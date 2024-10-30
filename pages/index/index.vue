@@ -9,8 +9,8 @@
 		</view>
 		<wd-tabbar shape="round" v-model="tabbar" fixed safeAreaInsetBottom placeholder>
 			<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
-			<wd-tabbar-item title="辞书" icon="cart"></wd-tabbar-item>
-			<wd-tabbar-item title="学习" icon="photo"></wd-tabbar-item>
+			<wd-tabbar-item title="辞书" icon="books"></wd-tabbar-item>
+			<wd-tabbar-item title="学习" icon="video1"></wd-tabbar-item>
 			<wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
 		</wd-tabbar>
 	</view>
