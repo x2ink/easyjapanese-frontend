@@ -47,18 +47,48 @@
 				<p>更精准更专业</p>
 			</view>
 		</view>
-		<uv-scroll-list @right="right" @left="left">
+		<uv-scroll-list>
 			<view class="scroll-list" style="flex-direction: row;">
-				<view class="scroll-list__goods-item" v-for="(item, index) in list" :key="index"
-					:class="[(index === 9) && 'scroll-list__goods-item--no-margin-right']">
-					<image class="scroll-list__goods-item__image" :src="item.image"></image>
-					<text class="scroll-list__goods-item__text">￥{{ item.price }}</text>
-				</view>
-				<view class="scroll-list__show-more">
-					<text class="scroll-list__show-more__text">查看更多</text>
+				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+					<image class="scroll-list__item__image" :src="item.image"></image>
+					<text class="scroll-list__item__text">{{ item.name }}</text>
 				</view>
 			</view>
 		</uv-scroll-list>
+		<wd-tabs :lineWidth="40" v-model="currentTab" swipeable animated>
+			<block v-for="(item,index) in tabList" :key="index">
+				<wd-tab :title="item.name">
+					<view class="articlelist">
+						<view class="articleitem" v-for="_ in 10">
+							<view class="head">
+								<view class="user">
+									<uv-avatar size="25" text="李"></uv-avatar>
+									<p>短句系统开发</p>
+								</view>
+								<wd-icon name="ellipsis" size="20px"></wd-icon>
+							</view>
+							<view class="content">
+								<view>
+									<p>这是文章标题</p>
+									<p>这是文章内容</p>
+								</view>
+								<image
+									src="https://ts3.cn.mm.bing.net/th?id=ORMS.067a87acd446bd8b04920fc4c07bf930&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1.25&p=0"
+									mode="aspectFill"></image>
+							</view>
+							<view class="footer">
+								<p>
+									525阅读&nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏
+								</p>
+								<p>
+									刚刚
+								</p>
+							</view>
+						</view>
+					</view>
+				</wd-tab>
+			</block>
+		</wd-tabs>
 	</view>
 </template>
 
@@ -74,46 +104,138 @@
 	const search = (e) => {
 		console.log(e);
 	}
-	const list = ref([{
-		price: '230.5',
-		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
-	}, {
-		price: '74.1',
-		image: 'https://via.placeholder.com/60x60.png/f9ae3d/fff'
-	}, {
-		price: '8457',
-		image: 'https://via.placeholder.com/60x60.png/5ac725/fff'
-	}, {
-		price: '1442',
+	const currentTab = ref(0)
+	const tabList = ref([{
+			name: "推荐文章"
+		},
+		{
+			name: "每日必读"
+		}, {
+			name: "推荐文章"
+		}, {
+			name: "推荐文章"
+		}, {
+			name: "推荐文章"
+		}, {
+			name: "推荐文章"
+		}, {
+			name: "推荐文章"
+		}
+	])
+	const toolList = ref([{
+		name: '五十音图',
 		image: 'https://via.placeholder.com/60x60.png/f56c6c/fff'
 	}, {
-		price: '541',
-		image: 'https://via.placeholder.com/60x60.png/909399/fff'
-	}, {
-		price: '234',
+		name: '文本翻译',
 		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
 	}, {
-		price: '562',
+		name: '语音朗读',
 		image: 'https://via.placeholder.com/60x60.png/f9ae3d/fff'
 	}, {
-		price: '251.5',
+		name: '动词变形',
+		image: 'https://via.placeholder.com/60x60.png/5ac725/fff'
+	}, {
+		name: '课文学习',
+		image: 'https://via.placeholder.com/60x60.png/909399/fff'
+	}, {
+		name: '动词变形',
+		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
+	}, {
+		name: '课文学习',
+		image: 'https://via.placeholder.com/60x60.png/f9ae3d/fff'
+	}, {
+		name: '尽情期待',
 		image: 'https://via.placeholder.com/60x60.png/5ac725/fff'
 	}])
 </script>
 
-<style lang="scss">
-	@mixin flex($direction: row) {
-		/* #ifndef APP-NVUE */
+<style lang="scss" scoped>
+	.articlelist {
+		margin-top: 10px;
 		display: flex;
-		/* #endif */
-		flex-direction: $direction;
+		flex-direction: column;
+		gap: 10px;
+
+		.articleitem {
+			padding: 15px;
+			background-color: white;
+			margin: 0 15px;
+			border-radius: $uni-border-radius-lg;
+
+			.footer {
+				margin-top: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				color: $uni-text-color-grey;
+				font-size: $uni-font-size-sm;
+			}
+
+			.content {
+				display: flex;
+				justify-content: space-between;
+				margin-top: 5px;
+
+				view {
+					p {
+						&:nth-of-type(1) {
+							font-size: $uni-font-size-lg;
+							font-weight: bold;
+						}
+
+						&:nth-of-type(2) {
+							font-size: $uni-font-size-base;
+							color: $uni-text-color-grey;
+							margin-top: 5px;
+						}
+					}
+				}
+
+				image {
+					border-radius: $uni-border-radius-lg;
+					width: 120px;
+					height: 80px;
+				}
+			}
+
+			.head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				.user {
+					display: flex;
+					align-items: center;
+
+					p {
+						font-size: $uni-font-size-base;
+						margin-left: 8px;
+					}
+				}
+			}
+		}
+	}
+
+	:deep(.wd-tabs) {
+		background: transparent !important;
+	}
+
+	:deep(.wd-tabs__nav) {
+		background-color: transparent !important;
 	}
 
 	.scroll-list {
-		@include flex(column);
+		display: flex;
+		gap: 15px;
 
-		&__goods-item {
-			margin-right: 20px;
+		&__item {
+			&:first-child {
+				margin-left: 15px;
+			}
+
+			&:last-child {
+				margin-right: 15px;
+			}
 
 			&__image {
 				width: 60px;
@@ -122,27 +244,13 @@
 			}
 
 			&__text {
-				color: #f56c6c;
+				color: $uni-text-color-grey;
 				text-align: center;
-				font-size: 12px;
+				font-size: $uni-font-size-sm;
 				margin-top: 5px;
 			}
 		}
 
-		&__show-more {
-			background-color: #fff0f0;
-			border-radius: 3px;
-			padding: 3px 6px;
-			@include flex(column);
-			align-items: center;
-
-			&__text {
-				font-size: 12px;
-				width: 12px;
-				color: #f56c6c;
-				line-height: 16px;
-			}
-		}
 	}
 
 	.maintool {

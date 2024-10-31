@@ -36,11 +36,11 @@ const _sfc_main = {
         }),
         f: common_vendor.p({
           title: "辞书",
-          icon: "cart"
+          icon: "books"
         }),
         g: common_vendor.p({
           title: "学习",
-          icon: "photo"
+          icon: "video1"
         }),
         h: common_vendor.p({
           title: "我的",

@@ -23,14 +23,154 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.scroll-list {
+  display: flex;
+  flex-direction: column;
+}
+.scroll-list__goods-item {
+  margin-right: 20px;
+}
+.scroll-list__goods-item__image {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+}
+.scroll-list__goods-item__text {
+  color: #f56c6c;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 5px;
+}
+.scroll-list__show-more {
+  background-color: #fff0f0;
+  border-radius: 3px;
+  padding: 3px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.scroll-list__show-more__text {
+  font-size: 12px;
+  width: 12px;
+  color: #f56c6c;
+  line-height: 16px;
+}
+.maintool {
+  display: flex;
+  align-items: center;
+  margin: 15px;
+  gap: 15px;
+}
+.maintool > view {
+  border-radius: 16px;
+  flex: 1;
+  padding: 15px;
+  background-size: 60%;
+  background-position: center right;
+  background-repeat: no-repeat;
+  background-color: white;
+  color: white;
+}
+.maintool > view p:nth-of-type(1) {
+  font-size: 16px;
+  font-weight: bold;
+}
+.maintool > view p:nth-of-type(2) {
+  margin-top: 3px;
+  font-size: 12px;
+}
+.maintool > view:nth-of-type(1) {
+  background: linear-gradient(135deg, #fa4350, #ffa39e);
+}
+.maintool > view:nth-of-type(2) {
+  background: linear-gradient(135deg, #4D80F0, #B0C4DE);
+}
+.day {
+  margin: 0 15px;
+  color: #999;
+}
+.day span:nth-of-type(1) {
+  font-size: 25px;
+  margin-left: 3px;
+  margin-right: 8px;
+  font-weight: bold;
+  font-style: italic;
+  color: #34d19d;
+}
+ .wd-progress__outer {
+  height: 10px !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
 .search {
   height: 45px;
   background: white;
-  margin: 10px;
+  margin: 15px;
   padding: 10px;
   font-size: 16px;
   box-sizing: border-box;
   border-radius: 45px;
   display: flex;
   align-items: center;
+}
+.search input {
+  margin-left: 10px;
+}
+.recite {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: white;
+  margin: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.recite .plan {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.recite .plan > p {
+  font-weight: bold;
+}
+.recite .plan view {
+  display: flex;
+  align-items: center;
+}
+.recite .task {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+.recite .task view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.recite .task view p:nth-of-type(1) {
+  color: #999;
+  font-size: 12px;
+}
+.recite .task view p:nth-of-type(2) {
+  font-size: 30px;
+  font-weight: bold;
+}
+.recite .progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.recite .progress p {
+  color: #999;
+  font-size: 14px;
+}
+.recite .progress .wd-button {
+  margin: 0;
+}
+.recite .btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

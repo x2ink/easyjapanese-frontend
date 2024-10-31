@@ -13,6 +13,11 @@ function getType(target) {
   return type;
 }
 const isDef = (value) => value !== void 0 && value !== null;
+const checkNumRange = (num, label = "value") => {
+  if (num < 0) {
+    throw new Error(`${label} shouldn't be less than zero`);
+  }
+};
 function getRect(selector, all, scope) {
   return new Promise((resolve, reject) => {
     let query = null;
@@ -120,8 +125,10 @@ function omitBy(obj, predicate) {
   return newObj;
 }
 exports.addUnit = addUnit;
+exports.checkNumRange = checkNumRange;
 exports.deepAssign = deepAssign;
 exports.getRect = getRect;
+exports.isArray = isArray;
 exports.isDef = isDef;
 exports.isImageUrl = isImageUrl;
 exports.isUndefined = isUndefined;

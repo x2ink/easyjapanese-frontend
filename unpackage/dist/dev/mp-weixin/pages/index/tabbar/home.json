@@ -1,4 +1,9 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "wd-icon": "../../../uni_modules/wot-design-uni/components/wd-icon/wd-icon",
+    "wd-progress": "../../../uni_modules/wot-design-uni/components/wd-progress/wd-progress",
+    "wd-button": "../../../uni_modules/wot-design-uni/components/wd-button/wd-button",
+    "uv-scroll-list": "../../../uni_modules/uv-scroll-list/components/uv-scroll-list/uv-scroll-list"
+  }
 }
