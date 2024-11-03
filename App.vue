@@ -16,6 +16,5 @@
 	page {
 		background: linear-gradient(to bottom, #F0F3FC, #FFFFFF);
 		background-attachment: fixed;
-		/* 固定背景，使其不会随着滚动而移动 */
 	}
 </style>
