@@ -30,9 +30,6 @@
 	import Self from "./tabbar/self.vue"
 	const tabbar = ref(0)
 	onMounted(() => {
-		uni.navigateTo({
-			url: '/pages/login/login'
-		});
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })

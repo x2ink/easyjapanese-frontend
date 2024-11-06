@@ -14,7 +14,7 @@
 			<wd-input style="margin-top: 15px;" size="large" type="text" label="验证码" label-width="50px"
 				v-model="from.password" placeholder="请输入验证码" center>
 				<template #suffix>
-					<wd-button type="warning" size="small">获取验证码</wd-button>
+					<wd-button type="warning" size="small" plain>获取验证码</wd-button>
 				</template>
 			</wd-input>
 			<wd-button style="margin-top: 30px;width: 100%;">注册</wd-button>
