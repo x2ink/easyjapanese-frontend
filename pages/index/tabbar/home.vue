@@ -33,8 +33,8 @@
 				<wd-button plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button type="info">记忆复习</wd-button>
-				<wd-button>开始学习</wd-button>
+				<wd-button type="info" style="width: 100%;">记忆复习</wd-button>
+				<wd-button style="width: 100%;">开始学习</wd-button>
 			</view>
 		</view>
 		<view class="maintool">
@@ -401,6 +401,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			gap: 15px;
 		}
 	}
 </style>

@@ -3,13 +3,13 @@
 		<StatusBar></StatusBar>
 		<view>
 			<Home v-if="tabbar===0"></Home>
-			<Book v-else-if="tabbar===1"></Book>
+			<Community v-else-if="tabbar===1"></Community>
 			<Learn v-else-if="tabbar===2"></Learn>
 			<Self v-else-if="tabbar===3"></Self>
 		</view>
 		<wd-tabbar shape="round" v-model="tabbar" fixed safeAreaInsetBottom placeholder>
 			<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
-			<wd-tabbar-item title="辞书" icon="books"></wd-tabbar-item>
+			<wd-tabbar-item title="交流" icon="chat"></wd-tabbar-item>
 			<wd-tabbar-item title="学习" icon="video1"></wd-tabbar-item>
 			<wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
 		</wd-tabbar>
@@ -24,7 +24,7 @@
 	import StatusBar from '@/components/statusBar.vue';
 	import store from '@/store/index.js';
 	import $http from "@/api/index.js"
-	import Book from "./tabbar/book.vue"
+	import Community from "./tabbar/community.vue"
 	import Home from "./tabbar/home.vue"
 	import Learn from "./tabbar/learn.vue"
 	import Self from "./tabbar/self.vue"

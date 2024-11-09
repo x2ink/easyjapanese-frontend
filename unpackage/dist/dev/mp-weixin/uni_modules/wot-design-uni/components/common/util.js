@@ -1,5 +1,12 @@
 "use strict";
 const common_vendor = require("../../../../common/vendor.js");
+const uni_modules_wotDesignUni_components_common_AbortablePromise = require("./AbortablePromise.js");
+function uuid() {
+  return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+}
+function s4() {
+  return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
+}
 function addUnit(num) {
   return Number.isNaN(Number(num)) ? `${num}` : `${num}px`;
 }
@@ -43,14 +50,23 @@ function kebabCase(word) {
   }).toLowerCase();
   return newWord;
 }
+function camelCase(word) {
+  return word.replace(/-(\w)/g, (_, c) => c.toUpperCase());
+}
 function isArray(value) {
   if (typeof Array.isArray === "function") {
     return Array.isArray(value);
   }
   return Object.prototype.toString.call(value) === "[object Array]";
 }
+function isFunction(value) {
+  return getType(value) === "function";
+}
 function isString(value) {
   return getType(value) === "string";
+}
+function isNumber(value) {
+  return getType(value) === "number";
 }
 function isUndefined(value) {
   return typeof value === "undefined";
@@ -75,6 +91,24 @@ function objToStyle(styles) {
   }
   return "";
 }
+const requestAnimationFrame = (cb = () => {
+}) => {
+  return new uni_modules_wotDesignUni_components_common_AbortablePromise.AbortablePromise((resolve) => {
+    const timer = setInterval(() => {
+      clearInterval(timer);
+      resolve(true);
+      cb();
+    }, 1e3 / 30);
+  });
+};
+const pause = (ms) => {
+  return new uni_modules_wotDesignUni_components_common_AbortablePromise.AbortablePromise((resolve) => {
+    const timer = setTimeout(() => {
+      clearTimeout(timer);
+      resolve(true);
+    }, ms);
+  });
+};
 function deepClone(obj, cache = /* @__PURE__ */ new Map()) {
   if (obj === null || typeof obj !== "object") {
     return obj;
@@ -114,6 +148,57 @@ function deepAssign(target, source) {
   });
   return target;
 }
+function debounce(func, wait, options = {}) {
+  let timeoutId = null;
+  let lastArgs;
+  let lastThis;
+  let result;
+  const leading = isDef(options.leading) ? options.leading : false;
+  const trailing = isDef(options.trailing) ? options.trailing : true;
+  function invokeFunc() {
+    if (lastArgs !== void 0) {
+      result = func.apply(lastThis, lastArgs);
+      lastArgs = void 0;
+    }
+  }
+  function startTimer() {
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      if (trailing) {
+        invokeFunc();
+      }
+    }, wait);
+  }
+  function cancelTimer() {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+  }
+  function debounced(...args) {
+    lastArgs = args;
+    lastThis = this;
+    if (timeoutId === null) {
+      if (leading) {
+        invokeFunc();
+      }
+      startTimer();
+    } else if (trailing) {
+      cancelTimer();
+      startTimer();
+    }
+    return result;
+  }
+  return debounced;
+}
+const getPropByPath = (obj, path) => {
+  const keys = path.split(".");
+  try {
+    return keys.reduce((acc, key) => acc !== void 0 && acc !== null ? acc[key] : void 0, obj);
+  } catch (error) {
+    return void 0;
+  }
+};
 const isDate = (val) => Object.prototype.toString.call(val) === "[object Date]" && !Number.isNaN(val.getTime());
 function isImageUrl(url) {
   const imageRegex = /\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg|image)/i;
@@ -125,12 +210,22 @@ function omitBy(obj, predicate) {
   return newObj;
 }
 exports.addUnit = addUnit;
+exports.camelCase = camelCase;
 exports.checkNumRange = checkNumRange;
+exports.debounce = debounce;
 exports.deepAssign = deepAssign;
+exports.getPropByPath = getPropByPath;
 exports.getRect = getRect;
 exports.isArray = isArray;
+exports.isDate = isDate;
 exports.isDef = isDef;
+exports.isFunction = isFunction;
 exports.isImageUrl = isImageUrl;
+exports.isNumber = isNumber;
+exports.isString = isString;
 exports.isUndefined = isUndefined;
 exports.objToStyle = objToStyle;
 exports.omitBy = omitBy;
+exports.pause = pause;
+exports.requestAnimationFrame = requestAnimationFrame;
+exports.uuid = uuid;

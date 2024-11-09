@@ -24,7 +24,6 @@
 							<view class="rankingitem" v-for="_ in 10">
 								<image mode="aspectFill"
 									src="https://static-cse.canva.cn/blob/352230/1003w-olh3HW7GiQY.3e89ead4.jpg">
-
 								</image>
 								<view>
 									<view>
@@ -89,6 +88,12 @@
 </script>
 
 <style lang="scss" scoped>
+	::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+		background-color: transparent;
+	}
+
 	.typelist {
 		margin: 15px;
 		display: grid;
@@ -121,42 +126,7 @@
 		}
 	}
 
-	.rankinglist {
-		margin: 0 16px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-
-		.rankingitem {
-			background-color: white;
-			padding: 10px;
-			border-radius: $uni-border-radius-lg;
-			display: flex;
-
-			>view {
-
-				&:last-child {
-					margin-left: 10px;
-					flex: 1;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-between;
-
-					.tags {
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-					}
-				}
-			}
-
-			image {
-				width: 90px;
-				height: 120px;
-				border-radius: $uni-border-radius-base;
-			}
-		}
-	}
+	
 
 	:deep(.wd-tabs) {
 		background: transparent !important;
@@ -191,29 +161,32 @@
 		font-weight: bold;
 	}
 
-	.newitem {
-		width: 100px;
-		margin: 0 8px;
-		display: inline-block;
-
-		&:first-child {
-			margin-left: 16px !important;
-		}
-
-		&:last-child {
-			margin-right: 16px !important;
-		}
-
-		image {
-			height: 133.33px;
-			width: 100px;
-			border-radius: $uni-border-radius-base;
-		}
-	}
 
 	.scroll-view_H {
 		padding-top: 5px;
 		white-space: nowrap;
 		width: 100%;
+		height: 160px;
+
+		.newitem {
+			width: 100px;
+			margin: 0 8px;
+			display: inline-block;
+
+			&:first-child {
+				margin-left: 16px !important;
+			}
+
+			&:last-child {
+				margin-right: 16px !important;
+			}
+
+			image {
+				height: 133.33px;
+				width: 100px;
+				border-radius: $uni-border-radius-base;
+			}
+		}
+
 	}
 </style>

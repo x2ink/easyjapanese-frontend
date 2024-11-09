@@ -4,7 +4,7 @@
     "wd-tabbar-item": "../../uni_modules/wot-design-uni/components/wd-tabbar-item/wd-tabbar-item",
     "wd-tabbar": "../../uni_modules/wot-design-uni/components/wd-tabbar/wd-tabbar",
     "status-bar": "../../components/statusBar",
-    "book": "./tabbar/book",
+    "community": "./tabbar/community",
     "home": "./tabbar/home",
     "learn": "./tabbar/learn",
     "self": "./tabbar/self"

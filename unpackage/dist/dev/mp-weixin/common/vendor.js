@@ -8374,6 +8374,7 @@ exports.inject = inject;
 exports.n = n;
 exports.nextTick$1 = nextTick$1;
 exports.o = o;
+exports.onBeforeMount = onBeforeMount;
 exports.onMounted = onMounted;
 exports.onUnmounted = onUnmounted;
 exports.p = p;

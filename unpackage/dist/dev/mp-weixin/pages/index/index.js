@@ -10,10 +10,10 @@ if (!Array) {
 const _easycom_wd_tabbar_item = () => "../../uni_modules/wot-design-uni/components/wd-tabbar-item/wd-tabbar-item.js";
 const _easycom_wd_tabbar = () => "../../uni_modules/wot-design-uni/components/wd-tabbar/wd-tabbar.js";
 if (!Math) {
-  (StatusBar + Home + Book + Learn + Self + _easycom_wd_tabbar_item + _easycom_wd_tabbar)();
+  (StatusBar + Home + Community + Learn + Self + _easycom_wd_tabbar_item + _easycom_wd_tabbar)();
 }
 const StatusBar = () => "../../components/statusBar.js";
-const Book = () => "./tabbar/book.js";
+const Community = () => "./tabbar/community.js";
 const Home = () => "./tabbar/home.js";
 const Learn = () => "./tabbar/learn.js";
 const Self = () => "./tabbar/self.js";
@@ -35,8 +35,8 @@ const _sfc_main = {
           icon: "home"
         }),
         f: common_vendor.p({
-          title: "辞书",
-          icon: "books"
+          title: "交流",
+          icon: "chat"
         }),
         g: common_vendor.p({
           title: "学习",
