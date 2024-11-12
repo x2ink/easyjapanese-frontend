@@ -22,14 +22,17 @@
 		onMounted
 	} from 'vue';
 	import StatusBar from '@/components/statusBar.vue';
-	import store from '@/store/index.js';
 	import $http from "@/api/index.js"
 	import Community from "./tabbar/community.vue"
 	import Home from "./tabbar/home.vue"
 	import Learn from "./tabbar/learn.vue"
 	import Self from "./tabbar/self.vue"
+	import {
+		userStore
+	} from "@/stores"
 	const tabbar = ref(0)
 	onMounted(() => {
+		console.log(userStore().token);
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })
