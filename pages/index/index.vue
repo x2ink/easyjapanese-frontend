@@ -30,7 +30,7 @@
 	import {
 		userStore
 	} from "@/stores"
-	const tabbar = ref(0)
+	const tabbar = ref(1)
 	onMounted(() => {
 		console.log(userStore().token);
 		// $http.user.getChartList().then(res => {

@@ -55,7 +55,7 @@
 				</view>
 			</view>
 		</uv-scroll-list>
-		<wd-tabs :lineWidth="40" v-model="currentTab" swipeable animated>
+		<wd-tabs v-model="currentTab" swipeable animated>
 			<block v-for="(item,index) in tabList" :key="index">
 				<wd-tab :title="item.name">
 					<view class="articlelist">
@@ -318,7 +318,7 @@
 
 	.search {
 		height: 45px;
-		background: white;
+		background: #EFEFEF;
 		margin: 15px;
 		padding: 10px;
 		font-size: $uni-font-size-lg;

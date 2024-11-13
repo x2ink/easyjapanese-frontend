@@ -14,7 +14,7 @@
 
 <style>
 	page {
-		background: linear-gradient(to bottom, #F0F3FC, #FFFFFF);
+		background: #F6F6F6;
 		background-attachment: fixed;
 	}
 </style>
