@@ -1,4 +1,5 @@
 <template>
+	<Statusbar></Statusbar>
 	<scroll-view @scroll="scroll" scroll-y="true" style="height: 100vh;">
 		<view class="search">
 			<wd-icon name="search" size="22px" color="#979797"></wd-icon>
@@ -66,6 +67,7 @@
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
+	import Statusbar from "@/components/statusbar.vue"
 	const currentTab = ref(0)
 	const tabList = ref([{
 		name: "全部",

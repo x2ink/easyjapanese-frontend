@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<Statusbar></Statusbar>
 		<view class="search">
 			<wd-icon name="search" size="22px" color="#979797"></wd-icon>
 			<input placeholder="搜索" />
@@ -100,6 +101,7 @@
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
+	import Statusbar from "@/components/statusbar.vue"
 	const searchVal = ref('')
 	const search = (e) => {
 		console.log(e);
@@ -160,7 +162,7 @@
 			padding: 15px;
 			background-color: white;
 			margin: 0 15px;
-			border-radius: $uni-border-radius-lg;
+			border-radius: $uni-border-radius-base;
 
 			.footer {
 				margin-top: 10px;
@@ -260,7 +262,7 @@
 		gap: 15px;
 
 		>view {
-			border-radius: $uni-border-radius-lg;
+			border-radius: $uni-border-radius-base;
 			flex: 1;
 			padding: 15px;
 			background-size: 60%;
