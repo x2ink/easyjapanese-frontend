@@ -17,4 +17,8 @@
 		background: #F6F6F6;
 		background-attachment: fixed;
 	}
+
+	::-webkit-scrollbar {
+		display: none !important;
+	}
 </style>

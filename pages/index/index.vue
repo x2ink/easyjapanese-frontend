@@ -7,7 +7,7 @@
 			<Learn v-else-if="tabbar===2"></Learn>
 			<Self v-else-if="tabbar===3"></Self>
 		</view>
-		<wd-tabbar shape="round" v-model="tabbar" fixed safeAreaInsetBottom placeholder>
+		<wd-tabbar v-model="tabbar" fixed safeAreaInsetBottom placeholder>
 			<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
 			<wd-tabbar-item title="交流" icon="chat"></wd-tabbar-item>
 			<wd-tabbar-item title="学习" icon="video1"></wd-tabbar-item>
@@ -30,7 +30,7 @@
 	import {
 		userStore
 	} from "@/stores"
-	const tabbar = ref(1)
+	const tabbar = ref(0)
 	onMounted(() => {
 		console.log(userStore().token);
 		// $http.user.getChartList().then(res => {
@@ -41,11 +41,6 @@
 	})
 </script>
 
-<style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+<style lang="scss" scoped>
+
 </style>

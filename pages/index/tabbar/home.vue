@@ -40,23 +40,23 @@
 		</view>
 		<view class="maintool">
 			<view>
-				<p>AI问答</p>
-				<p>更精准更专业</p>
+				<p>AI翻译</p>
+				<p>精准专业翻译</p>
 			</view>
 			<view>
-				<p>语法学习</p>
-				<p>更精准更专业</p>
+				<p>词库大全</p>
+				<p>收录词条过万</p>
 			</view>
 		</view>
 		<uv-scroll-list>
 			<view class="scroll-list" style="flex-direction: row;">
 				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
 					<image class="scroll-list__item__image" :src="item.image"></image>
-					<text class="scroll-list__item__text">{{ item.name }}</text>
+					<p style="text-align: center;" class="scroll-list__item__text">{{ item.name }}</p>
 				</view>
 			</view>
 		</uv-scroll-list>
-		<wd-tabs v-model="currentTab" swipeable animated>
+		<wd-tabs sticky v-model="currentTab" swipeable animated :offset-top="-45">
 			<block v-for="(item,index) in tabList" :key="index">
 				<wd-tab :title="item.name">
 					<view class="articlelist">
@@ -125,10 +125,10 @@
 		}
 	])
 	const toolList = ref([{
-		name: '五十音图',
+		name: '翻译讲解',
 		image: 'https://via.placeholder.com/60x60.png/f56c6c/fff'
 	}, {
-		name: '文本翻译',
+		name: '作文批改',
 		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
 	}, {
 		name: '语音朗读',
@@ -152,17 +152,26 @@
 </script>
 
 <style lang="scss" scoped>
+	::-webkit-scrollbar {
+		display: none !important;
+	}
+
+	:deep(.wd-tabs__nav) {
+		background-color: #F6F6F6;
+	}
+
 	.articlelist {
 		margin-top: 10px;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 15px;
 
 		.articleitem {
 			padding: 15px;
 			background-color: white;
 			margin: 0 15px;
 			border-radius: $uni-border-radius-base;
+
 
 			.footer {
 				margin-top: 10px;
@@ -222,9 +231,6 @@
 		background: transparent !important;
 	}
 
-	:deep(.wd-tabs__nav) {
-		background-color: transparent !important;
-	}
 
 	.scroll-list {
 		display: flex;
