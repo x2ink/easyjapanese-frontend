@@ -23,7 +23,7 @@
 							<view class="body">
 								<p class="content">你好这是效力与湖人队杀鸡吉尼斯可能仓库的是你看但是此时马上离开地面来昆明产生了矛盾</p>
 								<view class="images">
-									<img v-for="_ in 9"
+									<img v-for="_ in 3"
 										src="https://cn.bing.com/th?id=OVFT.Cvt2C_Z807esEH0HcbNQNi&w=186&h=88&c=7&rs=2&qlt=80&pid=PopNow"></img>
 								</view>
 							</view>

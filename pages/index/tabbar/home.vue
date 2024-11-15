@@ -34,8 +34,8 @@
 				<wd-button plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button type="info" style="width: 100%;">记忆复习</wd-button>
-				<wd-button style="width: 100%;">开始学习</wd-button>
+				<wd-button custom-class="review" size="large" type="info" style="width: 100%;">记忆复习</wd-button>
+				<wd-button size="large" style="width: 100%;">开始学习</wd-button>
 			</view>
 		</view>
 		<view class="maintool">
@@ -52,44 +52,38 @@
 			<view class="scroll-list" style="flex-direction: row;">
 				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
 					<image class="scroll-list__item__image" :src="item.image"></image>
-					<p style="text-align: center;" class="scroll-list__item__text">{{ item.name }}</p>
+					<p class="scroll-list__item__text">{{ item.name }}</p>
 				</view>
 			</view>
 		</uv-scroll-list>
-		<wd-tabs sticky v-model="currentTab" swipeable animated :offset-top="-45">
-			<block v-for="(item,index) in tabList" :key="index">
-				<wd-tab :title="item.name">
-					<view class="articlelist">
-						<view class="articleitem" v-for="_ in 10">
-							<view class="head">
-								<view class="user">
-									<uv-avatar size="25" text="李"></uv-avatar>
-									<p>短句系统开发</p>
-								</view>
-								<wd-icon name="ellipsis" size="20px"></wd-icon>
-							</view>
-							<view class="content">
-								<view>
-									<p>这是文章标题</p>
-									<p>这是文章内容</p>
-								</view>
-								<image
-									src="https://ts3.cn.mm.bing.net/th?id=ORMS.067a87acd446bd8b04920fc4c07bf930&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1.25&p=0"
-									mode="aspectFill"></image>
-							</view>
-							<view class="footer">
-								<p>
-									525阅读&nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏
-								</p>
-								<p>
-									刚刚
-								</p>
-							</view>
-						</view>
+		<view class="articlelist">
+			<view class="articleitem" v-for="_ in 10">
+				<view class="head">
+					<view class="user">
+						<uv-avatar size="25" text="李"></uv-avatar>
+						<p>短句系统开发</p>
 					</view>
-				</wd-tab>
-			</block>
-		</wd-tabs>
+					<wd-icon name="ellipsis" size="20px"></wd-icon>
+				</view>
+				<view class="content">
+					<view>
+						<p>这是文章标题</p>
+						<p>这是文章内容</p>
+					</view>
+					<image
+						src="https://ts3.cn.mm.bing.net/th?id=ORMS.067a87acd446bd8b04920fc4c07bf930&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1.25&p=0"
+						mode="aspectFill"></image>
+				</view>
+				<view class="footer">
+					<p>
+						525阅读&nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏
+					</p>
+					<p>
+						刚刚
+					</p>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -106,62 +100,43 @@
 	const search = (e) => {
 		console.log(e);
 	}
-	const currentTab = ref(0)
-	const tabList = ref([{
-			name: "推荐文章"
-		},
-		{
-			name: "每日必读"
-		}, {
-			name: "推荐文章"
-		}, {
-			name: "推荐文章"
-		}, {
-			name: "推荐文章"
-		}, {
-			name: "推荐文章"
-		}, {
-			name: "推荐文章"
-		}
-	])
+
 	const toolList = ref([{
-		name: '翻译讲解',
-		image: 'https://via.placeholder.com/60x60.png/f56c6c/fff'
-	}, {
-		name: '作文批改',
-		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
-	}, {
-		name: '语音朗读',
-		image: 'https://via.placeholder.com/60x60.png/f9ae3d/fff'
-	}, {
 		name: '动词变形',
-		image: 'https://via.placeholder.com/60x60.png/5ac725/fff'
+		image: '../../static/duo-icons--palette.png'
 	}, {
-		name: '课文学习',
-		image: 'https://via.placeholder.com/60x60.png/909399/fff'
+		name: '考试宝典',
+		image: '../../static/duo-icons--book-2.png'
 	}, {
-		name: '动词变形',
-		image: 'https://via.placeholder.com/60x60.png/3c9cff/fff'
+		name: '口语练习',
+		image: '../../static/duo-icons--user.png'
 	}, {
-		name: '课文学习',
-		image: 'https://via.placeholder.com/60x60.png/f9ae3d/fff'
+		name: '听力突破',
+		image: '../../static/duo-icons--disk.png'
 	}, {
-		name: '尽情期待',
-		image: 'https://via.placeholder.com/60x60.png/5ac725/fff'
+		name: '情景对话',
+		image: '../../static/duo-icons--message-3.png'
+	}, {
+		name: '漫画日语',
+		image: '../../static/duo-icons--book.png'
+	}, {
+		name: '免费动漫',
+		image: '../../static/duo-icons--clapperboard.png'
 	}])
 </script>
 
 <style lang="scss" scoped>
+	.review {
+		color: #4D80F0 !important;
+	}
+
 	::-webkit-scrollbar {
 		display: none !important;
 	}
 
-	:deep(.wd-tabs__nav) {
-		background-color: #F6F6F6;
-	}
 
 	.articlelist {
-		margin-top: 10px;
+		margin-top: 5px;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
@@ -227,28 +202,33 @@
 		}
 	}
 
-	:deep(.wd-tabs) {
-		background: transparent !important;
-	}
 
 
 	.scroll-list {
 		display: flex;
-		gap: 15px;
+		gap: 10px;
 
 		&__item {
+			width: 70px;
+			height: 70px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			background-color: white;
+			border-radius: $uni-border-radius-base;
+
 			&:first-child {
-				margin-left: 15px;
+				margin-left: 10px;
 			}
 
 			&:last-child {
-				margin-right: 15px;
+				margin-right: 10px;
 			}
 
 			&__image {
-				width: 60px;
-				height: 60px;
-				border-radius: 4px;
+				width: 30px;
+				height: 30px;
 			}
 
 			&__text {

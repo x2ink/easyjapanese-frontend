@@ -43,14 +43,42 @@
 		</view>
 	</view>
 	<view class="cell">
-		<view class="cellitem" v-for="_ in 5">
-			<p>主题</p>
+		<view class="cellitem">
+			<p>学习笔记</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>收藏夹</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>排行榜</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>我的PDF </p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>领取资料</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>设置</p>
 			<wd-icon name="arrow-right" size="22px"></wd-icon>
 		</view>
 	</view>
 	<view class="cell">
-		<view class="cellitem" v-for="_ in 3">
-			<p>主题</p>
+		<view class="cellitem">
+			<p>意见反馈</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>关于我们</p>
+			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		</view>
+		<view class="cellitem">
+			<p>分享App</p>
 			<wd-icon name="arrow-right" size="22px"></wd-icon>
 		</view>
 	</view>

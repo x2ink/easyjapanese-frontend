@@ -10,8 +10,14 @@
 	<view class="knowledge wrap">
 		<p class="title">知识点</p>
 		<view class="list">
-			<view class="item" v-for="_ in 3">
+			<view class="item">
 				<p>语法学习</p>
+			</view>
+			<view class="item">
+				<p>常用词汇</p>
+			</view>
+			<view class="item">
+				<p>学习电台</p>
 			</view>
 		</view>
 	</view>
