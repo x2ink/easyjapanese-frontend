@@ -1,25 +1,27 @@
 <template>
-	<view>
-		<StatusBar></StatusBar>
-		<NavBar title="词库列表"></NavBar>
-		<p class="title">推荐词书</p>
-		<view class="rankinglist">
-			<view class="rankingitem" v-for="_ in 5">
-				<image mode="aspectFill" src="https://static-cse.canva.cn/blob/352230/1003w-olh3HW7GiQY.3e89ead4.jpg">
-				</image>
-				<wd-button class="btn" plain size="small">开始学习</wd-button>
-				<view>
-					<view>
-						<wd-text color="#000000" :lines="1" size="18px" text="新编日语教程"></wd-text>
-						<wd-text :lines="3" size="14px" style="margin-top: 6px;" text="已学:40/100个"></wd-text>
+	<view style="height: 100vh;background-color: white;">
+		<NavBar title="词库列表" style="background-color: #F6F6F6;"></NavBar>
+		<wd-tabs v-model="current">
+			<block v-for="(item,index) in tabList" :key="index">
+				<wd-tab :title="item.name">
+					<view class="rankinglist">
+						<view class="rankingitem" v-for="_ in 5">
+							<image mode="aspectFill"
+								src="https://static-cse.canva.cn/blob/352230/1003w-olh3HW7GiQY.3e89ead4.jpg">
+							</image>
+							<view>
+								<view>
+									<wd-text color="#000000" :lines="1" size="17px" text="新编日语教程"></wd-text>
+									<wd-text :lines="3" size="14px" style="margin-top: 6px;"
+										text="含新课标新增词,全国统一"></wd-text>
+								</view>
+								<p class="number">355词<span>正在学习</span></p>
+							</view>
+						</view>
 					</view>
-					<view class="tags">
-						<uv-avatar-group :urls="urls" size="20" gap="0.4"></uv-avatar-group>
-						<wd-text :lines="1" size="12px" text="999人正在关注"></wd-text>
-					</view>
-				</view>
-			</view>
-		</view>
+				</wd-tab>
+			</block>
+		</wd-tabs>
 	</view>
 </template>
 
@@ -27,27 +29,40 @@
 	import {
 		ref
 	} from 'vue'
-	import StatusBar from '@/components/statusBar.vue';
 	import NavBar from '@/components/navbar.vue'
+	const current = ref(0)
+	const tabList = ref([{
+		name: "全部"
+	}, {
+		name: "新标"
+	}, {
+		name: "新编"
+	}, {
+		name: "考研"
+	}, {
+		name: "考级"
+	}])
 </script>
 
 <style lang="scss">
-	.title {
-		font-size: $uni-font-size-lg;
-		margin: 10px;
+	.number {
+		color: $uni-text-color-grey;
+		font-size: $uni-font-size-base;
 		font-weight: bold;
+
+		span {
+			margin-left: 10px;
+			color: $uni-color-warning;
+		}
 	}
 
 	.rankinglist {
 		margin: 0 16px;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
 
 		.rankingitem {
-			background-color: white;
 			padding: 10px;
-			border-radius: $uni-border-radius-lg;
 			display: flex;
 			position: relative;
 
@@ -78,7 +93,7 @@
 			image {
 				width: 60px;
 				height: 80px;
-				border-radius: $uni-border-radius-base;
+				border-radius: 5px;
 			}
 		}
 	}

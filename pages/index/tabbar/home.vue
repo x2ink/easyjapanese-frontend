@@ -12,26 +12,26 @@
 			<view class="plan">
 				<p>大学日语四级</p>
 				<view>
-					<p>
+					<p @click="openPlan">
 						修改计划
 					</p>
 					<wd-icon name="arrow-right" size="19px"></wd-icon>
 				</view>
 			</view>
 			<view class="task">
-				<view>
+				<view @click="goPage('wordlist')">
 					<p>等待复习</p>
 					<p>100</p>
 				</view>
-				<view>
-					<p>等待复习</p>
-					<p>100</p>
+				<view @click="goPage('wordlist')">
+					<p>今日未学</p>
+					<p>10</p>
 				</view>
 			</view>
 			<wd-progress :percentage="30" hide-text />
 			<view class="progress">
 				<p><span>50</span>/<span>100</span></p>
-				<wd-button plain size="small">词汇列表</wd-button>
+				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
 				<wd-button custom-class="review" size="large" type="info" style="width: 100%;">记忆复习</wd-button>
@@ -84,6 +84,8 @@
 				</view>
 			</view>
 		</view>
+		<!-- 修改计划 -->
+		<Setplan ref="setPlanRef"></Setplan>
 	</view>
 </template>
 
@@ -96,12 +98,16 @@
 		onLoad
 	} from '@dcloudio/uni-app'
 	import Statusbar from "@/components/statusbar.vue"
+	import Setplan from "@/components/setplan.vue"
 	const goPage = (path) => {
 		uni.navigateTo({
 			url: `/pages/${path}/${path}`
 		})
 	}
-
+	const setPlanRef = ref(null)
+	const openPlan = () => {
+		setPlanRef.value.show = true
+	}
 	const toolList = ref([{
 		name: '动词变形',
 		image: '../../static/duo-icons--palette.png'

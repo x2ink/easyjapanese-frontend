@@ -36,7 +36,7 @@
 	}
 
 	.navbar {
-		height: 40px;
+		height: 45px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -57,6 +57,7 @@
 			right: 10px;
 
 			.title {
+				margin-left: 10px;
 				font-size: $uni-font-size-lg;
 				font-weight: bold;
 			}
