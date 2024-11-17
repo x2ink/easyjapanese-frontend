@@ -122,6 +122,7 @@
 		align-items: center;
 
 		input {
+			width: 100%;
 			margin-left: 10px;
 		}
 	}

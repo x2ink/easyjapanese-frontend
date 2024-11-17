@@ -1,18 +1,24 @@
 <template>
 	<view class="navbar">
-		<view class="left">
+		<view class="left" @click="back">
 			<wd-icon name="thin-arrow-left" size="20px"></wd-icon>
 		</view>
-		<view class="center">
-			{{title}}
+		<view class="center" :class="{textcenter:title!==''}">
+			<text class="title" v-if="title!==''">{{title}}</text>
+			<slot v-else name="center"></slot>
 		</view>
 		<view class="right">
-			<slot></slot>
+			<slot name="right"></slot>
 		</view>
 	</view>
 </template>
 
 <script setup>
+	const back = () => {
+		uni.navigateBack({
+			delta: 1
+		})
+	}
 	const props = defineProps({
 		title: {
 			default: '',
@@ -22,6 +28,13 @@
 </script>
 
 <style lang="scss">
+	
+
+	.textcenter {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
 	.navbar {
 		height: 40px;
 		display: flex;
@@ -37,12 +50,16 @@
 		}
 
 		.center {
+			transform: translateY(-50%);
 			position: absolute;
 			top: 50%;
-			left: 50%;
-			font-size: $uni-font-size-lg;
-			font-weight: bold;
-			transform: translate(-50%, -50%);
+			left: 30px;
+			right: 10px;
+
+			.title {
+				font-size: $uni-font-size-lg;
+				font-weight: bold;
+			}
 		}
 	}
 </style>

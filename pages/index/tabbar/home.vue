@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<Statusbar></Statusbar>
-		<view class="search">
+		<view @click="goPage('search')" class="search">
 			<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-			<input placeholder="搜索" />
+			<p>搜索</p>
 		</view>
 		<view class="day">
 			你已经坚持了<span>99天</span><span>加油！！！</span>
@@ -96,9 +96,10 @@
 		onLoad
 	} from '@dcloudio/uni-app'
 	import Statusbar from "@/components/statusbar.vue"
-	const searchVal = ref('')
-	const search = (e) => {
-		console.log(e);
+	const goPage = (path) => {
+		uni.navigateTo({
+			url: `/pages/${path}/${path}`
+		})
 	}
 
 	const toolList = ref([{
@@ -315,7 +316,8 @@
 		display: flex;
 		align-items: center;
 
-		input {
+		p {
+			color: #979797;
 			margin-left: 10px;
 		}
 	}

@@ -2,7 +2,7 @@
 	<Statusbar></Statusbar>
 	<view class="search">
 		<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-		<input placeholder="搜索" />
+		<p>搜索</p>
 	</view>
 	<view class="banner">
 		五十音banner
@@ -158,7 +158,8 @@
 		display: flex;
 		align-items: center;
 
-		input {
+		p {
+			color: #979797;
 			margin-left: 10px;
 		}
 	}
