@@ -31,6 +31,8 @@
 	</view>
 	<!-- 列表 -->
 	<WordList></WordList>
+	<!--  -->
+	<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 </template>
 
 <script setup>
@@ -49,6 +51,17 @@
 		},
 		{
 			content: '语法'
+		}
+	])
+	const activeShow = ref(true)
+	const actions = ref([{
+			name: '选项1'
+		},
+		{
+			name: '选项2'
+		},
+		{
+			name: '选项3'
 		}
 	])
 	const changeSearchType = (e) => {

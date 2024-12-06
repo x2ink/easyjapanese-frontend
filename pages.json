@@ -41,6 +41,12 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/learn/learn",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

@@ -1,18 +1,21 @@
 <template>
 	<view>
 		<StatusBar></StatusBar>
-		<view>
-			<Home v-if="tabbar===0"></Home>
-			<Community v-else-if="tabbar===1"></Community>
-			<Learn v-else-if="tabbar===2"></Learn>
-			<Self v-else-if="tabbar===3"></Self>
+		<view class="swiper">
+			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll home">
+				<Home></Home>
+			</scroll-view>
+			<scroll-view v-show="tabbar===1" scroll-y="true" class="scroll community">
+				<Community></Community>
+			</scroll-view>
+			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
+				<Learn></Learn>
+			</scroll-view>
+			<scroll-view v-show="tabbar===3" scroll-y="true" class="scroll self">
+				<Self></Self>
+			</scroll-view>
 		</view>
-		<wd-tabbar v-model="tabbar" :zIndex="3" fixed safeAreaInsetBottom placeholder>
-			<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
-			<wd-tabbar-item title="交流" icon="chat"></wd-tabbar-item>
-			<wd-tabbar-item title="学习" icon="video1"></wd-tabbar-item>
-			<wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
-		</wd-tabbar>
+		<Tabbar @change="tabbarChange"></Tabbar>
 		<wd-fab type="warning" position="right-bottom">
 			<template #trigger>
 				<wd-badge :max="10" is-dot modelValue="12" class="wobble">
@@ -36,12 +39,15 @@
 	import Home from "./tabbar/home.vue"
 	import Learn from "./tabbar/learn.vue"
 	import Self from "./tabbar/self.vue"
+	import Tabbar from "@/components/tabbar.vue"
 	import {
 		userStore
 	} from "@/stores"
 	const tabbar = ref(0)
+	const tabbarChange = (e) => {
+		tabbar.value = e.value
+	}
 	onMounted(() => {
-		console.log(userStore().token);
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })
@@ -51,6 +57,15 @@
 </script>
 
 <style lang="scss" scoped>
+	.swiper {
+		width: 100%;
+		height: calc(100vh - 50px - env(safe-area-inset-bottom));
+
+		.scroll {
+			height: 100%;
+		}
+	}
+
 	:deep(.wd-fab) {
 		left: inherit !important;
 		top: inherit !important;

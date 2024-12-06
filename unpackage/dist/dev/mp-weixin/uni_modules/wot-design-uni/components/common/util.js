@@ -25,6 +25,52 @@ const checkNumRange = (num, label = "value") => {
     throw new Error(`${label} shouldn't be less than zero`);
   }
 };
+function rgbToHex(r, g, b) {
+  const hex = (r << 16 | g << 8 | b).toString(16);
+  const paddedHex = "#" + "0".repeat(Math.max(0, 6 - hex.length)) + hex;
+  return paddedHex;
+}
+function hexToRgb(hex) {
+  const rgb = [];
+  for (let i = 1; i < 7; i += 2) {
+    rgb.push(parseInt("0x" + hex.slice(i, i + 2), 16));
+  }
+  return rgb;
+}
+const gradient = (startColor, endColor, step = 2) => {
+  const sColor = hexToRgb(startColor);
+  const eColor = hexToRgb(endColor);
+  const rStep = (eColor[0] - sColor[0]) / step;
+  const gStep = (eColor[1] - sColor[1]) / step;
+  const bStep = (eColor[2] - sColor[2]) / step;
+  const gradientColorArr = [];
+  for (let i = 0; i < step; i++) {
+    gradientColorArr.push(
+      rgbToHex(parseInt(String(rStep * i + sColor[0])), parseInt(String(gStep * i + sColor[1])), parseInt(String(bStep * i + sColor[2])))
+    );
+  }
+  return gradientColorArr;
+};
+const isEqual = (value1, value2) => {
+  if (value1 === value2) {
+    return true;
+  }
+  if (!Array.isArray(value1) || !Array.isArray(value2)) {
+    return false;
+  }
+  if (value1.length !== value2.length) {
+    return false;
+  }
+  for (let i = 0; i < value1.length; ++i) {
+    if (value1[i] !== value2[i]) {
+      return false;
+    }
+  }
+  return true;
+};
+const context = {
+  id: 1e3
+};
 function getRect(selector, all, scope) {
   return new Promise((resolve, reject) => {
     let query = null;
@@ -67,6 +113,12 @@ function isString(value) {
 }
 function isNumber(value) {
   return getType(value) === "number";
+}
+function isPromise(value) {
+  if (isObj(value) && isDef(value)) {
+    return isFunction(value.then) && isFunction(value.catch);
+  }
+  return false;
 }
 function isUndefined(value) {
   return typeof value === "undefined";
@@ -212,16 +264,21 @@ function omitBy(obj, predicate) {
 exports.addUnit = addUnit;
 exports.camelCase = camelCase;
 exports.checkNumRange = checkNumRange;
+exports.context = context;
 exports.debounce = debounce;
 exports.deepAssign = deepAssign;
 exports.getPropByPath = getPropByPath;
 exports.getRect = getRect;
+exports.gradient = gradient;
 exports.isArray = isArray;
 exports.isDate = isDate;
 exports.isDef = isDef;
+exports.isEqual = isEqual;
 exports.isFunction = isFunction;
 exports.isImageUrl = isImageUrl;
 exports.isNumber = isNumber;
+exports.isObj = isObj;
+exports.isPromise = isPromise;
 exports.isString = isString;
 exports.isUndefined = isUndefined;
 exports.objToStyle = objToStyle;

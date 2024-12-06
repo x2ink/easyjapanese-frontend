@@ -18,7 +18,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.6.3",
+  "libVersion": "3.7.0",
   "appid": "touristappid",
   "projectname": "轻松日语",
   "condition": {},

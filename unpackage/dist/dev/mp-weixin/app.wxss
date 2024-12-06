@@ -1,6 +1,30 @@
 
 page {
-		background: linear-gradient(to bottom, #F0F3FC, #FFFFFF);
+		background: #F6F6F6;
 		background-attachment: fixed;
+}
+::-webkit-scrollbar {
+		display: none !important;
+}
+	/*每个页面公共css */
+._GCENTER {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+}
+._PCENTERY {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+}
+._PCENTERX {
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+}
+._BACKGROUND {
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 }
 page{--status-bar-height:25px;--top-window-height:0px;--window-top:0px;--window-bottom:0px;--window-left:0px;--window-right:0px;--window-magin:0px}[data-c-h="true"]{display: none !important;}

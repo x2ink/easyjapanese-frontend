@@ -35,7 +35,7 @@
 			</view>
 			<view class="btns">
 				<wd-button custom-class="review" size="large" type="info" style="width: 100%;">记忆复习</wd-button>
-				<wd-button size="large" style="width: 100%;">开始学习</wd-button>
+				<wd-button @click="goPage('learn')" size="large" style="width: 100%;">开始学习</wd-button>
 			</view>
 		</view>
 		<view class="maintool">
@@ -144,6 +144,7 @@
 
 	.articlelist {
 		margin-top: 5px;
+		padding-bottom: 15px;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
@@ -185,7 +186,7 @@
 				}
 
 				image {
-					border-radius: $uni-border-radius-lg;
+					border-radius: $uni-border-radius-base;
 					width: 120px;
 					height: 80px;
 				}

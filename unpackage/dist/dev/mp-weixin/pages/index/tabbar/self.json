@@ -1,4 +1,9 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "uv-avatar": "../../../uni_modules/uv-avatar/components/uv-avatar/uv-avatar",
+    "wd-icon": "../../../uni_modules/wot-design-uni/components/wd-icon/wd-icon",
+    "wd-progress": "../../../uni_modules/wot-design-uni/components/wd-progress/wd-progress",
+    "statusbar": "../../../components/statusbar"
+  }
 }

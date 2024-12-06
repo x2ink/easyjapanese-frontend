@@ -23,17 +23,24 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.review.data-v-53d42ae2 {
+  color: #4D80F0 !important;
+}
+.data-v-53d42ae2::-webkit-scrollbar {
+  display: none !important;
+}
 .articlelist.data-v-53d42ae2 {
-  margin-top: 10px;
+  margin-top: 5px;
+  padding-bottom: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
 .articlelist .articleitem.data-v-53d42ae2 {
   padding: 15px;
   background-color: white;
   margin: 0 15px;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 .articlelist .articleitem .footer.data-v-53d42ae2 {
   margin-top: 10px;
@@ -58,7 +65,7 @@
   margin-top: 5px;
 }
 .articlelist .articleitem .content image.data-v-53d42ae2 {
-  border-radius: 16px;
+  border-radius: 8px;
   width: 120px;
   height: 80px;
 }
@@ -75,26 +82,29 @@
   font-size: 14px;
   margin-left: 8px;
 }
-.data-v-53d42ae2 .wd-tabs {
-  background: transparent !important;
-}
-.data-v-53d42ae2 .wd-tabs__nav {
-  background-color: transparent !important;
-}
 .scroll-list.data-v-53d42ae2 {
   display: flex;
-  gap: 15px;
+  gap: 10px;
+}
+.scroll-list__item.data-v-53d42ae2 {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
 }
 .scroll-list__item.data-v-53d42ae2:first-child {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 .scroll-list__item.data-v-53d42ae2:last-child {
-  margin-right: 15px;
+  margin-right: 10px;
 }
 .scroll-list__item__image.data-v-53d42ae2 {
-  width: 60px;
-  height: 60px;
-  border-radius: 4px;
+  width: 30px;
+  height: 30px;
 }
 .scroll-list__item__text.data-v-53d42ae2 {
   color: #999;
@@ -109,7 +119,7 @@
   gap: 15px;
 }
 .maintool > view.data-v-53d42ae2 {
-  border-radius: 16px;
+  border-radius: 8px;
   flex: 1;
   padding: 15px;
   background-size: 60%;
@@ -151,7 +161,7 @@
 }
 .search.data-v-53d42ae2 {
   height: 45px;
-  background: white;
+  background: #EFEFEF;
   margin: 15px;
   padding: 10px;
   font-size: 16px;
@@ -160,7 +170,8 @@
   display: flex;
   align-items: center;
 }
-.search input.data-v-53d42ae2 {
+.search p.data-v-53d42ae2 {
+  color: #979797;
   margin-left: 10px;
 }
 .recite.data-v-53d42ae2 {

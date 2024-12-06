@@ -3,7 +3,10 @@
     "pages/index/index",
     "pages/login/login",
     "pages/register/register",
-    "pages/thesaurus/thesaurus"
+    "pages/thesaurus/thesaurus",
+    "pages/search/search",
+    "pages/wordlist/wordlist",
+    "pages/learn/learn"
   ],
   "window": {
     "navigationBarTextStyle": "black",
