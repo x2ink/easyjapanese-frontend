@@ -53,7 +53,7 @@
 			content: '语法'
 		}
 	])
-	const activeShow = ref(true)
+	const activeShow = ref(false)
 	const actions = ref([{
 			name: '选项1'
 		},

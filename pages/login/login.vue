@@ -1,10 +1,9 @@
 <template>
 	<view>
 		<StatusBar></StatusBar>
-		<NavBar></NavBar>
 		<view style="padding:80px 30px;">
-			<p class="title">你好，</p>
-			<p class="title">欢迎登录轻松日语</p>
+			<p class="title">欢迎回来，</p>
+			<p class="title">我们一直在等你！</p>
 			<wd-input style="margin-top: 40px;" size="large" type="text" label="邮箱" label-width="40px"
 				v-model="from.email" placeholder="请输入邮箱" center />
 			<wd-input style="margin-top: 15px;" size="large" type="text" label="密码" label-width="40px"
@@ -27,8 +26,9 @@
 			<ALI></ALI>
 		</view> -->
 	</view>
-	<wd-action-sheet cancel-text="取消" v-model="show" :actions="actions" @close="show=false" @select="select" />
-		<wd-toast />
+	<wd-action-sheet :safe-area-inset-bottom="false" cancel-text="取消" v-model="show" :actions="actions"
+		@close="show=false" @select="select" />
+	<wd-toast />
 </template>
 
 <script setup>
@@ -36,7 +36,6 @@
 		ref
 	} from 'vue'
 	import StatusBar from '@/components/statusBar.vue';
-	import NavBar from '@/components/navbar.vue'
 	import QQ from "./components/qq.vue"
 	import WX from "./components/wx.vue"
 	import ALI from "./components/alipay.vue"
@@ -50,7 +49,7 @@
 	import {
 		isEmail
 	} from "@/utils/common.js"
-		const toast = useToast()
+	const toast = useToast()
 	const from = ref({
 		email: '',
 		password: ''
@@ -96,7 +95,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 	.more {
 		display: flex;
 		align-items: center;

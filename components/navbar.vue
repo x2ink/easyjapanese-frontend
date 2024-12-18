@@ -28,8 +28,6 @@
 </script>
 
 <style lang="scss">
-	
-
 	.textcenter {
 		left: 50%;
 		transform: translateX(-50%);
@@ -47,6 +45,13 @@
 			top: 50%;
 			transform: translateY(-50%);
 			left: 10px;
+		}
+
+		.right {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 10px;
 		}
 
 		.center {

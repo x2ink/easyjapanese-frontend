@@ -1,9 +1,8 @@
 <template>
 	<view>
 		<StatusBar></StatusBar>
-		<NavBar></NavBar>
 		<view style="padding:80px 30px;">
-			<p class="title">你好，</p>
+			<p class="title">こんにちは，</p>
 			<p class="title">欢迎加入轻松日语</p>
 			<wd-input style="margin-top: 40px;" size="large" type="text" label="邮箱" label-width="40px"
 				v-model="from.email" placeholder="请输入邮箱" center />
@@ -37,7 +36,6 @@
 		onMounted
 	} from 'vue'
 	import StatusBar from '@/components/statusBar.vue';
-	import NavBar from '@/components/navbar.vue'
 	import $http from "@/api/index.js"
 	import {
 		isEmail
@@ -135,7 +133,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.more {
 		display: flex;
 		align-items: center;
