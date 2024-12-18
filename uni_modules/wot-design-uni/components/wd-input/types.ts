@@ -1,3 +1,4 @@
+import type { PropType } from 'vue'
 import { baseProps, makeArrayProp, makeBooleanProp, makeNumberProp, makeNumericProp, makeStringProp } from '../common/props'
 import type { FormItemRule } from '../wd-form/types'
 
@@ -6,6 +7,10 @@ export type InputClearTrigger = 'focus' | 'always'
 export type InputType = 'text' | 'number' | 'digit' | 'idcard'
 
 export type InputConfirmType = 'send' | 'search' | 'next' | 'go' | 'done'
+
+export type InputSize = 'large'
+
+export type InputMode = 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
 
 export const inputProps = {
   ...baseProps,
@@ -137,7 +142,7 @@ export const inputProps = {
   /**
    * 设置输入框大小，可选值：large
    */
-  size: String,
+  size: String as PropType<InputSize>,
   /**
    * 设置输入框错误状态，错误状态时为红色
    */
@@ -179,5 +184,12 @@ export const inputProps = {
    * 类型: boolean
    * 默认值: true
    */
-  ignoreCompositionEvent: makeBooleanProp(true)
+  ignoreCompositionEvent: makeBooleanProp(true),
+  /**
+   * 它提供了用户在编辑元素或其内容时可能输入的数据类型的提示。在符合条件的高版本webview里，uni-app的web和app-vue平台中可使用本属性。
+   * 类型: InputMode
+   * 可选值: "none" | "text" | "tel" | "url" | "email" | "numeric" | "decimal" | "search" | "password"
+   * 默认值: "text"
+   */
+  inputmode: makeStringProp<InputMode>('text')
 }

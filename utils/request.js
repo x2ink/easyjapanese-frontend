@@ -1,7 +1,7 @@
 var baseUrl;
 if (process.env.NODE_ENV === 'development') {
 	console.log('开发环境');
-	baseUrl = "http://127.0.0.1:8002/"
+	baseUrl = "http://192.168.164.89:8080/"
 } else {
 	console.log('生产环境');
 	baseUrl = "http://127.0.0.1/"
@@ -56,7 +56,19 @@ const beforeRequest = (config) => {
 }
 //响应拦截器
 const beforeResponse = (response) => {
-	return response.data
+	const {
+		statusCode,
+		data
+	} = response;
+	if (statusCode >= 400 && statusCode < 500) {
+		return new Promise((resolve, reject) => {
+			reject(response.data)
+		});
+	} else if (statusCode >= 500) {
+		// 服务端报错
+	} else {
+		return response.data
+	}
 }
 //异常处理
 const errorHandle = (err) => {

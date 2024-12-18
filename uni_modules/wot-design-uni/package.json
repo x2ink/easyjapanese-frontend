@@ -2,7 +2,7 @@
 	"id": "wot-design-uni",
 	"name": "wot-design-uni",
 	"displayName": "wot-design-uni 基于vue3+Typescript的高颜值组件库",
-	"version": "1.3.13",
+	"version": "1.5.1",
 	"license": "MIT",
 	"description": "一个基于Vue3+TS开发的uni-app组件库，提供70+高质量组件，支持暗黑模式、国际化和自定义主题。",
 	"keywords": [

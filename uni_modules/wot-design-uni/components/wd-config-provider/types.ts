@@ -151,20 +151,16 @@ export type buttonThemeVars = {
   buttonPlainBgColor?: string
   buttonPrimaryColor?: string
   buttonPrimaryBgColor?: string
-  buttonPrimaryBoxShadowColor?: string
   buttonSuccessColor?: string
   buttonSuccessBgColor?: string
-  buttonSuccessBoxShadowColor?: string
   buttonInfoColor?: string
   buttonInfoBgColor?: string
   buttonInfoPlainBorderColor?: string
   buttonInfoPlainNormalColor?: string
   buttonWarningColor?: string
   buttonWarningBgColor?: string
-  buttonWarningBoxShadowColor?: string
   buttonErrorColor?: string
   buttonErrorBgColor?: string
-  buttonErrorBoxShadowColor?: string
   buttonTextHoverOpacity?: string
 }
 
@@ -189,6 +185,7 @@ export type cellThemeVars = {
   cellValueColor?: string
   cellArrowSize?: string
   cellArrowColor?: string
+  cellClearColor?: string
   cellTapBg?: string
   cellTitleFsLarge?: string
   cellLabelFsLarge?: string
@@ -212,10 +209,12 @@ export type calendarThemeVars = {
   calendarDayHeight?: string
   calendarMonthWidth?: string
   calendarActiveColor?: string
+  calendarSelectedColor?: string
   calendarDisabledColor?: string
   calendarRangeColor?: string
   calendarActiveBorder?: string
   calendarInfoFs?: string
+  calendarItemMarginBottom?: string
 }
 
 export type checkboxThemeVars = {
@@ -262,9 +261,18 @@ export type collapseThemeVars = {
 
 export type dividerThemeVars = {
   dividerPadding?: string
+  dividerMargin?: string
   dividerColor?: string
   dividerLineColor?: string
+  dividerLineHeight?: string
   dividerFs?: string
+  dividerContentLeftWidth?: string
+  dividerContentLeftMargin?: string
+  dividerContentRightMargin?: string
+  dividerContentRightWidth?: string
+  dividerVerticalHeight?: string
+  dividerVerticalContentMargin?: string
+  dividerVerticalLineWidth?: string
 }
 
 export type dropMenuThemeVars = {
@@ -472,9 +480,8 @@ export type progressThemeVars = {
   progressBg?: string
   progressDangerColor?: string
   progressSuccessColor?: string
+  progressWarningColor?: string
   progressColor?: string
-  progressLinearSuccessColor?: string
-  progressLinearDangerColor?: string
   progressHeight?: string
   progressLabelColor?: string
   progressLabelFs?: string

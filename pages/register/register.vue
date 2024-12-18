@@ -10,34 +10,129 @@
 			<wd-input style="margin-top: 15px;" size="large" type="text" label="密码" label-width="40px"
 				v-model="from.password" placeholder="请输入账户密码" showPassword center />
 			<wd-input style="margin-top: 15px;" size="large" type="text" label="确认密码" label-width="65px"
-				v-model="from.password" placeholder="请输入账户确认密码" showPassword center />
+				v-model="validPassword" placeholder="请输入账户确认密码" showPassword center />
 			<wd-input style="margin-top: 15px;" size="large" type="text" label="验证码" label-width="50px"
-				v-model="from.password" placeholder="请输入验证码" center>
+				v-model="from.captcha" placeholder="请输入验证码" center>
 				<template #suffix>
-					<wd-button type="warning" size="small" plain>获取验证码</wd-button>
+					<wd-button :disabled="countdown>0" style="width: 80px;" @click="getCaptcha()" type="warning"
+						size="small" plain>{{btnText}}</wd-button>
 				</template>
 			</wd-input>
-			<wd-button style="margin-top: 30px;width: 100%;">注册</wd-button>
+			<wd-button style="margin-top: 30px;width: 100%;" @click="register()">注册</wd-button>
 			<view class="more">
-				<p>
+				<p @click="back">
 					返回登录
 				</p>
 			</view>
 		</view>
 
 	</view>
+	<wd-toast />
 </template>
 
 <script setup>
 	import {
-		ref
+		ref,
+		computed,
+		onMounted
 	} from 'vue'
 	import StatusBar from '@/components/statusBar.vue';
 	import NavBar from '@/components/navbar.vue'
+	import $http from "@/api/index.js"
+	import {
+		isEmail
+	} from "@/utils/common.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	import {
+		userStore
+	} from "@/stores/index.js"
+	const toast = useToast()
 	const from = ref({
-		email: '',
-		password: ''
+		email: '339851531@qq.com',
+		password: '',
+		captcha: '',
+		os: '',
+		device: '',
+		nickname: '默认昵称'
+
 	})
+	onMounted(() => {
+		uni.getSystemInfo({
+			success: (res) => {
+				from.value.os = res.osName
+				from.value.device = res.deviceBrand || '未知'
+			}
+		})
+	})
+	const validPassword = ref('')
+	const countdown = ref(0)
+	const btnText = computed(() => {
+		if (countdown.value > 0) {
+			return `${countdown.value}s`
+		} else {
+			return '获取验证码'
+		}
+	})
+	let timeId;
+	const startCountDown = () => {
+		countdown.value = 60
+		timeId = setInterval(() => {
+			if (--countdown.value <= 0) {
+				clearInterval(timeId)
+			}
+		}, 1000)
+	}
+	const register = async () => {
+		if (from.value.password != validPassword.value) {
+			toast.warning(`确认密码不一致`)
+			return
+		}
+		if (from.value.email == '' || from.value.password == '' ||
+			from.value.captcha == '') {
+			toast.warning(`表单不完整`)
+			return
+		}
+		try {
+			const res = await $http.user.register(from.value)
+			toast.success('注册成功')
+			userStore().setToken(res.data)
+			setTimeout(() => {
+				uni.navigateTo({
+					url: "/pages/index/index"
+				})
+			}, 1000)
+		} catch (error) {
+			if (error.code === 4001) {
+				toast.error('验证码错误或失效')
+			} else if (error.code === 4002) {
+				toast.error('邮箱已被注册')
+			}
+		}
+	}
+	const getCaptcha = async () => {
+		if (countdown.value > 0) {
+			toast.warning(`请在${countdown.value}s之后尝试`)
+			return
+		}
+		if (isEmail(from.value.email)) {
+			try {
+				const res = await $http.user.getCaptcha('register', from.value.email)
+				toast.success('发送成功，请注意查收')
+				startCountDown()
+			} catch (error) {
+				toast.warning(`操作频繁，稍后再试`)
+			}
+		} else {
+			toast.warning('邮箱验证失败')
+		}
+	}
+	const back = () => {
+		uni.navigateBack({
+			delta: 1
+		})
+	}
 </script>
 
 <style lang="scss">

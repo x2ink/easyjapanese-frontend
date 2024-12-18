@@ -43,6 +43,7 @@
           :always-embed="alwaysEmbed"
           :placeholder-class="inputPlaceholderClass"
           :ignoreCompositionEvent="ignoreCompositionEvent"
+          :inputmode="inputmode"
           @input="handleInput"
           @focus="handleFocus"
           @blur="handleBlur"
@@ -87,7 +88,7 @@ export default {
 <script lang="ts" setup>
 import wdIcon from '../wd-icon/wd-icon.vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
-import { isDef, objToStyle, pause, requestAnimationFrame } from '../common/util'
+import { isDef, objToStyle, pause } from '../common/util'
 import { useCell } from '../composables/useCell'
 import { FORM_KEY, type FormItemRule } from '../wd-form/types'
 import { useParent } from '../composables/useParent'
@@ -230,24 +231,23 @@ function formatValue(value: string | number) {
 function togglePwdVisible() {
   isPwdVisible.value = !isPwdVisible.value
 }
-function handleClear() {
+async function handleClear() {
   clearing.value = true
   focusing.value = false
   inputValue.value = ''
   if (props.focusWhenClear) {
     focused.value = false
   }
-  requestAnimationFrame(() => {
-    if (props.focusWhenClear) {
-      focused.value = true
-      focusing.value = true
-    }
-    emit('change', {
-      value: ''
-    })
-    emit('update:modelValue', inputValue.value)
-    emit('clear')
+  await pause()
+  if (props.focusWhenClear) {
+    focused.value = true
+    focusing.value = true
+  }
+  emit('change', {
+    value: ''
   })
+  emit('update:modelValue', inputValue.value)
+  emit('clear')
 }
 async function handleBlur() {
   // 等待150毫秒，clear执行完毕

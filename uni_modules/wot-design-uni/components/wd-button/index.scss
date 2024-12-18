@@ -42,9 +42,7 @@
 
 @include b(button) {
   position: relative;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   outline: none;
   -webkit-appearance: none;
   outline: none;
@@ -77,6 +75,13 @@
   &::after {
     border: none;
     border-radius: 0;
+  }
+
+  @include e(content) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 
   @include m(active) {
@@ -147,29 +152,10 @@
     padding: $-button-medium-padding;
     border-radius: $-button-medium-radius;
     font-size: $-button-medium-fs;
+    min-width: 120px;
 
-    @include when(primary) {
-      box-shadow: $-button-medium-box-shadow-size $-button-primary-box-shadow-color;
-    }
-
-    @include when(success) {
-      box-shadow: $-button-medium-box-shadow-size $-button-success-box-shadow-color;
-    }
-
-    @include when(warning) {
-      box-shadow: $-button-medium-box-shadow-size $-button-warning-box-shadow-color;
-    }
-
-    @include when(error) {
-      box-shadow: $-button-medium-box-shadow-size $-button-error-box-shadow-color;
-    }
-
-    @include when(plain) {
-      box-shadow: none;
-    }
 
     @include when(round) {
-      min-width: 120px;
 
       @include when(icon) {
         min-width: 0;
@@ -197,25 +183,6 @@
     &::after {
       border-radius: $-button-large-radius;
     }
-
-    &:not(.is-plain) {
-      @include when(primary) {
-        box-shadow: $-button-large-box-shadow-size $-button-primary-box-shadow-color;
-      }
-
-      @include when(success) {
-        box-shadow: $-button-large-box-shadow-size $-button-success-box-shadow-color;
-      }
-
-      @include when(warning) {
-        box-shadow: $-button-large-box-shadow-size $-button-warning-box-shadow-color;
-      }
-
-      @include when(error) {
-        box-shadow: $-button-large-box-shadow-size $-button-error-box-shadow-color;
-      }
-    }
-
 
     .wd-button__loading {
       width: $-button-large-loading;
@@ -319,7 +286,7 @@
   }
 
   @include when(block) {
-    display: flex;
+    display: block;
   }
 
   @include when(icon) {

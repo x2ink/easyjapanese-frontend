@@ -26,7 +26,9 @@
     :session-from="sessionFrom"
     :lang="lang"
     :hover-stop-propagation="hoverStopPropagation"
+    :scope="scope"
     @click="handleClick"
+    @getAuthorize="handleGetAuthorize"
     @getuserinfo="handleGetuserinfo"
     @contact="handleConcat"
     @getphonenumber="handleGetphonenumber"
@@ -36,11 +38,13 @@
     @chooseavatar="handleChooseavatar"
     @agreeprivacyauthorization="handleAgreePrivacyAuthorization"
   >
-    <view v-if="loading" class="wd-button__loading">
-      <view class="wd-button__loading-svg" :style="loadingStyle"></view>
+    <view class="wd-button__content">
+      <view v-if="loading" class="wd-button__loading">
+        <view class="wd-button__loading-svg" :style="loadingStyle"></view>
+      </view>
+      <wd-icon v-else-if="icon" custom-class="wd-button__icon" :name="icon" :classPrefix="classPrefix"></wd-icon>
+      <view class="wd-button__text"><slot /></view>
     </view>
-    <wd-icon v-else-if="icon" custom-class="wd-button__icon" :name="icon" :classPrefix="classPrefix"></wd-icon>
-    <view class="wd-button__text"><slot /></view>
   </button>
 </template>
 
@@ -103,6 +107,18 @@ watch(
 function handleClick(event: any) {
   if (!props.disabled && !props.loading) {
     emit('click', event)
+  }
+}
+
+/**
+ * 支付宝小程序授权
+ * @param event
+ */
+function handleGetAuthorize(event: any) {
+  if (props.scope === 'phoneNumber') {
+    handleGetphonenumber(event)
+  } else if (props.scope === 'userInfo') {
+    handleGetuserinfo(event)
   }
 }
 

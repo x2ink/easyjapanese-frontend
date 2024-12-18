@@ -67,6 +67,7 @@ export type UploadBeforePreviewOption = {
   file: UploadFileItem
   index: number
   imgList: string[]
+  fileList: UploadFileItem[]
   resolve: (isPass: boolean) => void
 }
 export type UploadBeforePreview = (option: UploadBeforePreviewOption) => void
@@ -144,7 +145,7 @@ export const uploadProps = {
    * 类型：object
    * 默认值：{}
    */
-  header: { type: Object as PropType<Record<string, any>>, default: () => {} },
+  header: { type: Object as PropType<Record<string, any>>, default: () => ({}) },
   /**
    * 是否支持多选文件
    * 类型：boolean
@@ -316,6 +317,12 @@ export const uploadProps = {
    * 类型：boolean
    */
   autoUpload: makeBooleanProp(true),
+  /**
+   * 点击已上传时是否可以重新上传
+   * 类型：boolean
+   * 默认值：false
+   */
+  reupload: makeBooleanProp(false),
   /**
    * 自定义上传文件的请求方法
    * 类型：UploadMethod

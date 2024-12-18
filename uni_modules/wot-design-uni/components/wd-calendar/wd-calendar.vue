@@ -1,7 +1,7 @@
 <template>
   <view :class="`wd-calendar ${cell.border.value ? 'is-border' : ''} ${customClass}`">
-    <view class="wd-calendar__field" @click="open">
-      <slot v-if="useDefaultSlot"></slot>
+    <view class="wd-calendar__field" @click="open" v-if="withCell">
+      <slot v-if="$slots.default"></slot>
       <view
         v-else
         :class="`wd-calendar__cell ${disabled ? 'is-disabled' : ''} ${readonly ? 'is-readonly' : ''} ${alignRight ? 'is-align-right' : ''} ${
@@ -9,12 +9,11 @@
         } ${size ? 'is-' + size : ''} ${center ? 'is-center' : ''}`"
       >
         <view
-          v-if="label || useLabelSlot"
+          v-if="label || $slots.label"
           :class="`wd-calendar__label ${isRequired ? 'is-required' : ''} ${customLabelClass}`"
           :style="labelWidth ? 'min-width:' + labelWidth + ';max-width:' + labelWidth + ';' : ''"
         >
-          <block v-if="label">{{ label }}</block>
-          <slot v-else name="label"></slot>
+          <slot name="label">{{ label }}</slot>
         </view>
         <view class="wd-calendar__body">
           <view class="wd-calendar__value-wraper">
@@ -122,7 +121,7 @@ import wdActionSheet from '../wd-action-sheet/wd-action-sheet.vue'
 import wdButton from '../wd-button/wd-button.vue'
 import { ref, computed, watch } from 'vue'
 import { dayjs } from '../common/dayjs'
-import { deepClone, isArray, isEqual, padZero, requestAnimationFrame } from '../common/util'
+import { deepClone, isArray, isEqual, padZero, pause } from '../common/util'
 import { getWeekNumber, isRange } from '../wd-calendar-view/utils'
 import { useCell } from '../composables/useCell'
 import { FORM_KEY, type FormItemRule } from '../wd-form/types'
@@ -313,7 +312,7 @@ function scrollIntoView() {
   calendarView.value && calendarView.value && calendarView.value.$.exposed.scrollIntoView()
 }
 // 对外暴露方法
-function open() {
+async function open() {
   const { disabled, readonly } = props
 
   if (disabled || readonly) return
@@ -323,10 +322,9 @@ function open() {
   lastCalendarValue.value = deepClone(calendarValue.value)
   lastTab.value = currentTab.value
   lastCurrentType.value = currentType.value
-  requestAnimationFrame(() => {
-    scrollIntoView()
-  })
-
+  // 等待渲染完毕
+  await pause()
+  scrollIntoView()
   setTimeout(() => {
     if (props.showTypeSwitch) {
       calendarTabs.value.scrollIntoView()
