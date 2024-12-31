@@ -1,9 +1,15 @@
 import http from '@/utils/request.js'
 export default {
-	jaSearch(page, size, val) {
-		return http.get(`ja/search/${page}/${size}/${val}`)
+	jcSearch(page, size, val) {
+		return http.get(`jc/search/${page}/${size}/${val}`)
 	},
-	jaInfo(id) {
-		return http.get(`ja/info/${id}`)
+	jcInfo(id) {
+		return http.get(`jc/info/${id}`)
+	},
+	cjSearch(page, size, val) {
+		return http.get(`cj/search/${page}/${size}/${val}`)
+	},
+	cjInfo(id) {
+		return http.get(`cj/info/${id}`)
 	}
 }

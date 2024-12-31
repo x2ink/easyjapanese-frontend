@@ -33,7 +33,7 @@
 		<wd-status-tip image="search" tip="没有搜索到结果" />
 	</view>
 	<!-- 列表 -->
-	<WordList style="margin-top: 5px;" :list="List"></WordList>
+	<WordList :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 5px;" :list="List"></WordList>
 	<!--  -->
 	<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 </template>
@@ -41,7 +41,8 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		watch
 	} from 'vue'
 	import WordList from "@/components/wordlist.vue"
 	import Navbar from "@/components/navbar.vue"
@@ -79,6 +80,13 @@
 	const noResult = ref(false)
 	const list = ref(['日中', '中日'])
 	const current = ref('日中')
+	watch(current, (newVal, oldVal) => {
+		console.log(newVal, oldVal);
+		noResult.value = false
+		List.value = []
+		page.value = 1
+		getList()
+	})
 	onReachBottom(() => {
 		if (total.value > List.value.length) {
 			++page.value
@@ -94,10 +102,19 @@
 			history.value.unshift(val.value)
 			searchrecordStore().push(val.value)
 		}
+		noResult.value = false
+		List.value = []
+		page.value = 1
 		getList()
 	}
 	const getList = async () => {
-		const res = await $http.word.jaSearch(page.value, size.value, val.value)
+		let res;
+		if (current.value == '日中') {
+			res = await $http.word.jcSearch(page.value, size.value, val.value)
+		} else {
+			res = await $http.word.cjSearch(page.value, size.value, val.value)
+		}
+		console.log(res);
 		total.value = res.total
 		if (total.value === 0) {
 			noResult.value = true

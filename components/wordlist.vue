@@ -1,11 +1,15 @@
 <template>
 	<view class="wordlist">
 		<view class="worditem" @click="getInfo(item.id)" :key="item.id" v-for="item in list">
-			<view class="head">
+			<view v-if="type=='jc'" class="head">
 				<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
-				<wd-icon name="sound" size="22px"></wd-icon>
 			</view>
-			<wd-text size="14px" :lines="2" class="body" color="#999" :text="item.meaning.join('\n')"></wd-text>
+			<view v-else class="head">
+				<p>{{item.ch}}</p>
+			</view>
+			<wd-text v-if="type=='jc'" size="14px" :lines="2" class="body" color="#999"
+				:text="item.meaning.join('\n')"></wd-text>
+			<wd-text v-else size="14px" :lines="2" class="body" color="#999" :text="item.pinyin"></wd-text>
 		</view>
 	</view>
 </template>
@@ -17,11 +21,15 @@
 	const props = defineProps({
 		list: {
 			type: Array
+		},
+		type: {
+			type: String,
+			default: 'jc'
 		}
 	})
 	const getInfo = (id) => {
 		uni.navigateTo({
-			url: "/pages/worddetail/worddetail?id=" + id
+			url: "/pages/worddetail/worddetail?id=" + id + "&type=" + props.type
 		})
 	}
 </script>
@@ -36,7 +44,7 @@
 		.worditem {
 			background-color: white;
 			padding: 10px;
-			border-radius: $uni-border-radius-base;
+			border-radius: 4px;
 
 			.body {
 				margin-top: 5px;
