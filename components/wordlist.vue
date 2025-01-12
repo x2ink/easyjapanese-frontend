@@ -1,7 +1,7 @@
 <template>
 	<view class="wordlist">
 		<view class="worditem" @click="getInfo(item.id)" :key="item.id" v-for="item in list">
-			<view v-if="type=='jc'" class="head">
+			<view v-if="type=='jc'" class="head jpfont">
 				<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
 			</view>
 			<view v-else class="head">
@@ -38,8 +38,9 @@
 	.wordlist {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
-		padding: 0 10px 10px 10px;
+		gap: 15px;
+		background-color: #f5f5f5;
+		padding: 15px 0;
 
 		.worditem {
 			background-color: white;

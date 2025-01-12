@@ -143,8 +143,8 @@
 
 
 	.articlelist {
-		margin-top: 5px;
-		padding-bottom: 15px;
+		background-color: #f5f5f5;
+		padding: 15px 0;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
@@ -152,8 +152,6 @@
 		.articleitem {
 			padding: 15px;
 			background-color: white;
-			margin: 0 15px;
-			border-radius: $uni-border-radius-base;
 
 
 			.footer {
@@ -314,7 +312,7 @@
 
 	.search {
 		height: 45px;
-		background: #EFEFEF;
+		background: #f5f5f5;
 		margin: 15px;
 		padding: 10px;
 		font-size: $uni-font-size-lg;
@@ -331,9 +329,9 @@
 
 	.recite {
 		padding: 15px;
+		margin: 15px;
 		border-radius: $uni-border-radius-base;
 		background-color: white;
-		margin: 15px;
 		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
 		.plan {

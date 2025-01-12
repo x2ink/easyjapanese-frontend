@@ -1,14 +1,13 @@
 <template>
 	<view>
 		<StatusBar></StatusBar>
-		<view style="padding:80px 30px;">
-			<p class="title">欢迎回来，</p>
-			<p class="title">我们一直在等你！</p>
-			<wd-input style="margin-top: 40px;" size="large" type="text" label="邮箱" label-width="40px"
-				v-model="from.email" placeholder="请输入邮箱" center />
-			<wd-input style="margin-top: 15px;" size="large" type="text" label="密码" label-width="40px"
-				v-model="from.password" placeholder="请输入账户密码" showPassword center />
-
+		<view style="padding:40px 30px;">
+			<p class="title">登录</p>
+			<wd-input size="large" no-border style="margin-top: 20px;" type="text" v-model="from.email"
+				placeholder="请输入邮箱" />
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
+			<wd-input size="large" no-border type="text" v-model="from.password" placeholder="请输入账户密码" showPassword />
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
 			<wd-button @click="login()" style="margin-top: 30px;width: 100%;">登录</wd-button>
 			<view class="more">
 				<p @click="show=true">
@@ -33,7 +32,8 @@
 
 <script setup>
 	import {
-		ref
+		ref,
+		onMounted
 	} from 'vue'
 	import StatusBar from '@/components/statusBar.vue';
 	import QQ from "./components/qq.vue"
@@ -50,9 +50,19 @@
 		isEmail
 	} from "@/utils/common.js"
 	const toast = useToast()
+	onMounted(() => {
+		uni.getSystemInfo({
+			success: (res) => {
+				from.value.os = res.osName
+				from.value.device = res.deviceBrand || '未知'
+			}
+		})
+	})
 	const from = ref({
-		email: '',
-		password: ''
+		email: '339851531@qq.com',
+		password: '123456',
+		os: '',
+		device: ''
 	})
 	const actions = ref([{
 			name: '验证码登录'

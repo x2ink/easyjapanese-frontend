@@ -1,5 +1,5 @@
 <template>
-	<NavBar title="" style="background-color: #F6F6F6;">
+	<NavBar title="">
 		<template #right>
 			<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
 		</template>
@@ -10,11 +10,11 @@
 	<view v-show="!loading">
 		<view class="cj" v-if="type=='cj'">
 			<view style="padding: 0 15px;">
-				<view class="word jpfont">
+				<view class="word">
 					<text>{{chinfo.ch}}</text>
 				</view>
-				<view class="hira jpfont">
-					<span>{{chinfo.py}}</span>
+				<view class="hira">
+					<span>{{chinfo.pinyin}}</span>
 				</view>
 				<view class="tools">
 					<view class="item">
@@ -46,41 +46,43 @@
 					</view>
 				</view>
 			</view>
-			<view class="wordlist" :key="item.wordtype" v-for="(item,index1) in wordinfo.detail">
-				<text class="title">词性</text>
-				<view class="wordtype">
-					{{item.wordtype}}
-				</view>
-				<view style="display: flex;flex-direction: column;gap: 10px;">
-					<text class="title">释义</text>
-					<view class="meanings" :key="item1.meaning" v-for="(item1,index2) in item.detail">
-						<view class="meaning">
-							<view class="text">
-								{{item1.meaning}}
+			<view style="display: flex;flex-direction: column;gap: 15px;background-color: #f5f5f5;">
+				<view class="wordlist" :key="item.wordtype" v-for="(item,index1) in wordinfo.detail">
+					<text v-if="item.wordtype!=''" class="title">词性</text>
+					<view class="wordtype">
+						{{item.wordtype}}
+					</view>
+					<view style="display: flex;flex-direction: column;gap: 10px;">
+						<text class="title">释义</text>
+						<view class="meanings" :key="item1.meaning" v-for="(item1,index2) in item.detail">
+							<view class="meaning">
+								<view class="text jpfont">
+									{{item1.meaning}}
+								</view>
 							</view>
-						</view>
-						<view class="examples" v-if="item1.example.length>0">
-							<view class="example" :key="item2.ch"
-								v-for="item2 in showExample(item1.show,item1.example)">
-								<view style="flex: 1;">
-									<view class="ja jpfont">
-										<view class="worditem" v-for="item3 in item2.read">
-											<view class="top">{{item3.top}}</view>
-											<view :class="{underline:item3.top}" class="body">{{item3.body}}</view>
+							<view class="examples" v-if="item1.example.length>0">
+								<view class="example" :key="item2.ch"
+									v-for="item2 in showExample(item1.show,item1.example)">
+									<view style="flex: 1;">
+										<view class="ja jpfont">
+											<view class="worditem" v-for="item3 in item2.read">
+												<view class="top">{{item3.top}}</view>
+												<view :class="{underline:item3.top}" class="body">{{item3.body}}</view>
+											</view>
+										</view>
+										<view class="ch">
+											<wd-tag custom-class="space" type="warning">译</wd-tag>{{item2.ch}}
 										</view>
 									</view>
-									<view class="ch">
-										<wd-tag custom-class="space" type="primary">译</wd-tag>{{item2.ch}}
+									<view class="operate">
+										<wd-icon name="sound" size="20" color="#909699" />
 									</view>
 								</view>
-								<view class="operate">
-									<wd-icon name="sound" size="20" color="#909699" />
-								</view>
 							</view>
+							<view v-if="item1.example.length>2&&!item1.show" @click="showMore(index1,index2)"
+								class="viewmore">
+								更多例句</view>
 						</view>
-						<view v-if="item1.example.length>2&&!item1.show" @click="showMore(index1,index2)"
-							class="viewmore">
-							更多例句</view>
 					</view>
 				</view>
 			</view>
@@ -163,19 +165,6 @@
 			name: '分享单词'
 		}
 	])
-	const worditem = ref([{
-		top: "われわれ",
-		body: "我々"
-	}, {
-		top: "",
-		body: "はもうそろそろ"
-	}, {
-		top: "じかんぎれ",
-		body: "時間切れ"
-	}, {
-		top: "",
-		body: "だ。"
-	}])
 </script>
 
 <style lang="scss" scoped>
@@ -195,11 +184,11 @@
 			border-radius: 18px;
 
 			&:nth-of-type(1) {
-				background-color: #57D09B;
+				background-color: #5880F2;
 			}
 
 			&:nth-of-type(2) {
-				background-color: #57D09B;
+				background-color: #5880F2;
 			}
 
 			text {
@@ -262,8 +251,9 @@
 
 					.top {
 						color: #57D09B;
-						font-size: 12px;
-						height: 12px;
+						font-size: 8px;
+						height: 8px;
+						margin: 0 2px;
 					}
 
 					.body {
@@ -282,9 +272,8 @@
 	.wordlist {
 		display: flex;
 		flex-direction: column;
-		margin-top: 10px;
-		background-color: white;
 		padding: 10px;
+		background-color: white;
 
 		.title {
 			font-size: $uni-font-size-sm;

@@ -3,7 +3,7 @@
 		<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
 		<wd-tabbar-item title="交流" icon="chat"></wd-tabbar-item>
 		<wd-tabbar-item title="学习" icon="video1"></wd-tabbar-item>
-		<wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
+		<wd-tabbar-item title="我的" :value="2" icon="user"></wd-tabbar-item>
 	</wd-tabbar>
 </template>
 

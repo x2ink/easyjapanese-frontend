@@ -11,5 +11,8 @@ export default {
 	},
 	login(type, data) {
 		return http.post(`login/${type}`, data)
+	},
+	getUserInfoSimple() {
+		return http.get(`user/info/simple`)
 	}
 }

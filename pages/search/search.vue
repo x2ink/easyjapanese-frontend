@@ -34,6 +34,7 @@
 	</view>
 	<!-- 列表 -->
 	<WordList :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 5px;" :list="List"></WordList>
+	<wd-loadmore v-if="List.length>0" custom-class="loadmore" :state="loadmore" />
 	<!--  -->
 	<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 </template>
@@ -42,7 +43,8 @@
 	import {
 		ref,
 		onMounted,
-		watch
+		watch,
+		computed
 	} from 'vue'
 	import WordList from "@/components/wordlist.vue"
 	import Navbar from "@/components/navbar.vue"
@@ -53,7 +55,13 @@
 	import {
 		onReachBottom
 	} from "@dcloudio/uni-app"
-
+	const loadmore = computed(() => {
+		if (total.value == List.value.length) {
+			return "finished"
+		} else {
+			return "loading"
+		}
+	})
 	const history = ref([])
 	const moreShow = ref(false)
 	const clear = () => {
@@ -85,6 +93,11 @@
 		noResult.value = false
 		List.value = []
 		page.value = 1
+		if (val.value.length > 0) {
+			uni.showLoading({
+				title: "正在加载"
+			})
+		}
 		getList()
 	})
 	onReachBottom(() => {
@@ -102,6 +115,9 @@
 			history.value.unshift(val.value)
 			searchrecordStore().push(val.value)
 		}
+		uni.showLoading({
+			title: "正在加载"
+		})
 		noResult.value = false
 		List.value = []
 		page.value = 1
@@ -114,14 +130,14 @@
 		} else {
 			res = await $http.word.cjSearch(page.value, size.value, val.value)
 		}
-		console.log(res);
+		uni.hideLoading()
 		total.value = res.total
 		if (total.value === 0) {
 			noResult.value = true
 			return
 		}
 		List.value = List.value.concat(res.data)
-		console.log(res);
+
 	}
 	const searchType = ref('全部')
 	const menu = ref([{
@@ -152,6 +168,15 @@
 
 <style scoped lang="scss">
 	:deep(.segmented) {}
+
+	:deep(.loadmore) {
+		background-color: #f4f4f4;
+		margin: 0;
+
+		>view {
+			margin: 0;
+		}
+	}
 
 	.title {
 		padding: 10px 15px;

@@ -1,10 +1,10 @@
 <template>
 	<Statusbar></Statusbar>
 	<view class="userinfo">
-		<uv-avatar size="60" text="李"></uv-avatar>
+		<uv-avatar size="60" :text="userInfo.nickname.charAt(0)" v-if="userInfo.avatar==''"></uv-avatar>
 		<view>
-			<p class="name">用户昵称</p>
-			<p class="id">ID：16985</p>
+			<p class="name">{{userInfo.nickname}}</p>
+			<p class="id">{{userInfo.email}}</p>
 		</view>
 	</view>
 	<view class="banner">
@@ -90,8 +90,21 @@
 		ref
 	} from 'vue'
 	import Statusbar from "@/components/statusbar.vue"
+	import $http from "@/api/index.js"
+	const getUserInfoSimple = async () => {
+		const res = await $http.user.getUserInfoSimple()
+		userInfo.value = res.data
+		console.log(userInfo.value);
+	}
+	const userInfo = ref({
+		address: "",
+		avatar: '',
+		nickname: '',
+		role: "",
+		email: ''
+	})
 	onMounted(() => {
-
+		getUserInfoSimple()
 	})
 </script>
 

@@ -53,6 +53,20 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path" : "pages/addtrend/addtrend",
+			"style" : 
+			{
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/trenddetail/trenddetail",
+			"style" : 
+			{
+					"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

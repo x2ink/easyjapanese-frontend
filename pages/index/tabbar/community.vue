@@ -1,8 +1,8 @@
 <template>
 	<Statusbar></Statusbar>
-	<view class="search">
+	<view @click="goPage('search')" class="search">
 		<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-		<input placeholder="搜索" />
+		<p>搜索</p>
 	</view>
 	<view style="position: relative;">
 		<view class="tabs">
@@ -11,63 +11,164 @@
 				{{item.name}}
 			</view>
 		</view>
-		<view class="list">
-			<view class="item" v-for="_ in 6">
-				<view class="head">
-					<uv-avatar size="40" text="李"></uv-avatar>
-					<view class="userinfo">
-						<p>鸟山明</p>
-						<p>一代宗师</p>
+		<view v-if="noResult">
+			<wd-status-tip image="content" tip="没有动态" />
+		</view>
+		<view v-else class="list">
+			<view @click="getDetail(item.id)" class="item" v-for="item in List" :key="item.id">
+				<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
+				<view style="flex: 1;">
+					<view class="head">
+						<view class="userinfo">
+							<p>{{item.user.nickname}}</p>
+							<view style="display: flex;align-items: center;">
+								<wd-tag v-if="item.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
+								<wd-tag v-else-if="item.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
+								<wd-tag v-else-if="item.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+							</view>
+						</view>
 					</view>
-					<view class="btn">
-						<wd-button plain size="small">关注</wd-button>
-					</view>
-				</view>
-				<view class="body">
-					<p class="content">你好这是效力与湖人队杀鸡吉尼斯可能仓库的是你看但是此时马上离开地面来昆明产生了矛盾</p>
-					<view class="images">
-						<img v-for="_ in 3"
-							src="https://cn.bing.com/th?id=OVFT.Cvt2C_Z807esEH0HcbNQNi&w=186&h=88&c=7&rs=2&qlt=80&pid=PopNow"></img>
-					</view>
-				</view>
-				<view class="footer">
-					<p class="left">2天前&nbsp;·&nbsp;日本</p>
-					<view class="right">
-						<wd-icon name="ellipsis" size="25px"></wd-icon>
-					</view>
-				</view>
+					<view class="body">
 
+						<p class="content" v-html="item.content.replace(/\n/g,'<br>')"></p>
+						<view class="images">
+							<view class="image" v-for="image in item.images" :key="image">
+								<uv-image mode="aspectFill" radius="4px" width="100%" height="100%"
+									:src="image"></uv-image>
+							</view>
+						</view>
+					</view>
+					<view class="footer">
+						<p class="left">{{dayjs().to(dayjs(item.created_at))}}</p>
+						<view class="right">
+							<view>
+								<wd-icon name="heart" color="#999" size="18px"></wd-icon>
+								<text>{{item.like}}</text>
+							</view>
+							<view>
+								<wd-icon name="browse" color="#999" size="18px"></wd-icon>
+								<text>{{item.browse}}</text>
+							</view>
+						</view>
+					</view>
+				</view>
 			</view>
 		</view>
+		<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
+
 	</view>
-	
+	<wd-fab type="warning" position="right-bottom">
+		<template #trigger>
+			<view class="release" @click="release">
+				<wd-icon name="add" size="25px" color="#ffffff"></wd-icon>
+			</view>
+		</template>
+	</wd-fab>
+	<wd-toast />
 </template>
 
 <script setup>
 	import {
 		ref,
+		watch,
 		onMounted,
-		getCurrentInstance
+		getCurrentInstance,
+		computed
 	} from 'vue'
+	import dayjs from 'dayjs'
+	import relativeTime from 'dayjs/plugin/relativeTime'
+	import 'dayjs/locale/zh'
 	import {
-		onLoad
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	const noResult = ref(false)
+	dayjs.locale('zh')
+	dayjs.extend(relativeTime)
+	const loadMoreText = computed(() => {
+		if (total.value == List.value.length) {
+			return "finished"
+		} else {
+			return "loading"
+		}
+	})
+	import {
+		onShow,
+		onLoad,
+		onReachBottom
 	} from '@dcloudio/uni-app'
+	import $http from "@/api/index.js"
 	import Statusbar from "@/components/statusbar.vue"
+	onShow(() => {
+		uni.$once("addTrend", (data) => {
+			if (data) {
+				console.log(data);
+				toast.success(`发布成功`)
+				refresh()
+			}
+		});
+	})
+	const loadMoreShow = ref(true)
 	const currentTab = ref(0)
 	const tabList = ref([{
 		name: "全部动态",
-		id: 1
-	}, {
-		name: "求助问答",
-		id: 1
-	}, {
-		name: "学习打卡",
-		id: 1
-	}, {
-		name: "好物推荐",
-		id: 1
+		id: 0
 	}])
-	
+	const getDetail = (id) => {
+		uni.navigateTo({
+			url: "/pages/trenddetail/trenddetail?id=" + id
+		})
+	}
+	watch(currentTab, (newVal, oldVal) => {
+		List.value = []
+		page.value = 1
+		getTrendList(false, page.value, size.value, tabList.value[currentTab.value].id)
+	})
+	const page = ref(1)
+	const size = ref(10)
+	const total = ref(0)
+	const refresh = () => {
+		size.value *= page.value
+		page.value = 1
+		getTrendList(true, page.value, size.value, tabList.value[currentTab.value].id)
+	}
+	const getSection = async () => {
+		const res = await $http.trend.getSection("trend")
+		tabList.value = tabList.value.concat(res.data)
+		getTrendList(false, page.value, size.value, tabList.value[currentTab.value].id)
+	}
+	const loadMore = () => {
+		if (total.value > List.value.length) {
+			++page.value
+			getTrendList(false, page.value, size.value, tabList.value[currentTab.value].id)
+		}
+	}
+
+	const release = () => {
+		uni.navigateTo({
+			url: "/pages/addtrend/addtrend"
+		})
+	}
+	const List = ref([])
+	const getTrendList = async (refresh, page, size, section) => {
+		const res = await $http.trend.getTrendList(page, size, section)
+		if (refresh) {
+			List.value = res.data
+		} else {
+			List.value = List.value.concat(res.data)
+		}
+		total.value = res.total
+		if (res.total === List.value.length) {
+			loadMoreShow.value = false
+		} else {
+			loadMoreShow.value = true
+		}
+		if (res.total === 0) {
+			noResult.value = true
+		} else {
+			noResult.value = false
+		}
+	}
 	const instance = getCurrentInstance();
 	const query = uni.createSelectorQuery().in(instance.proxy);
 	const scroll = (e) => {
@@ -75,27 +176,40 @@
 			console.log(rect.top);
 		}).exec();
 	}
+	onMounted(() => {
+		getSection()
+	})
+	defineExpose({
+		loadMore
+	})
 </script>
 
 <style lang="scss" scoped>
-	// :deep(.space) {
-	// 	padding: 3px 5px !important;
-	// }
+	.release {
+		width: 50px;
+		height: 50px;
+		background-color: #4D80F0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
 
+	}
 
+	:deep(.loadmore) {
+		background-color: #f5f5f5;
+		margin: 0;
 
-	// :deep(.wd-tabs) {
-	// 	background: transparent !important;
-	// }
+		>view {
+			margin: 0;
+		}
+	}
 
-	// :deep(.wd-tabs__nav) {
-	// 	background-color: #F6F6F6;
-	// }
 	.tabs {
 		position: sticky;
 		top: 0;
 		z-index: 1;
-		background-color: #F6F6F6;
+		background-color: #fff;
 		display: grid;
 		height: 45px;
 		grid-template-columns: repeat(4, 1fr);
@@ -111,40 +225,56 @@
 
 	.search {
 		height: 45px;
-		background: #EFEFEF;
-		margin: 15px;
+		background: #f5f5f5;
+		margin: 15px 15px 0 15px;
 		padding: 10px;
-		margin-bottom: 0;
 		font-size: $uni-font-size-lg;
 		box-sizing: border-box;
 		border-radius: 45px;
 		display: flex;
 		align-items: center;
 
-		input {
-			width: 100%;
+		p {
+			color: #979797;
 			margin-left: 10px;
 		}
 	}
 
+
 	.list {
-		padding-bottom: 10px;
+		background-color: #f5f5f5;
+		padding: 15px 0;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
 
 		.item {
-			margin: 0 15px;
+			display: flex;
 			background-color: white;
 			padding: 15px;
-			border-radius: $uni-border-radius-base;
+			gap: 15px;
 
 			.footer {
-				margin-left: 50px;
-				margin-top: 15px;
 				justify-content: space-between;
 				display: flex;
 				align-items: center;
+
+				.right {
+					display: flex;
+					align-items: center;
+					gap: 10px;
+
+					text {
+						font-size: $uni-font-size-sm;
+						color: $uni-text-color-grey;
+					}
+
+					>view {
+						display: flex;
+						align-items: center;
+						gap: 5px;
+					}
+				}
 
 				.left {
 					font-size: $uni-font-size-sm;
@@ -153,14 +283,15 @@
 			}
 
 			.body {
-				margin-left: 50px;
+
 
 				.images {
 					display: grid;
 					grid-template-columns: repeat(3, 1fr);
 					gap: 10px;
+					margin-bottom: 5px;
 
-					img {
+					.image {
 						object-fit: cover;
 						width: 100%;
 						aspect-ratio: 1;
@@ -169,14 +300,21 @@
 				}
 
 				.content {
-					margin: 10px 0;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 4;
+					/* 显示最多4行 */
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: normal;
+					/* 允许换行 */
+					margin: 5px 0;
 					font-size: $uni-font-size-base;
 				}
 			}
 
 			.head {
 				display: flex;
-				align-items: center;
 				gap: 10px;
 				position: relative;
 
@@ -186,9 +324,13 @@
 				}
 
 				.userinfo {
+					display: flex;
+					gap: 5px;
+					// align-items: center;
+
 					p {
 						&:nth-of-type(1) {
-							font-size: $uni-font-size-lg;
+							font-size: 15;
 						}
 
 						&:nth-of-type(2) {

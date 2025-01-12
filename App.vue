@@ -19,7 +19,7 @@
 	}
 
 	page {
-		background: #F6F6F6;
+		background: #fff;
 		background-attachment: fixed;
 	}
 

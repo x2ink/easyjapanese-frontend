@@ -1,22 +1,24 @@
 <template>
 	<view>
 		<StatusBar></StatusBar>
-		<view style="padding:80px 30px;">
-			<p class="title">こんにちは，</p>
-			<p class="title">欢迎加入轻松日语</p>
-			<wd-input style="margin-top: 40px;" size="large" type="text" label="邮箱" label-width="40px"
-				v-model="from.email" placeholder="请输入邮箱" center />
-			<wd-input style="margin-top: 15px;" size="large" type="text" label="密码" label-width="40px"
-				v-model="from.password" placeholder="请输入账户密码" showPassword center />
-			<wd-input style="margin-top: 15px;" size="large" type="text" label="确认密码" label-width="65px"
-				v-model="validPassword" placeholder="请输入账户确认密码" showPassword center />
-			<wd-input style="margin-top: 15px;" size="large" type="text" label="验证码" label-width="50px"
-				v-model="from.captcha" placeholder="请输入验证码" center>
+		<view style="padding:40px 30px;">
+			<p class="title">注册</p>
+			<wd-input no-border style="margin-top: 20px;" size="large" type="text" v-model="from.email"
+				placeholder="请输入邮箱" center />
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
+			<wd-input no-border size="large" type="text" v-model="from.password" placeholder="请输入密码" showPassword
+				center />
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
+			<wd-input no-border size="large" type="text" v-model="validPassword" placeholder="请输入确认密码" showPassword
+				center />
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
+			<wd-input no-border size="large" type="text" v-model="from.captcha" placeholder="请输入验证码" center>
 				<template #suffix>
 					<wd-button :disabled="countdown>0" style="width: 80px;" @click="getCaptcha()" type="warning"
 						size="small" plain>{{btnText}}</wd-button>
 				</template>
 			</wd-input>
+			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
 			<wd-button style="margin-top: 30px;width: 100%;" @click="register()">注册</wd-button>
 			<view class="more">
 				<p @click="back">

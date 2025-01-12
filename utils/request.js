@@ -1,11 +1,14 @@
 var baseUrl;
 if (process.env.NODE_ENV === 'development') {
 	console.log('开发环境');
-	baseUrl = "http://192.168.0.104:8080/"
+	baseUrl = "http://127.0.0.1:8080/"
 } else {
 	console.log('生产环境');
 	baseUrl = "http://127.0.0.1/"
 }
+import {
+	userStore
+} from "@/stores/index.js"
 const http = {
 	baseUrl: baseUrl,
 	request(config) {
@@ -51,7 +54,10 @@ const http = {
 }
 // 请求拦截器
 const beforeRequest = (config) => {
-	// config.header = {}
+	let token = userStore().token
+	config.header = {
+		"Authorization": token
+	}
 	return config
 }
 //响应拦截器
@@ -61,6 +67,12 @@ const beforeResponse = (response) => {
 		data
 	} = response;
 	if (statusCode >= 400 && statusCode < 500) {
+		if (statusCode == 401) {
+			uni.navigateTo({
+				url: "/pages/login/login"
+			})
+			return
+		}
 		return new Promise((resolve, reject) => {
 			reject(response.data)
 		});
