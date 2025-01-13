@@ -45,7 +45,7 @@
 		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
 		<!-- 评论区 -->
 		<view class="userinput">
-			<uv-avatar size="40" text="李" font-size="14"></uv-avatar>
+			<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
 			<view class="input" @click="replyOwner()">
 				<text>说点什么...</text>
 				<wd-icon name="edit-outline" color="#999" />
@@ -110,7 +110,7 @@
 		<!-- 评论 -->
 		<view class="fixed">
 			<view class="userinput">
-				<uv-avatar size="40" text="李" font-size="14"></uv-avatar>
+				<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
 				<view class="input" @click="replyOwner()">
 					<text>说点什么...</text>
 					<wd-icon name="edit-outline" color="#999" />
@@ -172,6 +172,18 @@
 		} else {
 			return "loading"
 		}
+	})
+	const getUserInfoSimple = async () => {
+		const res = await $http.user.getUserInfoSimple()
+		userInfo.value = res.data
+		console.log(userInfo.value);
+	}
+	const userInfo = ref({
+		address: "",
+		avatar: '',
+		nickname: '',
+		role: "",
+		email: ''
 	})
 	const loadMoreShow = ref(true)
 	import {
@@ -328,6 +340,7 @@
 		getInfo(e.id)
 		getHasLike(e.id)
 		getList(false)
+		getUserInfoSimple()
 	})
 	const handleChange = (files) => {
 		formData.value.images = []

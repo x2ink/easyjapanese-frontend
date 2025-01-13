@@ -7,8 +7,7 @@ export const test_userModule = defineStore('test_user', {
 		return {
 			token: '',
 			userInfo: {
-				Id: '',
-				CreatedAt: ''
+				id: '',
 			}
 		}
 	},

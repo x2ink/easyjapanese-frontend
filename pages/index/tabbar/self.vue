@@ -91,11 +91,19 @@
 	} from 'vue'
 	import Statusbar from "@/components/statusbar.vue"
 	import $http from "@/api/index.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	const getUserInfoSimple = async () => {
-		const res = await $http.user.getUserInfoSimple()
-		userInfo.value = res.data
-		console.log(userInfo.value);
+		try {
+			const res = await $http.user.getUserInfoSimple()
+			userInfo.value = res.data
+			userStore().setUserInfo(userInfo.value)
+		} catch (err) {
+			console.log("登录错误", err);
+		}
 	}
+
 	const userInfo = ref({
 		address: "",
 		avatar: '',
