@@ -11,5 +11,17 @@ export default {
 	},
 	cjInfo(id) {
 		return http.get(`cj/info/${id}`)
+	},
+	getWordBook() {
+		return http.get(`wordbook`)
+	},
+	getWordBookList(id, page, size) {
+		return http.get(`wordbook/${id}/${page}/${size}`)
+	},
+	todayWord() {
+		return http.get("todayword")
+	},
+	writeFromMemory() {
+		return http.get("learn/writefrommemory")
 	}
 }

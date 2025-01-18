@@ -1,70 +1,76 @@
 <template>
-	<Statusbar></Statusbar>
-	<view @click="goPage('search')" class="search">
-		<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-		<p>搜索</p>
-	</view>
-	<view style="position: relative;">
-		<view class="tabs">
-			<view @click="currentTab=index" :class="{active:currentTab===index}" class="tab _GCENTER "
-				v-for="(item,index) in tabList" :key="index">
-				{{item.name}}
+	<view style="background-color: #f5f5f5;height: 100%;">
+		<Statusbar></Statusbar>
+		<view style="background-color: white;">
+			<view @click="goPage('search')" class="search">
+				<wd-icon name="search" size="22px" color="#979797"></wd-icon>
+				<p>搜索</p>
 			</view>
 		</view>
-		<view v-if="noResult">
-			<wd-status-tip image="content" tip="没有动态" />
-		</view>
-		<view v-else class="list">
-			<view @click="getDetail(item.id)" class="item" v-for="item in List" :key="item.id">
-				<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
-				<view style="flex: 1;">
-					<view class="head">
-						<view class="userinfo">
-							<p>{{item.user.nickname}}</p>
-							<view style="display: flex;align-items: center;">
-								<wd-tag v-if="item.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
-								<wd-tag v-else-if="item.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
-								<wd-tag v-else-if="item.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+		<view style="position: relative;">
+			<view class="tabs">
+				<view @click="currentTab=index" :class="{active:currentTab===index}" class="tab _GCENTER "
+					v-for="(item,index) in tabList" :key="index">
+					{{item.name}}
+				</view>
+			</view>
+			<view v-if="noResult">
+				<wd-status-tip image="content" tip="没有动态" />
+			</view>
+			<view v-else class="list">
+				<view @click="getDetail(item.id)" class="item" v-for="item in List" :key="item.id">
+					<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
+					<view style="flex: 1;">
+						<view class="head">
+							<view class="userinfo">
+								<p>{{item.user.nickname}}</p>
+								<view style="display: flex;align-items: center;">
+									<wd-tag v-if="item.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
+									<wd-tag v-else-if="item.user.role=='官方'" custom-class="space"
+										type="primary">官方</wd-tag>
+									<wd-tag v-else-if="item.user.role=='会员'" custom-class="space"
+										type="danger">会员</wd-tag>
+								</view>
 							</view>
 						</view>
-					</view>
-					<view class="body">
+						<view class="body">
 
-						<p class="content" v-html="item.content.replace(/\n/g,'<br>')"></p>
-						<view class="images">
-							<view class="image" v-for="image in item.images" :key="image">
-								<uv-image mode="aspectFill" radius="4px" width="100%" height="100%"
-									:src="image"></uv-image>
+							<p class="content" v-html="item.content.replace(/\n/g,'<br>')"></p>
+							<view class="images">
+								<view class="image" v-for="image in item.images" :key="image">
+									<uv-image mode="aspectFill" radius="4px" width="100%" height="100%"
+										:src="image"></uv-image>
+								</view>
 							</view>
 						</view>
-					</view>
-					<view class="footer">
-						<p class="left">{{dayjs().to(dayjs(item.created_at))}}</p>
-						<view class="right">
-							<view>
-								<wd-icon name="heart" color="#999" size="18px"></wd-icon>
-								<text>{{item.like}}</text>
-							</view>
-							<view>
-								<wd-icon name="browse" color="#999" size="18px"></wd-icon>
-								<text>{{item.browse}}</text>
+						<view class="footer">
+							<p class="left">{{dayjs().to(dayjs(item.created_at))}}</p>
+							<view class="right">
+								<view>
+									<wd-icon name="heart" color="#999" size="18px"></wd-icon>
+									<text>{{item.like}}</text>
+								</view>
+								<view>
+									<wd-icon name="browse" color="#999" size="18px"></wd-icon>
+									<text>{{item.browse}}</text>
+								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
+			<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
 
+		</view>
+		<wd-fab type="warning" position="right-bottom">
+			<template #trigger>
+				<view class="release" @click="release">
+					<wd-icon name="add" size="25px" color="#ffffff"></wd-icon>
+				</view>
+			</template>
+		</wd-fab>
+		<wd-toast />
 	</view>
-	<wd-fab type="warning" position="right-bottom">
-		<template #trigger>
-			<view class="release" @click="release">
-				<wd-icon name="add" size="25px" color="#ffffff"></wd-icon>
-			</view>
-		</template>
-	</wd-fab>
-	<wd-toast />
 </template>
 
 <script setup>
@@ -243,10 +249,10 @@
 
 	.list {
 		background-color: #f5f5f5;
-		padding: 15px 0;
+		padding: 10px 0;
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
+		gap: 10px;
 
 		.item {
 			display: flex;

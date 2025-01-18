@@ -1,15 +1,19 @@
 <template>
 	<view class="wordlist">
-		<view class="worditem" @click="getInfo(item.id)" :key="item.id" v-for="item in list">
-			<view v-if="type=='jc'" class="head jpfont">
-				<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
+		<view @click="getInfo(item.id)" :key="item.id" v-for="item in list">
+			<view class="worditem">
+				<view v-if="type=='jc'" class="head jpfont">
+					<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
+				</view>
+				<view v-else class="head">
+					<p>{{item.ch}}</p>
+				</view>
+				<wd-text v-if="type=='jc'" size="14px" :lines="2" class="body" color="#999"
+					:text="item.meaning.join('\n')"></wd-text>
+				<wd-text v-else size="14px" :lines="2" class="body" color="#999" :text="item.pinyin"></wd-text>
+
 			</view>
-			<view v-else class="head">
-				<p>{{item.ch}}</p>
-			</view>
-			<wd-text v-if="type=='jc'" size="14px" :lines="2" class="body" color="#999"
-				:text="item.meaning.join('\n')"></wd-text>
-			<wd-text v-else size="14px" :lines="2" class="body" color="#999" :text="item.pinyin"></wd-text>
+			<wd-gap bg-color="#F5f5f5" height="10px"></wd-gap>
 		</view>
 	</view>
 </template>
@@ -39,8 +43,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
-		background-color: #f5f5f5;
-		padding: 15px 0;
+		background-color: white;
 
 		.worditem {
 			background-color: white;

@@ -55,17 +55,33 @@
 			}
 		},
 		{
-			"path" : "pages/addtrend/addtrend",
-			"style" : 
-			{
+			"path": "pages/addtrend/addtrend",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path" : "pages/trenddetail/trenddetail",
-			"style" : 
-			{
-					"navigationStyle": "custom"
+			"path": "pages/trenddetail/trenddetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/fastmode/fastmode",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/writefrommemory/writefrommemory",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/todaylearn/todaylearn",
+			"style": {
+				"navigationStyle": "custom"
 			}
 		}
 	],

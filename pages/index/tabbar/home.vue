@@ -23,8 +23,8 @@
 					<p>等待复习</p>
 					<p>100</p>
 				</view>
-				<view @click="goPage('wordlist')">
-					<p>今日未学</p>
+				<view @click="goPage('todaylearn')">
+					<p>今日学习</p>
 					<p>10</p>
 				</view>
 			</view>
@@ -35,7 +35,7 @@
 			</view>
 			<view class="btns">
 				<wd-button custom-class="review" size="large" type="info" style="width: 100%;">记忆复习</wd-button>
-				<wd-button @click="goPage('learn')" size="large" style="width: 100%;">开始学习</wd-button>
+				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
 			</view>
 		</view>
 		<view class="maintool">
@@ -99,6 +99,13 @@
 	} from '@dcloudio/uni-app'
 	import Statusbar from "@/components/statusbar.vue"
 	import Setplan from "@/components/setplan.vue"
+	const startLearn = () => {
+		if (setPlanRef.value.config.mode == "学习模式") {
+			goPage('learn')
+		} else {
+			goPage('fastmode')
+		}
+	}
 	const goPage = (path) => {
 		uni.navigateTo({
 			url: `/pages/${path}/${path}`

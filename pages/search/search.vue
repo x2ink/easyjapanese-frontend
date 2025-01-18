@@ -1,8 +1,9 @@
 <template>
-	<Navbar>
-		<template v-slot:center>
-			<wd-search focus placeholder="请输入单词" hide-cancel @search="search" custom-class="search" v-model="val">
-				<!-- 	<template #prefix>
+	<view style="height: 100vh;background-color: #f5f5f5;">
+		<Navbar style="background-color: white;">
+			<template v-slot:center>
+				<wd-search focus placeholder="请输入单词" hide-cancel @search="search" custom-class="search" v-model="val">
+					<!-- 	<template #prefix>
 					<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
 						<view class="search-type">
 							<text>{{ searchType }}</text>
@@ -10,33 +11,35 @@
 						</view>
 					</wd-popover>
 				</template> -->
-			</wd-search>
-		</template>
-	</Navbar>
-	<view style="padding:5px 15px;">
-		<wd-segmented size="small" customClass="segmented" :options="list" v-model:value="current"></wd-segmented>
-	</view>
-	<view class="title" v-if="total==0">
-		<p>搜索历史</p>
-		<wd-icon name="clear" @click="clear()" size="20px" color="#999" />
-	</view>
-	<!-- 历史记录 -->
-	<view class="history" v-if="total==0">
-		<view @click="clickrecord(item)" class="item" v-for="item in history" :key="item">
-			{{item}}
+				</wd-search>
+			</template>
+		</Navbar>
+		<view style="padding:5px 15px 10px 15px;background-color: white;">
+			<wd-segmented size="small" customClass="segmented" :options="list" v-model:value="current"></wd-segmented>
 		</view>
-		<view class="more" @click="lookmore()" v-if="moreShow">
-			<wd-icon size="18px" name="chevron-down" color="#000" />
+		<view class="title" v-if="total==0">
+			<p>搜索历史</p>
+			<wd-icon name="clear" @click="clear()" size="20px" color="#999" />
 		</view>
+		<!-- 历史记录 -->
+		<view class="history" v-if="total==0">
+			<view @click="clickrecord(item)" class="item" v-for="item in history" :key="item">
+				{{item}}
+			</view>
+			<view class="more" @click="lookmore()" v-if="moreShow">
+				<wd-icon size="18px" name="chevron-down" color="#000" />
+			</view>
+		</view>
+		<view v-if="noResult">
+			<wd-status-tip image="search" tip="没有搜索到结果" />
+		</view>
+		<!-- 列表 -->
+		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 10px;" :list="List">
+		</WordList>
+		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
+		<!--  -->
+		<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 	</view>
-	<view v-if="noResult">
-		<wd-status-tip image="search" tip="没有搜索到结果" />
-	</view>
-	<!-- 列表 -->
-	<WordList :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 5px;" :list="List"></WordList>
-	<wd-loadmore v-if="List.length>0" custom-class="loadmore" :state="loadmore" />
-	<!--  -->
-	<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 </template>
 
 <script setup>

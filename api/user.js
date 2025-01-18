@@ -14,5 +14,11 @@ export default {
 	},
 	getUserInfoSimple() {
 		return http.get(`user/info/simple`)
+	},
+	getConfig() {
+		return http.get(`config`)
+	},
+	updateConfig(data) {
+		return http.post(`config`, data)
 	}
 }
