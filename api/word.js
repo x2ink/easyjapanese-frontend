@@ -23,5 +23,14 @@ export default {
 	},
 	writeFromMemory() {
 		return http.get("learn/writefrommemory")
+	},
+	recordlearn(data) {
+		return http.post("learn/record/add", data)
+	},
+	getTodayReview(){
+		return http.get("learn/review")
+	},
+	getHomeInfo(){
+		return http.get("learn/info")
 	}
 }

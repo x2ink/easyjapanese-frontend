@@ -103,8 +103,6 @@
 	const showWord = ref(false)
 	const doneWord = ref([])
 	const learnSuccess = ref(false)
-
-
 	const loading = ref(true)
 	const selectKanaRef = ref(null)
 	const wordsSelectMeaningRef = ref(null)

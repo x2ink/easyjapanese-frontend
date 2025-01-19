@@ -83,7 +83,6 @@
 </template>
 
 <script setup>
-	// import {} from "@dcloudio/uni-app"
 	const showExample = (show, array) => {
 		if (show) {
 			return array
@@ -98,6 +97,7 @@
 		ref,
 		computed,
 	} from "vue"
+	import WordList from "@/components/wordlist.vue"
 	const props = defineProps({
 		wordinfo: {
 			type: Object,

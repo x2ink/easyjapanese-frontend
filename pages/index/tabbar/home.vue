@@ -6,11 +6,11 @@
 			<p>搜索</p>
 		</view>
 		<view class="day">
-			你已经坚持了<span>99天</span><span>加油！！！</span>
+			你已经坚持了<span>{{info.day}}天</span><span>加油！！！</span>
 		</view>
 		<view class="recite">
 			<view class="plan">
-				<p>大学日语四级</p>
+				<p>{{info.bookname}}</p>
 				<view>
 					<p @click="openPlan">
 						修改计划
@@ -21,20 +21,21 @@
 			<view class="task">
 				<view @click="goPage('wordlist')">
 					<p>等待复习</p>
-					<p>100</p>
+					<p>{{info.review}}</p>
 				</view>
 				<view @click="goPage('todaylearn')">
 					<p>今日学习</p>
-					<p>10</p>
+					<p>{{info.learn}}</p>
 				</view>
 			</view>
-			<wd-progress :percentage="30" hide-text />
+			<wd-progress :percentage="progress" hide-text />
 			<view class="progress">
-				<p><span>50</span>/<span>100</span></p>
+				<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
 				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button custom-class="review" size="large" type="info" style="width: 100%;">记忆复习</wd-button>
+				<wd-button @click="goPage('review')" custom-class="review" size="large" type="info"
+					style="width: 100%;">记忆复习</wd-button>
 				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
 			</view>
 		</view>
@@ -92,13 +93,38 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed
 	} from 'vue'
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
 	import Statusbar from "@/components/statusbar.vue"
 	import Setplan from "@/components/setplan.vue"
+	import $http from "@/api/index.js"
+	const progress = computed(() => {
+		if(info.value.learnnum){
+			return (info.value.learnnum / info.value.wordnum) * 100
+		}else{
+			return 0
+		}
+		
+	})
+	const info = ref({
+		bookname: "",
+		day: 0,
+		learn: 0,
+		learnnum: 0,
+		review: 0,
+		wordnum: 0
+	})
+	onMounted(() => {
+		getHomeInfo()
+	})
+	const getHomeInfo = async () => {
+		const res = await $http.word.getHomeInfo()
+		info.value = res.data
+	}
 	const startLearn = () => {
 		if (setPlanRef.value.config.mode == "学习模式") {
 			goPage('learn')

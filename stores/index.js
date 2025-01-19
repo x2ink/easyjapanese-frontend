@@ -28,6 +28,12 @@ import {
 import {
 	test_todaylearnModule
 } from '@/stores/test/todaylearn.js';
+import {
+	reviewModule
+} from '@/stores/release/review.js';
+import {
+	test_reviewModule
+} from '@/stores/test/review.js';
 export const userStore = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return test_userModule()
@@ -61,5 +67,12 @@ export const todaylearnStore = () => {
 		return test_todaylearnModule()
 	} else {
 		return todaylearnModule()
+	}
+}
+export const reviewStore = () => {
+	if (process.env.NODE_ENV === 'development') {
+		return test_reviewModule()
+	} else {
+		return reviewModule()
 	}
 }

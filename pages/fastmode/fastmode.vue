@@ -12,9 +12,10 @@
 		<view v-else class="list">
 			<view class="item" :key="item.id" v-for="(item,index) in wordList">
 				<view class="head">
-					<view class="word">{{item.kana==item.word?item.word:item.word+'【'+item.kana+'】'}}<text
+					<view class="word" @click="getInfo(item.id)">
+						{{item.kana==item.word?item.word:item.word+'【'+item.kana+'】'}}<text
 							style="font-size: 14px;font-weight: 400;">{{item.tone}}</text></view>
-					<wd-icon @click="clear(index)" name="delete-thin" color="#999999" size="20px"></wd-icon>
+					<wd-icon @click="clear(index,item.id)" name="delete-thin" color="#999999" size="20px"></wd-icon>
 				</view>
 				<view style="margin-top: 10px;">
 					<view @click="item.show=false" class="explain" v-if="item.show">{{item.meaning}}</view>
@@ -40,13 +41,25 @@
 	} from "@/stores/index.js"
 	const wordList = ref([])
 	const total = ref(0)
-	const clear = (index) => {
+	const doneId = ref([])
+	const getInfo = (id) => {
+		uni.navigateTo({
+			url: "/pages/worddetail/worddetail?id=" + id + "&type=jc"
+		})
+	}
+	const clear = (index, id) => {
+		record(id)
 		wordList.value.splice(index, 1)
 		if (wordList.value.length == 0) {
 			fastmodeStore().clear()
 		} else {
 			fastmodeStore().setList(wordList.value)
 		}
+	}
+	const record = async (id) => {
+		const res = await $http.word.recordlearn({
+			words: [id]
+		})
 	}
 	const showMeaning = (index) => {
 		wordList.value.map((item, index) => {
@@ -59,7 +72,6 @@
 		const todayZeroTime = new Date();
 		todayZeroTime.setHours(0, 0, 0, 0);
 		const timestamp = todayZeroTime.getTime();
-		console.log(timestamp, fastmodeStore().time);
 		if (timestamp > fastmodeStore().time) {
 			const res = await $http.word.todayWord()
 			wordList.value = res.data.map((item, index) => {
@@ -72,8 +84,6 @@
 		} else {
 			wordList.value = fastmodeStore().wordList
 		}
-
-
 	}
 	onMounted(() => {
 		init()
