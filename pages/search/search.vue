@@ -37,9 +37,11 @@
 		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 10px;" :list="List">
 		</WordList>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
+		
 		<!--  -->
 		<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 	</view>
+	  <wd-backtop :scrollTop="scrollTop"></wd-backtop>
 </template>
 
 <script setup>
@@ -56,8 +58,13 @@
 		searchrecordStore
 	} from "@/stores/index.js"
 	import {
-		onReachBottom
+		onReachBottom,
+		onPageScroll,
 	} from "@dcloudio/uni-app"
+	const scrollTop = ref(0)
+	onPageScroll((e) => {
+	  scrollTop.value = e.scrollTop
+	})
 	const loadmore = computed(() => {
 		if (total.value == List.value.length) {
 			return "finished"
@@ -92,7 +99,6 @@
 	const list = ref(['日中', '中日'])
 	const current = ref('日中')
 	watch(current, (newVal, oldVal) => {
-		console.log(newVal, oldVal);
 		noResult.value = false
 		List.value = []
 		page.value = 1

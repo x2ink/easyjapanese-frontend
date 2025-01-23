@@ -19,7 +19,7 @@
 				</view>
 			</view>
 			<view class="task">
-				<view @click="goPage('wordlist')">
+				<view @click="goPage('todayreview')">
 					<p>等待复习</p>
 					<p>{{info.review}}</p>
 				</view>
@@ -34,7 +34,7 @@
 				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button @click="goPage('review')" custom-class="review" size="large" type="info"
+				<wd-button @click="review()" custom-class="review" size="large" type="info"
 					style="width: 100%;">记忆复习</wd-button>
 				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
 			</view>
@@ -51,42 +51,43 @@
 		</view>
 		<uv-scroll-list>
 			<view class="scroll-list" style="flex-direction: row;">
-				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
 					<image class="scroll-list__item__image" :src="item.image"></image>
 					<p class="scroll-list__item__text">{{ item.name }}</p>
 				</view>
 			</view>
 		</uv-scroll-list>
 		<view class="articlelist">
-			<view class="articleitem" v-for="_ in 10">
+			<view class="articleitem" @click="goPage('articledetail','?id='+item.id)" :key="item.id"
+				v-for="item in articleList">
 				<view class="head">
 					<view class="user">
-						<uv-avatar size="25" text="李"></uv-avatar>
-						<p>短句系统开发</p>
+						<uv-avatar size="25" :src="item.user.avatar"></uv-avatar>
+						<p>{{item.user.nickname}}</p>
 					</view>
 					<wd-icon name="ellipsis" size="20px"></wd-icon>
 				</view>
 				<view class="content">
 					<view>
-						<p>这是文章标题</p>
-						<p>这是文章内容</p>
+						<wd-text :lines="1" :text="item.title" color="#000000" bold></wd-text>
+						<wd-text :lines="3" :text="item.encapsulate" size="14px" style="margin-top: 3px;"></wd-text>
 					</view>
-					<image
-						src="https://ts3.cn.mm.bing.net/th?id=ORMS.067a87acd446bd8b04920fc4c07bf930&pid=Wdp&w=268&h=140&qlt=90&c=1&rs=1&dpr=1.25&p=0"
-						mode="aspectFill"></image>
+					<image :src="item.icon" mode="aspectFill"></image>
 				</view>
 				<view class="footer">
 					<p>
-						525阅读&nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏
+						{{item.browse}}阅读
+						<!-- &nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏 -->
 					</p>
 					<p>
-						刚刚
+						{{dayjs().to(dayjs(item.created_at))}}
 					</p>
 				</view>
 			</view>
 		</view>
 		<!-- 修改计划 -->
 		<Setplan ref="setPlanRef"></Setplan>
+		<wd-toast />
 	</view>
 </template>
 
@@ -97,19 +98,54 @@
 		computed
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onReachBottom,
+		onShow
 	} from '@dcloudio/uni-app'
+	import dayjs from 'dayjs'
+	import relativeTime from 'dayjs/plugin/relativeTime'
+	import 'dayjs/locale/zh'
+	dayjs.locale('zh')
+	dayjs.extend(relativeTime)
 	import Statusbar from "@/components/statusbar.vue"
 	import Setplan from "@/components/setplan.vue"
 	import $http from "@/api/index.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const review = () => {
+		if (info.value.review == 0) {
+			toast.warning(`今日没有需要复习的单词`)
+		} else {
+			goPage('review')
+		}
+	}
+	const articleList = ref([])
+	const articleTotal = ref(0)
+	const articleParams = ref({
+		page: 1,
+		size: 10
+	})
+	onReachBottom(() => {
+		if (articleTotal.value > articleList.value.length) {
+			++articleParams.value.page
+			getArticleLis()
+		}
+	})
+	const getArticleList = async () => {
+		const res = await $http.article.getList(articleParams.value.page, articleParams.value.size)
+		articleList.value = articleList.value.concat(res.data)
+		articleTotal.value = res.total
+	}
+	const toast = useToast()
 	const progress = computed(() => {
-		if(info.value.learnnum){
+		if (info.value.learnnum) {
 			return (info.value.learnnum / info.value.wordnum) * 100
-		}else{
+		} else {
 			return 0
 		}
-		
 	})
+
 	const info = ref({
 		bookname: "",
 		day: 0,
@@ -119,12 +155,15 @@
 		wordnum: 0
 	})
 	onMounted(() => {
-		getHomeInfo()
+		getArticleList()
 	})
 	const getHomeInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		info.value = res.data
 	}
+	onShow(() => {
+		getHomeInfo()
+	})
 	const startLearn = () => {
 		if (setPlanRef.value.config.mode == "学习模式") {
 			goPage('learn')
@@ -132,10 +171,16 @@
 			goPage('fastmode')
 		}
 	}
-	const goPage = (path) => {
-		uni.navigateTo({
-			url: `/pages/${path}/${path}`
-		})
+	const goPage = (path, params) => {
+		if (params) {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}${params}`
+			})
+		} else {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}`
+			})
+		}
 	}
 	const setPlanRef = ref(null)
 	const openPlan = () => {
@@ -143,7 +188,8 @@
 	}
 	const toolList = ref([{
 		name: '动词变形',
-		image: '../../static/duo-icons--palette.png'
+		image: '../../static/duo-icons--palette.png',
+		path: "verbtransfiguration"
 	}, {
 		name: '考试宝典',
 		image: '../../static/duo-icons--book-2.png'
@@ -200,24 +246,16 @@
 				display: flex;
 				justify-content: space-between;
 				margin-top: 5px;
+				gap: 10px;
 
 				view {
-					p {
-						&:nth-of-type(1) {
-							font-size: $uni-font-size-lg;
-							font-weight: bold;
-						}
-
-						&:nth-of-type(2) {
-							font-size: $uni-font-size-base;
-							color: $uni-text-color-grey;
-							margin-top: 5px;
-						}
-					}
+					flex: 1;
+					display: flex;
+					flex-direction: column;
 				}
 
 				image {
-					border-radius: $uni-border-radius-base;
+					border-radius: 4px;
 					width: 120px;
 					height: 80px;
 				}

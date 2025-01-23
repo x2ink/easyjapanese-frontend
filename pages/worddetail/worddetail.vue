@@ -1,15 +1,17 @@
 <template>
-	<NavBar title="">
-		<template #right>
-			<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
-		</template>
-	</NavBar>
-	<view v-show="loading" class="loading _GCENTER">
-		<wd-loading />
+	<view>
+		<NavBar title="">
+			<template #right>
+				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
+			</template>
+		</NavBar>
+		<view v-show="loading" class="loading _GCENTER">
+			<wd-loading />
+		</view>
+		<WordDetail :wordinfo="wordinfo" :chinfo="chinfo" :type="type" v-show="!loading"></WordDetail>
+		<wd-action-sheet :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow" :actions="actions"
+			@close="moreShow=false" @select="select" />
 	</view>
-	<WordDetail :wordinfo="wordinfo" :chinfo="chinfo" :type="type" v-show="!loading"></WordDetail>
-	<wd-action-sheet :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow" :actions="actions"
-		@close="moreShow=false" @select="select" />
 </template>
 
 <script setup>
@@ -40,6 +42,9 @@
 		py: "",
 		result: []
 	})
+	const select = (e) => {
+		console.log(e);
+	}
 	const id = ref(null)
 	onLoad((e) => {
 		type.value = e.type

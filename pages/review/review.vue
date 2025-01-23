@@ -113,7 +113,9 @@
 					error_count: item.error_count
 				}
 			})
-			console.log(words);
+			await $http.word.updaterecord({
+				words: words
+			})
 			return
 		}
 		current.value = index

@@ -1,17 +1,9 @@
 <template>
 	<view style="background-color: #f5f5f5;min-height: 100vh;">
-		<NavBar title="今日学习" style="background-color: white;">
-			<template #right>
-				<wd-button @click="goPage('writefrommemory')" type="primary" size="small">默写</wd-button>
-			</template>
-			<template #bottom>
-				<view style="background-color: white;padding:0 10px 10px 10px;">
-					<wd-segmented customClass="segmented" :options="section" v-model:value="current"></wd-segmented>
-				</view>
-			</template>
+		<NavBar title="等待复习" style="background-color: white;">
 		</NavBar>
 		<view class="list">
-			<view class="item" @click="getInfo(item.id)" :key="item.id" v-for="(item,index) in array">
+			<view class="item" @click="getInfo(item.id)" :key="item.id" v-for="(item,index) in List">
 				<view class="head">
 					<view class="word">{{item.kana==item.word?item.word:item.word+'【'+item.kana+'】'}}<text
 							style="font-size: 14px;font-weight: 400;">{{item.tone}}</text>
@@ -23,7 +15,7 @@
 			</view>
 		</view>
 		<view class="noResult" v-if="showEmpty">
-			<wd-status-tip image="content" tip="暂无内容" />
+			<wd-status-tip image="content" tip="还没有需要复习的单词" />
 		</view>
 	</view>
 </template>
@@ -36,54 +28,19 @@
 	} from 'vue'
 	import $http from "@/api/index.js"
 	import NavBar from '@/components/navbar.vue'
-	import {
-		todaylearnStore
-	} from '@/stores/index.js'
 	const showEmpty = computed(() => {
 		if (loading.value) {
 			return false
 		} else {
-			return array.value.length == 0
+			return List.value.length == 0
 		}
-
 	})
 	const List = ref([])
-	const section = ref(['全部', '已默写', '未默写'])
-	const current = ref('全部')
-	const array = computed(() => {
-		if (current.value == "全部") {
-			return List.value.sort((a, b) => {
-				if (a.done === b.done) {
-					return 0;
-				}
-				return a.done ? 1 : -1;
-			});
-		} else if (current.value == "已默写") {
-			return List.value.filter(item => item.done)
-		} else {
-			return List.value.filter(item => !item.done)
-		}
-	})
 	const loading = ref(true)
 	const getList = async () => {
-		const midnightTimestamp = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
-		const res = await $http.word.writeFromMemory()
+		const res = await $http.word.getTodayReview()
+		List.value = res.data
 		loading.value = false
-		if (midnightTimestamp > todaylearnStore().time) {
-			List.value = res.data
-			todaylearnStore().setList(res.data)
-			todaylearnStore().setTime(midnightTimestamp)
-		} else {
-			res.data.forEach(item => {
-				if (!isIdExist(item.id)) {
-					todaylearnStore().unshift(item)
-				}
-			})
-			List.value = todaylearnStore().wordList
-		}
-	}
-	const isIdExist = (id) => {
-		return todaylearnStore().wordList.some(item => item.id === id);
 	}
 	const goPage = (path) => {
 		uni.navigateTo({

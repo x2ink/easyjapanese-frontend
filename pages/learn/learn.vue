@@ -27,22 +27,22 @@
 					<view v-if="!showWord">
 						<!-- 汉字选择假名 -->
 						<SelectKana ref="selectKanaRef" @answer="answerResult" v-if="currentProgress==0"
-							:wordinfo="wordList[current]">
+							:wordinfo="wordinfo">
 						</SelectKana>
 						<!-- 单词选择意思 -->
 						<WordsSelectMeaning ref="wordsSelectMeaningRef" @answer="answerResult"
-							v-else-if="currentProgress==1" :wordinfo="wordList[current]">
+							v-else-if="currentProgress==1" :wordinfo="wordinfo">
 						</WordsSelectMeaning>
 						<!-- 意思选择单词 -->
 						<MeaningSelectWords ref="meaningSelectWordsRef" @answer="answerResult"
-							v-else-if="currentProgress==2" :wordinfo="wordList[current]">
+							v-else-if="currentProgress==2" :wordinfo="wordinfo">
 						</MeaningSelectWords>
 						<!-- 发音选择单词 -->
 						<SoundSelectWord ref="soundSelectWordRef" @answer="answerResult" v-else-if="currentProgress==3"
-							:wordinfo="wordList[current]"></SoundSelectWord>
+							:wordinfo="wordinfo"></SoundSelectWord>
 					</view>
 					<view v-else>
-						<WordDetail :wordinfo="wordList[current]" type="jc"></WordDetail>
+						<WordDetail :wordinfo="wordinfo" type="jc"></WordDetail>
 						<view class="next">
 							<wd-button @click="continueNext" custom-class="btn" :round="false"
 								size="large">继续</wd-button>
@@ -53,8 +53,8 @@
 					<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
 					<text>{{total}}个单词已练习完成！赶紧默写吧！</text>
 					<view style="display: flex;gap: 15px;margin-top: 40px;">
-						<wd-button size="large" @click="startRecite">立刻默写</wd-button>
-						<wd-button size="large" type="info" @click="startRecite">稍后默写</wd-button>
+						<wd-button size="large" @click="goPage('todaylearn')">立刻默写</wd-button>
+						<wd-button size="large" type="info" @click="init()">再来一组</wd-button>
 					</view>
 					<text style="color: #000000;margin-top: 40px;">单词列表</text>
 					<view class="recitelist">
@@ -103,97 +103,87 @@
 	const showWord = ref(false)
 	const doneWord = ref([])
 	const learnSuccess = ref(false)
+	const wordinfo = ref({})
 	const loading = ref(true)
 	const selectKanaRef = ref(null)
 	const wordsSelectMeaningRef = ref(null)
 	const meaningSelectWordsRef = ref(null)
 	const soundSelectWordRef = ref(null)
+	const goPage = (path) => {
+		uni.redirectTo({
+			url: `/pages/${path}/${path}`
+		})
+	}
 	const reciteDone = computed(() => {
 		return (doneWord.value.length / total.value) * 100
 	})
+	const setOption = () => {
+		if (currentProgress.value == 0) {
+			selectKanaRef.value.setOption(wordinfo.value.kana_option)
+		} else if (currentProgress.value == 1) {
+			wordsSelectMeaningRef.value.setOption(wordinfo.value.meaning_option)
+		} else if (currentProgress.value == 2) {
+			meaningSelectWordsRef.value.setOption(wordinfo.value.word_option)
+		} else if (currentProgress.value == 3) {
+			soundSelectWordRef.value.setOption(wordinfo.value.voice_option)
+		}
+	}
+	const continueNext = () => {
+		if (wordinfo.value.progress.findIndex(item => !item) == -1) {
+			wordinfo.value.done = true
+			doneWord.value.push({
+				id: wordinfo.value.id,
+				word: wordinfo.value.word,
+				error_count: wordinfo.value.error_count,
+			})
+		}
+		getWord()
+		showWord.value = false
+	}
 	const answerResult = (e) => {
 		if (e) {
-			wordList.value[current.value].progress[currentProgress.value] = true
+			wordinfo.value.progress[currentProgress.value] = true
 		} else {
-			++wordList.value[current.value].error_count
-			if (wordList.value[current.value].kana == wordList.value[current.value].word) {
-				wordList.value[current.value].progress = [true, false, false, false]
+			++wordinfo.value.error_count
+			if (wordinfo.value.kana == wordinfo.value.word) {
+				wordinfo.value.progress = [true, false, false, false]
 			} else {
-				wordList.value[current.value].progress[currentProgress.value] = [false, false, false, false]
+				wordinfo.value.progress = [false, false, false, false]
 			}
 		}
 		setTimeout(() => {
 			showWord.value = true
+			setObject()
 		}, 500)
-	}
-	const isDone = () => {
-		for (let item of wordList.value[current.value].progress) {
-			if (!item) {
-				return false
-			}
-		}
-		return true
-	}
-	const continueNext = () => {
-		if (isDone()) {
-			doneWord.value.push({
-				id: wordList.value[current.value].id,
-				word: wordList.value[current.value].word,
-				error_count: wordList.value[current.value].error_count,
-			})
-			if (current.value == wordList.value.length - 1) {
-				--current.value
-				wordList.value.splice(wordList.value.length - 1, 1)
-			} else {
-				wordList.value.splice(current.value, 1)
-			}
-		} else {
-			let nextIndex = current.value + 1
-			if (nextIndex > wordList.value.length - 1) {
-				current.value = 0
-			} else {
-				++current.value
-			}
-		}
-		if (wordList.value.length == 0) {
-			doneTodayTask.value = true
-			learnmodeStore().clear()
-			return
-		}
-		currentProgress.value = getProgress(wordList.value[current.value].progress)
-		showWord.value = false
-		setOption(currentProgress.value)
-		setObject()
-	}
-	const setOption = async (index) => {
-		await nextTick();
-		if (index == 0) {
-			selectKanaRef.value.setOption(wordList.value[current.value].kana_option)
-		} else if (index == 1) {
-			wordsSelectMeaningRef.value.setOption(wordList.value[current.value].meaning_option)
-		} else if (index == 2) {
-			meaningSelectWordsRef.value.setOption(wordList.value[current.value].word_option)
-		} else if (index == 3) {
-			soundSelectWordRef.value.setOption(wordList.value[current.value].voice_option)
-		}
-	}
-	const getProgress = (arr) => {
-		for (let index in arr) {
-			if (!arr[index]) {
-				return index
-			}
-		}
-		return -1
-	}
-	const startRecite = () => {
-		current.value = 0
-		currentProgress.value = getProgress(wordList.value[current.value].progress)
-		recite.value = true
-		setOption(currentProgress.value)
 	}
 	const progress = computed(() => {
 		return (current.value / (wordList.value.length)) * 100
 	})
+	const getWord = async () => {
+		if (wordList.value.every(item => item.done)) {
+			doneTodayTask.value = true
+			await $http.word.recordlearn({
+				words: doneWord.value.map(item => item.id)
+			})
+			learnmodeStore().clear()
+			return
+		} else {
+			let index = wordList.value.findIndex(item => !item.done)
+			current.value = index
+			wordinfo.value = wordList.value[index]
+			currentProgress.value = wordinfo.value.progress.findIndex(item => !item)
+			setTimeout(() => {
+				setOption()
+			}, 10)
+			let temp = wordList.value[0]
+			wordList.value.splice(0, 1)
+			wordList.value.push(temp)
+		}
+	}
+	const startRecite = () => {
+		getWord()
+		recite.value = true
+	}
 	const setObject = () => {
 		learnmodeStore().setObj({
 			current: current.value,
@@ -204,7 +194,8 @@
 			currentProgress: currentProgress.value,
 			showWord: showWord.value,
 			doneWord: doneWord.value,
-			learnSuccess: learnSuccess.value
+			learnSuccess: learnSuccess.value,
+			wordinfo: wordinfo.value
 		})
 	}
 	const nextWord = () => {
@@ -223,6 +214,12 @@
 		}
 		setObject()
 	}
+
+	watch(current, (newVal, oldVal) => {
+		if (!learnSuccess.value) {
+			wordinfo.value = wordList.value[newVal]
+		}
+	})
 	const init = async () => {
 		const todayZeroTime = new Date();
 		todayZeroTime.setHours(0, 0, 0, 0);
@@ -231,6 +228,14 @@
 			const res = await $http.word.todayWord()
 			wordList.value = res.data
 			total.value = wordList.value.length
+			current.value = 0
+			currentProgress.value = 0
+			doneWord.value = []
+			wordinfo.value = {}
+			recite.value = false
+			doneTodayTask.value = false
+			learnSuccess.value = false
+			showWord.value = false
 			learnmodeStore().setTime(timestamp)
 			setObject()
 		} else {
@@ -244,10 +249,9 @@
 			showWord.value = learnmodeStore().showWord
 			doneWord.value = learnmodeStore().doneWord
 			learnSuccess.value = learnmodeStore().learnSuccess
-			if (recite.value) {
-				setOption(currentProgress.value)
-			}
+			wordinfo.value = learnmodeStore().wordinfo
 		}
+
 		loading.value = false
 	}
 	onMounted(() => {

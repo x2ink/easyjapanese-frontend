@@ -1,10 +1,14 @@
 <template>
-	<wd-popup v-model="show" closable custom-style="border-radius:8px;">
+	<wd-popup v-model="show" :z-index="999" closable custom-style="border-radius:8px;">
 		<view class="popup">
 			<p class="title">修改计划</p>
 			<view class="daystudy">
-				<p>每组学习：{{config.daily_learning}}</p>
-				<wd-input-number v-model="config.daily_learning" without-input />
+				<p>每组学习：{{config.learn_group}}</p>
+				<wd-input-number :min="5" :max="50" v-model="config.learn_group" without-input />
+			</view>
+			<view class="daystudy">
+				<p>每组复习：{{config.review_group}}</p>
+				<wd-input-number :min="5" :max="50" v-model="config.review_group" without-input />
 			</view>
 			<wd-radio-group v-model="learnMode" checked-color="#fa4350">
 				<wd-radio :value="1" @click="config.mode='学习模式'">学习模式</wd-radio>
@@ -32,14 +36,17 @@
 	const config = ref({
 		id: null,
 		user_id: null,
-		daily_learning: null,
+		learn_group: null,
+		review_group: null,
 		mode: "",
 		book_id: null
 	})
+	const emits = defineEmits("change")
 	const updateConfig = async () => {
 		const res = await $http.user.updateConfig(config.value)
 		toast.success(`更新成功`)
 		show.value = false
+		emits("change", config.value)
 	}
 	const getConfig = async () => {
 		const res = await $http.user.getConfig()
@@ -65,7 +72,7 @@
 		}
 
 		.daystudy {
-			height: 50px;
+			margin-top: 10px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;

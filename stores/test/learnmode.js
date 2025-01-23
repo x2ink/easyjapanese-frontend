@@ -14,7 +14,8 @@ export const test_learnmodeModule = defineStore('test_learnmode', {
 			currentProgress: 0,
 			showWord: false,
 			doneWord: [],
-			learnSuccess: false
+			learnSuccess: false,
+			wordinfo: {}
 		}
 	},
 	actions: {
@@ -28,6 +29,7 @@ export const test_learnmodeModule = defineStore('test_learnmode', {
 			this.showWord = obj.showWord
 			this.doneWord = obj.doneWord
 			this.learnSuccess = obj.learnSuccess
+			this.wordinfo = obj.wordinfo
 		},
 		setTime(time) {
 			this.time = time
@@ -43,6 +45,7 @@ export const test_learnmodeModule = defineStore('test_learnmode', {
 			this.showWord = false;
 			this.doneWord = [];
 			this.learnSuccess = false;
+			this.wordinfo = {};
 		}
 	}
 })

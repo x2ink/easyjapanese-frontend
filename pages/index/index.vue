@@ -17,7 +17,6 @@
 			</scroll-view>
 		</view>
 		<Tabbar @change="tabbarChange"></Tabbar>
-
 	</view>
 </template>
 

@@ -27,6 +27,9 @@ export default {
 	recordlearn(data) {
 		return http.post("learn/record/add", data)
 	},
+	updaterecord(data) {
+		return http.post("learn/record/update", data)
+	},
 	getTodayReview(){
 		return http.get("learn/review")
 	},

@@ -90,6 +90,27 @@
 			{
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path" : "pages/articledetail/articledetail",
+			"style" : 
+			{
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/todayreview/todayreview",
+			"style" : 
+			{
+			"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/verbtransfiguration/verbtransfiguration",
+			"style" : 
+			{
+			"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

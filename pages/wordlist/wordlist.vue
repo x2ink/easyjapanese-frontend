@@ -1,10 +1,10 @@
 <template>
-	<NavBar :title="title"></NavBar>
+	<NavBar :title="title" style="background-color: white;"></NavBar>
 	<wd-gap bg-color="#F5f5f5" height="10px"></wd-gap>
 	<WordList v-if="List.length>0" type="jc" style="margin-top: 10px;" :list="List">
 	</WordList>
 	<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
-	  <wd-backtop :scrollTop="scrollTop"></wd-backtop>
+	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 </template>
 
 <script setup>
@@ -21,7 +21,7 @@
 	import WordList from "@/components/wordlist.vue"
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
-	  scrollTop.value = e.scrollTop
+		scrollTop.value = e.scrollTop
 	})
 	const title = ref('')
 	import $http from "@/api/index.js"

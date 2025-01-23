@@ -195,7 +195,7 @@
 					justify-content: center;
 
 					.top {
-						color: #57D09B;
+						// color: #57D09B;
 						font-size: 8px;
 						height: 8px;
 						margin: 0 2px;
@@ -206,7 +206,7 @@
 					}
 
 					.underline {
-						color: #57D09B;
+						// color: #57D09B;
 						text-decoration: underline;
 					}
 				}

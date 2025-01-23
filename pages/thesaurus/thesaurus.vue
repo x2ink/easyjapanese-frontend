@@ -1,6 +1,10 @@
 <template>
-	<view style="height: 100vh;background-color: white;">
-		<NavBar title="词库列表"></NavBar>
+	<view>
+		<NavBar title="词库列表" style="background-color: white;">
+			<template #right>
+				<wd-icon name="help-circle" size="25px"></wd-icon>
+			</template>
+		</NavBar>
 		<wd-tabs v-model="current">
 			<block v-for="[key, value] in bookList.entries()" :key="key">
 				<wd-tab :title="key">
