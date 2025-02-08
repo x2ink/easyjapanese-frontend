@@ -1,7 +1,6 @@
 <template>
-	<NavBar :title="title" style="background-color: white;"></NavBar>
-	<wd-gap bg-color="#F5f5f5" height="10px"></wd-gap>
-	<WordList v-if="List.length>0" type="jc" style="margin-top: 10px;" :list="List">
+	<NavBar :title="title" style="background-color:#f5f5f5;"></NavBar>
+	<WordList v-if="List.length>0" type="jc" style="margin: 10px 15px 15px 15px;" :list="List">
 	</WordList>
 	<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 	<wd-backtop :scrollTop="scrollTop"></wd-backtop>

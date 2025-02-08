@@ -8,7 +8,8 @@
 		<wd-progress :percentage="progress" hide-text />
 		<view class="body" v-if="List.length>0">
 			<view class="input">
-				<wd-input custom-class="input" type="text" clearable size="large" v-model="value" placeholder="请输入单词" />
+				<wd-input custom-class="input" no-border type="text" clearable size="large" v-model="value"
+					placeholder="请输入单词" />
 			</view>
 			<view class="meaning">{{List[current].meaning}}</view>
 		</view>
@@ -104,6 +105,11 @@
 <style scoped lang="scss">
 	:deep(.input) {
 		text-align: center;
+		border-radius: 8px;
+	}
+
+	:deep(.wd-progress) {
+		padding-top: 0px;
 	}
 
 	.learnsuccess {
@@ -111,6 +117,7 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 15px;
+
 		justify-content: center;
 
 		text {

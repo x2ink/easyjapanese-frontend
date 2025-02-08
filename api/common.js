@@ -5,5 +5,14 @@ export default {
 	},
 	getVerbTrans(word) {
 		return http.get(`verbtrans/${word}`)
+	},
+	getGrammarList(id) {
+		return http.get(`grammar`)
+	},
+	getGrammarInfo(id) {
+		return http.get(`grammar/${id}`)
+	},
+	feedback(data) {
+		return http.post(`feedback`, data)
 	}
 }

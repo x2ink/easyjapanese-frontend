@@ -2,7 +2,7 @@
 	<view class="navwrap">
 		<view class="navbar">
 			<view class="left" @click="back">
-				<wd-icon name="thin-arrow-left" size="20px"></wd-icon>
+				<wd-icon name="thin-arrow-left" :color="color" size="20px"></wd-icon>
 			</view>
 			<view class="center" :class="{textcenter:title!==''}">
 				<text class="title" v-if="title!==''">{{title}}</text>
@@ -26,6 +26,10 @@
 		})
 	}
 	const props = defineProps({
+		color: {
+			default: '#000000',
+			type: String
+		},
 		title: {
 			default: '',
 			type: String
@@ -42,7 +46,7 @@
 	.navwrap {
 		position: sticky;
 		top: 0;
-		z-index: 999;
+		z-index: 99;
 
 		.navbar {
 			height: 45px;

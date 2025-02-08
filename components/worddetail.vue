@@ -16,7 +16,7 @@
 				</view>
 			</view>
 			<!-- 列表 -->
-			<WordList style="margin-top: 0px;background-color: transparent;" :list="chinfo.result"></WordList>
+			<WordList style="margin: 15px;background-color: transparent;" :list="chinfo.result"></WordList>
 		</view>
 		<view class="wordinfo" v-else>
 			<view style="padding: 0 15px;">
@@ -38,7 +38,7 @@
 					</view>
 				</view>
 			</view>
-			<view style="display: flex;flex-direction: column;gap: 15px;background-color: #f5f5f5;">
+			<view class="worddetail">
 				<view class="wordlist" :key="item.wordtype" v-for="(item,index1) in wordinfo.detail">
 					<text v-if="item.wordtype!=''" class="title">词性</text>
 					<view class="wordtype">
@@ -126,6 +126,43 @@
 </script>
 
 <style scoped lang="scss">
+	.worddetail {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		margin: 15px 10px 10px 10px;
+
+		.wordlist {
+			display: flex;
+			flex-direction: column;
+			padding: 10px;
+			background-color: white;
+			border-radius: 8px;
+
+			.title {
+				font-size: $uni-font-size-sm;
+				color: $uni-text-color-grey;
+			}
+
+			.wordtype {
+				margin: 5px 0;
+				font-size: $uni-font-size-base;
+			}
+
+			.meanings {
+				.meaning {
+					.text {
+						font-weight: bold;
+						font-size: $uni-font-size-base;
+					}
+				}
+
+
+			}
+
+		}
+	}
+
 	.tools {
 		display: flex;
 		margin-top: 5px;
@@ -214,34 +251,7 @@
 		}
 	}
 
-	.wordlist {
-		display: flex;
-		flex-direction: column;
-		padding: 10px;
-		background-color: white;
 
-		.title {
-			font-size: $uni-font-size-sm;
-			color: $uni-text-color-grey;
-		}
-
-		.wordtype {
-			margin: 5px 0;
-			font-size: $uni-font-size-base;
-		}
-
-		.meanings {
-			.meaning {
-				.text {
-					font-weight: bold;
-					font-size: $uni-font-size-base;
-				}
-			}
-
-
-		}
-
-	}
 
 
 	.word {
@@ -264,5 +274,9 @@
 		text-align: right;
 		margin-top: 5px;
 		color: $uni-text-color-grey;
+	}
+
+	.wordinfo {
+		padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
 	}
 </style>

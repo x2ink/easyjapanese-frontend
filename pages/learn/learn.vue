@@ -1,5 +1,5 @@
 <template>
-	<NavBar :title="`单词${recite?'背诵':'学习'}`">
+	<NavBar style="background-color: #f5f5f5;" :title="`单词${recite?'背诵':'学习'}`">
 	</NavBar>
 	<view v-show="loading" class="loading _GCENTER">
 		<wd-loading />
@@ -8,7 +8,9 @@
 		<!-- 学习单词 -->
 		<view v-if="!learnSuccess">
 			<wd-progress :percentage="progress" hide-text />
-			<WordDetail :wordinfo="wordList[current]" type="jc"></WordDetail>
+			<scroll-view scroll-y="true" style="height: calc(100vh - 56px);padding-bottom: 75px;">
+				<WordDetail style="height:100%;" :wordinfo="wordList[current]" type="jc"></WordDetail>
+			</scroll-view>
 			<view class="next">
 				<wd-button @click="previousWord" custom-class="btn" :round="false" size="large"
 					type="info">上一个</wd-button>
@@ -56,7 +58,6 @@
 						<wd-button size="large" @click="goPage('todaylearn')">立刻默写</wd-button>
 						<wd-button size="large" type="info" @click="init()">再来一组</wd-button>
 					</view>
-					<text style="color: #000000;margin-top: 40px;">单词列表</text>
 					<view class="recitelist">
 						<view v-for="item in doneWord" :key="item.id" class="reciteitem">
 							<text>{{item.word}}</text>
@@ -260,13 +261,19 @@
 </script>
 
 <style lang="scss" scoped>
+	:deep(.wd-progress) {
+		padding-top: 0px;
+	}
+
 	.recitelist {
+		width: calc(100vw - 30px);
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		width: 70%;
-		background-color: #f5f5f5;
-		padding: 15px;
+		background-color: #fff;
+		padding: 20px 30px;
+		margin-top: 20px;
+		box-sizing: border-box;
 		border-radius: $uni-border-radius-base;
 
 		.reciteitem {
@@ -283,7 +290,7 @@
 		justify-content: space-around;
 		align-items: center;
 		height: 60px;
-		position: absolute;
+		position: fixed;
 		bottom: 15px;
 		right: 0;
 		left: 0;

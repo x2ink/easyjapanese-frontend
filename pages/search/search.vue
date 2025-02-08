@@ -2,16 +2,7 @@
 	<view style="height: 100vh;background-color: #f5f5f5;">
 		<Navbar style="background-color: white;">
 			<template v-slot:center>
-				<wd-search focus placeholder="请输入单词" hide-cancel @search="search" custom-class="search" v-model="val">
-					<!-- 	<template #prefix>
-					<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
-						<view class="search-type">
-							<text>{{ searchType }}</text>
-							<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
-						</view>
-					</wd-popover>
-				</template> -->
-				</wd-search>
+				<SearchInput @confirm="search" @change="inputChange"></SearchInput>
 			</template>
 		</Navbar>
 		<view style="padding:5px 15px 10px 15px;background-color: white;">
@@ -34,14 +25,14 @@
 			<wd-status-tip image="search" tip="没有搜索到结果" />
 		</view>
 		<!-- 列表 -->
-		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin-top: 10px;" :list="List">
+		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin: 15px;" :list="List">
 		</WordList>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
-		
+
 		<!--  -->
 		<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
 	</view>
-	  <wd-backtop :scrollTop="scrollTop"></wd-backtop>
+	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 </template>
 
 <script setup>
@@ -54,6 +45,7 @@
 	import WordList from "@/components/wordlist.vue"
 	import Navbar from "@/components/navbar.vue"
 	import $http from "@/api/index.js"
+	import SearchInput from '@/components/searchinput.vue'
 	import {
 		searchrecordStore
 	} from "@/stores/index.js"
@@ -63,8 +55,11 @@
 	} from "@dcloudio/uni-app"
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
-	  scrollTop.value = e.scrollTop
+		scrollTop.value = e.scrollTop
 	})
+	const inputChange = (e) => {
+		val.value=e
+	}
 	const loadmore = computed(() => {
 		if (total.value == List.value.length) {
 			return "finished"

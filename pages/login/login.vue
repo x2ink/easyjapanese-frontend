@@ -5,9 +5,7 @@
 			<p class="title">登录</p>
 			<wd-input size="large" no-border style="margin-top: 20px;" type="text" v-model="from.email"
 				placeholder="请输入邮箱" />
-			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
-			<wd-input size="large" no-border type="text" v-model="from.password" placeholder="请输入账户密码" showPassword />
-			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
+			<wd-input size="large" no-border type="text" v-model="from.password" placeholder="请输入账户密码" showPassword style="margin-top: 10px;"/>
 			<wd-button @click="login()" style="margin-top: 30px;width: 100%;">登录</wd-button>
 			<view class="more">
 				<p @click="show=true">

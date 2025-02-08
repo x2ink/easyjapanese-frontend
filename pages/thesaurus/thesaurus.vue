@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar title="词库列表" style="background-color: white;">
+		<NavBar title="词库列表" style="background-color: #f5f5f5;">
 			<template #right>
 				<wd-icon name="help-circle" size="25px"></wd-icon>
 			</template>
@@ -99,6 +99,14 @@
 </script>
 
 <style lang="scss">
+	:deep(.wd-tabs) {
+		background-color: transparent !important;
+	}
+
+	:deep(.wd-tabs__nav) {
+		background-color: transparent !important;
+	}
+
 	.number {
 		color: $uni-text-color-grey;
 		font-size: $uni-font-size-base;
@@ -111,15 +119,16 @@
 	}
 
 	.rankinglist {
-		margin: 0 16px;
+		margin: 15px;
 		display: flex;
 		flex-direction: column;
-
+		gap: 15px;
 		.rankingitem {
 			padding: 10px;
+			border-radius: 8px;
 			display: flex;
 			position: relative;
-
+			background-color: white;
 			.btn {
 				position: absolute;
 				right: 10px;

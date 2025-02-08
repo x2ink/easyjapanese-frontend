@@ -1,8 +1,8 @@
 <template>
 	<NavBar title="动词变形"></NavBar>
 	<view class="input">
-		<wd-input type="text" v-model="value" placeholder="请输入动词" />
-		<wd-button custom-class="btn" :round="false" @click="getVerbTrans()">立即变形</wd-button>
+		<wd-input  custom-class="input1"  no-border type="text" v-model="value" placeholder="请输入动词" />
+		<wd-button custom-class="btn" @click="getVerbTrans()" >立即变形</wd-button>
 	</view>
 	<wd-table :data="data" v-if="data.length>0">
 		<wd-table-col width="150" prop="category" label="类别" fixed></wd-table-col>
@@ -41,6 +41,10 @@
 	:deep(.btn) {
 		margin-top: 15px;
 		width: 100%;
+	}
+	:deep(.input1) {
+		padding: 10px;
+		border-radius: 8px;
 	}
 
 	.input {

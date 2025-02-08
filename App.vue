@@ -19,12 +19,12 @@
 	}
 
 	page {
-		background: #fff;
+		background: #f5f5f5;
 		background-attachment: fixed;
 	}
 
 	.jpfont {
-		font-family: 'jp';
+		/* font-family: 'jp'; */
 	}
 
 	::-webkit-scrollbar {

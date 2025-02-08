@@ -85,31 +85,94 @@
 			}
 		},
 		{
-			"path" : "pages/review/review",
-			"style" : 
-			{
+			"path": "pages/review/review",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path" : "pages/articledetail/articledetail",
-			"style" : 
-			{
+			"path": "pages/articledetail/articledetail",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path" : "pages/todayreview/todayreview",
-			"style" : 
-			{
-			"navigationStyle": "custom"
+			"path": "pages/todayreview/todayreview",
+			"style": {
+				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path" : "pages/verbtransfiguration/verbtransfiguration",
+			"path": "pages/verbtransfiguration/verbtransfiguration",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/aitranslate/aitranslate",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/fiftysounds/fiftysounds",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/grammar/grammar",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/grammardetail/grammardetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/radiostation/radiostation",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/player/player",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/commonwords/commonwords",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/feedback/feedback",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/mybooks/mybooks",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/mybookswordlist/mybookswordlist",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/translate/translate",
 			"style" : 
 			{
-			"navigationStyle": "custom"
+				"navigationStyle": "custom"
 			}
 		}
 	],

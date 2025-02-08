@@ -1,6 +1,5 @@
 <template>
 	<view>
-		<StatusBar></StatusBar>
 		<view class="swiper">
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll home">
 				<Home></Home>
@@ -56,7 +55,6 @@
 	.swiper {
 		width: 100%;
 		height: calc(100vh - 50px - env(safe-area-inset-bottom));
-
 		.scroll {
 			height: 100%;
 		}

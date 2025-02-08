@@ -1,85 +1,78 @@
 <template>
-	<Statusbar></Statusbar>
-	<view class="userinfo">
-		<uv-avatar size="60" :text="userInfo.nickname.charAt(0)" v-if="userInfo.avatar==''"></uv-avatar>
-		<view>
-			<p class="name">{{userInfo.nickname}}</p>
-			<p class="id">{{userInfo.email}}</p>
-		</view>
-	</view>
-	<view class="banner">
-		banner图
-	</view>
-	<view class="statistics">
-		<view class="left">
-			<view class="head">
-				<wd-icon name="add-circle" size="20px" />
-				<p>今日学习时长</p>
-			</view>
+	<view>
+		<view class="userinfo">
+			<uv-avatar size="60" :text="userInfo.nickname.charAt(0)" v-if="userInfo.avatar==''"></uv-avatar>
 			<view>
-				<view class="time">
-					<span>0</span>
-					<span>分钟</span>
-				</view>
-				<wd-progress :percentage="30" />
-				<p class="target">学习目标&nbsp;5分钟</p>
+				<p class="name">{{userInfo.nickname}}</p>
+				<p class="id">{{userInfo.email}}</p>
 			</view>
 		</view>
-		<view class="right">
-			<view class="rightitem">
-				<wd-icon name="add-circle" size="20px" />
+		<view class="banner">
+			banner图
+		</view>
+		<view class="statistics">
+			<view class="left">
+				<view class="head">
+					<wd-icon name="add-circle" size="20px" />
+					<p>今日学习时长</p>
+				</view>
 				<view>
-					<p>总时长</p>
-					<p>1小时48分钟</p>
+					<view class="time">
+						<span>0</span>
+						<span>分钟</span>
+					</view>
+					<wd-progress :percentage="30" />
+					<p class="target">学习目标&nbsp;5分钟</p>
 				</view>
 			</view>
-			<view class="rightitem">
-				<wd-icon name="add-circle" size="20px" />
-				<view>
-					<p>累计打卡</p>
-					<p>1小时48分钟</p>
+			<view class="right">
+				<view class="rightitem">
+					<wd-icon name="add-circle" size="20px" />
+					<view>
+						<p>总时长</p>
+						<p>1小时48分钟</p>
+					</view>
+				</view>
+				<view class="rightitem">
+					<wd-icon name="add-circle" size="20px" />
+					<view>
+						<p>累计打卡</p>
+						<p>1小时48分钟</p>
+					</view>
 				</view>
 			</view>
 		</view>
-	</view>
-	<view class="cell">
-		<view class="cellitem">
-			<p>学习笔记</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		<view class="cell">
+			<view class="cellitem" @click="goPage('mybooks')">
+				<p>单词本</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
+			<view class="cellitem">
+				<p>收藏夹</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
+			<view class="cellitem">
+				<p>排行榜</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
+			<view class="cellitem">
+				<p>设置</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
 		</view>
-		<view class="cellitem">
-			<p>收藏夹</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>排行榜</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>我的PDF </p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>领取资料</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>设置</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-	</view>
-	<view class="cell">
-		<view class="cellitem">
-			<p>意见反馈</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>关于我们</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
-		</view>
-		<view class="cellitem">
-			<p>分享App</p>
-			<wd-icon name="arrow-right" size="22px"></wd-icon>
+		<view class="cell">
+			<view class="cellitem" @click="goPage('feedback')">
+				<p>意见反馈</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
+			<view class="cellitem">
+				<p>关于我们</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
+			<view class="cellitem">
+				<p>分享App</p>
+				<wd-icon name="arrow-right" size="22px"></wd-icon>
+			</view>
 		</view>
 	</view>
 </template>
@@ -103,7 +96,17 @@
 			console.log("登录错误", err);
 		}
 	}
-
+	const goPage = (path, params) => {
+		if (params) {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}${params}`
+			})
+		} else {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}`
+			})
+		}
+	}
 	const userInfo = ref({
 		address: "",
 		avatar: '',
@@ -140,7 +143,7 @@
 
 	.userinfo {
 		display: flex;
-		margin: 15px;
+		padding: 15px;
 		gap: 15px;
 		align-items: center;
 

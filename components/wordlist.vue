@@ -13,7 +13,6 @@
 				<wd-text v-else size="14px" :lines="2" class="body" color="#999" :text="item.pinyin"></wd-text>
 
 			</view>
-			<wd-gap bg-color="#F5f5f5" height="10px"></wd-gap>
 		</view>
 	</view>
 </template>
@@ -43,15 +42,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
-		background-color: white;
 
 		.worditem {
 			background-color: white;
 			padding: 10px;
-			border-radius: 4px;
+			border-radius: 8px;
 
 			.body {
-				margin-top: 5px;
+				// margin-top: 5px;
 			}
 
 			.head {

@@ -1,7 +1,6 @@
 <template>
-	<view style="background-color: #f5f5f5;height: 100%;">
-		<Statusbar></Statusbar>
-		<view style="background-color: white;">
+	<view style="height: 100%;">
+		<view style="background-color: white;padding-top: 15px;">
 			<view @click="goPage('search')" class="search">
 				<wd-icon name="search" size="22px" color="#979797"></wd-icon>
 				<p>搜索</p>
@@ -199,7 +198,6 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-
 	}
 
 	:deep(.loadmore) {
@@ -232,7 +230,7 @@
 	.search {
 		height: 45px;
 		background: #f5f5f5;
-		margin: 15px 15px 0 15px;
+		margin: 0 15px;
 		padding: 10px;
 		font-size: $uni-font-size-lg;
 		box-sizing: border-box;

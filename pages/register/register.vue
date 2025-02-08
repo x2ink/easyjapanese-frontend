@@ -5,14 +5,12 @@
 			<p class="title">注册</p>
 			<wd-input no-border style="margin-top: 20px;" size="large" type="text" v-model="from.email"
 				placeholder="请输入邮箱" center />
-			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
-			<wd-input no-border size="large" type="text" v-model="from.password" placeholder="请输入密码" showPassword
-				center />
-			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
-			<wd-input no-border size="large" type="text" v-model="validPassword" placeholder="请输入确认密码" showPassword
-				center />
-			<view style="background-color: #f0f0f0;height: 1px;width: 100%;"></view>
-			<wd-input no-border size="large" type="text" v-model="from.captcha" placeholder="请输入验证码" center>
+			<wd-input style="margin-top: 10px;" no-border size="large" type="text" v-model="from.password"
+				placeholder="请输入密码" showPassword center />
+			<wd-input style="margin-top: 10px;" no-border size="large" type="text" v-model="validPassword"
+				placeholder="请输入确认密码" showPassword center />
+			<wd-input style="margin-top: 10px;" no-border size="large" type="text" v-model="from.captcha"
+				placeholder="请输入验证码" center>
 				<template #suffix>
 					<wd-button :disabled="countdown>0" style="width: 80px;" @click="getCaptcha()" type="warning"
 						size="small" plain>{{btnText}}</wd-button>

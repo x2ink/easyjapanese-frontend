@@ -1,27 +1,24 @@
 <template>
 	<Statusbar></Statusbar>
-	<view class="search">
-		<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-		<p>搜索</p>
-	</view>
-	<view class="banner">
-		五十音banner
-	</view>
-	<view class="knowledge wrap">
-		<p class="title">知识点</p>
-		<view class="list">
-			<view class="item">
-				<p>语法学习</p>
-			</view>
-			<view class="item">
-				<p>常用词汇</p>
-			</view>
-			<view class="item">
-				<p>学习电台</p>
-			</view>
+	<view class="banner bg" @click="goPage('fiftysounds')">
+		<view>
+			<text>五十音学习</text>
+			<wd-icon name="arrow-right" size="25px" color="#fff"></wd-icon>
 		</view>
 	</view>
-	<view class="wrap">
+	<view class="list">
+		<view @click="goPage('grammar')" class="item _GCENTER">
+			<p>语法学习</p>
+		</view>
+		<view class="item  _GCENTER">
+			<p>常用词汇</p>
+		</view>
+		<view @click="goPage('radiostation')" class="item _GCENTER">
+			<p>学习电台</p>
+		</view>
+	</view>
+
+	<!-- 	<view class="wrap">
 		<view style="display: flex;align-items: center;justify-content: space-between;">
 			<p class="title">教材</p>
 			<view class="more">
@@ -33,7 +30,7 @@
 			<img class="bookitem" v-for="_ in 10" alt=""
 				src="https://static-cse.canva.cn/blob/352230/1003w-olh3HW7GiQY.3e89ead4.jpg" />
 		</scroll-view>
-	</view>
+	</view> -->
 	<view class="paper">
 		<view class="item" v-for="_ in 10">
 			<p class="time">2024</p>
@@ -54,11 +51,43 @@
 		onLoad
 	} from '@dcloudio/uni-app'
 	import Statusbar from "@/components/statusbar.vue"
+	const goPage = (path, params) => {
+		if (params) {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}${params}`
+			})
+		} else {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}`
+			})
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
 	:deep(.btn) {
 		margin: 0 !important;
+	}
+
+	.list {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 10px;
+		padding:0 15px;
+		.item {
+			background-color: #f5f5f5;
+			aspect-ratio: 16/9;
+			padding: 10px;
+			box-sizing: border-box;
+			border-radius: $uni-border-radius-base;
+			color: #000;
+			font-weight: bold;
+		}
+	}
+
+	.bg {
+		background-position: center;
+		background-size: 100% 100%;
 	}
 
 	.paper {
@@ -84,10 +113,29 @@
 	}
 
 	.banner {
-		background-color: white;
+		background-image: url('/static/fiftysounds.png');
 		aspect-ratio: 16/9;
 		margin: 15px;
 		border-radius: $uni-border-radius-base;
+		position: relative;
+		overflow: hidden;
+
+		>view {
+			color: #fff;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			line-height: 40px;
+			background-color: rgba(223, 142, 139, 0.6);
+			padding: 0 10px;
+			box-sizing: border-box;
+			font-size: 18px;
+			font-weight: bold;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
 	}
 
 	.more {
@@ -119,48 +167,8 @@
 
 	.wrap {
 		background-color: white;
-		margin: 15px;
-		padding: 15px;
-		border-radius: $uni-border-radius-base;
-	}
-
-	.knowledge {
-
-
-		.list {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 10px;
-			margin-top: 15px;
-
-			.item {
-				background-color: red;
-				aspect-ratio: 16/9;
-				padding: 10px;
-				box-sizing: border-box;
-				border-radius: $uni-border-radius-base;
-				color: white;
-				font-weight: bold;
-			}
-		}
-
-
-	}
-
-	.search {
-		height: 45px;
-		background: #EFEFEF;
-		margin: 15px;
+		margin: 10px;
 		padding: 10px;
-		font-size: $uni-font-size-lg;
-		box-sizing: border-box;
-		border-radius: 45px;
-		display: flex;
-		align-items: center;
-
-		p {
-			color: #979797;
-			margin-left: 10px;
-		}
+		border-radius: $uni-border-radius-base;
 	}
 </style>

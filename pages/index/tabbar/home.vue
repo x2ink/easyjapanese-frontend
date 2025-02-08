@@ -1,62 +1,63 @@
 <template>
 	<view>
-		<Statusbar></Statusbar>
-		<view @click="goPage('search')" class="search">
-			<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-			<p>搜索</p>
-		</view>
-		<view class="day">
-			你已经坚持了<span>{{info.day}}天</span><span>加油！！！</span>
-		</view>
-		<view class="recite">
-			<view class="plan">
-				<p>{{info.bookname}}</p>
-				<view>
-					<p @click="openPlan">
-						修改计划
-					</p>
-					<wd-icon name="arrow-right" size="19px"></wd-icon>
+		<view style="background-color: white;padding-top: 15px;">
+			<view @click="goPage('search')" class="search">
+				<wd-icon name="search" size="22px" color="#979797"></wd-icon>
+				<p>搜索</p>
+			</view>
+			<view class="day">
+				你已经坚持了<span>{{info.day}}天</span><span>加油！！！</span>
+			</view>
+			<view class="recite">
+				<view class="plan">
+					<p>{{info.bookname}}</p>
+					<view>
+						<p @click="openPlan">
+							修改计划
+						</p>
+						<wd-icon name="arrow-right" size="19px"></wd-icon>
+					</view>
+				</view>
+				<view class="task">
+					<view @click="goPage('todayreview')">
+						<p>等待复习</p>
+						<p>{{info.review}}</p>
+					</view>
+					<view @click="goPage('todaylearn')">
+						<p>今日学习</p>
+						<p>{{info.learn}}</p>
+					</view>
+				</view>
+				<wd-progress :percentage="progress" hide-text />
+				<view class="progress">
+					<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
+					<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
+				</view>
+				<view class="btns">
+					<wd-button @click="review()" custom-class="review" size="large" type="info"
+						style="width: 100%;">记忆复习</wd-button>
+					<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
 				</view>
 			</view>
-			<view class="task">
-				<view @click="goPage('todayreview')">
-					<p>等待复习</p>
-					<p>{{info.review}}</p>
+			<view class="maintool">
+				<view @click="goPage('aitranslate')">
+					<p>AI翻译</p>
+					<p>精准专业翻译</p>
 				</view>
-				<view @click="goPage('todaylearn')">
-					<p>今日学习</p>
-					<p>{{info.learn}}</p>
+				<view @click="goPage('translate')">
+					<p>标准翻译</p>
+					<p>快速翻译语言</p>
 				</view>
 			</view>
-			<wd-progress :percentage="progress" hide-text />
-			<view class="progress">
-				<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
-				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
-			</view>
-			<view class="btns">
-				<wd-button @click="review()" custom-class="review" size="large" type="info"
-					style="width: 100%;">记忆复习</wd-button>
-				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
-			</view>
-		</view>
-		<view class="maintool">
-			<view>
-				<p>AI翻译</p>
-				<p>精准专业翻译</p>
-			</view>
-			<view>
-				<p>词库大全</p>
-				<p>收录词条过万</p>
-			</view>
-		</view>
-		<uv-scroll-list>
-			<view class="scroll-list" style="flex-direction: row;">
-				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+			<view class="scroll-list">
+				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList"
+					:key="index">
 					<image class="scroll-list__item__image" :src="item.image"></image>
 					<p class="scroll-list__item__text">{{ item.name }}</p>
 				</view>
 			</view>
-		</uv-scroll-list>
+		</view>
+
 		<view class="articlelist">
 			<view class="articleitem" @click="goPage('articledetail','?id='+item.id)" :key="item.id"
 				v-for="item in articleList">
@@ -187,37 +188,31 @@
 		setPlanRef.value.show = true
 	}
 	const toolList = ref([{
+		name: '语法学习',
+		image: '../../static/duo-icons--book.png',
+		path: 'grammar'
+	}, {
+		name: '五十音图',
+		image: '../../static/duo-icons--dashboard.png',
+		path: 'fiftysounds'
+	}, {
 		name: '动词变形',
 		image: '../../static/duo-icons--palette.png',
 		path: "verbtransfiguration"
 	}, {
-		name: '考试宝典',
-		image: '../../static/duo-icons--book-2.png'
+		name: '日语电台',
+		image: '../../static/duo-icons--disk.png',
+		path: 'radiostation'
 	}, {
-		name: '口语练习',
-		image: '../../static/duo-icons--user.png'
-	}, {
-		name: '听力突破',
-		image: '../../static/duo-icons--disk.png'
-	}, {
-		name: '情景对话',
-		image: '../../static/duo-icons--message-3.png'
-	}, {
-		name: '漫画日语',
-		image: '../../static/duo-icons--book.png'
-	}, {
-		name: '免费动漫',
-		image: '../../static/duo-icons--clapperboard.png'
+		name: '常用词汇',
+		image: '../../static/duo-icons--message-3.png',
+		path: "commonwords"
 	}])
 </script>
 
 <style lang="scss" scoped>
 	.review {
 		color: #4D80F0 !important;
-	}
-
-	::-webkit-scrollbar {
-		display: none !important;
 	}
 
 
@@ -282,12 +277,13 @@
 
 
 	.scroll-list {
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
 		gap: 10px;
+		margin: 0 5px;
 
 		&__item {
-			width: 70px;
-			height: 70px;
+			height: 80px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -295,17 +291,10 @@
 			background-color: white;
 			border-radius: $uni-border-radius-base;
 
-			&:first-child {
-				margin-left: 10px;
-			}
-
-			&:last-child {
-				margin-right: 10px;
-			}
 
 			&__image {
-				width: 30px;
-				height: 30px;
+				width: 40px;
+				height: 40px;
 			}
 
 			&__text {
@@ -360,7 +349,7 @@
 	}
 
 	.day {
-		margin: 0 15px;
+		margin: 10px 15px 15px 15px;
 		color: $uni-text-color-grey;
 
 		span {
@@ -384,7 +373,7 @@
 	.search {
 		height: 45px;
 		background: #f5f5f5;
-		margin: 15px;
+		margin: 0 15px;
 		padding: 10px;
 		font-size: $uni-font-size-lg;
 		box-sizing: border-box;
