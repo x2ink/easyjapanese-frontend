@@ -42,15 +42,14 @@
 				</view>
 			</view>
 		</view>
-		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
 		<!-- 评论区 -->
-		<view class="userinput">
+	<!-- 	<view class="userinput">
 			<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
 			<view class="input" @click="replyOwner()">
 				<text>说点什么...</text>
 				<wd-icon name="edit-outline" color="#999" />
 			</view>
-		</view>
+		</view> -->
 		<view class="commentarea">
 			<view class="comment" v-for="(item,index) in List" :key="item.id">
 				<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
@@ -111,7 +110,7 @@
 		<view class="fixed">
 			<view class="userinput">
 				<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
-				<view class="input" @click="replyOwner()">
+				<view class="input" style="background-color: #F3F3F5;" @click="replyOwner()">
 					<text>说点什么...</text>
 					<wd-icon name="edit-outline" color="#999" />
 				</view>
@@ -420,7 +419,7 @@
 			border-radius: 35px;
 			display: flex;
 			align-items: center;
-			background-color: #f5f5f5;
+			background-color: #fff;
 			flex: 1;
 			justify-content: space-between;
 
@@ -435,7 +434,11 @@
 		padding: 15px;
 		display: flex;
 		flex-direction: column;
+		margin: 10px;
+		border-radius: 8px;
+		background-color: white;
 		gap: 15px;
+
 
 
 		.comment {
@@ -504,6 +507,8 @@
 	.item {
 		background-color: white;
 		padding: 10px 15px;
+		margin: 0 10px;
+		border-radius: 8px;
 
 		.footer {
 			margin-left: 50px;

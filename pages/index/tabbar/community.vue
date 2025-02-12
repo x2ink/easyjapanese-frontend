@@ -1,18 +1,19 @@
 <template>
-	<view style="height: 100%;">
-		<view style="background-color: white;padding-top: 15px;">
+	<view>
+		<!-- 顶部区域 -->
+		<view class="chead">
+			<wd-tabs slidable custom-class="tabs" v-model="tab">
+				<block v-for="(item,index) in tabList" :key="item">
+					<wd-tab :title="item.name">
+					</wd-tab>
+				</block>
+			</wd-tabs>
 			<view @click="goPage('search')" class="search">
-				<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-				<p>搜索</p>
+				<wd-icon name="search" size="18px" color="#979797"></wd-icon>
+				<p>搜索动态内容</p>
 			</view>
 		</view>
 		<view style="position: relative;">
-			<view class="tabs">
-				<view @click="currentTab=index" :class="{active:currentTab===index}" class="tab _GCENTER "
-					v-for="(item,index) in tabList" :key="index">
-					{{item.name}}
-				</view>
-			</view>
 			<view v-if="noResult">
 				<wd-status-tip image="content" tip="没有动态" />
 			</view>
@@ -59,7 +60,6 @@
 				</view>
 			</view>
 			<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
-
 		</view>
 		<wd-fab type="warning" position="right-bottom">
 			<template #trigger>
@@ -116,7 +116,7 @@
 	const loadMoreShow = ref(true)
 	const currentTab = ref(0)
 	const tabList = ref([{
-		name: "全部动态",
+		name: "全部",
 		id: 0
 	}])
 	const getDetail = (id) => {
@@ -190,6 +190,55 @@
 </script>
 
 <style lang="scss" scoped>
+	:deep(.wd-tabs__nav-item) {
+		font-size: 16px;
+	}
+
+	:deep(.tabs) {
+		background-color: transparent;
+		width: 200px;
+	}
+
+	:deep(.wd-tabs) {
+		background-color: transparent;
+	}
+
+	:deep(.wd-tabs__nav) {
+		background-color: transparent;
+	}
+
+	.chead {
+		padding: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+
+		.search {
+			height: 40px;
+			background: #fff;
+			padding: 5px 15px;
+			font-size: $uni-font-size-lg;
+			box-sizing: border-box;
+			border-radius: 40px;
+			display: flex;
+			align-items: center;
+
+			p {
+				font-size: 14px;
+				color: #979797;
+				margin-left: 5px;
+			}
+		}
+
+
+	}
+
+
+
+
+
+
 	.release {
 		width: 50px;
 		height: 50px;
@@ -209,45 +258,13 @@
 		}
 	}
 
-	.tabs {
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		background-color: #fff;
-		display: grid;
-		height: 45px;
-		grid-template-columns: repeat(4, 1fr);
 
-		.tab {
-			font-size: $uni-font-size-base;
-		}
 
-		.active {
-			font-weight: bold;
-		}
-	}
-
-	.search {
-		height: 45px;
-		background: #f5f5f5;
-		margin: 0 15px;
-		padding: 10px;
-		font-size: $uni-font-size-lg;
-		box-sizing: border-box;
-		border-radius: 45px;
-		display: flex;
-		align-items: center;
-
-		p {
-			color: #979797;
-			margin-left: 10px;
-		}
-	}
 
 
 	.list {
 		background-color: #f5f5f5;
-		padding: 10px 0;
+		padding: 0 10px;
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
@@ -257,6 +274,7 @@
 			background-color: white;
 			padding: 15px;
 			gap: 15px;
+			border-radius: 8px;
 
 			.footer {
 				justify-content: space-between;

@@ -1,88 +1,94 @@
 <template>
 	<view>
-		<view style="background-color: white;padding-top: 15px;">
-			<view @click="goPage('search')" class="search">
-				<wd-icon name="search" size="22px" color="#979797"></wd-icon>
-				<p>搜索</p>
-			</view>
+		<!-- 顶部区域 -->
+		<view class="head">
 			<view class="day">
-				你已经坚持了<span>{{info.day}}天</span><span>加油！！！</span>
+				你已坚持<span>{{info.day}}天</span>加油！
 			</view>
-			<view class="recite">
-				<view class="plan">
-					<p>{{info.bookname}}</p>
-					<view>
-						<p @click="openPlan">
-							修改计划
-						</p>
-						<wd-icon name="arrow-right" size="19px"></wd-icon>
-					</view>
-				</view>
-				<view class="task">
-					<view @click="goPage('todayreview')">
-						<p>等待复习</p>
-						<p>{{info.review}}</p>
-					</view>
-					<view @click="goPage('todaylearn')">
-						<p>今日学习</p>
-						<p>{{info.learn}}</p>
-					</view>
-				</view>
-				<wd-progress :percentage="progress" hide-text />
-				<view class="progress">
-					<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
-					<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
-				</view>
-				<view class="btns">
-					<wd-button @click="review()" custom-class="review" size="large" type="info"
-						style="width: 100%;">记忆复习</wd-button>
-					<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
-				</view>
-			</view>
-			<view class="maintool">
-				<view @click="goPage('aitranslate')">
-					<p>AI翻译</p>
-					<p>精准专业翻译</p>
-				</view>
-				<view @click="goPage('translate')">
-					<p>标准翻译</p>
-					<p>快速翻译语言</p>
-				</view>
-			</view>
-			<view class="scroll-list">
-				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList"
-					:key="index">
-					<image class="scroll-list__item__image" :src="item.image"></image>
-					<p class="scroll-list__item__text">{{ item.name }}</p>
-				</view>
+			<view @click="goPage('search')" class="search">
+				<wd-icon name="search" size="18px" color="#979797"></wd-icon>
+				<p>搜索单词或语法</p>
 			</view>
 		</view>
-
-		<view class="articlelist">
-			<view class="articleitem" @click="goPage('articledetail','?id='+item.id)" :key="item.id"
-				v-for="item in articleList">
-				<view class="head">
-					<view class="user">
-						<uv-avatar size="25" :src="item.user.avatar"></uv-avatar>
-						<p>{{item.user.nickname}}</p>
-					</view>
-					<wd-icon name="ellipsis" size="20px"></wd-icon>
+		<!-- 统计 -->
+		<view class="recite">
+			<view class="plan">
+				<p>{{info.bookname}}</p>
+				<view>
+					<p @click="openPlan">
+						修改计划
+					</p>
+					<wd-icon name="arrow-right" size="19px"></wd-icon>
 				</view>
-				<view class="content">
+			</view>
+			<view class="task">
+				<view @click="goPage('todayreview')">
+					<p>等待复习</p>
+					<p>{{info.review}}</p>
+				</view>
+				<view @click="goPage('todaylearn')">
+					<p>今日学习</p>
+					<p>{{info.learn}}</p>
+				</view>
+			</view>
+			<wd-progress :percentage="progress" hide-text />
+			<view class="progress">
+				<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
+				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
+			</view>
+			<view class="btns">
+				<wd-button @click="review()" custom-class="review" size="large" type="info"
+					style="width: 100%;">记忆复习</wd-button>
+				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
+			</view>
+		</view>
+		<!-- 翻译 -->
+		<view class="maintool">
+			<view @click="goPage('aitranslate')">
+				<p>AI翻译</p>
+				<p>精准专业翻译</p>
+				<image src="/static/duo-icons--android.png" mode="aspectFit"></image>
+			</view>
+			<view @click="goPage('translate')">
+				<p>标准翻译</p>
+				<p>快速翻译语言</p>
+				<image src="/static/duo-icons--g-translate.png" mode="aspectFit"></image>
+			</view>
+		</view>
+		<!-- 其他工具 -->
+		<view class="scroll-list">
+			<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+				<image class="scroll-list__item__image" :src="item.image"></image>
+				<p class="scroll-list__item__text">{{ item.name }}</p>
+			</view>
+		</view>
+		<!-- 推荐单词 -->
+		<view class="smalltitle">
+			<text>单词推荐</text>
+			<view>
+				<text>换一批</text>
+				<wd-icon name="refresh1" color="#999" size="16px"></wd-icon>
+			</view>
+		</view>
+		<!-- 单词列表 -->
+		<view class="wordlist">
+			<view class="worditem" v-for="_ in 10">
+				<view class="wordhead">
+					<text>这是单词</text>
+					<wd-tag custom-class="tag" color="#0083ff" bg-color="#d0e8ff">N5</wd-tag>
+				</view>
+				<view class="explain">
+					这是单词解释
+				</view>
+				<view class="wordfooter">
 					<view>
-						<wd-text :lines="1" :text="item.title" color="#000000" bold></wd-text>
-						<wd-text :lines="3" :text="item.encapsulate" size="14px" style="margin-top: 3px;"></wd-text>
+						<wd-icon name="browse" color="#999" size="18px"></wd-icon>
+						<text>0</text>
 					</view>
-					<image :src="item.icon" mode="aspectFill"></image>
-				</view>
-				<view class="footer">
-					<p>
-						{{item.browse}}阅读
-						<!-- &nbsp;·&nbsp;4点赞&nbsp;·&nbsp;6收藏 -->
-					</p>
-					<p>
-						{{dayjs().to(dayjs(item.created_at))}}
-					</p>
+					<view>
+						<text>查看详情</text>
+						<wd-icon name="arrow-right" color="#999" size="16px"></wd-icon>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -211,188 +217,50 @@
 </script>
 
 <style lang="scss" scoped>
-	.review {
-		color: #4D80F0 !important;
-	}
-
-
-	.articlelist {
-		background-color: #f5f5f5;
-		padding: 15px 0;
+	.head {
+		padding: 10px;
 		display: flex;
-		flex-direction: column;
-		gap: 15px;
+		align-items: center;
+		justify-content: space-between;
 
-		.articleitem {
-			padding: 15px;
-			background-color: white;
-
-
-			.footer {
-				margin-top: 10px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				color: $uni-text-color-grey;
-				font-size: $uni-font-size-sm;
-			}
-
-			.content {
-				display: flex;
-				justify-content: space-between;
-				margin-top: 5px;
-				gap: 10px;
-
-				view {
-					flex: 1;
-					display: flex;
-					flex-direction: column;
-				}
-
-				image {
-					border-radius: 4px;
-					width: 120px;
-					height: 80px;
-				}
-			}
-
-			.head {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-
-				.user {
-					display: flex;
-					align-items: center;
-
-					p {
-						font-size: $uni-font-size-base;
-						margin-left: 8px;
-					}
-				}
-			}
-		}
-	}
-
-
-
-	.scroll-list {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 10px;
-		margin: 0 5px;
-
-		&__item {
-			height: 80px;
+		.search {
+			height: 40px;
+			background: #fff;
+			padding: 5px 15px;
+			font-size: $uni-font-size-lg;
+			box-sizing: border-box;
+			border-radius: 40px;
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			flex-direction: column;
-			background-color: white;
-			border-radius: $uni-border-radius-base;
-
-
-			&__image {
-				width: 40px;
-				height: 40px;
-			}
-
-			&__text {
-				color: $uni-text-color-grey;
-				text-align: center;
-				font-size: $uni-font-size-sm;
-				margin-top: 5px;
-			}
-		}
-
-	}
-
-	.maintool {
-		display: flex;
-		align-items: center;
-		margin: 15px;
-		gap: 15px;
-
-		>view {
-			border-radius: $uni-border-radius-base;
-			flex: 1;
-			padding: 15px;
-			background-size: 60%;
-			background-position: center right;
-			background-repeat: no-repeat;
-			background-color: white;
-			color: white;
-
 
 			p {
+				font-size: 14px;
+				color: #979797;
+				margin-left: 5px;
+			}
+		}
+
+		.day {
+			color: $uni-text-color-grey;
+
+			span {
 				&:nth-of-type(1) {
-					font-size: $uni-font-size-lg;
+					font-size: 25px;
+					margin-left: 3px;
+					margin-right: 8px;
 					font-weight: bold;
-				}
-
-				&:nth-of-type(2) {
-					margin-top: 3px;
-					font-size: $uni-font-size-sm;
+					font-style: italic;
+					color: $uni-color-success;
 				}
 			}
-
-			&:nth-of-type(1) {
-				background: linear-gradient(135deg, #fa4350, #ffa39e);
-				// background-image: url('@/static/ai.png');
-			}
-
-			&:nth-of-type(2) {
-				background: linear-gradient(135deg, #4D80F0, #B0C4DE);
-				// background-image: url('@/static/yufa.png');
-			}
-		}
-	}
-
-	.day {
-		margin: 10px 15px 15px 15px;
-		color: $uni-text-color-grey;
-
-		span {
-			&:nth-of-type(1) {
-				font-size: 25px;
-				margin-left: 3px;
-				margin-right: 8px;
-				font-weight: bold;
-				font-style: italic;
-				color: $uni-color-success;
-			}
-		}
-	}
-
-	:deep(.wd-progress__outer) {
-		height: 10px !important;
-		border-radius: 10px !important;
-		overflow: hidden;
-	}
-
-	.search {
-		height: 45px;
-		background: #f5f5f5;
-		margin: 0 15px;
-		padding: 10px;
-		font-size: $uni-font-size-lg;
-		box-sizing: border-box;
-		border-radius: 45px;
-		display: flex;
-		align-items: center;
-
-		p {
-			color: #979797;
-			margin-left: 10px;
 		}
 	}
 
 	.recite {
 		padding: 15px;
-		margin: 15px;
-		border-radius: $uni-border-radius-base;
+		margin: 0 10px 10px 10px;
+		border-radius: 8px;
 		background-color: white;
-		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
 		.plan {
 			font-size: $uni-font-size-base;
@@ -457,6 +325,177 @@
 			align-items: center;
 			justify-content: space-between;
 			gap: 15px;
+		}
+	}
+
+	.scroll-list {
+		margin: 10px;
+		background-color: white;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 10px;
+		border-radius: 8px;
+
+		&__item {
+			height: 80px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+
+
+			&__image {
+				width: 40px;
+				height: 40px;
+			}
+
+			&__text {
+				color: $uni-text-color-grey;
+				text-align: center;
+				font-size: $uni-font-size-sm;
+				margin-top: 5px;
+			}
+		}
+
+	}
+
+
+
+
+
+
+
+
+	.review {
+		color: #4D80F0 !important;
+	}
+
+
+
+
+
+
+
+	.maintool {
+		display: flex;
+		align-items: center;
+		margin: 10px;
+		gap: 15px;
+
+		>view {
+			position: relative;
+			border-radius: $uni-border-radius-base;
+			flex: 1;
+			padding: 15px;
+			background-size: 60%;
+			background-position: center right;
+			background-repeat: no-repeat;
+			background-color: white;
+
+			image {
+				position: absolute;
+				right: 15px;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 50px;
+				height: 50px;
+			}
+
+			p {
+				&:nth-of-type(1) {
+					font-size: $uni-font-size-lg;
+					// font-weight: bold;
+				}
+
+				&:nth-of-type(2) {
+					margin-top: 3px;
+					color: #999;
+					font-size: $uni-font-size-sm;
+				}
+			}
+
+			&:nth-of-type(1) {
+				// background: linear-gradient(135deg, #fa4350, #ffa39e);
+				// background-image: url('@/static/ai.png');
+			}
+
+			&:nth-of-type(2) {
+				// background: linear-gradient(135deg, #4D80F0, #B0C4DE);
+				// background-image: url('@/static/yufa.png');
+			}
+		}
+	}
+
+
+	.smalltitle {
+		margin: 10px 10px 0 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		>view {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			font-size: 12px;
+			color: #999;
+		}
+	}
+
+	:deep(.wd-progress__outer) {
+		height: 10px !important;
+		border-radius: 10px !important;
+		overflow: hidden;
+	}
+
+	:deep(.tag) {
+		padding: 2px 8px;
+		border-radius: 4px;
+	}
+
+	.wordlist {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px;
+
+		.worditem {
+			border-radius: 8px;
+			padding: 10px;
+			background-color: white;
+
+			.wordfooter {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				>view {
+					gap: 2px;
+					display: flex;
+					align-items: center;
+
+					text {
+						font-size: 12px;
+						color: #999;
+					}
+				}
+			}
+
+			.explain {
+				font-size: 14px;
+				margin: 10px 0;
+			}
+
+			.wordhead {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				text {
+					font-size: 16px;
+					font-weight: bold;
+				}
+			}
 		}
 	}
 </style>

@@ -1,13 +1,19 @@
 <template>
-	<view style="height: 100vh;background-color: #f5f5f5;">
-		<Navbar style="background-color: white;">
+	<view>
+		<Navbar style="background-color: #F3F3F5;">
 			<template v-slot:center>
-				<SearchInput @confirm="search" @change="inputChange"></SearchInput>
+				<SearchInput @confirm="search" @change="inputChange">
+					<template #prefix>
+						<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
+							<view class="search-type">
+								<text>{{ current }}</text>
+								<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
+							</view>
+						</wd-popover>
+					</template>
+				</SearchInput>
 			</template>
 		</Navbar>
-		<view style="padding:5px 15px 10px 15px;background-color: white;">
-			<wd-segmented size="small" customClass="segmented" :options="list" v-model:value="current"></wd-segmented>
-		</view>
 		<view class="title" v-if="total==0">
 			<p>搜索历史</p>
 			<wd-icon name="clear" @click="clear()" size="20px" color="#999" />
@@ -25,7 +31,7 @@
 			<wd-status-tip image="search" tip="没有搜索到结果" />
 		</view>
 		<!-- 列表 -->
-		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin: 15px;" :list="List">
+		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin: 10px;" :list="List">
 		</WordList>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 
@@ -58,7 +64,7 @@
 		scrollTop.value = e.scrollTop
 	})
 	const inputChange = (e) => {
-		val.value=e
+		val.value = e
 	}
 	const loadmore = computed(() => {
 		if (total.value == List.value.length) {
@@ -73,6 +79,16 @@
 		moreShow.value = false
 		history.value = []
 		searchrecordStore().clear()
+	}
+	const menu = ref([{
+			content: '日中'
+		},
+		{
+			content: '中日'
+		}
+	])
+	const changeSearchType = (e) => {
+		current.value=e.item.content
 	}
 	const lookmore = () => {
 		moreShow.value = false
@@ -91,7 +107,6 @@
 	const List = ref([])
 	const total = ref(0)
 	const noResult = ref(false)
-	const list = ref(['日中', '中日'])
 	const current = ref('日中')
 	watch(current, (newVal, oldVal) => {
 		noResult.value = false
@@ -143,17 +158,7 @@
 		List.value = List.value.concat(res.data)
 
 	}
-	const searchType = ref('全部')
-	const menu = ref([{
-			content: '全部'
-		},
-		{
-			content: '单词'
-		},
-		{
-			content: '语法'
-		}
-	])
+	
 	const activeShow = ref(false)
 	const actions = ref([{
 			name: '选项1'
@@ -165,9 +170,7 @@
 			name: '选项3'
 		}
 	])
-	const changeSearchType = (e) => {
-		console.log(e);
-	}
+
 </script>
 
 <style scoped lang="scss">

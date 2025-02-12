@@ -8,10 +8,10 @@
 				class="scroll community">
 				<Community ref="communityRef"></Community>
 			</scroll-view>
-			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
+	<!-- 		<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
 				<Learn></Learn>
-			</scroll-view>
-			<scroll-view v-show="tabbar===3" scroll-y="true" class="scroll self">
+			</scroll-view> -->
+			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll self">
 				<Self></Self>
 			</scroll-view>
 		</view>

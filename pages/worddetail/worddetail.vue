@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar title="" style="background-color: #f5f5f5;">
+		<NavBar title="">
 			<template #right>
 				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
 			</template>
