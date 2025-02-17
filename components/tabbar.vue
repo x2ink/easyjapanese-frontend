@@ -3,7 +3,8 @@
 		safeAreaInsetBottom placeholder>
 		<wd-tabbar-item title="首页" icon="home"></wd-tabbar-item>
 		<wd-tabbar-item title="交流" icon="chat"></wd-tabbar-item>
-		<wd-tabbar-item title="我的" :value="2" icon="user"></wd-tabbar-item>
+		<wd-tabbar-item title="消息" :value="msg" icon="notification"></wd-tabbar-item>
+		<wd-tabbar-item title="我的" icon="user"></wd-tabbar-item>
 	</wd-tabbar>
 </template>
 
@@ -14,6 +15,12 @@
 	} from 'vue';
 	const tabbar = ref(0)
 	const emits = defineEmits(["change"])
+	const props = defineProps({
+		msg: {
+			default: 0,
+			type: Number
+		}
+	})
 	defineExpose({
 		tabbar
 	})

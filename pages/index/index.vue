@@ -8,14 +8,14 @@
 				class="scroll community">
 				<Community ref="communityRef"></Community>
 			</scroll-view>
-	<!-- 		<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
-				<Learn></Learn>
-			</scroll-view> -->
-			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll self">
+			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
+				<Message :msgTotal="msgTotal"></Message>
+			</scroll-view>
+			<scroll-view v-show="tabbar===3" scroll-y="true" class="scroll self">
 				<Self></Self>
 			</scroll-view>
 		</view>
-		<Tabbar @change="tabbarChange"></Tabbar>
+		<Tabbar :msg="msgTotal.comment_total+msgTotal.like_total" @change="tabbarChange"></Tabbar>
 	</view>
 </template>
 
@@ -25,11 +25,13 @@
 		onMounted
 	} from 'vue';
 	import {
-		onLoad
+		onLoad,
+		onShow
 	} from '@dcloudio/uni-app'
 	import StatusBar from '@/components/statusBar.vue';
 	import $http from "@/api/index.js"
 	import Community from "./tabbar/community.vue"
+	import Message from "./tabbar/message.vue"
 	import Home from "./tabbar/home.vue"
 	import Learn from "./tabbar/learn.vue"
 	import Self from "./tabbar/self.vue"
@@ -42,7 +44,19 @@
 		tabbar.value = e.value
 	}
 	const communityRef = ref(null)
+	const msgTotal = ref({
+		comment_total: 0,
+		like_total: 0
+	})
+	const getUnread = async () => {
+		const res = await $http.common.getUnread()
+		msgTotal.value = res
+	}
+	onShow(() => {
+		getUnread()
+	})
 	onMounted(() => {
+
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })
@@ -55,6 +69,7 @@
 	.swiper {
 		width: 100%;
 		height: calc(100vh - 50px - env(safe-area-inset-bottom));
+
 		.scroll {
 			height: 100%;
 		}

@@ -10,7 +10,7 @@
 		<view class="banner">
 			banner图
 		</view>
-		<view class="statistics">
+		<!-- 	<view class="statistics">
 			<view class="left">
 				<view class="head">
 					<wd-icon name="add-circle" size="20px" />
@@ -41,14 +41,10 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="cell">
 			<view class="cellitem" @click="goPage('mybooks')">
 				<p>单词本</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
-			</view>
-			<view class="cellitem">
-				<p>收藏夹</p>
 				<wd-icon name="arrow-right" size="22px"></wd-icon>
 			</view>
 			<view class="cellitem">
@@ -128,7 +124,7 @@
 	}
 
 	.cell {
-		padding: 10px;
+		padding: 5px 15px;
 		margin: 15px;
 		background-color: white;
 		border-radius: $uni-border-radius-base;

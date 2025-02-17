@@ -2,8 +2,8 @@
 	<view>
 		<!-- 顶部区域 -->
 		<view class="chead">
-			<wd-tabs slidable custom-class="tabs" v-model="tab">
-				<block v-for="(item,index) in tabList" :key="item">
+			<wd-tabs slidable custom-class="tabs" v-model="currentTab">
+				<block v-for="(item,index) in tabList" :key="item.name">
 					<wd-tab :title="item.name">
 					</wd-tab>
 				</block>

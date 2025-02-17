@@ -1,5 +1,5 @@
 <template>
-	<Statusbar></Statusbar>
+
 	<view class="banner bg" @click="goPage('fiftysounds')">
 		<view>
 			<text>五十音学习</text>

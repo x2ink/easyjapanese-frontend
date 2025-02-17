@@ -43,7 +43,7 @@
 			</view>
 		</view>
 		<!-- 翻译 -->
-		<view class="maintool">
+		<!-- 	<view class="maintool">
 			<view @click="goPage('aitranslate')">
 				<p>AI翻译</p>
 				<p>精准专业翻译</p>
@@ -54,36 +54,40 @@
 				<p>快速翻译语言</p>
 				<image src="/static/duo-icons--g-translate.png" mode="aspectFit"></image>
 			</view>
-		</view>
+		</view> -->
 		<!-- 其他工具 -->
-		<view class="scroll-list">
-			<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
-				<image class="scroll-list__item__image" :src="item.image"></image>
-				<p class="scroll-list__item__text">{{ item.name }}</p>
+		<uv-scroll-list style="background-color: white;border-radius: 8px;margin: 10px;">
+			<view class="scroll-list" style="flex-direction: row;">
+				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+					<image class="scroll-list__item__image" :src="item.image"></image>
+					<p class="scroll-list__item__text">{{ item.name }}</p>
+				</view>
 			</view>
-		</view>
+		</uv-scroll-list>
 		<!-- 推荐单词 -->
 		<view class="smalltitle">
 			<text>单词推荐</text>
-			<view>
+			<view @click="getRecommend()">
 				<text>换一批</text>
 				<wd-icon name="refresh1" color="#999" size="16px"></wd-icon>
 			</view>
 		</view>
 		<!-- 单词列表 -->
 		<view class="wordlist">
-			<view class="worditem" v-for="_ in 10">
+			<view class="worditem" @click="goPage('worddetail','?id=' + item.id + '&type=jc')" :key="item.id"
+				v-for="item in recommendWord">
 				<view class="wordhead">
-					<text>这是单词</text>
-					<wd-tag custom-class="tag" color="#0083ff" bg-color="#d0e8ff">N5</wd-tag>
+					<text>{{item.word}}</text>
+					<wd-tag v-for="tag in item.level" custom-class="tag" color="#0083ff"
+						bg-color="#d0e8ff">{{tag}}</wd-tag>
 				</view>
 				<view class="explain">
-					这是单词解释
+					<wd-text size="14px" :lines="2" color="#999" :text="item.meaning.join(';')"></wd-text>
 				</view>
 				<view class="wordfooter">
 					<view>
 						<wd-icon name="browse" color="#999" size="18px"></wd-icon>
-						<text>0</text>
+						<text>{{item.browse}}</text>
 					</view>
 					<view>
 						<text>查看详情</text>
@@ -127,6 +131,7 @@
 			goPage('review')
 		}
 	}
+
 	const articleList = ref([])
 	const articleTotal = ref(0)
 	const articleParams = ref({
@@ -163,6 +168,7 @@
 	})
 	onMounted(() => {
 		getArticleList()
+		getRecommend()
 	})
 	const getHomeInfo = async () => {
 		const res = await $http.word.getHomeInfo()
@@ -193,7 +199,16 @@
 	const openPlan = () => {
 		setPlanRef.value.show = true
 	}
+	const recommendWord = ref([])
+	const getRecommend = async () => {
+		const res = await $http.word.getRecommend()
+		recommendWord.value = res.data
+	}
 	const toolList = ref([{
+		name: '文本翻译',
+		image: '../../static/duo-icons--g-translate.png',
+		path: "commonwords"
+	}, {
 		name: '语法学习',
 		image: '../../static/duo-icons--book.png',
 		path: 'grammar'
@@ -209,14 +224,14 @@
 		name: '日语电台',
 		image: '../../static/duo-icons--disk.png',
 		path: 'radiostation'
-	}, {
-		name: '常用词汇',
-		image: '../../static/duo-icons--message-3.png',
-		path: "commonwords"
 	}])
 </script>
 
 <style lang="scss" scoped>
+	:deep(.uv-scroll-list__indicator) {
+		margin-top: 0;
+	}
+
 	.head {
 		padding: 10px;
 		display: flex;
@@ -329,24 +344,29 @@
 	}
 
 	.scroll-list {
-		margin: 10px;
-		background-color: white;
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
+		display: flex;
 		gap: 10px;
-		border-radius: 8px;
+		margin-top: 10px;
 
 		&__item {
-			height: 80px;
+			width: 70px;
+			height: 70px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			flex-direction: column;
 
+			&:first-child {
+				margin-left: 10px;
+			}
+
+			&:last-child {
+				margin-right: 10px;
+			}
 
 			&__image {
-				width: 40px;
-				height: 40px;
+				width: 30px;
+				height: 30px;
 			}
 
 			&__text {

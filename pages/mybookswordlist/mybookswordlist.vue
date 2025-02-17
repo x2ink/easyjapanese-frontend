@@ -1,40 +1,42 @@
 <template>
-	<NavBar :title="formData.name" style="background-color: #f5f5f5;">
-		<template #right>
-			<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
-		</template>
-	</NavBar>
-	<view class="wordlist" v-if="List.length>0">
-		<view @click="getInfo(item.id)" :key="item.id" v-for="item in List">
-			<view class="worditem">
-				<view class="head jpfont">
-					<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
+	<view>
+		<NavBar :title="formData.name" style="background-color: #f5f5f5;">
+			<template #right>
+				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
+			</template>
+		</NavBar>
+		<view class="wordlist" v-if="List.length>0">
+			<view @click="getInfo(item.id)" :key="item.id" v-for="item in List">
+				<view class="worditem">
+					<view class="head jpfont">
+						<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
+					</view>
+					<wd-text size="14px" :lines="2" class="body" color="#999" :text="item.meaning.join('\n')"></wd-text>
+					<wd-icon @click.stop="deleteWord(item.id)" name="delete-thin" color="#999" class="delete"
+						size="18px"></wd-icon>
 				</view>
-				<wd-text size="14px" :lines="2" class="body" color="#999" :text="item.meaning.join('\n')"></wd-text>
-				<wd-icon @click.stop="deleteWord(item.id)" name="delete-thin" color="#999" class="delete"
-					size="18px"></wd-icon>
 			</view>
 		</view>
-	</view>
-	<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
-	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
-	<view v-if="noResult">
-		<wd-status-tip image="content" tip="没有数据" />
-	</view>
-	<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
-		:actions="actions" @close="moreShow=false" @select="select" />
-	<wd-message-box />
-	<wd-popup v-model="show" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
-		<view class="popup">
-			<h3>修改资料</h3>
-			<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
-			<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
-			<view style="padding:10px;margin-top: 15px;">
-				<wd-button @click="create()" style="width: 100%;">修改</wd-button>
-			</view>
+		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
+		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+		<view v-if="noResult">
+			<wd-status-tip image="content" tip="没有数据" />
 		</view>
-	</wd-popup>
-	<wd-toast />
+		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
+			:actions="actions" @close="moreShow=false" @select="select" />
+		<wd-message-box />
+		<wd-popup v-model="show" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
+			<view class="popup">
+				<h3>修改资料</h3>
+				<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
+				<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
+				<view style="padding:10px;margin-top: 15px;">
+					<wd-button @click="create()" style="width: 100%;">修改</wd-button>
+				</view>
+			</view>
+		</wd-popup>
+		<wd-toast />
+	</view>
 </template>
 
 <script setup>

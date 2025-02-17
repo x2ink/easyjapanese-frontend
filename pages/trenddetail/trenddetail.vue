@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar title="动态详情">
+		<NavBar title="动态详情" style="background-color: #F3F3F5;">
 			<template #right>
 				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
 			</template>
@@ -43,66 +43,73 @@
 			</view>
 		</view>
 		<!-- 评论区 -->
-	<!-- 	<view class="userinput">
+		<!-- 	<view class="userinput">
 			<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
 			<view class="input" @click="replyOwner()">
 				<text>说点什么...</text>
 				<wd-icon name="edit-outline" color="#999" />
 			</view>
 		</view> -->
-		<view class="commentarea">
-			<view class="comment" v-for="(item,index) in List" :key="item.id">
-				<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
-				<view class="main">
-					<view class="head">
-						<view class="userinfo">
-							{{item.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(item.created_at))}}
-						</view>
-						<view class="thumb" @click="likeComment(index,null,item.id)">
-							<text>{{item.like_count}}</text>
-							<wd-icon v-if="!item.has_like" name="heart" color="#999" size="14px"></wd-icon>
-							<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
-						</view>
-					</view>
-					<view @click="replyUser(item.id,item.from_user)">
-						<view class="body">
-							<p v-html="item.content.replace(/\n/g,'<br>')"></p>
-						</view>
-						<image v-for="image in item.images" :key="image" class="image" :src="image" mode="aspectFill">
-						</image>
-					</view>
-					<view class="childcommont" v-for="(child,index1) in item.children" :key="child.id">
-						<uv-avatar size="30" :src="child.from_user.avatar" font-size="14"></uv-avatar>
-						<view class="childmain">
-							<view class="head">
-								<view class="userinfo">
-									{{child.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(child.created_at))}}
-								</view>
-								<view class="thumb" @click="likeComment(index,index1,child.id)">
-									<text>{{child.like_count}}</text>
-									<wd-icon v-if="!child.has_like" name="heart" color="#999" size="14px"></wd-icon>
-									<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
-								</view>
-							</view>
-							<view @click="replyUser(item.id,child.from_user)">
-								<view class="childcontent">
-									回复<text class="text">{{child.to_user.nickname}}</text>：<text
-										v-html="child.content.replace(/\n/g,'<br>')"></text>
-								</view>
-								<image v-for="image in child.images" :key="image" class="image" :src="image"
-									mode="aspectFill">
-								</image>
-							</view>
-						</view>
-					</view>
-					<wd-divider @click="getChildComment(index,item.id)"
-						v-if="item.child_count>10&&item.child_count>item.children.length" style="margin: 15px 0 0 0 ;"
-						color="#999" content-position="right">展示更多回复</wd-divider>
-				</view>
+		<view class="commentwrap">
+			<view class="commenttop">
+				<text>评论留言</text>
+				<wd-segmented :options="optionsList" v-model:value="optionsCurrent"></wd-segmented>
 			</view>
-			<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
-			<view v-if="noResult">
-				<wd-status-tip image="comment" tip="没有评论" />
+			<view class="commentarea">
+				<view class="comment" v-for="(item,index) in List" :key="item.id">
+					<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
+					<view class="main">
+						<view class="head">
+							<view class="userinfo">
+								{{item.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(item.created_at))}}
+							</view>
+							<view class="thumb" @click="likeComment(index,null,item.id)">
+								<text>{{item.like_count}}</text>
+								<wd-icon v-if="!item.has_like" name="heart" color="#999" size="14px"></wd-icon>
+								<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
+							</view>
+						</view>
+						<view @click="replyUser(item.id,item.from_user)">
+							<view class="body">
+								<p v-html="item.content.replace(/\n/g,'<br>')"></p>
+							</view>
+							<image v-for="image in item.images" :key="image" class="image" :src="image"
+								mode="aspectFill">
+							</image>
+						</view>
+						<view class="childcommont" v-for="(child,index1) in item.children" :key="child.id">
+							<uv-avatar size="30" :src="child.from_user.avatar" font-size="14"></uv-avatar>
+							<view class="childmain">
+								<view class="head">
+									<view class="userinfo">
+										{{child.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(child.created_at))}}
+									</view>
+									<view class="thumb" @click="likeComment(index,index1,child.id)">
+										<text>{{child.like_count}}</text>
+										<wd-icon v-if="!child.has_like" name="heart" color="#999" size="14px"></wd-icon>
+										<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
+									</view>
+								</view>
+								<view @click="replyUser(item.id,child.from_user)">
+									<view class="childcontent">
+										回复<text class="text">{{child.to_user.nickname}}</text>：<text
+											v-html="child.content.replace(/\n/g,'<br>')"></text>
+									</view>
+									<image v-for="image in child.images" :key="image" class="image" :src="image"
+										mode="aspectFill">
+									</image>
+								</view>
+							</view>
+						</view>
+						<wd-divider @click="getChildComment(index,item.id)"
+							v-if="item.child_count>10&&item.child_count>item.children.length"
+							style="margin: 15px 0 0 0 ;" color="#999" content-position="right">展示更多回复</wd-divider>
+					</view>
+				</view>
+				<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
+				<view v-if="noResult">
+					<wd-status-tip image="comment" tip="没有评论" />
+				</view>
 			</view>
 		</view>
 		<view style="height: 60px;"></view>
@@ -172,6 +179,8 @@
 			return "loading"
 		}
 	})
+	const optionsList = ref(['按赞数', '按时间'])
+	const optionsCurrent = ref('按赞数')
 	const getUserInfoSimple = async () => {
 		const res = await $http.user.getUserInfoSimple()
 		userInfo.value = res.data
@@ -430,74 +439,99 @@
 		}
 	}
 
-	.commentarea {
-		padding: 15px;
-		display: flex;
-		flex-direction: column;
+	:deep(.wd-segmented) {
+		width: 100px;
+	}
+
+	:deep(.wd-segmented__item) {
+		min-height: inherit;
+		line-height: inherit;
+		font-size: 8px;
+		padding: 0;
+	}
+
+	.commentwrap {
 		margin: 10px;
 		border-radius: 8px;
 		background-color: white;
-		gap: 15px;
 
 
-
-		.comment {
+		.commenttop {
+			padding: 10px 10px 0 10px;
 			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			text {
+				font-size: 14px;
+				color: #999;
+			}
+		}
+
+		.commentarea {
+			padding: 15px;
+			display: flex;
+			flex-direction: column;
 			gap: 15px;
 
-			.main {
-				flex: 1;
+			.comment {
+				display: flex;
+				gap: 15px;
 
-				.image {
-					width: 80px;
-					height: 80px;
-					border-radius: 4px;
-					margin-top: 5px;
-				}
+				.main {
+					flex: 1;
 
-				.childcommont {
-					display: flex;
-					margin-top: 10px;
-					gap: 10px;
+					.image {
+						width: 80px;
+						height: 80px;
+						border-radius: 4px;
+						margin-top: 5px;
+					}
 
-					.childmain {
-						flex: 1;
-						font-size: $uni-font-size-base;
+					.childcommont {
+						display: flex;
+						margin-top: 10px;
+						gap: 10px;
+
+						.childmain {
+							flex: 1;
+							font-size: $uni-font-size-base;
 
 
 
-						.childcontent {
-							padding: 5px;
+							.childcontent {
+								padding: 5px;
 
-							.text {
-								margin-left: 5px;
-								color: $uni-text-color-grey;
+								.text {
+									margin-left: 5px;
+									color: $uni-text-color-grey;
+								}
 							}
 						}
 					}
-				}
 
-				.body {
-					margin-top: 5px;
-					font-size: $uni-font-size-base;
-				}
-
-				.head {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-
-					.thumb {
-						gap: 3px;
-						color: $uni-text-color-grey;
-						font-size: $uni-font-size-sm;
-						display: flex;
-						align-items: center;
+					.body {
+						margin-top: 5px;
+						font-size: $uni-font-size-base;
 					}
 
-					.userinfo {
-						color: $uni-text-color-grey;
-						font-size: $uni-font-size-base;
+					.head {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+
+						.thumb {
+							gap: 3px;
+							color: $uni-text-color-grey;
+							font-size: $uni-font-size-sm;
+							display: flex;
+							align-items: center;
+						}
+
+						.userinfo {
+							color: $uni-text-color-grey;
+							font-size: $uni-font-size-base;
+						}
 					}
 				}
 			}

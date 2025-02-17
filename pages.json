@@ -169,9 +169,32 @@
 			}
 		},
 		{
-			"path" : "pages/translate/translate",
-			"style" : 
-			{
+			"path": "pages/translate/translate",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/browse/browse",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/noticedetail/noticedetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/likemsg/likemsg",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/commentmsg/commentmsg",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		}

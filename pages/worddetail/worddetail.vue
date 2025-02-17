@@ -69,7 +69,7 @@
 	}
 	const select = (e) => {
 		if (e.index === 0) {
-			goPage('feedback', "?type=单词纠错")
+			goPage('feedback', "?type=单词纠错&wordid=" + id.value + "&wordtype=" + type.value)
 		} else if (e.index === 2) {
 			uni.setClipboardData({
 				data: `/pages/worddetail/worddetail?id=${id.value}`,
@@ -118,16 +118,28 @@
 		wordinfo.value = res.data
 		loading.value = false
 	}
-	const actions = ref([{
-			name: '单词纠错'
-		},
-		{
-			name: '加入单词本'
-		},
-		{
-			name: '分享单词'
+	const actions = computed(() => {
+		if (type.value == 'cj') {
+			return [{
+					name: '单词纠错'
+				},
+				{
+					name: '分享单词'
+				}
+			]
+		} else {
+			return [{
+					name: '单词纠错'
+				},
+				{
+					name: '加入单词本'
+				},
+				{
+					name: '分享单词'
+				}
+			]
 		}
-	])
+	})
 </script>
 
 <style lang="scss" scoped>

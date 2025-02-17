@@ -1,18 +1,21 @@
 <template>
-	<NavBar title="反馈"></NavBar>
-	<wd-textarea style="margin: 0 10px;border-radius: 8px;" v-model="formData.content" clearable show-word-limit placeholder="请输入内容" :maxlength="400" />
-	<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-	<view style="background-color: white;padding: 10px;margin: 0 10px;border-radius: 8px;">
-		<wd-radio-group v-model="formData.type" shape="button">
-			<wd-radio value="单词纠错">单词纠错</wd-radio>
-			<wd-radio value="意见建议">意见建议</wd-radio>
-			<wd-radio value="BUG反馈">BUG反馈</wd-radio>
-		</wd-radio-group>
+	<view>
+		<NavBar title="反馈"></NavBar>
+		<wd-textarea style="margin: 0 10px;border-radius: 8px;" v-model="formData.content" clearable show-word-limit
+			placeholder="请输入内容" :maxlength="400" />
+		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
+		<view style="background-color: white;padding: 10px;margin: 0 10px;border-radius: 8px;">
+			<wd-radio-group v-model="formData.type" shape="button">
+				<wd-radio value="意见建议">意见建议</wd-radio>
+				<wd-radio value="BUG反馈">BUG反馈</wd-radio>
+				<wd-radio value="单词纠错">单词纠错</wd-radio>
+			</wd-radio-group>
+		</view>
+		<view style="padding:10px;margin-top: 15px;">
+			<wd-button @click="submit()" style="width: 100%;">提交</wd-button>
+		</view>
+		<wd-toast />
 	</view>
-	<view style="padding:10px;margin-top: 15px;">
-		<wd-button @click="submit()" style="width: 100%;">提交</wd-button>
-	</view>
-	<wd-toast />
 </template>
 
 <script setup>
@@ -31,7 +34,7 @@
 	const toast = useToast()
 	const formData = ref({
 		content: "",
-		type: "单词纠错"
+		type: "意见建议"
 	})
 	const submit = async () => {
 		if (formData.value.content == "" || formData.value.content.length == 0) {
@@ -44,8 +47,11 @@
 	onLoad(e => {
 		if (e.type) {
 			formData.value.type = e.type
+			if (e.type == "单词纠错") {
+				formData.value.content = `${e.wordtype=='jc'?'日中':'中日'}单词ID：${e.wordid}`
+			}
 		} else {
-			formData.value.type = "单词纠错"
+			formData.value.type = "意见建议"
 		}
 	})
 </script>

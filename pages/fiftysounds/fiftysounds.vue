@@ -1,15 +1,18 @@
 <template>
-	<NavBar title="五十音学习" style="background-color: white;">
+	<NavBar title="五十音学习" style="background-color:#F3F3F5;">
 		<template #bottom>
-			<view style="background-color: white;padding:0 10px 10px 10px;">
-				<wd-segmented customClass="segmented" :options="section" v-model:value="current"></wd-segmented>
-			</view>
+			<wd-tabs slidable custom-class="tabs" v-model="current">
+				<block v-for="(item,index) in tabList" :key="item.name">
+					<wd-tab :title="item.name">
+					</wd-tab>
+				</block>
+			</wd-tabs>
 		</template>
 	</NavBar>
 	<view>
-		<FiftySounds :type="`${current=='平假名'?'hiragana':'katakana'}`" title="清音" :data="unvoicedsound"></FiftySounds>
-		<FiftySounds :type="`${current=='平假名'?'hiragana':'katakana'}`" title="浊音" :data="dakutenHiragana"></FiftySounds>
-		<FiftySounds :type="`${current=='平假名'?'hiragana':'katakana'}`" title="拗音" :data="youonHiragana"></FiftySounds>
+		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="清音" :data="unvoicedsound"></FiftySounds>
+		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="浊音" :data="dakutenHiragana"></FiftySounds>
+		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="拗音" :data="youonHiragana"></FiftySounds>
 	</view>
 	<view style="height: 60px;"></view>
 	<wd-toast />
@@ -26,8 +29,12 @@
 	} from '@/uni_modules/wot-design-uni'
 	import FiftySounds from "@/components/fiftysounds.vue"
 	const toast = useToast()
-	const section = ref(['平假名', '片假名'])
-	const current = ref('平假名')
+	const current = ref(0)
+	const tabList = ref([{
+		name: "平假名"
+	}, {
+		name: "片假名"
+	}])
 	const showDetail = ref(true)
 	const unvoicedsound = ref(new Map([
 		['', ['a', 'i', 'u', 'e', 'o']], // あ行
@@ -67,5 +74,11 @@
 </script>
 
 <style scoped lang="scss">
+	:deep(.wd-tabs) {
+		background-color: transparent;
+	}
 
+	:deep(.wd-tabs__nav) {
+		background-color: transparent;
+	}
 </style>

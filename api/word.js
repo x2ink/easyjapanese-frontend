@@ -57,7 +57,10 @@ export default {
 	deleteMyBooks(id) {
 		return http.post(`mybooks/del/book/${id}`)
 	},
-	deleteMyBooksWord(wordid,bookid) {
+	deleteMyBooksWord(wordid, bookid) {
 		return http.post(`mybooks/del/word/${wordid}/${bookid}`)
+	},
+	getRecommend() {
+		return http.get(`recommend`)
 	}
 }

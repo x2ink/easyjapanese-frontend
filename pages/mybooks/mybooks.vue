@@ -1,36 +1,38 @@
 <template>
-	<NavBar title="单词本" style="background-color: #f5f5f5;"></NavBar>
-	<view class="list">
-		<view class="item"
-			@click="goPage('mybookswordlist','?id='+item.id+'&name='+item.name+'&describe='+item.describe)"
-			v-for="item in List" :key="item.id">
-			<view class="add _GCENTER" style="border: 2px solid #fff;">
-				<image src="/static/mybooks.png" mode="aspectFit"></image>
+	<view>
+		<NavBar title="单词本" style="background-color: #f5f5f5;"></NavBar>
+		<view class="list">
+			<view class="item"
+				@click="goPage('mybookswordlist','?id='+item.id+'&name='+item.name+'&describe='+item.describe)"
+				v-for="item in List" :key="item.id">
+				<view class="add _GCENTER" style="border: 2px solid #fff;">
+					<image src="/static/mybooks.png" mode="aspectFit"></image>
+				</view>
+				<view class="info">
+					<view class="name">{{item.name}}</view>
+					<view class="describe">{{item.describe}}</view>
+				</view>
+				<wd-button @click.stop="selectBook(item.id)" plain custom-class="custom-btn" size="small">选择</wd-button>
 			</view>
-			<view class="info">
-				<view class="name">{{item.name}}</view>
-				<view class="describe">{{item.describe}}</view>
+			<view class="item" @click="show=true">
+				<view class="add _GCENTER" style="border: 2px solid #d9d9d9;">
+					<wd-icon name="add" size="22px" color="#d9d9d9"></wd-icon>
+				</view>
+				<text class="addtext">新增单词本</text>
 			</view>
-			<wd-button @click.stop="selectBook(item.id)" plain custom-class="custom-btn" size="small">选择</wd-button>
 		</view>
-		<view class="item" @click="show=true">
-			<view class="add _GCENTER" style="border: 2px solid #d9d9d9;">
-				<wd-icon name="add" size="22px" color="#d9d9d9"></wd-icon>
+		<wd-toast />
+		<wd-popup v-model="show" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
+			<view class="popup">
+				<h3>新增单词本</h3>
+				<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
+				<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
+				<view style="padding:10px;margin-top: 15px;">
+					<wd-button @click="create()" style="width: 100%;">立即创建</wd-button>
+				</view>
 			</view>
-			<text class="addtext">新增单词本</text>
-		</view>
+		</wd-popup>
 	</view>
-	<wd-toast />
-	<wd-popup v-model="show" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
-		<view class="popup">
-			<h3>新增单词本</h3>
-			<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
-			<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
-			<view style="padding:10px;margin-top: 15px;">
-				<wd-button @click="create()" style="width: 100%;">立即创建</wd-button>
-			</view>
-		</view>
-	</wd-popup>
 </template>
 
 <script setup>

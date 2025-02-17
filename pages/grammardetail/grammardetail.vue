@@ -1,6 +1,6 @@
 <template>
-	<view style="min-height: 100vh;background-color: #f5f5f5;">
-		<NavBar title="语法详情" style="background-color: #f5f5f5;">
+	<view style="min-height: 100vh;background-color: #F3F3F5;">
+		<NavBar title="语法详情" style="background-color: #F3F3F5;">
 		</NavBar>
 		<view style="padding: 0 10px 20px 10px; display: flex;flex-direction: column;gap: 10px;">
 			<view class="head">
