@@ -29,5 +29,8 @@ export default {
 	},
 	getUnread() {
 		return http.get(`unread`)
+	},
+	setMessageRead(id) {
+		return http.get(`message/read/${id}`)
 	}
 }

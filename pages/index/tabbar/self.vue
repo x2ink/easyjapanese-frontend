@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="userinfo">
-			<uv-avatar size="60" :text="userInfo.nickname.charAt(0)" v-if="userInfo.avatar==''"></uv-avatar>
+			<uv-avatar size="60" :src="userInfo.avatar"></uv-avatar>
 			<view>
 				<p class="name">{{userInfo.nickname}}</p>
 				<p class="id">{{userInfo.email}}</p>

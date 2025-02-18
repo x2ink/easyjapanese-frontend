@@ -1,18 +1,20 @@
 <template>
-	<NavBar title="发布动态"></NavBar>
-	<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-	<wd-textarea v-model="formData.content" clearable show-word-limit placeholder="请发表你的想法" :maxlength="800" />
-	<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-	<wd-upload v-model:file-list="fileList" ref="uploadRef" :auto-upload="false" accept="image" :limit="9"
-		custom-class="updload" :max-size="1024*1024*10" show-limit-num image-mode="aspectFill" multiple :header="header"
-		:action="`${http.baseUrl}upload`" @change="handleChange"></wd-upload>
-	<view style="margin:0 10px;">
-		<wd-radio-group v-model="formData.section_id" shape="button">
-			<wd-radio v-for="item in section" :key="item.id" :value="item.id">{{item.name}}</wd-radio>
-		</wd-radio-group>
-	</view>
-	<view style="padding:0 10px;margin-top: 15px;">
-		<wd-button @click="submit()" style="width: 100%;">发布</wd-button>
+	<view>
+		<NavBar title="发布动态"></NavBar>
+		<wd-textarea style="margin: 0 10px;border-radius: 8px;" v-model="formData.content" clearable show-word-limit
+			placeholder="请发表你的想法" :maxlength="800" />
+		<view style="background-color: white;padding: 10px;margin:10px;border-radius: 8px;">
+			<wd-radio-group v-model="formData.section_id" shape="button">
+				<wd-radio v-for="item in section" :key="item.id" :value="item.id">{{item.name}}</wd-radio>
+			</wd-radio-group>
+		</view>
+		<wd-upload v-model:file-list="fileList" ref="uploadRef" :auto-upload="false" accept="image" :limit="9"
+			custom-class="updload" :max-size="1024*1024*10" show-limit-num image-mode="aspectFill" multiple
+			:header="header" :action="`${http.baseUrl}upload`" @change="handleChange"></wd-upload>
+
+		<view style="padding:0 10px;margin-top: 15px;">
+			<wd-button @click="submit()" style="width: 100%;">发布</wd-button>
+		</view>
 	</view>
 </template>
 
@@ -101,5 +103,4 @@
 		gap: 10px;
 		grid-template-columns: repeat(4, 1fr);
 	}
-	
 </style>

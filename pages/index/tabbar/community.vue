@@ -54,6 +54,10 @@
 									<wd-icon name="browse" color="#999" size="18px"></wd-icon>
 									<text>{{item.browse}}</text>
 								</view>
+								<view>
+									<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
+									<text>{{item.comment}}</text>
+								</view>
 							</view>
 						</view>
 					</view>

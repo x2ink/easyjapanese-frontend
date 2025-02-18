@@ -53,7 +53,7 @@
 		<view class="commentwrap">
 			<view class="commenttop">
 				<text>评论留言</text>
-				<wd-segmented :options="optionsList" v-model:value="optionsCurrent"></wd-segmented>
+				<wd-segmented @click="refresh()" :options="optionsList" v-model:value="optionsCurrent"></wd-segmented>
 			</view>
 			<view class="commentarea">
 				<view class="comment" v-for="(item,index) in List" :key="item.id">
@@ -61,7 +61,10 @@
 					<view class="main">
 						<view class="head">
 							<view class="userinfo">
-								{{item.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(item.created_at))}}
+								{{item.from_user.nickname}}
+								<text>
+									&nbsp;·&nbsp;{{dayjs().to(dayjs(item.created_at))}}
+								</text>
 							</view>
 							<view class="thumb" @click="likeComment(index,null,item.id)">
 								<text>{{item.like_count}}</text>
@@ -82,7 +85,8 @@
 							<view class="childmain">
 								<view class="head">
 									<view class="userinfo">
-										{{child.from_user.nickname}}&nbsp;·&nbsp;{{dayjs().to(dayjs(child.created_at))}}
+										{{child.from_user.nickname}}
+										<text>&nbsp;·&nbsp;{{dayjs().to(dayjs(child.created_at))}}</text>
 									</view>
 									<view class="thumb" @click="likeComment(index,index1,child.id)">
 										<text>{{child.like_count}}</text>
@@ -92,7 +96,10 @@
 								</view>
 								<view @click="replyUser(item.id,child.from_user)">
 									<view class="childcontent">
-										回复<text class="text">{{child.to_user.nickname}}</text>：<text
+										<text v-if="child.to_user.id!=child.from_user.id">回复</text>
+										<text v-if="child.to_user.id!=child.from_user.id"
+											class="text">{{child.to_user.nickname}}</text><text
+											v-if="child.to_user.id!=child.from_user.id">：</text><text
 											v-html="child.content.replace(/\n/g,'<br>')"></text>
 									</view>
 									<image v-for="image in child.images" :key="image" class="image" :src="image"
@@ -179,8 +186,15 @@
 			return "loading"
 		}
 	})
-	const optionsList = ref(['按赞数', '按时间'])
-	const optionsCurrent = ref('按赞数')
+	const optionsList = ref(['按时间', '按赞数'])
+	const optionsCurrent = ref('按时')
+	const sort = computed(() => {
+		if (optionsCurrent.value == "按赞数") {
+			return "like"
+		} else {
+			return "time"
+		}
+	})
 	const getUserInfoSimple = async () => {
 		const res = await $http.user.getUserInfoSimple()
 		userInfo.value = res.data
@@ -257,6 +271,7 @@
 		size: 10
 	})
 	const refresh = () => {
+		oneComment.value.parent_id = 0
 		commentParams.value = {
 			target: "trend",
 			target_id: id.value,
@@ -269,9 +284,11 @@
 		page: 1,
 		size: 10
 	})
+	const hideId = ref("")
 	const getChildComment = async (index, parent_id, page, size) => {
 		++childParams.value.page
-		const res = await $http.comment.getChildComment(parent_id, childParams.value.page, childParams.value.size)
+		const res = await $http.comment.getChildComment(parent_id, childParams.value.page, childParams.value.size,
+			sort.value)
 		List.value[index].children = List.value[index].children.concat(res.data)
 	}
 	const List = ref([])
@@ -279,13 +296,16 @@
 	const noResult = ref(false)
 	const getList = async (refresh) => {
 		const res = await $http.comment.getList(commentParams.value.target, commentParams.value.target_id,
-			commentParams.value.page, commentParams.value.size)
+			commentParams.value.page, commentParams.value.size, sort.value, oneComment.value.parent_id)
 		if (refresh) {
 			List.value = res.data
 		} else {
 			List.value = List.value.concat(res.data)
 		}
 		count.value = res.total
+		if (oneComment.value.parent_id != 0) {
+			getCommentOne()
+		}
 		if (res.total === List.value.length) {
 			loadMoreShow.value = false
 		}
@@ -341,10 +361,22 @@
 		const res = await $http.trend.getTrendInfo(id)
 		info.value = res.data
 	}
+	const getCommentOne = async () => {
+		const res = await $http.comment.getOne(oneComment.value)
+		List.value.unshift(res.data)
+	}
+	const oneComment = ref({
+		parent_id: 0,
+		child_id: 0
+	})
 	onLoad((e) => {
 		id.value = Number(e.id)
 		formData.value.target_id = Number(e.id)
 		commentParams.value.target_id = Number(e.id)
+		if (e.parent_id) {
+			oneComment.value.parent_id = Number(e.parent_id)
+			oneComment.value.child_id = Number(e.child_id)
+		}
 		getInfo(e.id)
 		getHasLike(e.id)
 		getList(false)
@@ -500,7 +532,7 @@
 
 
 							.childcontent {
-								padding: 5px;
+								padding: 5px 5px 5px 0;
 
 								.text {
 									margin-left: 5px;
@@ -531,6 +563,12 @@
 						.userinfo {
 							color: $uni-text-color-grey;
 							font-size: $uni-font-size-base;
+							display: flex;
+							align-items: center;
+
+							text {
+								font-size: 12px;
+							}
 						}
 					}
 				}

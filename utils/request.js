@@ -1,7 +1,7 @@
 var baseUrl;
 if (process.env.NODE_ENV === 'development') {
 	console.log('开发环境');
-	baseUrl = "http://10.4.61.55:8080/"
+	baseUrl = "http://10.4.54.2:8080/"
 } else {
 	console.log('生产环境');
 	baseUrl = "http://127.0.0.1/"

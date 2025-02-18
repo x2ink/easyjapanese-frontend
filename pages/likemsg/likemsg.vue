@@ -3,14 +3,14 @@
 		<NavBar title="点赞" style="background-color: #f3f3f5;"></NavBar>
 		<!-- 点赞 -->
 		<view class="commentlist">
-			<view class="commentitem" :key="item.id" v-for="item in List">
+			<view class="commentitem" @click="openDetail(item)" :key="item.id" v-for="item in List">
 				<view class="left">
 					<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
 				</view>
 				<view class="right">
 					<view class="nickname">{{item.from_user.nickname}}</view>
 					<view class="magtype">
-						<text>点赞了你的{{item.target=='comment'?'评论':'动态'}}</text>
+						<text>点赞了你的{{item.parent_id||item.child_id!=0?'评论':'动态'}}</text>
 						<text>{{dayjs().to(dayjs(item.created_at))}}</text>
 					</view>
 					<view class="tocontent">
@@ -57,6 +57,36 @@
 			getList()
 		}
 	})
+	const openDetail = (item) => {
+		let parent_id = 0,
+			child_id = 0;
+		if (item.target == "trend") {
+			if (item.parent_id || item.child_id != 0) {
+				if (item.parent_id) {
+					parent_id = item.parent_id
+					child_id = item.child_id
+				} else {
+					parent_id = item.child_id
+				}
+				goPage("trenddetail", `?id=${item.target_id}&parent_id=${parent_id}&child_id=${child_id}`)
+			} else {
+				goPage("trenddetail", `?id=${item.target_id}`)
+			}
+
+		}
+
+	}
+	const goPage = (path, params) => {
+		if (params) {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}${params}`
+			})
+		} else {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}`
+			})
+		}
+	}
 </script>
 
 <style scoped lang="scss">
