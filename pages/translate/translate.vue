@@ -1,36 +1,73 @@
 <template>
-	<NavBar title="标准翻译"></NavBar>
-	<wd-textarea style="margin: 0 15px;border-radius: 8px;" v-model="value" clearable show-word-limit
-		placeholder="输入中文或日文" :maxlength="400" />
-	<view style="background-color: white;padding: 10px;margin: 15px;border-radius: 8px;">
-		<wd-radio-group v-model="type" shape="button">
-			<wd-radio value="中译日">中译日</wd-radio>
-			<wd-radio value="日译中">日译中</wd-radio>
-		</wd-radio-group>
-	</view>
-	<view style="padding:10px;">
-		<wd-button @click="submit()" style="width: 100%;">翻译</wd-button>
-	</view>
-	<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-	<view class="result">
-		<view v-if="loading" class="loading _GCENTER">
-			<div class="loadership_KUDLC">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div>
+	<NavBar :title="ai?'AI翻译':'标准翻译'">
+		<template #right>
+			<view @click="ai=!ai" class="swap">
+				<wd-icon name="swap" size="18px"></wd-icon>
+				<text>{{ai?'标准翻译':'AI翻译'}}</text>
+			</view>
+		</template>
+	</NavBar>
+	<view v-if="ai" style="padding-bottom: 40px;">
+		<wd-textarea style="margin: 0 15px;border-radius: 8px;" v-model="value" clearable show-word-limit
+			placeholder="输入中文或日文" :maxlength="400" />
+		<view style="padding:10px;margin-top: 15px;">
+			<wd-button @click="aisubmit()" style="width: 100%;">翻译</wd-button>
 		</view>
-		<view v-if="result.length>0&&!loading" class="translate">
-			<view>{{result}}</view>
-			<view class="tool">
-				<wd-icon @click="copy(result)" name="file-copy" color="#999" size="20px"></wd-icon>
-				<!-- <wd-icon name="sound" size="20px" color="#999"></wd-icon> -->
+		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
+		<view class="result">
+			<view v-if="loading" class="loading _GCENTER">
+				<div class="loadership_KUDLC">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				<text class="tip">
+					AI正在思考,大概需要10s
+				</text>
+			</view>
+
+			<view v-if="result.length>0&&!loading" class="translate">
+				<view v-html="result"></view>
 			</view>
 		</view>
-
 	</view>
+	<view v-else style="padding-bottom: 40px;">
+		<wd-textarea style="margin: 0 15px;border-radius: 8px;" v-model="value" clearable show-word-limit
+			placeholder="输入中文或日文" :maxlength="400" />
+		<view style="background-color: white;padding: 10px;margin: 15px;border-radius: 8px;">
+			<wd-radio-group v-model="type" shape="button">
+				<wd-radio value="中译日">中译日</wd-radio>
+				<wd-radio value="日译中">日译中</wd-radio>
+			</wd-radio-group>
+		</view>
+		<view style="padding:10px;">
+			<wd-button @click="submit()" style="width: 100%;">翻译</wd-button>
+		</view>
+		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
+		<view class="result">
+			<view v-if="loading" class="loading _GCENTER">
+				<div class="loadership_KUDLC">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</view>
+			<view v-if="result.length>0&&!loading" class="translate">
+				<view>{{result}}</view>
+				<view class="tool">
+					<wd-icon @click="copy(result)" name="file-copy" color="#999" size="20px"></wd-icon>
+					<!-- <wd-icon name="sound" size="20px" color="#999"></wd-icon> -->
+				</view>
+			</view>
+
+		</view>
+	</view>
+	<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
+		@onFinish="finishCore" />
 	<wd-toast />
 </template>
 
@@ -38,12 +75,19 @@
 	import {
 		ref,
 		onMounted,
-		computed
+		computed,
+		watch
 	} from 'vue'
+	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
 	import NavBar from '@/components/navbar.vue'
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	const ai = ref(false)
+	watch(ai, (newVal, oldVal) => {
+		result.value = ""
+		value.value = ""
+	})
 	const copy = (data) => {
 		uni.setClipboardData({
 			data: data,
@@ -108,9 +152,80 @@
 			}
 		})
 	}
+	// ai
+	const chatSSEClientRef = ref(null);
+	const openCore = () => {
+		loading.value = false
+		console.log("open sse");
+	}
+	const errorCore = (err) => {
+		console.log("error sse：", err);
+	}
+	const messageCore = (msg) => {
+		let jsonData = JSON.parse(msg)
+		result.value += `${jsonData.choices[0].delta.content}`
+	}
+	const finishCore = () => {
+		console.log("finish sse")
+		loading.value = false;
+	}
+	const stop = () => {
+		chatSSEClientRef.value.stopChat()
+		console.log("stop");
+	}
+	const content = ref(
+		`你是一个中日翻译，我会给你中文或者日文，然后你翻译为日文或者中文，并且我还要你对翻译进行讲解，为什么这么翻译，这句话用了哪些语法点，返回html格式如下<div><h3>翻译：</h3><p>这里是翻译内容。</p></div><div><h3>翻译讲解：</h3><h4>句子结构分析：</h4><p>这里是句子结构分析。</p><h4>关键词翻译：</h4><ul><li><strong>关键词1</strong>：解释1</li><li><strong>关键词2</strong>：解释2</li></ul><h4>语法点解析：</h4><ul><li><strong>语法点1</strong>：解释1</li><li><strong>语法点2</strong>：解释2</li></ul><h4>翻译思路：</h4><p>这里是翻译思路。</p></div>`
+	)
+	const aisubmit = async () => {
+		if (value.value == "" || value.value.length == 0) {
+			toast.warning(`内容不可为空`)
+			return
+		}
+		loading.value = true
+		chatSSEClientRef.value.startChat({
+			url: "https://api.deepseek.com/chat/completions",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept": "application/json",
+				"Authorization": "Bearer sk-d8624a2b074c477e86a5facc49b7e5bc",
+			},
+			body: {
+				messages: [{
+						content: content.value,
+						role: "system"
+					},
+					{
+						content: value.value,
+						role: "user"
+					}
+				],
+				model: "deepseek-chat",
+				response_format: {
+					type: "text"
+				},
+				stop: null,
+				stream: true,
+				temperature: 1.3,
+				tools: null,
+				tool_choice: "none",
+				logprobs: false,
+				top_logprobs: null
+			}
+		})
+	}
 </script>
 
 <style scoped lang="scss">
+	.swap {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+
+		text {
+			font-size: 14px;
+		}
+	}
+
 	.translate {
 		padding: 15px;
 		background-color: white;

@@ -1,18 +1,16 @@
 <template>
 	<NavBar title="五十音学习" style="background-color:#F3F3F5;">
-		<template #bottom>
-			<wd-tabs slidable custom-class="tabs" v-model="current">
-				<block v-for="(item,index) in tabList" :key="item.name">
-					<wd-tab :title="item.name">
-					</wd-tab>
-				</block>
-			</wd-tabs>
+		<template #right>
+			<view @click="hiragana=!hiragana" class="swap">
+				<wd-icon name="swap" size="18px"></wd-icon>
+				<text>{{hiragana?'平假名':'片假名'}}</text>
+			</view>
 		</template>
 	</NavBar>
-	<view>
-		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="清音" :data="unvoicedsound"></FiftySounds>
-		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="浊音" :data="dakutenHiragana"></FiftySounds>
-		<FiftySounds :type="`${current==0?'hiragana':'katakana'}`" title="拗音" :data="youonHiragana"></FiftySounds>
+	<view style="display: flex;flex-direction: column;gap: 15px;">
+		<FiftySounds :type="`${hiragana?'hiragana':'katakana'}`" title="清音" :data="unvoicedsound"></FiftySounds>
+		<FiftySounds :type="`${hiragana?'hiragana':'katakana'}`" title="浊音" :data="dakutenHiragana"></FiftySounds>
+		<FiftySounds :type="`${hiragana?'hiragana':'katakana'}`" title="拗音" :data="youonHiragana"></FiftySounds>
 	</view>
 	<view style="height: 60px;"></view>
 	<wd-toast />
@@ -29,12 +27,7 @@
 	} from '@/uni_modules/wot-design-uni'
 	import FiftySounds from "@/components/fiftysounds.vue"
 	const toast = useToast()
-	const current = ref(0)
-	const tabList = ref([{
-		name: "平假名"
-	}, {
-		name: "片假名"
-	}])
+	const hiragana = ref(true)
 	const showDetail = ref(true)
 	const unvoicedsound = ref(new Map([
 		['', ['a', 'i', 'u', 'e', 'o']], // あ行
@@ -80,5 +73,15 @@
 
 	:deep(.wd-tabs__nav) {
 		background-color: transparent;
+	}
+
+	.swap {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+
+		text {
+			font-size: 14px;
+		}
 	}
 </style>

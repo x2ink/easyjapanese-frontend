@@ -58,7 +58,7 @@
 		<!-- 其他工具 -->
 		<uv-scroll-list style="background-color: white;border-radius: 8px;margin: 10px;">
 			<view class="scroll-list" style="flex-direction: row;">
-				<view class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
+				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
 					<image class="scroll-list__item__image" :src="item.image"></image>
 					<p class="scroll-list__item__text">{{ item.name }}</p>
 				</view>
@@ -207,7 +207,7 @@
 	const toolList = ref([{
 		name: '文本翻译',
 		image: '../../static/duo-icons--g-translate.png',
-		path: "commonwords"
+		path: "translate"
 	}, {
 		name: '语法学习',
 		image: '../../static/duo-icons--book.png',

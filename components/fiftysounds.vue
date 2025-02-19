@@ -1,5 +1,5 @@
 <template>
-	<view style="background-color: white;margin: 15px;border-radius: 8px;padding: 10px;">
+	<view style="background-color: white;margin:0 15px;border-radius: 8px;padding: 10px;">
 		<h3>{{title}}</h3>
 		<view class="unvoicedsound">
 			<view class="kana" v-for="[key, value] in data.entries()" :key="key">

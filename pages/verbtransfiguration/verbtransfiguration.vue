@@ -48,7 +48,7 @@
 	}
 
 	.input {
-		padding: 15px;
+		padding:0 15px;
 		gap: 15px;
 	}
 </style>
