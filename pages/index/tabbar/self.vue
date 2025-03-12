@@ -1,14 +1,13 @@
 <template>
 	<view>
-		<view class="userinfo">
+		<view @click="goPage('userinfo')" class="userinfo">
 			<uv-avatar size="60" :src="userInfo.avatar"></uv-avatar>
 			<view>
 				<p class="name">{{userInfo.nickname}}</p>
 				<p class="id">{{userInfo.email}}</p>
 			</view>
 		</view>
-		<view class="banner">
-			banner图
+		<view class="banner _BACKGROUND">
 		</view>
 		<!-- 	<view class="statistics">
 			<view class="left">
@@ -43,31 +42,35 @@
 			</view>
 		</view> -->
 		<view class="cell">
+			<view class="cellitem" @click="goPage('mytrend')">
+				<p>我的动态</p>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
+			</view>
 			<view class="cellitem" @click="goPage('mybooks')">
 				<p>单词本</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem">
+			<view class="cellitem" @click="goPage('ranking')">
 				<p>排行榜</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem">
+			<view class="cellitem" @click="goPage('setting')">
 				<p>设置</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
 		</view>
 		<view class="cell">
 			<view class="cellitem" @click="goPage('feedback')">
 				<p>意见反馈</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem">
+			<view class="cellitem" @click="goPage('about')">
 				<p>关于我们</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem">
+			<view class="cellitem" @click="goPage('share')">
 				<p>分享App</p>
-				<wd-icon name="arrow-right" size="22px"></wd-icon>
+				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
 		</view>
 	</view>
@@ -83,6 +86,15 @@
 	import {
 		userStore
 	} from "@/stores/index.js"
+	const goFollowUs = () => {
+		let url = "https://space.bilibili.com/437416398"
+		if (uni.getSystemInfoSync().uniPlatform == 'web') {
+			window.open(url)
+		} else {
+			plus.runtime.openURL(url)
+		}
+	}
+
 	const getUserInfoSimple = async () => {
 		try {
 			const res = await $http.user.getUserInfoSimple()
@@ -117,8 +129,8 @@
 
 <style lang="scss" scoped>
 	.banner {
-		margin: 15px;
-		background-color: white;
+		margin: 0 15px;
+		background-image: url('http://jp.x2.ink/images/followus.jpg');
 		aspect-ratio: 5/1;
 		border-radius: $uni-border-radius-base;
 	}
@@ -134,6 +146,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			font-size: 14px;
 		}
 	}
 
@@ -142,6 +155,7 @@
 		padding: 15px;
 		gap: 15px;
 		align-items: center;
+
 
 		.name {
 			font-weight: bold;

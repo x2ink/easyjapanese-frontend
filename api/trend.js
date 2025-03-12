@@ -6,6 +6,9 @@ export default {
 	addTrend(data) {
 		return http.post(`trend`, data)
 	},
+	getMyTrendList(page, size) {
+		return http.get(`trend/mylist/${page}/${size}`)
+	},
 	getTrendList(page, size, section) {
 		return http.get(`trend/list/${page}/${size}/${section}`)
 	},
@@ -17,5 +20,8 @@ export default {
 	},
 	addLike(id) {
 		return http.post(`trend/like/${id}`)
+	},
+	deleteTrend(id) {
+		return http.delete(`trend/${id}`)
 	}
 }

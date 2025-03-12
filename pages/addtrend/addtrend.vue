@@ -8,13 +8,15 @@
 				<wd-radio v-for="item in section" :key="item.id" :value="item.id">{{item.name}}</wd-radio>
 			</wd-radio-group>
 		</view>
-		<wd-upload v-model:file-list="fileList" ref="uploadRef" :auto-upload="false" accept="image" :limit="9"
-			custom-class="updload" :max-size="1024*1024*10" show-limit-num image-mode="aspectFill" multiple
-			:header="header" :action="`${http.baseUrl}upload`" @change="handleChange"></wd-upload>
+		<wd-upload @success="uploadSuccess" v-model:file-list="fileList" ref="uploadRef"
+			:auto-upload="false" accept="image" :limit="9" custom-class="updload" :max-size="1024*1024*10"
+			show-limit-num image-mode="aspectFill" multiple :header="header" :action="`${http.baseUrl}upload`"
+			@change="handleChange"></wd-upload>
 
 		<view style="padding:0 10px;margin-top: 15px;">
 			<wd-button @click="submit()" style="width: 100%;">发布</wd-button>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -41,6 +43,7 @@
 		section_id: 1
 	})
 	const section = ref([])
+
 	const header = ref({
 		"Authorization": userStore().token
 	})
@@ -63,6 +66,8 @@
 			return
 		}
 		status.value = true
+		uploadRef.value.submit()
+		console.log(fileList.value);
 		if (fileList.value.length == 0) {
 			addTrend()
 		} else {
@@ -77,15 +82,20 @@
 	onMounted(() => {
 		getSection()
 	})
+	const uploadSuccess = (e) => {
+		console.log(e);
+	}
 	const handleChange = (files) => {
-		files.fileList.map((item) => {
-			if (item.status == "success") {
-				formData.value.images.push(JSON.parse(item.response).data)
-			}
-		})
-		if (status.value) {
-			addTrend()
-		}
+		console.log("触发了上传");
+		console.log(files);
+		// files.fileList.map((item) => {
+		// 	if (item.status == "success") {
+		// 		formData.value.images.push(JSON.parse(item.response).data)
+		// 	}
+		// })
+		// if (status.value) {
+		// 	addTrend()
+		// }
 	}
 </script>
 

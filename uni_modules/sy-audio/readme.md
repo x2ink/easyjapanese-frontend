@@ -48,10 +48,10 @@ this.$refs.audio.audioSeek(15)
 <sy-audio isCountDown ref="audio" src='' audioCover='' subheading='' audioTitle=''></sy-audio>
 
 //项目为vue2时 src为本地路径时，使用require方法，如下:
-<sy-audio :src="require('@/static/audio.mp3')"></sy-audio>
+<sy-audio :src="require('http://jp.x2.ink/images/audio.mp3')"></sy-audio>
 
 //项目为vue3时 src为本地路径时，使用自定义方法，如下:
-<sy-audio :src="toUrl('../../static/audio.mp3')"></sy-audio>
+<sy-audio :src="toUrl('../..http://jp.x2.ink/images/audio.mp3')"></sy-audio>
 methods: {
 	toUrl(src){
 		return new URL(src, import.meta.url).href

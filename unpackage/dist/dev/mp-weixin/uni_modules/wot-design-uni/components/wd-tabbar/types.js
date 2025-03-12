@@ -16,7 +16,7 @@ const tabbarProps = {
    */
   bordered: uni_modules_wotDesignUni_components_common_props.makeBooleanProp(true),
   /**
-   * 是否设置底部安全距禿（iPhone X 类型的机型）
+   * 是否设置底部安全距离（iPhone X 类型的机型）
    */
   safeAreaInsetBottom: uni_modules_wotDesignUni_components_common_props.makeBooleanProp(false),
   /**
@@ -42,3 +42,4 @@ const tabbarProps = {
 };
 exports.TABBAR_KEY = TABBAR_KEY;
 exports.tabbarProps = tabbarProps;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/wd-tabbar/types.js.map

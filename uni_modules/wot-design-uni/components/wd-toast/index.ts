@@ -9,14 +9,8 @@ const toastDefaultOptionKey = '__TOAST_OPTION__'
 
 // 默认模板
 export const defaultOptions: ToastOptions = {
-  msg: '',
   duration: 2000,
-  loadingType: 'outline',
-  loadingColor: '#4D80F0',
-  iconColor: '#4D80F0',
-  position: 'middle',
-  show: false,
-  zIndex: 100
+  show: false
 }
 
 const None = Symbol('None')
@@ -31,7 +25,6 @@ export function useToast(selector: string = ''): Toast {
   let timer: ReturnType<typeof setTimeout> | null = null
 
   const createMethod = (toastOptions: ToastOptions) => {
-    // 优先级：options->toastOptions->defaultOptions
     return (options: ToastOptions | string) => {
       return show(deepMerge(toastOptions, typeof options === 'string' ? { msg: options } : options) as ToastOptions)
     }

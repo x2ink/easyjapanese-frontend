@@ -60,6 +60,7 @@
 /* 此方法用于生成穿透样式 */
 /* 定义元素（e），对于伪类，会自动将 e 嵌套在 伪类 底下 */
 /* 定义状态（m） */
+/* 定义状态（m） */
 /* 对于需要需要嵌套在 m 底下的 e，调用这个混合宏，一般在切换整个组件的状态，如切换颜色的时候 */
 /* 状态，生成 is-$state 类名 */
 /**
@@ -185,6 +186,7 @@
 /* video-preview */
 /* img-cropper */
 /* floating-panel */
+/* signature */
 .wot-theme-dark .wd-badge__content.data-v-6ea9b0eb {
   border-color: var(--wot-dark-background2, #1b1b1b);
 }
@@ -209,6 +211,8 @@
 }
 .wd-badge__content.is-fixed.data-v-6ea9b0eb {
   position: absolute;
+  top: 0px;
+  right: 0px;
   transform: translateY(-50%) translateX(50%);
 }
 .wd-badge__content.is-dot.data-v-6ea9b0eb {

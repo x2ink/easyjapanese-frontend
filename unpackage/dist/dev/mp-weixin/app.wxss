@@ -1,11 +1,19 @@
 
+/* 	@font-face {
+		font-family: 'jp';
+		src: url('~http://jp.x2.ink/images/font/jp.ttf');
+	} */
 page {
-		background: #F6F6F6;
+		background: #F3F3F5;
 		background-attachment: fixed;
+}
+.jpfont {
+		/* font-family: 'jp'; */
 }
 ::-webkit-scrollbar {
 		display: none !important;
 }
+
 	/*每个页面公共css */
 ._GCENTER {
 		display: flex;

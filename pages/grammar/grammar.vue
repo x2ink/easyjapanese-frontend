@@ -18,10 +18,14 @@
 				<wd-text style="flex: 1;" size="14px" :lines="1" color="#000" :text="item.grammar"></wd-text>
 				<wd-tag custom-class="space" color="#0083ff" bg-color="#d0e8ff"
 					v-if="item.level=='N1'">{{item.level}}</wd-tag>
-				<wd-tag custom-class="space" color="#57D09B" bg-color="#D0F4E5" v-else-if="item.level=='N2'" type="primary">{{item.level}}</wd-tag>
-				<wd-tag custom-class="space" color="#f5222d" bg-color="#FAC8C8" v-else-if="item.level=='N3'" type="danger">{{item.level}}</wd-tag>
-				<wd-tag custom-class="space" color="#E78938" bg-color="#F5D6B9" v-else-if="item.level=='N4'" type="warning">{{item.level}}</wd-tag>
-				<wd-tag custom-class="space" color="#13c2c2" bg-color="#A6E6E6" v-else-if="item.level=='N5'" type="success">{{item.level}}</wd-tag>
+				<wd-tag custom-class="space" color="#57D09B" bg-color="#D0F4E5" v-else-if="item.level=='N2'"
+					type="primary">{{item.level}}</wd-tag>
+				<wd-tag custom-class="space" color="#f5222d" bg-color="#FAC8C8" v-else-if="item.level=='N3'"
+					type="danger">{{item.level}}</wd-tag>
+				<wd-tag custom-class="space" color="#E78938" bg-color="#F5D6B9" v-else-if="item.level=='N4'"
+					type="warning">{{item.level}}</wd-tag>
+				<wd-tag custom-class="space" color="#13c2c2" bg-color="#A6E6E6" v-else-if="item.level=='N5'"
+					type="success">{{item.level}}</wd-tag>
 			</view>
 		</view>
 	</view>
@@ -83,6 +87,18 @@
 </script>
 
 <style scoped lang="scss">
+	:deep(.wd-tabs__nav) {
+		height: 30px;
+	}
+
+	:deep(.wd-tabs__nav-item) {
+		height: 30px;
+	}
+
+	:deep(.wd-tabs__line) {
+		bottom: 0;
+	}
+
 	:deep(.space) {
 		margin-left: 10px;
 		padding: 2px 8px;

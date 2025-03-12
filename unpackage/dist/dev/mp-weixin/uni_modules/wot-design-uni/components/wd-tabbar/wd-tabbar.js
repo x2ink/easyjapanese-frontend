@@ -73,3 +73,4 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
 });
 const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-70467ab8"]]);
 wx.createComponent(Component);
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/wd-tabbar/wd-tabbar.js.map

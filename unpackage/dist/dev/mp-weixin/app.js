@@ -10,16 +10,47 @@ if (!Math) {
   "./pages/search/search.js";
   "./pages/wordlist/wordlist.js";
   "./pages/learn/learn.js";
+  "./pages/worddetail/worddetail.js";
+  "./pages/addtrend/addtrend.js";
+  "./pages/trenddetail/trenddetail.js";
+  "./pages/fastmode/fastmode.js";
+  "./pages/writefrommemory/writefrommemory.js";
+  "./pages/todaylearn/todaylearn.js";
+  "./pages/review/review.js";
+  "./pages/articledetail/articledetail.js";
+  "./pages/todayreview/todayreview.js";
+  "./pages/verbtransfiguration/verbtransfiguration.js";
+  "./pages/fiftysounds/fiftysounds.js";
+  "./pages/grammar/grammar.js";
+  "./pages/grammardetail/grammardetail.js";
+  "./pages/radiostation/radiostation.js";
+  "./pages/player/player.js";
+  "./pages/commonwords/commonwords.js";
+  "./pages/feedback/feedback.js";
+  "./pages/mybooks/mybooks.js";
+  "./pages/mybookswordlist/mybookswordlist.js";
+  "./pages/translate/translate.js";
+  "./pages/browse/browse.js";
+  "./pages/noticedetail/noticedetail.js";
+  "./pages/likemsg/likemsg.js";
+  "./pages/commentmsg/commentmsg.js";
+  "./pages/userinfo/userinfo.js";
+  "./pages/ranking/ranking.js";
+  "./pages/share/share.js";
+  "./pages/about/about.js";
+  "./pages/setting/setting.js";
+  "./pages/mytrend/mytrend.js";
+  "./pages/repwd/repwd.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    console.log("App Launch");
+    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
   },
   onShow: function() {
-    console.log("App Show");
+    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
   },
   onHide: function() {
-    console.log("App Hide");
+    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
   }
 };
 function createApp() {
@@ -34,3 +65,4 @@ function createApp() {
 }
 createApp().app.mount("#app");
 exports.createApp = createApp;
+//# sourceMappingURL=../.sourcemap/mp-weixin/app.js.map

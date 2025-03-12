@@ -38,3 +38,4 @@ const tabbarItemProps = {
   badgeProps: Object
 };
 exports.tabbarItemProps = tabbarItemProps;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/wd-tabbar-item/types.js.map

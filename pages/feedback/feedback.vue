@@ -48,7 +48,9 @@
 		if (e.type) {
 			formData.value.type = e.type
 			if (e.type == "单词纠错") {
-				formData.value.content = `${e.wordtype=='jc'?'日中':'中日'}单词ID：${e.wordid}`
+				formData.value.content = `${e.wordtype=='jc'?'日中':'中日'}单词ID：${e.wordid}\n`
+			}else if(e.type == "动态举报"){
+					formData.value.content = `动态ID：${e.trendid}\n`
 			}
 		} else {
 			formData.value.type = "意见建议"

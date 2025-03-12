@@ -1,13 +1,19 @@
 <template>
-	<view style="background-color: #f5f5f5;min-height: 100vh;">
-		<NavBar title="今日学习" style="background-color: white;">
+	<view>
+		<NavBar title="今日学习" style="background-color: #f3f3f5;">
 			<template #right>
-				<wd-button @click="goPage('writefrommemory')" type="primary" size="small">默写</wd-button>
+				<view @click="goPage('writefrommemory')" class="swap">
+					<wd-icon name="edit" size="18px"></wd-icon>
+					<text>默写</text>
+				</view>
 			</template>
 			<template #bottom>
-				<view style="background-color: white;padding:0 10px 10px 10px;">
-					<wd-segmented customClass="segmented" :options="section" v-model:value="current"></wd-segmented>
-				</view>
+				<wd-tabs slidable custom-class="tabs" v-model="currentTab">
+					<block v-for="(item,index) in tabList" :key="item.name">
+						<wd-tab :title="item.name">
+						</wd-tab>
+					</block>
+				</wd-tabs>
 			</template>
 		</NavBar>
 		<view class="list">
@@ -48,17 +54,26 @@
 
 	})
 	const List = ref([])
-	const section = ref(['全部', '已默写', '未默写'])
-	const current = ref('全部')
+	const currentTab = ref(0)
+	const tabList = ref([{
+		name: "全部",
+		id: 0
+	}, {
+		name: "已默写",
+		id: 1
+	}, {
+		name: "未默写",
+		id: 2
+	}])
 	const array = computed(() => {
-		if (current.value == "全部") {
+		if (currentTab.value == 0) {
 			return List.value.sort((a, b) => {
 				if (a.done === b.done) {
 					return 0;
 				}
 				return a.done ? 1 : -1;
 			});
-		} else if (current.value == "已默写") {
+		} else if (currentTab.value == 1) {
 			return List.value.filter(item => item.done)
 		} else {
 			return List.value.filter(item => !item.done)
@@ -103,19 +118,49 @@
 <style scoped lang="scss">
 	:deep(.segmented) {}
 
+	.swap {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+
+		text {
+			font-size: 14px;
+		}
+	}
+
+	:deep(.wd-tabs__nav) {
+		height: 30px;
+		background-color: transparent !important;
+	}
+
+	:deep(.wd-tabs__nav-item) {
+		height: 30px;
+		align-items: initial;
+	}
+
+	:deep(.wd-tabs__line) {
+		// bottom: 0;
+	}
+
+	:deep(.wd-tabs) {
+		background-color: transparent !important;
+	}
+
 	:deep(.space) {
 		margin-left: 5px;
 	}
 
 	.list {
-		margin-top: 10px;
+		margin: 5px 15px 15px 15px;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 15px;
+		padding-bottom: 15px;
 
 		.item {
-			padding: 10px;
+			padding: 15px;
 			background-color: white;
+			border-radius: 8px;
 
 			.explain {
 				margin-top: 5px;
@@ -138,6 +183,4 @@
 			}
 		}
 	}
-
-	
 </style>

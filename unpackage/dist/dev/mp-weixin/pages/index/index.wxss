@@ -23,6 +23,16 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.data-v-1cf27b2a .recitebtn {
+  width: 100% !important;
+}
+.data-v-1cf27b2a .reviewbtn {
+  color: #4D80F0 !important;
+}
+.data-v-1cf27b2a .wd-progress__outer {
+  height: 5px !important;
+  border-radius: 5px !important;
+}
 .swiper.data-v-1cf27b2a {
   width: 100%;
   height: calc(100vh - 50px - env(safe-area-inset-bottom));
@@ -34,38 +44,5 @@
   left: inherit !important;
   top: inherit !important;
   right: 15px !important;
-  bottom: calc(60px + env(safe-area-inset-bottom)) !important;
-}
-.message.data-v-1cf27b2a {
-  width: 50px;
-  height: 50px;
-  background-color: #4D80F0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-.wobble.data-v-1cf27b2a {
-  animation: wobble-1cf27b2a 2s infinite;
-  /* 动画持续时间2秒，无限循环 */
-}
-@keyframes wobble-1cf27b2a {
-0%, 100% {
-    transform: translateX(0);
-}
-15% {
-    transform: translateX(-25%) rotate(-5deg);
-}
-30% {
-    transform: translateX(20%) rotate(3deg);
-}
-45% {
-    transform: translateX(-15%) rotate(-3deg);
-}
-60% {
-    transform: translateX(10%) rotate(2deg);
-}
-75% {
-    transform: translateX(-5%) rotate(-1deg);
-}
+  bottom: calc(80px + env(safe-area-inset-bottom)) !important;
 }

@@ -98,15 +98,22 @@
 	})
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	:deep(.wd-tabs__nav) {
+		height: 30px;
+		background-color: transparent !important;
+	}
+	
+	:deep(.wd-tabs__nav-item) {
+		height: 30px;
+	}
+	
+	:deep(.wd-tabs__line) {
+		bottom: 0;
+	}
 	:deep(.wd-tabs) {
 		background-color: transparent !important;
 	}
-
-	:deep(.wd-tabs__nav) {
-		background-color: transparent !important;
-	}
-
 	.number {
 		color: $uni-text-color-grey;
 		font-size: $uni-font-size-base;

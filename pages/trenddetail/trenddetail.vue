@@ -156,7 +156,10 @@
 				</view>
 			</view>
 		</wd-popup>
+		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
+			:actions="actions" @close="moreShow=false" @select="select" />
 		<wd-toast />
+		<wd-message-box></wd-message-box>
 	</view>
 </template>
 
@@ -179,6 +182,53 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
+	import {
+		useMessage
+	} from '@/uni_modules/wot-design-uni'
+	const message = useMessage()
+	const moreShow = ref(false)
+	const goPage = (path, params) => {
+		if (params) {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}${params}`
+			})
+		} else {
+			uni.navigateTo({
+				url: `/pages/${path}/${path}`
+			})
+		}
+	}
+	const select = async (e) => {
+		if (e.item.name == "删除动态") {
+			moreShow.value = true
+			message.alert({
+				msg: '你正在执行删除操作，此操作不可逆',
+				title: '温馨提示'
+			}).then(async () => {
+				const res = await $http.trend.deleteTrend(info.value.id)
+				uni.navigateBack({
+					delta: 1
+				})
+			})
+		} else {
+			goPage('feedback', "?type=动态举报&trendid=" + info.value.id)
+		}
+	}
+	const actions = computed(() => {
+		if (info.value.my) {
+			return [{
+					name: '删除动态'
+				},
+				{
+					name: '内容举报'
+				}
+			]
+		} else {
+			return [{
+				name: '内容举报'
+			}]
+		}
+	})
 	const loadMoreText = computed(() => {
 		if (count.value == List.value.length) {
 			return "finished"

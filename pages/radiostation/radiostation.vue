@@ -4,7 +4,7 @@
 			<template #bottom>
 				<view class="intro">
 					<view class="icon">
-						<image src="/static/yfxx.png" mode="aspectFill"></image>
+						<image src="http://jp.x2.ink/images/yfxx.png" mode="aspectFill"></image>
 						<view class="mask _GCENTER">
 							<wd-icon color="#ffffff" name="play-circle-stroke" size="35px"></wd-icon>
 						</view>
@@ -16,7 +16,7 @@
 				</view>
 			</template>
 		</NavBar>
-		<image src="/static/xxdt.png" mode="widthFix" class="bg"></image>
+		<image src="http://jp.x2.ink/images/xxdt.png" mode="widthFix" class="bg"></image>
 		<scroll-view scroll-y="true" class="content">
 			<view>
 				<view class="play">

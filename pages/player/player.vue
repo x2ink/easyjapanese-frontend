@@ -4,7 +4,7 @@
 		</NavBar>
 		<!-- <view class="_GCENTER">
 			<view class="avatarbg _GCENTER">
-				<image src="/static/logo.png" mode="aspectFill"></image>
+				<image src="http://jp.x2.ink/images/logo.png" mode="aspectFill"></image>
 			</view>
 		</view> -->
 		<view class="musk center">
@@ -70,7 +70,7 @@
 		height: 100vh;
 		background-color: #f5f5f5;
 		position: relative;
-		background-image: url('/static/playerbg.png');
+		background-image: url('http://jp.x2.ink/images/playerbg.png');
 	}
 
 	.player {

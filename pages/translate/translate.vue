@@ -187,7 +187,7 @@
 			headers: {
 				"Content-Type": "application/json",
 				"Accept": "application/json",
-				"Authorization": "Bearer sk-d8624a2b074c477e86a5facc49b7e5bc",
+				"Authorization": "Bearer sk-7f2affcd4e1549b8b53b08d5afca6077",
 			},
 			body: {
 				messages: [{

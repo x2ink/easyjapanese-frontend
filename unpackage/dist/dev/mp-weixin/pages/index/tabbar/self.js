@@ -1,83 +1,98 @@
 "use strict";
 const common_vendor = require("../../../common/vendor.js");
+const api_index = require("../../../api/index.js");
+const stores_index = require("../../../stores/index.js");
 if (!Array) {
   const _easycom_uv_avatar2 = common_vendor.resolveComponent("uv-avatar");
   const _easycom_wd_icon2 = common_vendor.resolveComponent("wd-icon");
-  const _easycom_wd_progress2 = common_vendor.resolveComponent("wd-progress");
-  (_easycom_uv_avatar2 + _easycom_wd_icon2 + _easycom_wd_progress2)();
+  (_easycom_uv_avatar2 + _easycom_wd_icon2)();
 }
 const _easycom_uv_avatar = () => "../../../uni_modules/uv-avatar/components/uv-avatar/uv-avatar.js";
 const _easycom_wd_icon = () => "../../../uni_modules/wot-design-uni/components/wd-icon/wd-icon.js";
-const _easycom_wd_progress = () => "../../../uni_modules/wot-design-uni/components/wd-progress/wd-progress.js";
 if (!Math) {
-  (Statusbar + _easycom_uv_avatar + _easycom_wd_icon + _easycom_wd_progress)();
+  (_easycom_uv_avatar + _easycom_wd_icon)();
 }
-const Statusbar = () => "../../../components/statusbar2.js";
 const _sfc_main = {
   __name: "self",
   setup(__props) {
+    const getUserInfoSimple = async () => {
+      try {
+        const res = await api_index.$http.user.getUserInfoSimple();
+        userInfo.value = res.data;
+        stores_index.userStore().setUserInfo(userInfo.value);
+      } catch (err) {
+        common_vendor.index.__f__("log", "at pages/index/tabbar/self.vue:104", "登录错误", err);
+      }
+    };
+    const goPage = (path, params) => {
+      if (params) {
+        common_vendor.index.navigateTo({
+          url: `/pages/${path}/${path}${params}`
+        });
+      } else {
+        common_vendor.index.navigateTo({
+          url: `/pages/${path}/${path}`
+        });
+      }
+    };
+    const userInfo = common_vendor.ref({
+      address: "",
+      avatar: "",
+      nickname: "",
+      role: "",
+      email: ""
+    });
     common_vendor.onMounted(() => {
+      getUserInfoSimple();
     });
     return (_ctx, _cache) => {
       return {
         a: common_vendor.p({
           size: "60",
-          text: "李"
+          src: userInfo.value.avatar
         }),
-        b: common_vendor.p({
-          name: "add-circle",
-          size: "20px"
-        }),
-        c: common_vendor.p({
-          percentage: 30
-        }),
-        d: common_vendor.p({
-          name: "add-circle",
-          size: "20px"
-        }),
+        b: common_vendor.t(userInfo.value.nickname),
+        c: common_vendor.t(userInfo.value.email),
+        d: common_vendor.o(($event) => goPage("userinfo")),
         e: common_vendor.p({
-          name: "add-circle",
+          name: "arrow-right",
           size: "20px"
         }),
-        f: common_vendor.p({
-          name: "arrow-right",
-          size: "22px"
-        }),
+        f: common_vendor.o(($event) => goPage("mytrend")),
         g: common_vendor.p({
           name: "arrow-right",
-          size: "22px"
+          size: "20px"
         }),
-        h: common_vendor.p({
-          name: "arrow-right",
-          size: "22px"
-        }),
+        h: common_vendor.o(($event) => goPage("mybooks")),
         i: common_vendor.p({
           name: "arrow-right",
-          size: "22px"
+          size: "20px"
         }),
-        j: common_vendor.p({
-          name: "arrow-right",
-          size: "22px"
-        }),
+        j: common_vendor.o(($event) => goPage("ranking")),
         k: common_vendor.p({
           name: "arrow-right",
-          size: "22px"
+          size: "20px"
         }),
-        l: common_vendor.p({
-          name: "arrow-right",
-          size: "22px"
-        }),
+        l: common_vendor.o(($event) => goPage("setting")),
         m: common_vendor.p({
           name: "arrow-right",
-          size: "22px"
+          size: "20px"
         }),
-        n: common_vendor.p({
+        n: common_vendor.o(($event) => goPage("feedback")),
+        o: common_vendor.p({
           name: "arrow-right",
-          size: "22px"
-        })
+          size: "20px"
+        }),
+        p: common_vendor.o(($event) => goPage("about")),
+        q: common_vendor.p({
+          name: "arrow-right",
+          size: "20px"
+        }),
+        r: common_vendor.o(($event) => goPage("share"))
       };
     };
   }
 };
 const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-97502f50"]]);
 wx.createComponent(Component);
+//# sourceMappingURL=../../../../.sourcemap/mp-weixin/pages/index/tabbar/self.js.map

@@ -20,3 +20,4 @@ const iconProps = {
   classPrefix: uni_modules_wotDesignUni_components_common_props.makeStringProp("wd-icon")
 };
 exports.iconProps = iconProps;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/wd-icon/types.js.map

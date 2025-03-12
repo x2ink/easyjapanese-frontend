@@ -5,13 +5,13 @@
 			<view class="zanandcomment">
 				<view class="_GCENTER" @click="goPage('likemsg')">
 					<wd-badge :modelValue="msgTotal.like_total">
-						<image src="/static/twemoji--brown-heart.png" mode="aspectFit"></image>
+						<image src="http://jp.x2.ink/images/twemoji--brown-heart.png" mode="aspectFit"></image>
 					</wd-badge>
 					<text>点赞</text>
 				</view>
 				<view class="_GCENTER" @click="goPage('commentmsg')">
 					<wd-badge :modelValue="msgTotal.comment_total">
-						<image src="/static/twemoji--speech-balloon.png" mode="aspectFit"></image>
+						<image src="http://jp.x2.ink/images/twemoji--speech-balloon.png" mode="aspectFit"></image>
 					</wd-badge>
 					<text>评论</text>
 				</view>

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar :title="formData.name" style="background-color: #f5f5f5;">
+		<NavBar :title="formData.name" style="background-color: #f3f3f5;">
 			<template #right>
 				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
 			</template>
@@ -96,9 +96,10 @@
 				console.log('点击了取消按钮')
 			})
 	}
-	const actions = ref([{
-			name: '导出单词'
-		},
+	const actions = ref([
+		// {
+		// 	name: '导出单词'
+		// },
 		{
 			name: '修改资料'
 		},

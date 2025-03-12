@@ -1,24 +1,24 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-require("../../utils/request.js");
+const api_index = require("../../api/index.js");
 require("../../stores/release/user.js");
 require("../../stores/test/user.js");
-if (!Array) {
-  const _easycom_wd_icon2 = common_vendor.resolveComponent("wd-icon");
-  const _easycom_wd_badge2 = common_vendor.resolveComponent("wd-badge");
-  const _easycom_wd_fab2 = common_vendor.resolveComponent("wd-fab");
-  (_easycom_wd_icon2 + _easycom_wd_badge2 + _easycom_wd_fab2)();
-}
-const _easycom_wd_icon = () => "../../uni_modules/wot-design-uni/components/wd-icon/wd-icon.js";
-const _easycom_wd_badge = () => "../../uni_modules/wot-design-uni/components/wd-badge/wd-badge.js";
-const _easycom_wd_fab = () => "../../uni_modules/wot-design-uni/components/wd-fab/wd-fab.js";
+require("../../stores/release/searchrecord.js");
+require("../../stores/test/searchrecord.js");
+require("../../stores/release/learnmode.js");
+require("../../stores/test/learnmode.js");
+require("../../stores/release/fastmode.js");
+require("../../stores/test/fastmode.js");
+require("../../stores/release/todaylearn.js");
+require("../../stores/test/todaylearn.js");
+require("../../stores/release/review.js");
+require("../../stores/test/review.js");
 if (!Math) {
-  (StatusBar + Home + Community + Learn + Self + Tabbar + _easycom_wd_icon + _easycom_wd_badge + _easycom_wd_fab)();
+  (Home + Community + Message + Self + Tabbar)();
 }
-const StatusBar = () => "../../components/statusBar.js";
 const Community = () => "./tabbar/community.js";
+const Message = () => "./tabbar/message.js";
 const Home = () => "./tabbar/home.js";
-const Learn = () => "./tabbar/learn.js";
 const Self = () => "./tabbar/self.js";
 const Tabbar = () => "../../components/tabbar.js";
 const _sfc_main = {
@@ -28,28 +28,36 @@ const _sfc_main = {
     const tabbarChange = (e) => {
       tabbar.value = e.value;
     };
+    const communityRef = common_vendor.ref(null);
+    const msgTotal = common_vendor.ref({
+      comment_total: 0,
+      like_total: 0
+    });
+    const getUnread = async () => {
+      const res = await api_index.$http.common.getUnread();
+      msgTotal.value = res;
+    };
+    common_vendor.onShow(() => {
+      getUnread();
+    });
     common_vendor.onMounted(() => {
     });
     return (_ctx, _cache) => {
       return {
         a: tabbar.value === 0,
-        b: tabbar.value === 1,
-        c: tabbar.value === 2,
-        d: tabbar.value === 3,
-        e: common_vendor.o(tabbarChange),
-        f: common_vendor.p({
-          name: "mail",
-          size: "25px",
-          color: "#ffffff"
+        b: common_vendor.sr(communityRef, "1cf27b2a-1", {
+          "k": "communityRef"
         }),
-        g: common_vendor.p({
-          max: 10,
-          ["is-dot"]: true,
-          modelValue: "12"
+        c: common_vendor.o(($event) => communityRef.value.loadMore()),
+        d: tabbar.value === 1,
+        e: common_vendor.p({
+          msgTotal: msgTotal.value
         }),
-        h: common_vendor.p({
-          type: "warning",
-          position: "right-bottom"
+        f: tabbar.value === 2,
+        g: tabbar.value === 3,
+        h: common_vendor.o(tabbarChange),
+        i: common_vendor.p({
+          msg: msgTotal.value.comment_total + msgTotal.value.like_total
         })
       };
     };
@@ -57,3 +65,4 @@ const _sfc_main = {
 };
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-1cf27b2a"]]);
 wx.createPage(MiniProgramPage);
+//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map

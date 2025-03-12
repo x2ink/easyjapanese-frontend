@@ -1,69 +1,54 @@
 <template>
 	<view>
-		<!-- 顶部区域 -->
-		<view class="head">
-			<view class="day">
-				你已坚持<span>{{info.day}}天</span>加油！
-			</view>
-			<view @click="goPage('search')" class="search">
-				<wd-icon name="search" size="18px" color="#979797"></wd-icon>
-				<p>搜索单词或语法</p>
-			</view>
+		<view :style="{height:navBarHeight}"></view>
+		<view class="persistday">
+			你已坚持<text>{{info.day}}天</text>加油！
 		</view>
-		<!-- 统计 -->
+		<view @click="goPage('search')" class="search">
+			<wd-icon name="search" size="18px" color="#979797"></wd-icon>
+			<text>搜索单词或语法</text>
+		</view>
 		<view class="recite">
 			<view class="plan">
-				<p>{{info.bookname}}</p>
+				<text>{{info.bookname}}</text>
 				<view>
-					<p @click="openPlan">
+					<text @click="openPlan">
 						修改计划
-					</p>
+					</text>
 					<wd-icon name="arrow-right" size="19px"></wd-icon>
 				</view>
 			</view>
 			<view class="task">
 				<view @click="goPage('todayreview')">
-					<p>等待复习</p>
-					<p>{{info.review}}</p>
+					<text>等待复习</text>
+					<text>{{info.review}}</text>
 				</view>
 				<view @click="goPage('todaylearn')">
-					<p>今日学习</p>
-					<p>{{info.learn}}</p>
+					<text>今日学习</text>
+					<text>{{info.learn}}</text>
 				</view>
 			</view>
-			<wd-progress :percentage="progress" hide-text />
+			<wd-progress custom-class="customprogress" :percentage="progress" hide-text />
 			<view class="progress">
-				<p><span>{{info.learnnum}}</span>/<span>{{info.wordnum}}</span></p>
+				<view><text>{{info.learnnum}}</text>/<text>{{info.wordnum}}</text></view>
 				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button @click="review()" custom-class="review" size="large" type="info"
-					style="width: 100%;">记忆复习</wd-button>
-				<wd-button @click="startLearn()" size="large" style="width: 100%;">开始学习</wd-button>
+				<wd-button @click="review()" size="large" custom-class="reviewbtn recitebtn" type="info">记忆复习</wd-button>
+				<wd-button custom-class="recitebtn" size="large" @click="startLearn()">开始学习</wd-button>
 			</view>
 		</view>
-		<!-- 翻译 -->
-		<!-- 	<view class="maintool">
-			<view @click="goPage('aitranslate')">
-				<p>AI翻译</p>
-				<p>精准专业翻译</p>
-				<image src="/static/duo-icons--android.png" mode="aspectFit"></image>
-			</view>
-			<view @click="goPage('translate')">
-				<p>标准翻译</p>
-				<p>快速翻译语言</p>
-				<image src="/static/duo-icons--g-translate.png" mode="aspectFit"></image>
-			</view>
-		</view> -->
-		<!-- 其他工具 -->
-		<uv-scroll-list style="background-color: white;border-radius: 8px;margin: 10px;">
-			<view class="scroll-list" style="flex-direction: row;">
-				<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList" :key="index">
-					<image class="scroll-list__item__image" :src="item.image"></image>
-					<p class="scroll-list__item__text">{{ item.name }}</p>
+		<view class="tools">
+			<uv-scroll-list>
+				<view class="scroll-list" style="flex-direction: row;">
+					<view @click="goPage(item.path)" class="scroll-list__item" v-for="(item, index) in toolList"
+						:key="index">
+						<image class="scroll-list__item__image" :src="item.image"></image>
+						<p class="scroll-list__item__text">{{ item.name }}</p>
+					</view>
 				</view>
-			</view>
-		</uv-scroll-list>
+			</uv-scroll-list>
+		</view>
 		<!-- 推荐单词 -->
 		<view class="smalltitle">
 			<text>单词推荐</text>
@@ -118,7 +103,6 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import Statusbar from "@/components/statusbar.vue"
 	import Setplan from "@/components/setplan.vue"
 	import $http from "@/api/index.js"
 	import {
@@ -166,7 +150,11 @@
 		review: 0,
 		wordnum: 0
 	})
+	const navBarHeight = ref(0)
 	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
 		getArticleList()
 		getRecommend()
 	})
@@ -206,24 +194,28 @@
 	}
 	const toolList = ref([{
 		name: '文本翻译',
-		image: '../../static/duo-icons--g-translate.png',
+		image: 'http://jp.x2.ink/images/duo-icons--g-translate.png',
 		path: "translate"
 	}, {
 		name: '语法学习',
-		image: '../../static/duo-icons--book.png',
+		image: 'http://jp.x2.ink/images/duo-icons--book.png',
 		path: 'grammar'
 	}, {
 		name: '五十音图',
-		image: '../../static/duo-icons--dashboard.png',
+		image: 'http://jp.x2.ink/images/duo-icons--dashboard.png',
 		path: 'fiftysounds'
 	}, {
 		name: '动词变形',
-		image: '../../static/duo-icons--palette.png',
+		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
 		path: "verbtransfiguration"
 	}, {
-		name: '日语电台',
-		image: '../../static/duo-icons--disk.png',
-		path: 'radiostation'
+		name: '动词变形',
+		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
+		path: "verbtransfiguration"
+	}, {
+		name: '动词变形',
+		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
+		path: "verbtransfiguration"
 	}])
 </script>
 
@@ -232,44 +224,86 @@
 		margin-top: 0;
 	}
 
-	.head {
-		padding: 10px;
+
+
+	.persistday {
+		color: $uni-text-color-grey;
+		height: 45px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		padding: 0 10px;
 
-		.search {
-			height: 40px;
-			background: #fff;
-			padding: 5px 15px;
-			font-size: $uni-font-size-lg;
-			box-sizing: border-box;
-			border-radius: 40px;
-			display: flex;
-			align-items: center;
-
-			p {
-				font-size: 14px;
-				color: #979797;
-				margin-left: 5px;
-			}
-		}
-
-		.day {
-			color: $uni-text-color-grey;
-
-			span {
-				&:nth-of-type(1) {
-					font-size: 25px;
-					margin-left: 3px;
-					margin-right: 8px;
-					font-weight: bold;
-					font-style: italic;
-					color: $uni-color-success;
-				}
+		text {
+			&:nth-of-type(1) {
+				font-size: 25px;
+				margin-left: 3px;
+				margin-right: 8px;
+				font-weight: bold;
+				font-style: italic;
+				color: $uni-color-success;
 			}
 		}
 	}
+
+	.search {
+		height: 40px;
+		background: #fff;
+		padding: 5px 15px;
+		margin: 0 10px 10px 10px;
+		font-size: $uni-font-size-lg;
+		box-sizing: border-box;
+		border-radius: 40px;
+		display: flex;
+		align-items: center;
+
+		text {
+			font-size: 14px;
+			color: #979797;
+			margin-left: 5px;
+		}
+	}
+
+	.tools {
+		margin-top: 20px;
+
+		.scroll-list {
+			display: flex;
+			gap: 10px;
+
+			&__item {
+				width: 70px;
+				height: 70px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+
+				&:first-child {
+					margin-left: 10px;
+				}
+
+				&:last-child {
+					margin-right: 10px;
+				}
+
+				&__image {
+					width: 40px;
+					height: 40px;
+				}
+
+				&__text {
+					color: $uni-text-color-grey;
+					text-align: center;
+					font-size: $uni-font-size-sm;
+					margin-top: 5px;
+				}
+			}
+
+		}
+	}
+
+
+
 
 	.recite {
 		padding: 15px;
@@ -283,7 +317,7 @@
 			align-items: center;
 			justify-content: space-between;
 
-			>p {
+			>text {
 				font-weight: bold;
 			}
 
@@ -305,7 +339,7 @@
 				justify-content: center;
 				align-items: center;
 
-				p {
+				text {
 					&:nth-of-type(1) {
 						color: $uni-text-color-grey;
 						font-size: $uni-font-size-sm;
@@ -325,7 +359,7 @@
 			justify-content: space-between;
 			margin: 10px 0;
 
-			p {
+			>view {
 				color: $uni-text-color-grey;
 				font-size: $uni-font-size-base;
 			}
@@ -343,41 +377,6 @@
 		}
 	}
 
-	.scroll-list {
-		display: flex;
-		gap: 10px;
-		margin-top: 10px;
-
-		&__item {
-			width: 70px;
-			height: 70px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-direction: column;
-
-			&:first-child {
-				margin-left: 10px;
-			}
-
-			&:last-child {
-				margin-right: 10px;
-			}
-
-			&__image {
-				width: 30px;
-				height: 30px;
-			}
-
-			&__text {
-				color: $uni-text-color-grey;
-				text-align: center;
-				font-size: $uni-font-size-sm;
-				margin-top: 5px;
-			}
-		}
-
-	}
 
 
 
@@ -386,9 +385,9 @@
 
 
 
-	.review {
-		color: #4D80F0 !important;
-	}
+
+
+
 
 
 
@@ -436,19 +435,19 @@
 
 			&:nth-of-type(1) {
 				// background: linear-gradient(135deg, #fa4350, #ffa39e);
-				// background-image: url('@/static/ai.png');
+				// background-image: url('http://jp.x2.ink/images/ai.png');
 			}
 
 			&:nth-of-type(2) {
 				// background: linear-gradient(135deg, #4D80F0, #B0C4DE);
-				// background-image: url('@/static/yufa.png');
+				// background-image: url('http://jp.x2.ink/images/yufa.png');
 			}
 		}
 	}
 
 
 	.smalltitle {
-		margin: 10px 10px 0 10px;
+		margin: 0 10px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

@@ -71,7 +71,7 @@ const isEqual = (value1, value2) => {
 const context = {
   id: 1e3
 };
-function getRect(selector, all, scope) {
+function getRect(selector, all, scope, useFields) {
   return new Promise((resolve, reject) => {
     let query = null;
     if (scope) {
@@ -79,7 +79,8 @@ function getRect(selector, all, scope) {
     } else {
       query = common_vendor.index.createSelectorQuery();
     }
-    query[all ? "selectAll" : "select"](selector).boundingClientRect((rect) => {
+    const method = all ? "selectAll" : "select";
+    const callback = (rect) => {
       if (all && isArray(rect) && rect.length > 0) {
         resolve(rect);
       } else if (!all && rect) {
@@ -87,7 +88,12 @@ function getRect(selector, all, scope) {
       } else {
         reject(new Error("No nodes found"));
       }
-    }).exec();
+    };
+    if (useFields) {
+      query[method](selector).fields({ size: true, node: true }, callback).exec();
+    } else {
+      query[method](selector).boundingClientRect(callback).exec();
+    }
   });
 }
 function kebabCase(word) {
@@ -106,7 +112,7 @@ function isArray(value) {
   return Object.prototype.toString.call(value) === "[object Array]";
 }
 function isFunction(value) {
-  return getType(value) === "function";
+  return getType(value) === "function" || getType(value) === "asyncfunction";
 }
 function isString(value) {
   return getType(value) === "string";
@@ -122,6 +128,12 @@ function isPromise(value) {
 }
 function isUndefined(value) {
   return typeof value === "undefined";
+}
+function isOdd(value) {
+  if (typeof value !== "number") {
+    throw new Error("输入必须为数字");
+  }
+  return value % 2 === 1;
 }
 function objToStyle(styles) {
   if (isArray(styles)) {
@@ -143,17 +155,7 @@ function objToStyle(styles) {
   }
   return "";
 }
-const requestAnimationFrame = (cb = () => {
-}) => {
-  return new uni_modules_wotDesignUni_components_common_AbortablePromise.AbortablePromise((resolve) => {
-    const timer = setInterval(() => {
-      clearInterval(timer);
-      resolve(true);
-      cb();
-    }, 1e3 / 30);
-  });
-};
-const pause = (ms) => {
+const pause = (ms = 1e3 / 30) => {
   return new uni_modules_wotDesignUni_components_common_AbortablePromise.AbortablePromise((resolve) => {
     const timer = setTimeout(() => {
       clearTimeout(timer);
@@ -187,6 +189,18 @@ function deepClone(obj, cache = /* @__PURE__ */ new Map()) {
     }
   }
   return copy;
+}
+function deepMerge(target, source) {
+  target = deepClone(target);
+  if (typeof target !== "object" || typeof source !== "object") {
+    throw new Error("Both target and source must be objects.");
+  }
+  for (const prop in source) {
+    if (!source.hasOwnProperty(prop))
+      continue;
+    target[prop] = source[prop];
+  }
+  return target;
 }
 function deepAssign(target, source) {
   Object.keys(source).forEach((key) => {
@@ -252,10 +266,18 @@ const getPropByPath = (obj, path) => {
   }
 };
 const isDate = (val) => Object.prototype.toString.call(val) === "[object Date]" && !Number.isNaN(val.getTime());
+function isVideoUrl(url) {
+  const videoRegex = /\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|video)/i;
+  return videoRegex.test(url);
+}
 function isImageUrl(url) {
   const imageRegex = /\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg|image)/i;
   return imageRegex.test(url);
 }
+const isH5 = /* @__PURE__ */ (() => {
+  let isH52 = false;
+  return isH52;
+})();
 function omitBy(obj, predicate) {
   const newObj = deepClone(obj);
   Object.keys(newObj).forEach((key) => predicate(newObj[key], key) && delete newObj[key]);
@@ -267,6 +289,8 @@ exports.checkNumRange = checkNumRange;
 exports.context = context;
 exports.debounce = debounce;
 exports.deepAssign = deepAssign;
+exports.deepClone = deepClone;
+exports.deepMerge = deepMerge;
 exports.getPropByPath = getPropByPath;
 exports.getRect = getRect;
 exports.gradient = gradient;
@@ -275,14 +299,17 @@ exports.isDate = isDate;
 exports.isDef = isDef;
 exports.isEqual = isEqual;
 exports.isFunction = isFunction;
+exports.isH5 = isH5;
 exports.isImageUrl = isImageUrl;
 exports.isNumber = isNumber;
 exports.isObj = isObj;
+exports.isOdd = isOdd;
 exports.isPromise = isPromise;
 exports.isString = isString;
 exports.isUndefined = isUndefined;
+exports.isVideoUrl = isVideoUrl;
 exports.objToStyle = objToStyle;
 exports.omitBy = omitBy;
 exports.pause = pause;
-exports.requestAnimationFrame = requestAnimationFrame;
 exports.uuid = uuid;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/common/util.js.map

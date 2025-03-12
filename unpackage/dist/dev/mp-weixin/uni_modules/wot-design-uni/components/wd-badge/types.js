@@ -5,10 +5,7 @@ const badgeProps = {
   /**
    * 显示值
    */
-  modelValue: {
-    type: [Number, String, null],
-    default: null
-  },
+  modelValue: uni_modules_wotDesignUni_components_common_props.numericProp,
   /** 当数值为 0 时，是否展示徽标 */
   showZero: uni_modules_wotDesignUni_components_common_props.makeBooleanProp(false),
   bgColor: String,
@@ -31,10 +28,11 @@ const badgeProps = {
   /**
    * 为正时，角标向下偏移对应的像素
    */
-  top: Number,
+  top: uni_modules_wotDesignUni_components_common_props.numericProp,
   /**
    * 为正时，角标向左偏移对应的像素
    */
-  right: Number
+  right: uni_modules_wotDesignUni_components_common_props.numericProp
 };
 exports.badgeProps = badgeProps;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/wd-badge/types.js.map

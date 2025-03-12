@@ -647,6 +647,7 @@ $-toast-fs: var(--wot-toast-fs, $-fs-content) !default; // 字号
 $-toast-with-icon-min-width: var(--wot-toast-with-icon-min-width, 150px) !default; // 有图标的情况下最小宽度
 $-toast-icon-size: var(--wot-toast-icon-size, 32px) !default; // 图标大小
 $-toast-icon-margin-right: var(--wot-toast-icon-margin-right, 12px) !default; // 图标右边距
+$-toast-icon-margin-bottom: var(--wot-toast-icon-margin-bottom, 12px) !default; // 图标下边距
 $-toast-loading-padding: var(--wot-toast-loading-padding, 10px) !default; // loading 下的padding
 $-toast-box-shadow: var(--wot-toast-box-shadow, 0px 6px 16px 0px rgba(0, 0, 0, 0.08)) !default; // 外部阴影
 
@@ -953,3 +954,13 @@ $-floating-panel-bar-height: var(--wot-floating-panel-bar-height, 3px) !default;
 $-floating-panel-bar-bg: var(--wot-floating-panel-bar-bg, $-color-gray-5) !default; // bar 背景色
 $-floating-panel-bar-radius: var(--wot-floating-panel-bar-radius, 4px) !default; // bar 圆角
 $-floating-panel-content-bg: var(--wot-floating-panel-content-bg, $-color-white) !default; // 内容背景色
+
+/* signature */
+$-signature-bg: var(--wot-signature-bg, $-color-white) !default; // 背景色
+$-signature-radius: var(--wot-signature-radius, 4px) !default; // 圆角
+$-signature-border: var(--wot-signature-border, 1px solid $-color-gray-5) !default; // 边框圆角
+$-signature-footer-margin-top: var(--wot-signature-footer-margin-top, 8px) !default; // 底部按钮上边距
+$-signature-button-margin-left: var(--wot-signature-button-margin-left, 8px) !default; // 底部按钮左边距
+
+
+

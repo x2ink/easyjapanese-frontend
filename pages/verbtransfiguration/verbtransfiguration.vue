@@ -43,8 +43,8 @@
 		width: 100%;
 	}
 	:deep(.input1) {
-		padding: 10px;
-		border-radius: 8px;
+		padding: 8px 15px;
+		border-radius: 44px;
 	}
 
 	.input {

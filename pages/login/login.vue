@@ -1,31 +1,19 @@
 <template>
 	<view>
-		<StatusBar></StatusBar>
-		<view style="padding:40px 30px;">
-			<p class="title">登录</p>
-			<wd-input size="large" no-border style="margin-top: 20px;" type="text" v-model="from.email"
-				placeholder="请输入邮箱" />
-			<wd-input size="large" no-border type="text" v-model="from.password" placeholder="请输入账户密码" showPassword style="margin-top: 10px;"/>
-			<wd-button @click="login()" style="margin-top: 30px;width: 100%;">登录</wd-button>
-			<view class="more">
-				<p @click="show=true">
-					忘记密码？
-				</p>
-				<p @click="register()">
-					注册账号
-				</p>
+		<Navbar></Navbar>
+		<view class="_GCENTER body">
+			<image class="logo" src="http://jp.x2.ink/images/logo.png" mode="aspectFit"></image>
+			<view class="title">轻松日语APP</view>
+			<view class="describe">日语单词百科全书</view>
+			<wd-button @click="wxLogin()" custom-class="login">微信一键登录</wd-button>
+			<view class="agree">
+				<wd-checkbox v-model="agree">
+					<view class="agreement">我已同意并阅读<text>《用户协议》</text>与<text>《隐私政策》</text></view>
+				</wd-checkbox>
 			</view>
 		</view>
-		<!-- 其他登录方式 -->
-		<!-- 	<view class="otherway">
-			<WX></WX>
-			<QQ></QQ>
-			<ALI></ALI>
-		</view> -->
+		<wd-toast />
 	</view>
-	<wd-action-sheet :safe-area-inset-bottom="false" cancel-text="取消" v-model="show" :actions="actions"
-		@close="show=false" @select="select" />
-	<wd-toast />
 </template>
 
 <script setup>
@@ -33,10 +21,7 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import StatusBar from '@/components/statusBar.vue';
-	import QQ from "./components/qq.vue"
-	import WX from "./components/wx.vue"
-	import ALI from "./components/alipay.vue"
+	import Navbar from '@/components/navbar/navbar.vue';
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
@@ -44,9 +29,6 @@
 		userStore
 	} from "@/stores/index.js"
 	import $http from "@/api/index.js"
-	import {
-		isEmail
-	} from "@/utils/common.js"
 	const toast = useToast()
 	onMounted(() => {
 		uni.getSystemInfo({
@@ -56,90 +38,89 @@
 			}
 		})
 	})
+	const agree = ref(false)
+
+	const wxLogin = () => {
+		if (!agree.value) {
+			toast.warning(`请同意《用户协议》与隐私政策`)
+			return
+		}
+		toast.loading('正在登录中...')
+		uni.getUserInfo({
+			provider: "weixin",
+			lang: "zh_CN",
+			success: (InfoRes) => {
+				uni.login({
+					provider: 'weixin',
+					success: async function(loginRes) {
+						let data = {
+							avatar: InfoRes.userInfo.avatarUrl,
+							nickname: InfoRes.userInfo.nickName,
+							code: loginRes.code,
+							os: from.value.os,
+							device: from.value.device
+						}
+						const loginResult = await $http.user.wxLogin(data)
+						console.log(loginResult);
+						toast.close()
+						userStore().setToken(loginResult.data)
+						uni.navigateTo({
+							url: "/pages/index/index"
+						})
+					}
+				});
+			},
+			fail: () => {
+				toast.warning(`请授权获取用户昵称与头像`)
+			}
+		})
+	}
 	const from = ref({
-		email: '339851531@qq.com',
-		password: '123456',
 		os: '',
 		device: ''
 	})
-	const actions = ref([{
-			name: '验证码登录'
-		},
-		{
-			name: '重置密码'
-		}
-	])
-	const login = async () => {
-		if (isEmail(from.value.email)) {
-			if (from.value.password == '') {
-				toast.warning(`表单不完整`)
-				return
-			}
-			try {
-				const res = await $http.user.login('pwd', from.value)
-				toast.success('登录成功')
-				userStore().setToken(res.data)
-				setTimeout(() => {
-					uni.navigateTo({
-						url: "/pages/index/index"
-					})
-				}, 1000)
-			} catch (error) {
-				if (error.code === 4001) {
-					toast.error('验证码错误或失效')
-				} else if (error.code === 4002) {
-					toast.error('邮箱或密码错误')
-				}
-			}
-		} else {
-			toast.warning('邮箱验证失败')
-		}
-	}
-	const show = ref(false)
-	const register = () => {
-		uni.navigateTo({
-			url: "/pages/register/register"
-		})
-	}
 </script>
 
 <style scoped lang="scss">
-	.more {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+	:deep(.login) {
+		width: 100%;
+		margin-top: 30px;
+	}
+
+	.agree {
 		margin-top: 30px;
 
-		p {
-			font-size: $uni-font-size-base;
+		.agreement {
+			font-size: 12px;
+			color: #999;
 
-			&:nth-of-type(2) {
-				color: $uni-color-primary;
-			}
-
-			&:nth-of-type(1) {
-				color: $uni-color-subtitle;
+			text {
+				color: #5880F2;
 			}
 		}
 	}
 
-	:deep(.wd-input) {
-		border-radius: $uni-border-radius-base;
-	}
 
-	.title {
-		font-size: $uni-font-size-subtitle;
-		font-weight: bold;
-	}
+	.body {
+		padding: 30px 15px;
+		flex-direction: column;
 
-	.otherway {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 30px;
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 30px;
+		.title {
+			font-size: 18px;
+			margin-top: 10px;
+			font-weight: 600;
+		}
+
+		.describe {
+			margin-top: 5px;
+			color: #999;
+			font-size: 12px;
+		}
+
+		.logo {
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+		}
 	}
 </style>

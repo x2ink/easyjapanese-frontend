@@ -111,7 +111,6 @@
 	onShow(() => {
 		uni.$once("addTrend", (data) => {
 			if (data) {
-				console.log(data);
 				toast.success(`发布成功`)
 				refresh()
 			}
@@ -268,10 +267,10 @@
 
 	.list {
 		background-color: #f5f5f5;
-		padding: 0 10px;
+		padding: 0 15px;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 15px;
 
 		.item {
 			display: flex;
@@ -356,11 +355,11 @@
 
 					p {
 						&:nth-of-type(1) {
-							font-size: 15;
+							font-size: 15px;
 						}
 
 						&:nth-of-type(2) {
-							font-size: $uni-font-size-sm;
+							font-size: 14px;
 							color: $uni-text-color-grey;
 						}
 					}

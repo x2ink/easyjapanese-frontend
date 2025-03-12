@@ -6,7 +6,7 @@
 			<view class="list">
 				<view class="category">
 					<view class="item _GCENTER" v-for="_ in 9">
-						<image src="/static/FluentEmojiBirthdayCake.png" mode="aspectFill"></image>
+						<image src="http://jp.x2.ink/images/FluentEmojiBirthdayCake.png" mode="aspectFill"></image>
 						<text>日常食物</text>
 					</view>
 				</view>

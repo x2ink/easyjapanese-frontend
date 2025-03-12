@@ -1,5 +1,5 @@
 <div align="center">
-    <img width="200px" height="200px" src="https://gitee.com/dishait/pinia-plugin-unistorage/raw/main/static/favicon.png" />
+    <img width="200px" height="200px" src="https://gitee.com/dishait/pinia-plugin-unistorage/raw/mainhttp://jp.x2.ink/images/favicon.png" />
     <h1>pinia-plugin-unistorage</h1>
     <p>uniapp 下 pinia 的本地数据缓存插件</p>
 </div>
@@ -8,7 +8,7 @@
 <br />
 
 <div align="center">
-    <img width="100%" height="100%" src="https://gitee.com/dishait/pinia-plugin-unistorage/raw/main/static/pinia-plugin-unistorage.gif" />
+    <img width="100%" height="100%" src="https://gitee.com/dishait/pinia-plugin-unistorage/raw/mainhttp://jp.x2.ink/images/pinia-plugin-unistorage.gif" />
 </div>
 
 <br />
@@ -32,7 +32,7 @@
 <br />
 <br />
 
-## 组织 🦔
+## 组织 ??
 
 欢迎关注 **帝莎编程**
 
@@ -65,7 +65,7 @@ export function createApp() {
 
   const store = Pinia.createPinia();
 
-  // 关键代码 👇
+  // 关键代码 ??
   store.use(createUnistorage());
 
   app.use(store);
@@ -94,7 +94,7 @@ export function createApp() {
 
   const store = Pinia.createPinia();
 
-  // 关键代码 👇
+  // 关键代码 ??
   store.use(createUnistorage());
 
   app.use(store);

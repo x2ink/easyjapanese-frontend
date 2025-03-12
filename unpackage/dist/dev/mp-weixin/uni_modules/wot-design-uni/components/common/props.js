@@ -42,3 +42,4 @@ exports.makeNumericProp = makeNumericProp;
 exports.makeRequiredProp = makeRequiredProp;
 exports.makeStringProp = makeStringProp;
 exports.numericProp = numericProp;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/common/props.js.map

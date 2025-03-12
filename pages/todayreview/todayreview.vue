@@ -1,6 +1,6 @@
 <template>
-	<view style="background-color: #f5f5f5;min-height: 100vh;">
-		<NavBar title="等待复习" style="background-color: white;">
+	<view>
+		<NavBar title="等待复习" style="background-color: #f3f3f5;">
 		</NavBar>
 		<view class="list">
 			<view class="item" @click="getInfo(item.id)" :key="item.id" v-for="(item,index) in List">
@@ -65,14 +65,16 @@
 	}
 
 	.list {
-		margin-top: 10px;
+		margin: 5px 15px 15px 15px;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 15px;
+		padding-bottom: 15px;
 
 		.item {
-			padding: 10px;
+			padding: 15px;
 			background-color: white;
+			border-radius: 8px;
 
 			.explain {
 				margin-top: 5px;

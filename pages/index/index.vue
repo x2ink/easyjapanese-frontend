@@ -33,7 +33,6 @@
 	import Community from "./tabbar/community.vue"
 	import Message from "./tabbar/message.vue"
 	import Home from "./tabbar/home.vue"
-	import Learn from "./tabbar/learn.vue"
 	import Self from "./tabbar/self.vue"
 	import Tabbar from "@/components/tabbar.vue"
 	import {
@@ -66,6 +65,17 @@
 </script>
 
 <style lang="scss" scoped>
+	:deep(.recitebtn) {
+		width: 100% !important;
+	}
+	
+	:deep(.reviewbtn) {
+		color: #4D80F0 !important;
+	}
+	:deep(.wd-progress__outer){
+		height: 5px!important;
+		border-radius: 5px!important;
+	}
 	.swiper {
 		width: 100%;
 		height: calc(100vh - 50px - env(safe-area-inset-bottom));

@@ -1,7 +1,7 @@
 <template>
 	<view class="root">
 		<slot name="prefix"></slot>
-		<wd-input prefix-icon="search" custom-class="search" confirm-type="search" no-border type="text" v-model="value"
+		<wd-input prefix-icon="search" custom-class="search" confirm-type="search" no-border type="text"
 			:placeholder="placeholder" @input="onChange" @confirm="emits('confirm')" />
 	</view>
 </template>
@@ -23,6 +23,8 @@
 </script>
 
 <style scoped lang="scss">
+	
+
 	.root {
 		display: flex;
 		align-items: center;
