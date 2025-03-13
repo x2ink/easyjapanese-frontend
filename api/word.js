@@ -62,5 +62,11 @@ export default {
 	},
 	getRecommend() {
 		return http.get(`recommend`)
+	},
+	followRead(data) {
+		return http.post(`followread`, data)
+	},
+	getFollowRead(id, page, size) {
+		return http.get(`followread/${id}/${page}/${size}`)
 	}
 }

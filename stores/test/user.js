@@ -1,13 +1,18 @@
 import {
 	defineStore
 } from 'pinia'
+import $http from "@/api/index.js"
 export const test_userModule = defineStore('test_user', {
-	unistorage: true, // 是否持久化
+	unistorage: true,
 	state: () => {
 		return {
 			token: '',
 			userInfo: {
-				id: '',
+				address: "",
+				avatar: '',
+				nickname: '登录/注册',
+				role: 1,
+				email: ''
 			}
 		}
 	},
@@ -18,8 +23,14 @@ export const test_userModule = defineStore('test_user', {
 		setToken(token) {
 			this.token = token
 		},
-		setUserInfo(info) {
-			this.userInfo = info
+		setUserInfo: async (info) => {
+			console.log("初始化用户信息");
+			try {
+				const res = await $http.user.getUserInfoSimple()
+				this.userInfo = info
+			} catch (err) {
+				console.log("未登录", err);
+			}
 		},
 		clearTokenInfo() {
 			this.token === ''

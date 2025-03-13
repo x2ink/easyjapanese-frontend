@@ -28,13 +28,12 @@
 		onLoad,
 		onShow
 	} from '@dcloudio/uni-app'
-	import StatusBar from '@/components/statusBar.vue';
 	import $http from "@/api/index.js"
-	import Community from "./tabbar/community.vue"
-	import Message from "./tabbar/message.vue"
-	import Home from "./tabbar/home.vue"
-	import Self from "./tabbar/self.vue"
-	import Tabbar from "@/components/tabbar.vue"
+	import Community from "./pages/community/index.vue"
+	import Message from "./pages/message/index.vue"
+	import Home from "./pages/home/index.vue"
+	import Self from "./pages/self/index.vue"
+	import Tabbar from "./components/tabbar/tabbar.vue"
 	import {
 		userStore
 	} from "@/stores"
@@ -55,7 +54,7 @@
 		getUnread()
 	})
 	onMounted(() => {
-
+userStore().setUserInfo()
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })
@@ -68,14 +67,16 @@
 	:deep(.recitebtn) {
 		width: 100% !important;
 	}
-	
+
 	:deep(.reviewbtn) {
 		color: #4D80F0 !important;
 	}
-	:deep(.wd-progress__outer){
-		height: 5px!important;
-		border-radius: 5px!important;
+
+	:deep(.wd-progress__outer) {
+		height: 5px !important;
+		border-radius: 5px !important;
 	}
+
 	.swiper {
 		width: 100%;
 		height: calc(100vh - 50px - env(safe-area-inset-bottom));

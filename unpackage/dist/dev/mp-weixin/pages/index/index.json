@@ -1,10 +1,10 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "community": "./tabbar/community",
-    "message": "./tabbar/message",
-    "home": "./tabbar/home",
-    "self": "./tabbar/self",
-    "tabbar": "../../components/tabbar"
+    "community": "./pages/community/index",
+    "message": "./pages/message/index",
+    "home": "./pages/home/index",
+    "self": "./pages/self/index",
+    "tabbar": "./components/tabbar/tabbar"
   }
 }

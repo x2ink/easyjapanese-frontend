@@ -13,6 +13,10 @@
 	} from '@dcloudio/uni-app'
 	const src = ref("")
 	onLoad((op) => {
-		src.value = op.src
+		if (op.type == "dict") {
+			src.value = `https://cn.bing.com/search?q=site:www.weblio.jp%20${op.word}`
+		} else {
+			src.value = op.src
+		}
 	})
 </script>

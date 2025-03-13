@@ -87,13 +87,14 @@
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import 'dayjs/locale/zh'
+	dayjs.locale('zh')
+	dayjs.extend(relativeTime)
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const noResult = ref(false)
-	dayjs.locale('zh')
-	dayjs.extend(relativeTime)
+
 	const loadMoreText = computed(() => {
 		if (total.value == List.value.length) {
 			return "finished"

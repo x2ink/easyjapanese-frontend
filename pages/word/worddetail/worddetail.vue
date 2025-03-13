@@ -1,14 +1,11 @@
 <template>
 	<view>
-		<NavBar title="">
-			<template #right>
-				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
-			</template>
-		</NavBar>
+		<Navbar title="">
+		</Navbar>
 		<view v-show="loading" class="loading _GCENTER">
 			<wd-loading />
 		</view>
-		<WordDetail :wordinfo="wordinfo" :chinfo="chinfo" :type="type" v-show="!loading"></WordDetail>
+		<WordDetail :jcinfo="jcinfo" :cjinfo="cjinfo" :type="type" v-show="!loading"></WordDetail>
 		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
 			:actions="actions" @close="moreShow=false" @select="select" />
 		<wd-toast />
@@ -20,14 +17,14 @@
 		computed,
 		ref
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import {
 		onLoad,
 		onShow
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
-	import WordList from "@/components/wordlist.vue"
-	import WordDetail from "@/components/worddetail.vue"
+	import WordList from "@/components/wordlist/wordlist.vue"
+	import WordDetail from "@/components/worddetail/worddetail.vue"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
@@ -35,15 +32,16 @@
 	const type = ref('jc')
 	const loading = ref(true)
 	const moreShow = ref(false)
-	const wordinfo = ref({
+	const jcinfo = ref({
 		word: null,
 		voice: null,
 		tone: null,
 		rome: null,
 		kana: null,
-		detail: []
+		meaning: [],
+		example: []
 	})
-	const chinfo = ref({
+	const cjinfo = ref({
 		ch: "",
 		py: "",
 		result: []
@@ -82,17 +80,6 @@
 			goPage('mybooks', "?type=select")
 		}
 	}
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
 	const id = ref(null)
 	onLoad((e) => {
 		type.value = e.type
@@ -105,17 +92,12 @@
 	})
 	const getCjInfo = async () => {
 		const res = await $http.word.cjInfo(id.value)
-		chinfo.value = res.data
+		cjinfo.value = res.data
 		loading.value = false
 	}
 	const getJcInfo = async () => {
 		const res = await $http.word.jcInfo(id.value)
-		res.data.detail.forEach((_, i) => {
-			res.data.detail[i].detail.forEach((_, k) => {
-				res.data.detail[i].detail[k].show = false
-			})
-		})
-		wordinfo.value = res.data
+		jcinfo.value = res.data
 		loading.value = false
 	}
 	const actions = computed(() => {
@@ -146,4 +128,5 @@
 	.loading {
 		margin-top: 40px;
 	}
+
 </style>

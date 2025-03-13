@@ -1,6 +1,9 @@
 <template>
 	<view class="wordlist">
-		<view @click="getInfo(item.id)" :key="item.id" v-for="item in list">
+		<view @click="goPage('/pages/word/worddetail/worddetail',{
+			id:item.id,
+			type:type
+		})" :key="item.id" v-for="item in list">
 			<view class="worditem">
 				<view v-if="type=='jc'" class="head jpfont">
 					<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
@@ -8,9 +11,9 @@
 				<view v-else class="head">
 					<p>{{item.ch}}</p>
 				</view>
-				<wd-text v-if="type=='jc'" size="14px" :lines="2" class="body" color="#999"
+				<wd-text v-if="type=='jc'" size="14px" :lines="2" custom-class="body" color="#999"
 					:text="item.meaning.join('\n')"></wd-text>
-				<wd-text v-else size="14px" :lines="2" class="body" color="#999" :text="item.pinyin"></wd-text>
+				<wd-text v-else size="14px" :lines="2" custom-class="body" color="#999" :text="item.pinyin"></wd-text>
 			</view>
 		</view>
 	</view>
@@ -20,6 +23,9 @@
 	import {
 		ref
 	} from 'vue'
+	import {
+		goPage
+	} from "@/utils/common.js"
 	const props = defineProps({
 		list: {
 			type: Array
@@ -29,28 +35,20 @@
 			default: 'jc'
 		}
 	})
-	const getInfo = (id) => {
-		uni.navigateTo({
-			url: "/pages/worddetail/worddetail?id=" + id + "&type=" + props.type
-		})
-	}
 </script>
 
 <style lang="scss" scoped>
 	.wordlist {
-
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		padding: 10px;
 
 		.worditem {
 			background-color: white;
 			padding: 10px;
 			border-radius: 8px;
 
-			.body {
-				// margin-top: 5px;
-			}
 
 			.head {
 				display: flex;

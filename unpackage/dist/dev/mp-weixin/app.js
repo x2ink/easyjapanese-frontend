@@ -7,10 +7,10 @@ if (!Math) {
   "./pages/login/login.js";
   "./pages/register/register.js";
   "./pages/thesaurus/thesaurus.js";
-  "./pages/search/search.js";
+  "./pages/word/search/search.js";
   "./pages/wordlist/wordlist.js";
   "./pages/learn/learn.js";
-  "./pages/worddetail/worddetail.js";
+  "./pages/word/worddetail/worddetail.js";
   "./pages/addtrend/addtrend.js";
   "./pages/trenddetail/trenddetail.js";
   "./pages/fastmode/fastmode.js";
@@ -30,7 +30,6 @@ if (!Math) {
   "./pages/mybooks/mybooks.js";
   "./pages/mybookswordlist/mybookswordlist.js";
   "./pages/translate/translate.js";
-  "./pages/browse/browse.js";
   "./pages/noticedetail/noticedetail.js";
   "./pages/likemsg/likemsg.js";
   "./pages/commentmsg/commentmsg.js";
@@ -41,6 +40,8 @@ if (!Math) {
   "./pages/setting/setting.js";
   "./pages/mytrend/mytrend.js";
   "./pages/repwd/repwd.js";
+  "./pages/word/followread/followread.js";
+  "./otherpages/browse/browse.js";
 }
 const _sfc_main = {
   onLaunch: function() {

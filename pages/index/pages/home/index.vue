@@ -4,7 +4,7 @@
 		<view class="persistday">
 			你已坚持<text>{{info.day}}天</text>加油！
 		</view>
-		<view @click="goPage('search')" class="search">
+		<view @click="goPage('/pages/word/search/search')" class="search">
 			<wd-icon name="search" size="18px" color="#979797"></wd-icon>
 			<text>搜索单词或语法</text>
 		</view>
@@ -34,7 +34,8 @@
 				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
-				<wd-button @click="review()" size="large" custom-class="reviewbtn recitebtn" type="info">记忆复习</wd-button>
+				<wd-button @click="review()" size="large" custom-class="reviewbtn recitebtn"
+					type="info">记忆复习</wd-button>
 				<wd-button custom-class="recitebtn" size="large" @click="startLearn()">开始学习</wd-button>
 			</view>
 		</view>
@@ -108,6 +109,11 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	import {
+		goPage
+	} from "@/utils/common.js"
+
 	const review = () => {
 		if (info.value.review == 0) {
 			toast.warning(`今日没有需要复习的单词`)
@@ -133,7 +139,7 @@
 		articleList.value = articleList.value.concat(res.data)
 		articleTotal.value = res.total
 	}
-	const toast = useToast()
+
 	const progress = computed(() => {
 		if (info.value.learnnum) {
 			return (info.value.learnnum / info.value.wordnum) * 100
@@ -172,17 +178,7 @@
 			goPage('fastmode')
 		}
 	}
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
+
 	const setPlanRef = ref(null)
 	const openPlan = () => {
 		setPlanRef.value.show = true

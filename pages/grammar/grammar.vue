@@ -10,7 +10,7 @@
 				</wd-tabs>
 			</template>
 			<template #right>
-				<SearchInput @change="inputChange"></SearchInput>
+				<!-- <SearchInput @change="inputChange"></SearchInput> -->
 			</template>
 		</NavBar>
 		<view class="list">
@@ -40,7 +40,7 @@
 	} from 'vue'
 	import $http from "@/api/index.js"
 	import NavBar from '@/components/navbar.vue'
-	import SearchInput from '@/components/searchinput.vue'
+	// import SearchInput from '@/components/searchinput.vue'
 	const tabList = ref([{
 		name: 'N1'
 	}, {

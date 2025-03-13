@@ -23,22 +23,9 @@
 </script>
 
 <style scoped lang="scss">
-	
-
 	.root {
 		display: flex;
 		align-items: center;
-
-		margin-left: 10px;
-	}
-
-	.search {
-		flex: 1;
-		background-color: #fff;
-		padding: 5px 10px;
-		margin-left: 10px;
-		box-sizing: border-box;
-		border-radius: 34px;
 	}
 
 	:deep(.wd-input__icon) {

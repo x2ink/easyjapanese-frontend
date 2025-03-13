@@ -1,26 +1,15 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_index = require("../../api/index.js");
-require("../../stores/release/user.js");
-require("../../stores/test/user.js");
-require("../../stores/release/searchrecord.js");
-require("../../stores/test/searchrecord.js");
-require("../../stores/release/learnmode.js");
-require("../../stores/test/learnmode.js");
-require("../../stores/release/fastmode.js");
-require("../../stores/test/fastmode.js");
-require("../../stores/release/todaylearn.js");
-require("../../stores/test/todaylearn.js");
-require("../../stores/release/review.js");
-require("../../stores/test/review.js");
+const stores_index = require("../../stores/index.js");
 if (!Math) {
   (Home + Community + Message + Self + Tabbar)();
 }
-const Community = () => "./tabbar/community.js";
-const Message = () => "./tabbar/message.js";
-const Home = () => "./tabbar/home.js";
-const Self = () => "./tabbar/self.js";
-const Tabbar = () => "../../components/tabbar.js";
+const Community = () => "./pages/community/index.js";
+const Message = () => "./pages/message/index.js";
+const Home = () => "./pages/home/index.js";
+const Self = () => "./pages/self/index.js";
+const Tabbar = () => "./components/tabbar/tabbar.js";
 const _sfc_main = {
   __name: "index",
   setup(__props) {
@@ -41,6 +30,7 @@ const _sfc_main = {
       getUnread();
     });
     common_vendor.onMounted(() => {
+      stores_index.userStore().setUserInfo();
     });
     return (_ctx, _cache) => {
       return {

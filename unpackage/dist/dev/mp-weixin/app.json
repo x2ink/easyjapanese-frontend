@@ -4,10 +4,10 @@
     "pages/login/login",
     "pages/register/register",
     "pages/thesaurus/thesaurus",
-    "pages/search/search",
+    "pages/word/search/search",
     "pages/wordlist/wordlist",
     "pages/learn/learn",
-    "pages/worddetail/worddetail",
+    "pages/word/worddetail/worddetail",
     "pages/addtrend/addtrend",
     "pages/trenddetail/trenddetail",
     "pages/fastmode/fastmode",
@@ -27,7 +27,6 @@
     "pages/mybooks/mybooks",
     "pages/mybookswordlist/mybookswordlist",
     "pages/translate/translate",
-    "pages/browse/browse",
     "pages/noticedetail/noticedetail",
     "pages/likemsg/likemsg",
     "pages/commentmsg/commentmsg",
@@ -37,7 +36,16 @@
     "pages/about/about",
     "pages/setting/setting",
     "pages/mytrend/mytrend",
-    "pages/repwd/repwd"
+    "pages/repwd/repwd",
+    "pages/word/followread/followread"
+  ],
+  "subPackages": [
+    {
+      "root": "otherpages",
+      "pages": [
+        "browse/browse"
+      ]
+    }
   ],
   "window": {
     "navigationBarTextStyle": "black",

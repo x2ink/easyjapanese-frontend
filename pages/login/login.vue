@@ -25,11 +25,12 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+		const toast = useToast()
 	import {
 		userStore
 	} from "@/stores/index.js"
 	import $http from "@/api/index.js"
-	const toast = useToast()
+
 	onMounted(() => {
 		uni.getSystemInfo({
 			success: (res) => {
@@ -42,7 +43,7 @@
 
 	const wxLogin = () => {
 		if (!agree.value) {
-			toast.warning(`请同意《用户协议》与隐私政策`)
+			toast.warning(`请同意《用户协议》与《隐私政策》`)
 			return
 		}
 		toast.loading('正在登录中...')

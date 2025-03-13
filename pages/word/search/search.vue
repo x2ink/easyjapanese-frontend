@@ -1,24 +1,21 @@
 <template>
 	<view>
-		<Navbar style="background-color: #F3F3F5;">
-			<template v-slot:center>
-				<SearchInput @confirm="search" @change="inputChange">
-					<template #prefix>
-						<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
-							<view class="search-type">
-								<text>{{ current }}</text>
-								<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
-							</view>
-						</wd-popover>
-					</template>
-				</SearchInput>
+		<Navbar>
+			<template #left>
+				<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
+					<view class="search-type">
+						<text>{{ current }}</text>
+						<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
+					</view>
+				</wd-popover>
 			</template>
 		</Navbar>
+		<SearchInput @confirm="search" @change="inputChange">
+		</SearchInput>
 		<view class="title" v-if="total==0">
-			<p>搜索历史</p>
+			<text>搜索历史</text>
 			<wd-icon name="clear" @click="clear()" size="20px" color="#999" />
 		</view>
-		<!-- 历史记录 -->
 		<view class="history" v-if="total==0">
 			<view @click="clickrecord(item)" class="item" v-for="item in history" :key="item">
 				{{item}}
@@ -27,18 +24,18 @@
 				<wd-icon size="18px" name="chevron-down" color="#000" />
 			</view>
 		</view>
-		<view v-if="noResult">
-			<wd-status-tip image="search" tip="没有搜索到结果" />
+		<view style="margin-top: 40px;" v-if="noResult">
+			<wd-status-tip :image-size="{
+          height: 80,
+          width: 80
+  }" image="http://jp.x2.ink/images/fail.png" tip="没有搜索到结果" />
 		</view>
-		<!-- 列表 -->
-		<WordList v-if="List.length>0" :type="`${current=='日中'?'jc':'cj'}`" style="margin: 10px;" :list="List">
+		<WordList v-if="List.length>0" :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
 		</WordList>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
-
-		<!--  -->
-		<wd-action-sheet :z-index="4" cancel-text="取消" v-model="activeShow" :actions="actions" />
+		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+		<wd-toast />
 	</view>
-	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 </template>
 
 <script setup>
@@ -48,10 +45,10 @@
 		watch,
 		computed
 	} from 'vue'
-	import WordList from "@/components/wordlist.vue"
-	import Navbar from "@/components/navbar.vue"
+	import WordList from "@/components/wordlist/wordlist.vue"
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
-	import SearchInput from '@/components/searchinput.vue'
+	import SearchInput from '@/components/searchinput/searchinput.vue'
 	import {
 		searchrecordStore
 	} from "@/stores/index.js"
@@ -59,6 +56,10 @@
 		onReachBottom,
 		onPageScroll,
 	} from "@dcloudio/uni-app"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop
@@ -80,15 +81,16 @@
 		history.value = []
 		searchrecordStore().clear()
 	}
+	const current = ref('日中词典')
 	const menu = ref([{
-			content: '日中'
+			content: '日中词典'
 		},
 		{
-			content: '中日'
+			content: '中日词典'
 		}
 	])
 	const changeSearchType = (e) => {
-		current.value=e.item.content
+		current.value = e.item.content
 	}
 	const lookmore = () => {
 		moreShow.value = false
@@ -107,15 +109,12 @@
 	const List = ref([])
 	const total = ref(0)
 	const noResult = ref(false)
-	const current = ref('日中')
 	watch(current, (newVal, oldVal) => {
 		noResult.value = false
 		List.value = []
 		page.value = 1
 		if (val.value.length > 0) {
-			uni.showLoading({
-				title: "正在加载"
-			})
+			toast.loading('正在查询中...')
 		}
 		getList()
 	})
@@ -134,9 +133,7 @@
 			history.value.unshift(val.value)
 			searchrecordStore().push(val.value)
 		}
-		uni.showLoading({
-			title: "正在加载"
-		})
+		toast.loading('正在查询中...')
 		noResult.value = false
 		List.value = []
 		page.value = 1
@@ -144,12 +141,12 @@
 	}
 	const getList = async () => {
 		let res;
-		if (current.value == '日中') {
+		if (current.value == '日中词典') {
 			res = await $http.word.jcSearch(page.value, size.value, val.value)
 		} else {
 			res = await $http.word.cjSearch(page.value, size.value, val.value)
 		}
-		uni.hideLoading()
+		toast.close()
 		total.value = res.total
 		if (total.value === 0) {
 			noResult.value = true
@@ -158,23 +155,21 @@
 		List.value = List.value.concat(res.data)
 
 	}
-	
-	const activeShow = ref(false)
-	const actions = ref([{
-			name: '选项1'
-		},
-		{
-			name: '选项2'
-		},
-		{
-			name: '选项3'
-		}
-	])
-
 </script>
 
 <style scoped lang="scss">
-	:deep(.segmented) {}
+	:deep(.body) {
+		margin-top: 5px;
+	}
+
+	:deep(.search) {
+		flex: 1;
+		background-color: #fff;
+		padding: 7px 10px;
+		box-sizing: border-box;
+		border-radius: 38px;
+		margin: 0 10px;
+	}
 
 	:deep(.loadmore) {
 		background-color: #f4f4f4;
@@ -183,20 +178,6 @@
 		>view {
 			margin: 0;
 		}
-	}
-
-	.title {
-		padding: 10px 15px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.history {
-		padding: 0 15px;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
 	}
 
 	:deep(.wd-search__cover) {
@@ -213,9 +194,23 @@
 		border-radius: var(--wot-search-input-radius, 15px);
 	}
 
+	.search-type {
+		margin-left: 10px;
+	}
+
+	.title {
+		padding: 15px;
+		display: flex;
+		font-size: 14px;
+		align-items: center;
+		justify-content: space-between;
+	}
+
 	.history {
+		padding: 0 10px;
 		display: flex;
 		flex-wrap: wrap;
+		gap: 10px;
 
 		>view {
 			background-color: #EFEFEF;
@@ -239,9 +234,5 @@
 			height: 28px;
 			width: 28px;
 		}
-	}
-
-	.search {
-		background-color: transparent !important;
 	}
 </style>

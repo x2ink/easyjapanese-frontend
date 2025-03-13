@@ -7139,9 +7139,9 @@ function initOnError() {
   };
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.220.1,192.168.199.1,10.4.3.96,127.0.0.1";
+  const hosts = "192.168.220.1,192.168.199.1,10.5.184.166,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_c2bv-a";
+  const id = "mp-weixin_huH0h2";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -8679,6 +8679,7 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
 };
 const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+const onUnload = /* @__PURE__ */ createHook(ON_UNLOAD);
 const onPageScroll = /* @__PURE__ */ createHook(ON_PAGE_SCROLL);
 const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
@@ -9061,6 +9062,7 @@ exports.onMounted = onMounted;
 exports.onPageScroll = onPageScroll;
 exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
+exports.onUnload = onUnload;
 exports.onUnmounted = onUnmounted;
 exports.p = p;
 exports.provide = provide;

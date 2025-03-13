@@ -1,9 +1,10 @@
 <template>
-	<view :style="{height:navBarHeight}"></view>
-	<view class="navwrap" :style="{top:navBarHeight}">
+	<view class="navwrap">
+		<view :style="{height:navBarHeight}"></view>
 		<view class="navbar">
 			<view class="left" @click="back">
 				<wd-icon name="thin-arrow-left" :color="color" size="18px"></wd-icon>
+				<slot name="left"></slot>
 			</view>
 			<view class="center" :class="{textcenter:title!==''}">
 				<text class="title" v-if="title!==''">{{title}}</text>
@@ -12,7 +13,6 @@
 			<view class="right">
 				<slot name="right"></slot>
 			</view>
-
 		</view>
 		<view>
 			<slot name="bottom"></slot>
@@ -45,7 +45,7 @@
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
-		navBarHeight.value = statusBarHeight+'px'
+		navBarHeight.value = statusBarHeight + 'px'
 	})
 </script>
 
@@ -58,6 +58,8 @@
 	.navwrap {
 		position: sticky;
 		z-index: 99;
+		top: 0;
+		background-color: #F3F3F5;
 
 		.navbar {
 			height: 45px;

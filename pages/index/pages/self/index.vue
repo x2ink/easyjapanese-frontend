@@ -1,10 +1,11 @@
 <template>
 	<view>
+		<view :style="{height:navBarHeight}"></view>
 		<view @click="goPage('userinfo')" class="userinfo">
-			<uv-avatar size="60" :src="userInfo.avatar"></uv-avatar>
+			<uv-avatar size="60" :src="userStore().userInfo.avatar"></uv-avatar>
 			<view>
-				<p class="name">{{userInfo.nickname}}</p>
-				<p class="id">{{userInfo.email}}</p>
+				<p class="name">{{userStore().userInfo.nickname}}</p>
+				<p class="id">{{userStore().userInfo.email}}</p>
 			</view>
 		</view>
 		<view class="banner _BACKGROUND">
@@ -81,7 +82,6 @@
 		onMounted,
 		ref
 	} from 'vue'
-	import Statusbar from "@/components/statusbar.vue"
 	import $http from "@/api/index.js"
 	import {
 		userStore
@@ -95,15 +95,6 @@
 		}
 	}
 
-	const getUserInfoSimple = async () => {
-		try {
-			const res = await $http.user.getUserInfoSimple()
-			userInfo.value = res.data
-			userStore().setUserInfo(userInfo.value)
-		} catch (err) {
-			console.log("登录错误", err);
-		}
-	}
 	const goPage = (path, params) => {
 		if (params) {
 			uni.navigateTo({
@@ -115,15 +106,11 @@
 			})
 		}
 	}
-	const userInfo = ref({
-		address: "",
-		avatar: '',
-		nickname: '',
-		role: "",
-		email: ''
-	})
+	const navBarHeight = ref(0)
 	onMounted(() => {
-		getUserInfoSimple()
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
 	})
 </script>
 
