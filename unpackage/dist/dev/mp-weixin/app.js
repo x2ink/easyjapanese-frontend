@@ -26,9 +26,8 @@ if (!Math) {
   "./pages/radiostation/radiostation.js";
   "./pages/player/player.js";
   "./pages/commonwords/commonwords.js";
-  "./pages/feedback/feedback.js";
-  "./pages/mybooks/mybooks.js";
-  "./pages/mybookswordlist/mybookswordlist.js";
+  "./pages/word/mybooks/mybooks.js";
+  "./pages/word/mybookswordlist/mybookswordlist.js";
   "./pages/translate/translate.js";
   "./pages/noticedetail/noticedetail.js";
   "./pages/likemsg/likemsg.js";
@@ -41,7 +40,10 @@ if (!Math) {
   "./pages/mytrend/mytrend.js";
   "./pages/repwd/repwd.js";
   "./pages/word/followread/followread.js";
+  "./pages/word/edit/edit.js";
+  "./pages/word/edithistory/edithistory.js";
   "./otherpages/browse/browse.js";
+  "./otherpages/feedback/feedback.js";
 }
 const _sfc_main = {
   onLaunch: function() {

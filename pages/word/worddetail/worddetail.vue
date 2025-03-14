@@ -1,15 +1,24 @@
 <template>
-	<view>
+	<page-meta :page-style="`overflow:${bookShow ? 'hidden' : 'visible'};`">
 		<Navbar title="">
 		</Navbar>
 		<view v-show="loading" class="loading _GCENTER">
 			<wd-loading />
 		</view>
-		<WordDetail :jcinfo="jcinfo" :cjinfo="cjinfo" :type="type" v-show="!loading"></WordDetail>
-		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
-			:actions="actions" @close="moreShow=false" @select="select" />
+		<WordDetail @openBook="bookShow=true" :jcinfo="jcinfo" :cjinfo="cjinfo" :type="type" v-show="!loading">
+		</WordDetail>
 		<wd-toast />
-	</view>
+	</page-meta>
+	<!-- 生词本 -->
+	<wd-popup v-model="bookShow" :z-index="99" position="bottom" :safe-area-inset-bottom="true"
+		custom-style="border-radius:16px 16px 0 0;">
+		<view class="books">
+			<text>生词本</text>
+			<scroll-view class="scroll-view_H" scroll-x="true">
+				<BookList :wordId="id" type="select"></BookList>
+			</scroll-view>
+		</view>
+	</wd-popup>
 </template>
 
 <script setup>
@@ -25,13 +34,14 @@
 	import $http from "@/api/index.js"
 	import WordList from "@/components/wordlist/wordlist.vue"
 	import WordDetail from "@/components/worddetail/worddetail.vue"
+	import BookList from '@/components/booklist/booklist.vue';
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	const bookShow = ref(false)
 	const toast = useToast()
 	const type = ref('jc')
 	const loading = ref(true)
-	const moreShow = ref(false)
 	const jcinfo = ref({
 		word: null,
 		voice: null,
@@ -46,40 +56,6 @@
 		py: "",
 		result: []
 	})
-	onShow(() => {
-		uni.$once("selectBookRes", (data) => {
-			if (data) {
-				moreShow.value = false
-				addWordBooks(data)
-			}
-		});
-	})
-	const addWordBooks = async (bookid) => {
-		try {
-			const res = await $http.word.addMyBooksWord({
-				word_id: Number(id.value),
-				book_id: bookid
-			})
-			toast.success(`加入成功`)
-		} catch (err) {
-			toast.warning(`单词已经在该生词本内`)
-		}
-	}
-	const select = (e) => {
-		if (e.index === 0) {
-			goPage('feedback', "?type=单词纠错&wordid=" + id.value + "&wordtype=" + type.value)
-		} else if (e.index === 2) {
-			uni.setClipboardData({
-				data: `/pages/worddetail/worddetail?id=${id.value}`,
-				showToast: false,
-				success() {
-					toast.success(`链接复制成功`)
-				}
-			});
-		} else if (e.index == 1) {
-			goPage('mybooks', "?type=select")
-		}
-	}
 	const id = ref(null)
 	onLoad((e) => {
 		type.value = e.type
@@ -100,33 +76,29 @@
 		jcinfo.value = res.data
 		loading.value = false
 	}
-	const actions = computed(() => {
-		if (type.value == 'cj') {
-			return [{
-					name: '单词纠错'
-				},
-				{
-					name: '分享单词'
-				}
-			]
-		} else {
-			return [{
-					name: '单词纠错'
-				},
-				{
-					name: '加入单词本'
-				},
-				{
-					name: '分享单词'
-				}
-			]
-		}
-	})
 </script>
 
 <style lang="scss" scoped>
+	:deep(.list) {
+		gap: 0;
+		margin: 0;
+	}
+
 	.loading {
 		margin-top: 40px;
 	}
 
+	.books {
+		padding: 20px;
+
+		text {
+			font-weight: bold;
+			font-size: 16px;
+		}
+
+		.scroll-view_H {
+			height: 40vh;
+			margin: 10px 0;
+		}
+	}
 </style>

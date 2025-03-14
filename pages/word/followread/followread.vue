@@ -6,8 +6,14 @@
 			<text>{{word}}</text>
 		</view>
 		<wd-divider>用户发音</wd-divider>
+		<view style="margin-top: 40px;" v-if="noResult">
+			<wd-status-tip :image-size="{
+		        height: 80,
+		        width: 80
+		}" image="http://jp.x2.ink/images/blank.png" tip="还没有小伙伴跟读" />
+		</view>
 		<view class="readlist">
-			<view class="userread" v-for="item in List" :key="item.id">
+			<view class="userread" v-for="(item,index) in List" :key="item.id">
 				<view class="right">
 					<view class="sound _GCENTER">
 						<wd-icon name="sound" size="20" color="#57D09B" />
@@ -20,8 +26,9 @@
 						</view>
 					</view>
 				</view>
-				<view class="left _GCENTER">
-					<wd-icon size="20" name="thumb-up" color="#999" />
+				<view class="left _GCENTER" @click="like(index,item.id)">
+					<wd-icon v-if="item.has" size="20" name="heart-filled" color="#EF4651" />
+					<wd-icon v-else size="20" name="heart" color="#999" />
 					<text>{{item.like}}</text>
 				</view>
 			</view>
@@ -97,6 +104,7 @@
 			recordDuration.value = res.duration
 		});
 	})
+	const noResult = ref(false)
 	const id = ref(null)
 	const word = ref(null)
 	const total = ref(0)
@@ -106,7 +114,27 @@
 	const getList = async () => {
 		const res = await $http.word.getFollowRead(id.value, page.value, size.value)
 		total.value = res.total
-		List.value = List.value.concat(res.data)
+		List.value = List.value.concat(res.data.map(item => ({
+			...item,
+			has: false
+		})));
+		if (total.value == 0) {
+			noResult.value = true
+		}
+	}
+	const like = async (index, id) => {
+		if (List.value[index].has) {
+			await $http.word.unlikeFollowRead({
+					id
+				})
+				--List.value[index].like
+		} else {
+			await $http.word.likeFollowRead({
+					id
+				})
+				++List.value[index].like
+		}
+		List.value[index].has = !List.value[index].has
 	}
 	onReachBottom(() => {
 		if (total.value > List.value.length) {

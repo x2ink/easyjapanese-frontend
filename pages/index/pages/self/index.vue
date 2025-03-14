@@ -47,7 +47,7 @@
 				<p>我的动态</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
+			<view class="cellitem" @click="goPage('/pages/word/mybooks/mybooks')">
 				<p>单词本</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
@@ -86,24 +86,15 @@
 	import {
 		userStore
 	} from "@/stores/index.js"
+	import {
+		goPage
+	} from "@/utils/common.js"
 	const goFollowUs = () => {
 		let url = "https://space.bilibili.com/437416398"
 		if (uni.getSystemInfoSync().uniPlatform == 'web') {
 			window.open(url)
 		} else {
 			plus.runtime.openURL(url)
-		}
-	}
-
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
 		}
 	}
 	const navBarHeight = ref(0)

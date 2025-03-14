@@ -26,9 +26,9 @@
 		</view>
 		<view style="margin-top: 40px;" v-if="noResult">
 			<wd-status-tip :image-size="{
-          height: 80,
-          width: 80
-  }" image="http://jp.x2.ink/images/fail.png" tip="没有搜索到结果" />
+			        height: 80,
+			        width: 80
+			}" image="http://jp.x2.ink/images/blank.png" tip="没有搜到结果哦" />
 		</view>
 		<WordList v-if="List.length>0" :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
 		</WordList>

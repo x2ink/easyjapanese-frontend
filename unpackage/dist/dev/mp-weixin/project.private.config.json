@@ -4,6 +4,55 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/word/mybookswordlist/mybookswordlist",
+          "pathName": "pages/word/mybookswordlist/mybookswordlist",
+          "query": "id=14&name=%E6%97%A5%E8%AF%AD%E8%80%83%E7%BA%A7&describe=%E8%80%83%E7%BA%A7%E4%B8%93%E7%94%A8",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybookswordlist/mybookswordlist",
+          "pathName": "pages/word/mybookswordlist/mybookswordlist",
+          "query": "id=14&name=%E6%97%A5%E8%AF%AD%E8%80%83%E7%BA%A7&describe=%E8%80%83%E7%BA%A7%E4%B8%93%E7%94%A8",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/login/login",
+          "pathName": "pages/login/login",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybooks/mybooks",
+          "pathName": "pages/word/mybooks/mybooks",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "otherpages/feedback/feedback",
+          "pathName": "otherpages/feedback/feedback",
+          "query": "0=",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/edithistory/edithistory",
+          "pathName": "pages/word/edithistory/edithistory",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/edit/edit",
+          "pathName": "pages/word/edit/edit",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/followread/followread",
           "pathName": "pages/word/followread/followread",
           "query": "",

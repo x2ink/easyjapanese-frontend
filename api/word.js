@@ -37,28 +37,25 @@ export default {
 		return http.get("learn/info")
 	},
 	addMyBooks(data) {
-		return http.post("mybooks", data)
+		return http.post("mybooks/book", data)
 	},
-	getMyBooks() {
-		return http.get("mybooks")
-	},
-	addMyBooks(data) {
-		return http.post("mybooks", data)
+	getMyBooks(id) {
+		return http.get(`mybooks/book/${id}`)
 	},
 	setMyBooks(id, data) {
 		return http.post(`mybooks/set/${id}`, data)
 	},
 	addMyBooksWord(data) {
-		return http.post("mybooks/add", data)
+		return http.post("mybooks/word", data)
 	},
 	getMyBooksWord(id, page, size) {
-		return http.get(`mybooks/list/${id}/${page}/${size}`)
+		return http.get(`mybooks/word/${id}/${page}/${size}`)
 	},
 	deleteMyBooks(id) {
-		return http.post(`mybooks/del/book/${id}`)
+		return http.delete(`mybooks/book/${id}`)
 	},
 	deleteMyBooksWord(wordid, bookid) {
-		return http.post(`mybooks/del/word/${wordid}/${bookid}`)
+		return http.delete(`mybooks/word/${wordid}/${bookid}`)
 	},
 	getRecommend() {
 		return http.get(`recommend`)
@@ -68,5 +65,17 @@ export default {
 	},
 	getFollowRead(id, page, size) {
 		return http.get(`followread/${id}/${page}/${size}`)
+	},
+	likeFollowRead(id) {
+		return http.post(`followread/like`, id)
+	},
+	unlikeFollowRead(id) {
+		return http.post(`followread/unlike`, id)
+	},
+	editWord(data) {
+		return http.post(`editword`, data)
+	},
+	getEditWord(id) {
+		return http.get(`editword/${id}`)
 	}
 }

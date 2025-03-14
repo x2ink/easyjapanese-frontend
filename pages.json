@@ -145,19 +145,13 @@
 			}
 		},
 		{
-			"path": "pages/feedback/feedback",
+			"path": "pages/word/mybooks/mybooks",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/mybooks/mybooks",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/mybookswordlist/mybookswordlist",
+			"path": "pages/word/mybookswordlist/mybookswordlist",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -230,9 +224,20 @@
 			}
 		},
 		{
-			"path" : "pages/word/followread/followread",
-			"style" : 
-			{
+			"path": "pages/word/followread/followread",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/word/edit/edit",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/word/edithistory/edithistory",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		}
@@ -240,11 +245,18 @@
 	"subPackages": [{
 		"root": "otherpages",
 		"pages": [{
-			"path": "browse/browse",
-			"style": {
-				"navigationStyle": "default"
+				"path": "browse/browse",
+				"style": {
+					"navigationStyle": "default"
+				}
+			},
+			{
+				"path": "feedback/feedback",
+				"style": {
+					"navigationStyle": "custom"
+				}
 			}
-		}]
+		]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

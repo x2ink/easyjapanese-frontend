@@ -46,9 +46,15 @@
 						<text>全网搜索</text>
 						<wd-icon name="internet" size="14px"></wd-icon>
 					</view>
-					<view class="item">
+					<view class="item" @click="goPage(`/pages/word/edit/edit`,{
+						id:jcinfo.id
+					})">
 						<text>编辑</text>
 						<wd-icon name="edit" size="14px"></wd-icon>
+					</view>
+					<view class="item" @click="emits('openBook')">
+						<text>生词本</text>
+						<wd-icon name="books" size="14px"></wd-icon>
 					</view>
 				</view>
 			</view>
@@ -95,21 +101,19 @@
 					</view>
 				</view>
 			</view>
+			<view class="_GCENTER" @click="goPage('/otherpages/feedback/feedback', {
+					type:'单词纠错',
+					wordid,
+					wordtype:type
+				})" style="margin-top: 20px;">
+				<wd-button  type="info" size="small" plain hairline icon="edit">纠错</wd-button>
+			</view>
 		</view>
+
 	</view>
 </template>
 
 <script setup>
-	const showExample = (show, array) => {
-		if (show) {
-			return array
-		} else {
-			return array.slice(0, 2)
-		}
-	}
-	const showMore = (index1, index2) => {
-		props.jcinfo.detail[index1].detail[index2].show = true
-	}
 	import {
 		ref,
 		computed,
@@ -118,6 +122,10 @@
 	import {
 		goPage
 	} from "@/utils/common.js"
+	const wordid = computed(() => {
+		return props.type === 'jc' ? props.jcinfo.id : props.cjinfo.id
+	})
+	const emits = defineEmits("openBook")
 	const props = defineProps({
 		jcinfo: {
 			type: Object,
@@ -288,13 +296,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px;
-		color: $uni-text-color-grey;
-	}
-
-	.viewmore {
-		font-size: $uni-font-size-sm;
-		text-align: right;
-		margin-top: 5px;
 		color: $uni-text-color-grey;
 	}
 

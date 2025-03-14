@@ -23,9 +23,8 @@
     "pages/radiostation/radiostation",
     "pages/player/player",
     "pages/commonwords/commonwords",
-    "pages/feedback/feedback",
-    "pages/mybooks/mybooks",
-    "pages/mybookswordlist/mybookswordlist",
+    "pages/word/mybooks/mybooks",
+    "pages/word/mybookswordlist/mybookswordlist",
     "pages/translate/translate",
     "pages/noticedetail/noticedetail",
     "pages/likemsg/likemsg",
@@ -37,13 +36,16 @@
     "pages/setting/setting",
     "pages/mytrend/mytrend",
     "pages/repwd/repwd",
-    "pages/word/followread/followread"
+    "pages/word/followread/followread",
+    "pages/word/edit/edit",
+    "pages/word/edithistory/edithistory"
   ],
   "subPackages": [
     {
       "root": "otherpages",
       "pages": [
-        "browse/browse"
+        "browse/browse",
+        "feedback/feedback"
       ]
     }
   ],

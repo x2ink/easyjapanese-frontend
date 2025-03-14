@@ -1,41 +1,56 @@
 <template>
 	<view>
-		<NavBar :title="formData.name" style="background-color: #f3f3f5;">
-			<template #right>
-				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
-			</template>
-		</NavBar>
+		<Navbar :title="formData.name">
+		</Navbar>
 		<view class="wordlist" v-if="List.length>0">
-			<view @click="getInfo(item.id)" :key="item.id" v-for="item in List">
+			<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id,type:'jc'})" :key="item.id"
+				v-for="item in List">
 				<view class="worditem">
 					<view class="head jpfont">
 						<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
 					</view>
-					<wd-text size="14px" :lines="2" class="body" color="#999" :text="item.meaning.join('\n')"></wd-text>
-					<wd-icon @click.stop="deleteWord(item.id)" name="delete-thin" color="#999" class="delete"
-						size="18px"></wd-icon>
+					<wd-text size="14px" :lines="2" custom-class="bodytext" color="#999"
+						:text="item.meaning.join('\n')"></wd-text>
+					<view style="margin-top: 5px;display: flex;justify-content: flex-end;">
+						<wd-icon @click.stop="deleteWord(item.id)" name="delete-thin" color="#999" class="delete"
+							size="18px"></wd-icon>
+					</view>
 				</view>
 			</view>
 		</view>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
-		<view v-if="noResult">
-			<wd-status-tip image="content" tip="没有数据" />
+		<view v-if="noResult" style="margin-top: 40px;">
+			<wd-status-tip :image-size="{
+			        height: 80,
+			        width: 80
+			}" image="http://jp.x2.ink/images/blank.png" tip="空空如也" />
 		</view>
-		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
-			:actions="actions" @close="moreShow=false" @select="select" />
-		<wd-message-box />
-		<wd-popup v-model="show" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
+		<wd-popup v-model="show" :safe-area-inset-bottom="true" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
 			<view class="popup">
 				<h3>修改资料</h3>
 				<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
 				<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
 				<view style="padding:10px;margin-top: 15px;">
-					<wd-button @click="create()" style="width: 100%;">修改</wd-button>
+					<wd-button @click="create()" block style="width: 100%;">修改</wd-button>
 				</view>
 			</view>
 		</wd-popup>
 		<wd-toast />
+		<wd-fab :gap="{right: 15, bottom: 60 }">
+			<view style="display: flex;flex-direction: column;gap: 12px;">
+				<view class="btn _GCENTER" @click="show=true">
+					<wd-icon name="edit" sitze="20px" color="#fff"></wd-icon>
+				</view>
+				<view class="btn _GCENTER">
+					<wd-icon name="print" size="20px" color="#fff"></wd-icon>
+				</view>
+				<view class="btn _GCENTER" @click="dele()">
+					<wd-icon name="delete1" size="20px" color="#fff"></wd-icon>
+				</view>
+			</view>
+		</wd-fab>
+		<wd-message-box></wd-message-box>
 	</view>
 </template>
 
@@ -53,16 +68,14 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import WordList from "@/components/wordlist.vue"
+	import {
+		goPage
+	} from "@/utils/common.js"
 	import {
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
-	const getInfo = (id) => {
-		uni.navigateTo({
-			url: "/pages/worddetail/worddetail?id=" + id + "&type=jc"
-		})
-	}
 	const show = ref(false)
 	const formData = ref({
 		name: '',
@@ -79,8 +92,8 @@
 	}
 	const message = useMessage()
 	const scrollTop = ref(0)
-	const moreShow = ref(false)
 	const dele = () => {
+		console.log("删除");
 		message
 			.confirm({
 				msg: '删除生词本之后单词也会被删除',
@@ -95,26 +108,6 @@
 			.catch(() => {
 				console.log('点击了取消按钮')
 			})
-	}
-	const actions = ref([
-		// {
-		// 	name: '导出单词'
-		// },
-		{
-			name: '修改资料'
-		},
-		{
-			name: '删除生词本'
-		}
-	])
-	const select = (e) => {
-		if (e.index === 0) {
-			goPage('feedback', "?type=单词纠错")
-		} else if (e.index === 2) {
-			dele()
-		} else if (e.index == 1) {
-			show.value = true
-		}
 	}
 	const create = async () => {
 		if (formData.value.name == "" || formData.value.name.length == 0) {
@@ -165,6 +158,21 @@
 </script>
 
 <style scoped lang="scss">
+	.btn {
+		width: 56px;
+		height: 56px;
+		border-radius: 100%;
+		&:nth-of-type(1){
+			background-color: #5880F2;
+		}
+		&:nth-of-type(2){
+			background-color: #57D09B;
+		}
+		&:nth-of-type(3){
+			background-color: #EF4651;
+		}
+	}
+
 	:deep(.loadmore) {
 		background-color: #f4f4f4;
 		margin: 0;
@@ -172,6 +180,10 @@
 		>view {
 			margin: 0;
 		}
+	}
+
+	:deep(.bodytext) {
+		margin-top: 5px;
 	}
 
 	.popup {
@@ -196,9 +208,7 @@
 				top: 10px;
 			}
 
-			.body {
-				// margin-top: 5px;
-			}
+
 
 			.head {
 				display: flex;

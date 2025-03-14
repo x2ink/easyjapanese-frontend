@@ -13,10 +13,11 @@
 </script>
 
 <style>
-/* 	@font-face {
+	/* 	@font-face {
 		font-family: 'jp';
 		src: url('~http://jp.x2.ink/images/font/jp.ttf');
 	} */
+
 
 	page {
 		background: #F3F3F5;
