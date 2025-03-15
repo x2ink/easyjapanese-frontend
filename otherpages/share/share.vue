@@ -1,11 +1,12 @@
 <template>
 	<view>
-		<NavBar title="分享"></NavBar>
+		<Navbar title="分享"></Navbar>
 		<view style="padding:10px 15px;">
 			<wd-segmented :options="list" v-model:value="current"></wd-segmented>
 		</view>
 		<view v-if="current=='海报'" class="poster _GCENTER">
-			<image style="width: 200px;border-radius: 8px;" src="http://jp.x2.ink/images/poster.png" mode="widthFix"></image>
+			<image style="width: 200px;border-radius: 8px;" src="http://jp.x2.ink/images/poster.png" mode="widthFix">
+			</image>
 		</view>
 		<view v-else class="poster">
 			<wd-textarea v-model="shareContent" placeholder="请填写内容" />
@@ -15,20 +16,13 @@
 		</view>
 		<view style="font-size: 14px;color: #999;text-align: center;margin-top: 20px;">分享至</view>
 		<view class="way">
-			<view>
-				<image src="http://jp.x2.ink/images/share/qq.png" mode="aspectFit"></image>
-			</view>
-			<view>
-				<image src="http://jp.x2.ink/images/share/zone.png" mode="aspectFit"></image>
-			</view>
-			<view>
+			<view class="_GCENTER">
 				<image src="http://jp.x2.ink/images/share/wx.png" mode="aspectFit"></image>
+				<text>微信好友</text>
 			</view>
-			<view>
+			<view class="_GCENTER">
 				<image src="http://jp.x2.ink/images/share/pyq.png" mode="aspectFit"></image>
-			</view>
-			<view>
-				<image src="http://jp.x2.ink/images/share/wb.png" mode="aspectFit"></image>
+				<text>朋友圈</text>
 			</view>
 		</view>
 	</view>
@@ -38,7 +32,7 @@
 	import {
 		ref
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	const list = ref(['海报', '文字'])
 	const current = ref('点赞')
 	const shareContent = ref(`这是分享内容`)
@@ -71,9 +65,14 @@
 		align-items: center;
 
 		>view {
+			gap: 10px;
 			image {
 				width: 35px;
 				height: 35px;
+			}
+			text{
+				font-size: 14px;
+				color: #999;
 			}
 		}
 	}

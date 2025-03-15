@@ -55,18 +55,6 @@
 			}
 		},
 		{
-			"path": "pages/addtrend/addtrend",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/trenddetail/trenddetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/fastmode/fastmode",
 			"style": {
 				"navigationStyle": "custom"
@@ -181,32 +169,9 @@
 				"navigationStyle": "custom"
 			}
 		},
-		{
-			"path": "pages/userinfo/userinfo",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
+
 		{
 			"path": "pages/ranking/ranking",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/share/share",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/about/about",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/setting/setting",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -243,15 +208,53 @@
 		}
 	],
 	"subPackages": [{
+		"root": "trendpages",
+		"pages": [{
+			"path": "addtrend/addtrend",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "trenddetail/trenddetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}]
+	}, {
+		"root": "userpages",
+		"pages": [{
+			"path": "userinfo/userinfo",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}]
+	}, {
 		"root": "otherpages",
 		"pages": [{
 				"path": "browse/browse",
 				"style": {
 					"navigationStyle": "default"
 				}
+			}, {
+				"path": "about/about",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			}, {
+				"path": "share/share",
+				"style": {
+					"navigationStyle": "custom"
+				}
 			},
 			{
 				"path": "feedback/feedback",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "setting/setting",
 				"style": {
 					"navigationStyle": "custom"
 				}

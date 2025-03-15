@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar title=""></NavBar>
+		<Navbar title=""></Navbar>
 		<view style="margin:15px;padding: 10px;background-color: white;border-radius: 10px;">
 			<!-- 更换头像 -->
 			<view class="_GCENTER" style="margin-top: 10px;">
@@ -28,7 +28,8 @@
 				<view class="userinfoitem">
 					<text style="font-size: 14px;">邮箱</text>
 					<view>
-						<text>{{userInfo.email}}</text>
+						<text>{{userInfo.email==''?'未绑定':userInfo.email}}</text>
+						<wd-icon color="#999" name="arrow-right" size="20px"></wd-icon>
 					</view>
 				</view>
 				<view class="hr">
@@ -44,7 +45,7 @@
 			</view>
 		</view>
 		<view style="padding: 15px;">
-			<wd-button @click="logout" style="width: 100%;" type="error">退出账号</wd-button>
+			<wd-button @click="logout" block type="error">退出账号</wd-button>
 		</view>
 		<wd-message-box selector="wd-message-box-slot">
 			<wd-input type="text" v-model="nickname" placeholder="请输入用户名" />
@@ -59,7 +60,7 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import dayjs from 'dayjs'
 	import {
 		userStore

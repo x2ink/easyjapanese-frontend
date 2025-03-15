@@ -37,7 +37,7 @@
 	import {
 		userStore
 	} from "@/stores"
-	const tabbar = ref(0)
+	const tabbar = ref(1)
 	const tabbarChange = (e) => {
 		tabbar.value = e.value
 	}
@@ -54,7 +54,7 @@
 		getUnread()
 	})
 	onMounted(() => {
-userStore().setUserInfo()
+		userStore().setUserInfo()
 		// $http.user.getChartList().then(res => {
 		// 	console.log(res);
 		// })
@@ -67,7 +67,22 @@ userStore().setUserInfo()
 	:deep(.recitebtn) {
 		width: 100% !important;
 	}
+	:deep(.wd-tabs__nav-item) {
+		font-size: 16px;
+	}
 
+	:deep(.tabs) {
+		background-color: transparent!important;
+		width: 250px!important;
+	}
+
+	:deep(.wd-tabs) {
+		background-color: transparent!important;
+	}
+
+	:deep(.wd-tabs__nav) {
+		background-color: transparent!important;
+	}
 	:deep(.reviewbtn) {
 		color: #4D80F0 !important;
 	}

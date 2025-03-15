@@ -62,9 +62,9 @@
 							device: from.value.device
 						}
 						const loginResult = await $http.user.wxLogin(data)
-						console.log(loginResult);
 						toast.close()
 						userStore().setToken(loginResult.data)
+						userStore().setUserInfo()
 						uni.navigateTo({
 							url: "/pages/index/index"
 						})

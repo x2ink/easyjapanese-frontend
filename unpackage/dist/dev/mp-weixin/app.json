@@ -8,8 +8,6 @@
     "pages/wordlist/wordlist",
     "pages/learn/learn",
     "pages/word/worddetail/worddetail",
-    "pages/addtrend/addtrend",
-    "pages/trenddetail/trenddetail",
     "pages/fastmode/fastmode",
     "pages/writefrommemory/writefrommemory",
     "pages/todaylearn/todaylearn",
@@ -29,11 +27,7 @@
     "pages/noticedetail/noticedetail",
     "pages/likemsg/likemsg",
     "pages/commentmsg/commentmsg",
-    "pages/userinfo/userinfo",
     "pages/ranking/ranking",
-    "pages/share/share",
-    "pages/about/about",
-    "pages/setting/setting",
     "pages/mytrend/mytrend",
     "pages/repwd/repwd",
     "pages/word/followread/followread",
@@ -42,10 +36,26 @@
   ],
   "subPackages": [
     {
+      "root": "trendpages",
+      "pages": [
+        "addtrend/addtrend",
+        "trenddetail/trenddetail"
+      ]
+    },
+    {
+      "root": "userpages",
+      "pages": [
+        "userinfo/userinfo"
+      ]
+    },
+    {
       "root": "otherpages",
       "pages": [
         "browse/browse",
-        "feedback/feedback"
+        "about/about",
+        "share/share",
+        "feedback/feedback",
+        "setting/setting"
       ]
     }
   ],

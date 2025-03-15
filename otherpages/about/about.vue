@@ -1,13 +1,13 @@
 <template>
 	<view>
-		<NavBar title="关于我们"></NavBar>
+		<Navbar title="关于我们"></Navbar>
 		<view style="text-align: center;margin-top: 20px;">
 			<image src="http://jp.x2.ink/images/logo.png" style="width: 70px;height: 70px;" />
 			<h4 style="margin-top: 5px;">轻松日语</h4>
 			<p style="color: #666666;margin-top: 5px;font-size: 13px;">v.{{version}}</p>
 		</view>
 		<view style="margin: 15px;border-radius: 8px;padding:10px 20px;background-color: white;font-size: 14px;">
-			<view @click="goPage('browse','?src=https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g')"
+			<view @click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})"
 				style="display: flex;justify-content: space-between;padding: 10px 0px;">
 				<p>更新日志</p>
 				<wd-icon name="arrow-right" size="18px" color="#666666"></wd-icon>
@@ -28,18 +28,11 @@
 			<view style="height: 1px;background-color: #f6f6f6;">
 			</view>
 			<view style="display: flex;justify-content: space-between;padding: 10px 0px;">
-				<p>官方QQ群</p>
-				<p style="color: #666666;">666430696</p>
-			</view>
-			<view style="height: 1px;background-color: #f6f6f6;">
-			</view>
-			<view @click="openUrl('https://www.x2.ink')"
-				style="display: flex;justify-content: space-between;padding: 10px 0px;">
 				<p>官网</p>
 				<p style="color: #666666;">www.x2.ink</p>
 			</view>
 		</view>
-		<view style="position: fixed;bottom: 10px;text-align: center;width: 100%;"
+		<view style="position: fixed;bottom:env(safe-area-inset-bottom);text-align: center;width: 100%;"
 			@click="goPage('browse','?src=https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke')">
 			<p style="text-decoration:underline;color: #3c9cff;">服务条款 | 隐私政策</p>
 			<p style="color: #666666;font-size: 13px;margin-top: 5px;">Copyright © 2023-2025 小二网络.All Rights Reserved
@@ -54,19 +47,11 @@
 	import {
 		ref
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	const version = uni.getSystemInfoSync().appVersion
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
+	import {
+		goPage
+	} from "@/utils/common.js"
 </script>
 
 <style scoped lang="scss">

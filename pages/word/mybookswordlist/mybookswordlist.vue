@@ -22,8 +22,8 @@
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<view v-if="noResult" style="margin-top: 40px;">
 			<wd-status-tip :image-size="{
-			        height: 80,
-			        width: 80
+			        height: 60,
+			        width: 60
 			}" image="http://jp.x2.ink/images/blank.png" tip="空空如也" />
 		</view>
 		<wd-popup v-model="show" :safe-area-inset-bottom="true" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">

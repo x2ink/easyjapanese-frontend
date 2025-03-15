@@ -25,7 +25,7 @@ export default {
 		return http.post(`config`, data)
 	},
 	setUserInfo(data) {
-		return http.post(`user/info`, data)
+		return http.put(`user/info`, data)
 	},
 	ranking() {
 		return http.get(`ranking`)

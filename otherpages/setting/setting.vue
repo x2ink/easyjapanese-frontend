@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<NavBar title="设置"></NavBar>
+		<Navbar title="设置"></Navbar>
 		<view class="cell" style="margin-top: 5px;">
 			<view class="cellitem" @click="goPage('repwd','?email='+userInfo.email)">
 				<p>修改密码</p>
@@ -54,7 +54,7 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	const userInfo = ref({
 		avatar: '',

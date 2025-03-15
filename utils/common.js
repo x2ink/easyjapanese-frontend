@@ -17,3 +17,9 @@ export const goPage = (to, params) => {
 		url: url
 	})
 }
+export const copy = (data) => {
+	uni.setClipboardData({
+		data: data,
+		showToast: false
+	});
+}

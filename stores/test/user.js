@@ -23,11 +23,10 @@ export const test_userModule = defineStore('test_user', {
 		setToken(token) {
 			this.token = token
 		},
-		setUserInfo: async (info) => {
-			console.log("初始化用户信息");
+		setUserInfo: async function() {
 			try {
 				const res = await $http.user.getUserInfoSimple()
-				this.userInfo = info
+				this.userInfo = res.data
 			} catch (err) {
 				console.log("未登录", err);
 			}

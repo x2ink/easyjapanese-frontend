@@ -4,6 +4,41 @@
     "miniprogram": {
       "list": [
         {
+          "name": "trendpages/trenddetail/trenddetail",
+          "pathName": "trendpages/trenddetail/trenddetail",
+          "query": "id=51",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "trendpages/addtrend/addtrend",
+          "pathName": "trendpages/addtrend/addtrend",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/addtrend/addtrend",
+          "pathName": "pages/addtrend/addtrend",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "otherpages/share/share",
+          "pathName": "otherpages/share/share",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/userinfo/userinfo",
+          "pathName": "pages/user/userinfo/userinfo",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/mybookswordlist/mybookswordlist",
           "pathName": "pages/word/mybookswordlist/mybookswordlist",
           "query": "id=14&name=%E6%97%A5%E8%AF%AD%E8%80%83%E7%BA%A7&describe=%E8%80%83%E7%BA%A7%E4%B8%93%E7%94%A8",

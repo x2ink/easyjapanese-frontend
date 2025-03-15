@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view :style="{height:navBarHeight}"></view>
-		<view @click="goPage('userinfo')" class="userinfo">
+		<view @click="goUserInfo()" class="userinfo">
 			<uv-avatar size="60" :src="userStore().userInfo.avatar"></uv-avatar>
 			<view>
 				<p class="name">{{userStore().userInfo.nickname}}</p>
@@ -55,21 +55,21 @@
 				<p>排行榜</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem" @click="goPage('setting')">
+			<view class="cellitem" @click="goPage('/otherpages/setting/setting')">
 				<p>设置</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
 		</view>
 		<view class="cell">
-			<view class="cellitem" @click="goPage('feedback')">
+			<view class="cellitem" @click="goPage('/otherpages/feedback/feedback')">
 				<p>意见反馈</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem" @click="goPage('about')">
+			<view class="cellitem" @click="goPage('/otherpages/about/about')">
 				<p>关于我们</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem" @click="goPage('share')">
+			<view class="cellitem" @click="goPage('/otherpages/share/share')">
 				<p>分享App</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
@@ -95,6 +95,13 @@
 			window.open(url)
 		} else {
 			plus.runtime.openURL(url)
+		}
+	}
+	const goUserInfo = () => {
+		if (userStore().loginStatus) {
+			goPage("/userpages/userinfo/userinfo")
+		} else {
+			goPage("/pages/login/login")
 		}
 	}
 	const navBarHeight = ref(0)

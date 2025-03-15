@@ -26,7 +26,7 @@ const user = {
     return utils_request.http.post(`config`, data);
   },
   setUserInfo(data) {
-    return utils_request.http.post(`user/info`, data);
+    return utils_request.http.put(`user/info`, data);
   },
   ranking() {
     return utils_request.http.get(`ranking`);

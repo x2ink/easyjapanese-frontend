@@ -1,24 +1,30 @@
 <template>
 	<view>
+		<view :style="{height:navBarHeight}"></view>
 		<!-- 顶部区域 -->
-		<view class="chead">
+		<view style="padding: 0 10px;">
 			<wd-tabs slidable custom-class="tabs" v-model="currentTab">
 				<block v-for="(item,index) in tabList" :key="item.name">
 					<wd-tab :title="item.name">
 					</wd-tab>
 				</block>
 			</wd-tabs>
-			<view @click="goPage('search')" class="search">
-				<wd-icon name="search" size="18px" color="#979797"></wd-icon>
-				<p>搜索动态内容</p>
-			</view>
+		</view>
+		<view @click="goPage('search')" class="search">
+			<wd-icon name="search" size="18px" color="#979797"></wd-icon>
+			<text>搜索动态内容</text>
 		</view>
 		<view style="position: relative;">
 			<view v-if="noResult">
-				<wd-status-tip image="content" tip="没有动态" />
+				<view style="margin-top: 40px;" v-if="noResult">
+					<wd-status-tip :image-size="{
+				        height: 60,
+				        width: 60
+				}" image="http://jp.x2.ink/images/blank.png" tip="还没有动态" />
+				</view>
 			</view>
 			<view v-else class="list">
-				<view @click="getDetail(item.id)" class="item" v-for="item in List" :key="item.id">
+				<view @click="goPage('/trendpages/trenddetail/trenddetail',{id:item.id})" class="item" v-for="item in List" :key="item.id">
 					<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
 					<view style="flex: 1;">
 						<view class="head">
@@ -67,7 +73,7 @@
 		</view>
 		<wd-fab type="warning" position="right-bottom">
 			<template #trigger>
-				<view class="release" @click="release">
+				<view class="release" @click="goPage('/trendpages/addtrend/addtrend')">
 					<wd-icon name="add" size="25px" color="#ffffff"></wd-icon>
 				</view>
 			</template>
@@ -108,7 +114,9 @@
 		onReachBottom
 	} from '@dcloudio/uni-app'
 	import $http from "@/api/index.js"
-	import Statusbar from "@/components/statusbar.vue"
+	import {
+		goPage
+	} from "@/utils/common.js"
 	onShow(() => {
 		uni.$once("addTrend", (data) => {
 			if (data) {
@@ -123,11 +131,6 @@
 		name: "全部",
 		id: 0
 	}])
-	const getDetail = (id) => {
-		uni.navigateTo({
-			url: "/pages/trenddetail/trenddetail?id=" + id
-		})
-	}
 	watch(currentTab, (newVal, oldVal) => {
 		List.value = []
 		page.value = 1
@@ -142,7 +145,7 @@
 		getTrendList(true, page.value, size.value, tabList.value[currentTab.value].id)
 	}
 	const getSection = async () => {
-		const res = await $http.trend.getSection("trend")
+		const res = await $http.trend.getSection()
 		tabList.value = tabList.value.concat(res.data)
 		getTrendList(false, page.value, size.value, tabList.value[currentTab.value].id)
 	}
@@ -153,11 +156,7 @@
 		}
 	}
 
-	const release = () => {
-		uni.navigateTo({
-			url: "/pages/addtrend/addtrend"
-		})
-	}
+
 	const List = ref([])
 	const getTrendList = async (refresh, page, size, section) => {
 		const res = await $http.trend.getTrendList(page, size, section)
@@ -185,7 +184,11 @@
 			console.log(rect.top);
 		}).exec();
 	}
+	const navBarHeight = ref(0)
 	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
 		getSection()
 	})
 	defineExpose({
@@ -194,54 +197,23 @@
 </script>
 
 <style lang="scss" scoped>
-	:deep(.wd-tabs__nav-item) {
-		font-size: 16px;
-	}
-
-	:deep(.tabs) {
-		background-color: transparent;
-		width: 200px;
-	}
-
-	:deep(.wd-tabs) {
-		background-color: transparent;
-	}
-
-	:deep(.wd-tabs__nav) {
-		background-color: transparent;
-	}
-
-	.chead {
-		padding: 10px;
+	.search {
+		height: 40px;
+		background: #fff;
+		padding: 5px 15px;
+		margin: 10px 15px 0 15px;
+		font-size: $uni-font-size-lg;
+		box-sizing: border-box;
+		border-radius: 40px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 
-
-		.search {
-			height: 40px;
-			background: #fff;
-			padding: 5px 15px;
-			font-size: $uni-font-size-lg;
-			box-sizing: border-box;
-			border-radius: 40px;
-			display: flex;
-			align-items: center;
-
-			p {
-				font-size: 14px;
-				color: #979797;
-				margin-left: 5px;
-			}
+		text {
+			font-size: 14px;
+			color: #979797;
+			margin-left: 5px;
 		}
-
-
 	}
-
-
-
-
-
 
 	.release {
 		width: 50px;
@@ -262,13 +234,10 @@
 		}
 	}
 
-
-
-
-
 	.list {
 		background-color: #f5f5f5;
 		padding: 0 15px;
+		margin-top: 15px;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;

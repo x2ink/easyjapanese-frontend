@@ -1,55 +1,47 @@
 <template>
 	<view>
-		<NavBar title="动态详情" style="background-color: #F3F3F5;">
-			<template #right>
-				<wd-icon @click="moreShow=true" name="ellipsis" size="30px"></wd-icon>
-			</template>
-		</NavBar>
+		<Navbar title="动态详情">
+		</Navbar>
 		<view class="item">
-			<view class="head">
-				<uv-avatar size="40" :src="info.user.avatar"></uv-avatar>
+			<uv-avatar size="40" :src="info.user.avatar"></uv-avatar>
+			<view>
 				<view class="userinfo">
-					<p>{{info.user.nickname}}</p>
-					<wd-tag v-if="info.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
-					<wd-tag v-else-if="info.user.role=='普通'" custom-class="space" type="success">普通</wd-tag>
-					<wd-tag v-else-if="info.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
-					<wd-tag v-else-if="info.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+					<view>
+						<text>{{info.user.nickname}}</text>
+						<wd-tag v-if="info.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
+						<wd-tag v-else-if="info.user.role=='普通'" custom-class="space" type="success">普通</wd-tag>
+						<wd-tag v-else-if="info.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
+						<wd-tag v-else-if="info.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+					</view>
+					<wd-icon name="more" @click="moreShow=true" size="20px"></wd-icon>
 				</view>
-			</view>
-			<view class="body">
-				<p class="content" v-html="info.content.replace(/\n/g,'<br>')"></p>
-				<view class="images">
-					<view class="image" v-for="image in info.images" :key="image">
-						<uv-image mode="aspectFill" radius="4px" width="100%" height="100%" :src="image"></uv-image>
+				<view class="body">
+					<p class="content" v-html="info.content.replace(/\n/g,'<br>')"></p>
+					<view class="images">
+						<view class="image" v-for="image in info.images" :key="image">
+							<uv-image mode="aspectFill" radius="4px" width="100%" height="100%" :src="image"></uv-image>
+						</view>
 					</view>
 				</view>
-			</view>
-			<view class="footer">
-				<p class="left">{{dayjs().to(dayjs(info.created_at))}}</p>
-				<view class="right">
-					<view>
-						<wd-icon name="heart" color="#999" size="18px"></wd-icon>
-						<text>{{info.like}}</text>
-					</view>
-					<view>
-						<wd-icon name="browse" color="#999" size="18px"></wd-icon>
-						<text>{{info.browse}}</text>
-					</view>
-					<view>
-						<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
-						<text>{{count}}</text>
+				<view class="footer">
+					<p class="left">{{dayjs().to(dayjs(info.created_at))}}</p>
+					<view class="right">
+						<view>
+							<wd-icon name="heart" color="#999" size="18px"></wd-icon>
+							<text>{{info.like}}</text>
+						</view>
+						<view>
+							<wd-icon name="browse" color="#999" size="18px"></wd-icon>
+							<text>{{info.browse}}</text>
+						</view>
+						<view>
+							<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
+							<text>{{count}}</text>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<!-- 评论区 -->
-		<!-- 	<view class="userinput">
-			<uv-avatar size="40" :src="userInfo.avatar" font-size="14"></uv-avatar>
-			<view class="input" @click="replyOwner()">
-				<text>说点什么...</text>
-				<wd-icon name="edit-outline" color="#999" />
-			</view>
-		</view> -->
 		<view class="commentwrap">
 			<view class="commenttop">
 				<text>评论留言</text>
@@ -61,9 +53,11 @@
 					<view class="main">
 						<view class="head">
 							<view class="userinfo">
+								<text class="top _GCENTER" v-if="item.top">置顶</text>
 								{{item.from_user.nickname}}
+								<text class="author" v-if="isAuthor(item.from_user.id)">作者</text>
 								<text>
-									&nbsp;·&nbsp;{{dayjs().to(dayjs(item.created_at))}}
+									{{dayjs().to(dayjs(item.created_at))}}
 								</text>
 							</view>
 							<view class="thumb" @click="likeComment(index,null,item.id)">
@@ -72,9 +66,9 @@
 								<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
 							</view>
 						</view>
-						<view @click="replyUser(item.id,item.from_user)">
+						<view @click="replyUser(item.id,item.from_user,item.id,true,true,item.content,item.top)">
 							<view class="body">
-								<p v-html="item.content.replace(/\n/g,'<br>')"></p>
+								<view v-html="item.content.replace(/\n/g,'<br>')"></view>
 							</view>
 							<image v-for="image in item.images" :key="image" class="image" :src="image"
 								mode="aspectFill">
@@ -86,7 +80,8 @@
 								<view class="head">
 									<view class="userinfo">
 										{{child.from_user.nickname}}
-										<text>&nbsp;·&nbsp;{{dayjs().to(dayjs(child.created_at))}}</text>
+										<text class="author" v-if="isAuthor(child.from_user.id)">作者</text>
+										<text>{{dayjs().to(dayjs(child.created_at))}}</text>
 									</view>
 									<view class="thumb" @click="likeComment(index,index1,child.id)">
 										<text>{{child.like_count}}</text>
@@ -94,13 +89,14 @@
 										<wd-icon v-else name="heart-filled" color="#EF4651" size="14px"></wd-icon>
 									</view>
 								</view>
-								<view @click="replyUser(item.id,child.from_user)">
+								<view
+									@click="replyUser(item.id,child.from_user,child.id,true,false,child.content,false)">
 									<view class="childcontent">
-										<text v-if="child.to_user.id!=child.from_user.id">回复</text>
-										<text v-if="child.to_user.id!=child.from_user.id"
+										<text v-if="child.to_user.id!=item.from_user.id">回复</text>
+										<text v-if="child.to_user.id!=item.from_user.id"
 											class="text">{{child.to_user.nickname}}</text><text
-											v-if="child.to_user.id!=child.from_user.id">：</text><text
-											v-html="child.content.replace(/\n/g,'<br>')"></text>
+											v-if="child.to_user.id!=item.from_user.id">：</text>
+										<view v-html="child.content.replace(/\n/g,'<br>')"></view>
 									</view>
 									<image v-for="image in child.images" :key="image" class="image" :src="image"
 										mode="aspectFill">
@@ -115,11 +111,14 @@
 				</view>
 				<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
 				<view v-if="noResult">
-					<wd-status-tip image="comment" tip="没有评论" />
+					<wd-status-tip :image-size="{
+				        height: 60,
+				        width: 60
+				}" image="http://jp.x2.ink/images/blank.png" tip="还没有评论呢" />
 				</view>
 			</view>
 		</view>
-		<view style="height: 60px;"></view>
+		<view style="height: calc(60px + env(safe-area-inset-bottom));"></view>
 		<!-- 评论 -->
 		<view class="fixed">
 			<view class="userinput">
@@ -142,22 +141,26 @@
 			</view>
 		</view>
 		<!-- 弹出评论 -->
-		<wd-popup v-model="commentShow" position="bottom" :safe-area-inset-bottom="true"
-			custom-style="border-radius:8px 8px 0 0;padding:15px">
-			<view>
+		<wd-popup v-model="commentShow" :z-index="100" position="bottom" :safe-area-inset-bottom="true"
+			custom-style="border-radius:8px 8px 0 0;padding:20px">
+			<view style="padding-bottom: env(safe-area-inset-bottom);">
 				<p class="commenttitle">回复<text>@{{toUser.nickname}}</text></p>
 				<wd-textarea :focus="commentShow" v-model="formData.content" clearable show-word-limit
-					placeholder="请发表你的想法" :maxlength="800" />
+					placeholder="请发表你的想法" :maxlength="400" />
 				<wd-upload accept="image" :limit="1" custom-class="updload" :max-size="1024*1024*10" show-limit-num
 					image-mode="aspectFill" multiple :header="header" :action="`${http.baseUrl}upload`"
 					@change="handleChange"></wd-upload>
-				<view style="padding:0 10px;">
-					<wd-button @click="submit()" style="width: 100%;margin-top: 15px;">发布</wd-button>
+				<view style="padding:0 10px;margin-top: 15px;">
+					<wd-button @click="submit()" block>发布</wd-button>
 				</view>
 			</view>
 		</wd-popup>
-		<wd-action-sheet :z-index="999" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
+		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
 			:actions="actions" @close="moreShow=false" @select="select" />
+		<wd-toast />
+		<!-- 操作自己的评论 -->
+		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="false" cancel-text="取消" v-model="commentEdit"
+			:actions="commentActions" @close="commentEdit=false" @select="selectEdit" />
 		<wd-toast />
 		<wd-message-box></wd-message-box>
 	</view>
@@ -176,7 +179,7 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import http from '@/utils/request.js'
 	import {
 		useToast
@@ -187,22 +190,17 @@
 	} from '@/uni_modules/wot-design-uni'
 	const message = useMessage()
 	const moreShow = ref(false)
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
+	const isAuthor = (userId) => {
+		return userId == info.value.user.id
 	}
+	import {
+		goPage,
+		copy
+	} from "@/utils/common.js"
 	const select = async (e) => {
 		if (e.item.name == "删除动态") {
-			moreShow.value = true
 			message.alert({
-				msg: '你正在执行删除操作，此操作不可逆',
+				msg: '你真的要删除这条动态？',
 				title: '温馨提示'
 			}).then(async () => {
 				const res = await $http.trend.deleteTrend(info.value.id)
@@ -211,9 +209,55 @@
 				})
 			})
 		} else {
-			goPage('feedback', "?type=动态举报&trendid=" + info.value.id)
+			goPage('/otherpages/feedback/feedback', {
+				type: '动态举报',
+				trendid: info.value.id
+			})
 		}
 	}
+	const commentTemp = ref({
+		commentId: null,
+		parentId: null,
+		user: {},
+		top: false,
+		isTop: false
+	})
+	const selectEdit = async (e) => {
+		console.log(e.item.name.indexOf("置顶"));
+		if (e.item.name == "删除") {
+			message.alert({
+				msg: '你真的要删除这条评论？',
+				title: '温馨提示'
+			}).then(async () => {
+				const res = await $http.trend.deleteComment(commentTemp.value.commentId)
+				refresh()
+			})
+		} else if (e.item.name == "回复") {
+			replyUser(commentTemp.value.parentId, commentTemp.value.user, commentTemp.value.parentId, false)
+		} else if (e.item.name == "复制") {
+			copy(commentTemp.value.content)
+		} else if (e.item.name.indexOf("置顶")>=0) {
+			const res = await $http.trend.topComment(commentTemp.value.commentId)
+			refresh()
+		}
+	}
+	const commentEdit = ref(false)
+	const commentActions = computed(() => {
+		let temp = [{
+			name: '回复'
+		}, {
+			name: '复制'
+		}, {
+			name: '删除'
+		}]
+		if (commentTemp.value.top) {
+			return [{
+				name: commentTemp.value.isTop ? '取消置顶' : '置顶'
+			}, ...temp]
+		} else {
+			return temp
+		}
+	})
 	const actions = computed(() => {
 		if (info.value.my) {
 			return [{
@@ -248,7 +292,6 @@
 	const getUserInfoSimple = async () => {
 		const res = await $http.user.getUserInfoSimple()
 		userInfo.value = res.data
-		console.log(userInfo.value);
 	}
 	const userInfo = ref({
 		address: "",
@@ -272,8 +315,7 @@
 	const formData = ref({
 		content: "",
 		to: null,
-		target: "trend",
-		target_id: null,
+		trend_id: null,
 		parent_id: null,
 		images: []
 	})
@@ -308,23 +350,34 @@
 		avatar: "",
 		id: null
 	})
-	const replyUser = (parent_id, user) => {
+	const replyUser = (parentId, user, commentId, open, top, content, isTop) => {
+		commentTemp.value = {
+			parentId,
+			user,
+			commentId,
+			top,
+			content,
+			isTop
+		}
+		if (userInfo.value.id == user.id && open) {
+			commentEdit.value = true
+			return
+		}
 		toUser.value = user
 		commentShow.value = true
-		formData.value.parent_id = parent_id
+		formData.value.parent_id = parentId
 		formData.value.to = user.id
 	}
 	const commentParams = ref({
 		target: "trend",
-		target_id: null,
+		trend_id: null,
 		page: 1,
 		size: 10
 	})
 	const refresh = () => {
 		oneComment.value.parent_id = 0
 		commentParams.value = {
-			target: "trend",
-			target_id: id.value,
+			trend_id: id.value,
 			page: 1,
 			size: 10 * commentParams.value.page
 		}
@@ -345,7 +398,7 @@
 	const count = ref(0)
 	const noResult = ref(false)
 	const getList = async (refresh) => {
-		const res = await $http.comment.getList(commentParams.value.target, commentParams.value.target_id,
+		const res = await $http.trend.getCommentList(commentParams.value.trend_id,
 			commentParams.value.page, commentParams.value.size, sort.value, oneComment.value.parent_id)
 		if (refresh) {
 			List.value = res.data
@@ -370,10 +423,11 @@
 			toast.warning(`内容不可为空`)
 			return
 		}
-		const res = await $http.comment.add(formData.value)
+		const res = await $http.trend.addComment(formData.value)
 		toast.success(`回复成功`)
 		commentShow.value = false
 		formData.value.content = ""
+		formData.value.images = []
 		refresh()
 	}
 	const id = ref(null)
@@ -421,8 +475,8 @@
 	})
 	onLoad((e) => {
 		id.value = Number(e.id)
-		formData.value.target_id = Number(e.id)
-		commentParams.value.target_id = Number(e.id)
+		formData.value.trend_id = Number(e.id)
+		commentParams.value.trend_id = Number(e.id)
 		if (e.parent_id) {
 			oneComment.value.parent_id = Number(e.parent_id)
 			oneComment.value.child_id = Number(e.child_id)
@@ -443,6 +497,16 @@
 </script>
 
 <style scoped lang="scss">
+	.author {
+		background-color: #FFEAEF;
+		color: #D21C45;
+		font-size: 10px !important;
+		padding: 0 7px;
+		border-radius: 20px;
+		margin: 0 5px;
+		line-height: 20px;
+	}
+
 	:deep(.updload) {
 		margin: 0px 10px 0 10px;
 	}
@@ -458,6 +522,7 @@
 	}
 
 	.commenttitle {
+		font-weight: bold;
 		display: flex;
 		align-items: center;
 		gap: 3px;
@@ -474,6 +539,7 @@
 		left: 0;
 		right: 0;
 		background-color: white;
+		padding-bottom: env(safe-area-inset-bottom);
 
 		.userinput {
 			padding: 10px;
@@ -522,14 +588,14 @@
 	}
 
 	:deep(.wd-segmented) {
-		width: 100px;
+		width: 100px !important;
 	}
 
 	:deep(.wd-segmented__item) {
-		min-height: inherit;
-		line-height: inherit;
-		font-size: 8px;
-		padding: 0;
+		min-height: inherit !important;
+		line-height: inherit !important;
+		font-size: 8px !important;
+		padding: 0 !important;
 	}
 
 	.commentwrap {
@@ -557,6 +623,7 @@
 			gap: 15px;
 
 			.comment {
+				position: relative;
 				display: flex;
 				gap: 15px;
 
@@ -616,6 +683,16 @@
 							display: flex;
 							align-items: center;
 
+							.top {
+								color: white;
+								font-size: 10px;
+								padding: 0 5px;
+								height: 18px;
+								border-radius: 4px;
+								background-color: #EF4651;
+								margin-right: 5px;
+							}
+
 							text {
 								font-size: 12px;
 							}
@@ -631,79 +708,83 @@
 		padding: 10px 15px;
 		margin: 0 10px;
 		border-radius: 8px;
+		display: flex;
+		gap: 10px;
 
-		.footer {
-			margin-left: 50px;
-			justify-content: space-between;
-			display: flex;
-			align-items: center;
+		>view {
+			flex: 1;
 
-			.right {
+			.footer {
+				justify-content: space-between;
 				display: flex;
 				align-items: center;
-				gap: 10px;
 
-				text {
+				.right {
+					display: flex;
+					align-items: center;
+					gap: 10px;
+
+					text {
+						font-size: $uni-font-size-sm;
+						color: $uni-text-color-grey;
+					}
+
+					>view {
+						display: flex;
+						align-items: center;
+						gap: 5px;
+					}
+				}
+
+				.left {
 					font-size: $uni-font-size-sm;
 					color: $uni-text-color-grey;
 				}
+			}
+
+			.body {
+
+				.images {
+					display: grid;
+					grid-template-columns: repeat(3, 1fr);
+					gap: 10px;
+					margin-bottom: 15px;
+
+					.image {
+						object-fit: cover;
+						width: 100%;
+						aspect-ratio: 1;
+						border-radius: $uni-border-radius-base;
+					}
+				}
+
+				.content {
+					margin: 5px 0 10px 0;
+					font-size: $uni-font-size-base;
+				}
+			}
+
+			.userinfo {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+
 
 				>view {
 					display: flex;
 					align-items: center;
 					gap: 5px;
-				}
-			}
 
-			.left {
-				font-size: $uni-font-size-sm;
-				color: $uni-text-color-grey;
-			}
-		}
+					text {
+						&:nth-of-type(1) {
+							font-size: $uni-font-size-lg;
+						}
 
-		.body {
-			margin-left: 50px;
-
-			.images {
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				gap: 10px;
-				margin-bottom: 15px;
-
-				.image {
-					object-fit: cover;
-					width: 100%;
-					aspect-ratio: 1;
-					border-radius: $uni-border-radius-base;
-				}
-			}
-
-			.content {
-				margin: 5px 0;
-				font-size: $uni-font-size-base;
-			}
-		}
-
-		.head {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			position: relative;
-
-			.btn {
-				position: absolute;
-				right: 0;
-			}
-
-			.userinfo {
-				p {
-					&:nth-of-type(1) {
-						font-size: $uni-font-size-lg;
-					}
-
-					&:nth-of-type(2) {
-						font-size: $uni-font-size-sm;
-						color: $uni-text-color-grey;
+						&:nth-of-type(2) {
+							font-size: $uni-font-size-sm;
+							color: $uni-text-color-grey;
+						}
 					}
 				}
 			}

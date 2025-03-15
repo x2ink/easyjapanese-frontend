@@ -8,8 +8,8 @@
 		<wd-divider>用户发音</wd-divider>
 		<view style="margin-top: 40px;" v-if="noResult">
 			<wd-status-tip :image-size="{
-		        height: 80,
-		        width: 80
+		        height: 60,
+		        width: 60
 		}" image="http://jp.x2.ink/images/blank.png" tip="还没有小伙伴跟读" />
 		</view>
 		<view class="readlist">
