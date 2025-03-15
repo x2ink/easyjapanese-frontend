@@ -13,7 +13,7 @@ const Tabbar = () => "./components/tabbar/tabbar.js";
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const tabbar = common_vendor.ref(1);
+    const tabbar = common_vendor.ref(0);
     const tabbarChange = (e) => {
       tabbar.value = e.value;
     };

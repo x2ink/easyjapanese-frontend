@@ -37,7 +37,7 @@
 	import {
 		userStore
 	} from "@/stores"
-	const tabbar = ref(1)
+	const tabbar = ref(0)
 	const tabbarChange = (e) => {
 		tabbar.value = e.value
 	}

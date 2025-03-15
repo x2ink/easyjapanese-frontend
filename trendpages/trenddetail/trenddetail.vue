@@ -129,7 +129,7 @@
 				</view>
 				<view class="count">
 					<view @click="addLike()">
-						<wd-icon v-if="!hasLike" name="heart" color="#999" size="22px"></wd-icon>
+						<wd-icon v-if="!info.has" name="heart" color="#999" size="22px"></wd-icon>
 						<wd-icon v-else name="heart-filled" color="#EF4651" size="22px"></wd-icon>
 						<text>{{info.like}}</text>
 					</view>
@@ -236,7 +236,7 @@
 			replyUser(commentTemp.value.parentId, commentTemp.value.user, commentTemp.value.parentId, false)
 		} else if (e.item.name == "复制") {
 			copy(commentTemp.value.content)
-		} else if (e.item.name.indexOf("置顶")>=0) {
+		} else if (e.item.name.indexOf("置顶") >= 0) {
 			const res = await $http.trend.topComment(commentTemp.value.commentId)
 			refresh()
 		}
@@ -320,7 +320,7 @@
 		images: []
 	})
 	const likeComment = async (parent, child, id) => {
-		const res = await $http.comment.like(id)
+		const res = await $http.trend.addCommentLike(id)
 		if (res.msg === "like") {
 			if (child == null) {
 				++List.value[parent].like_count
@@ -390,7 +390,7 @@
 	const hideId = ref("")
 	const getChildComment = async (index, parent_id, page, size) => {
 		++childParams.value.page
-		const res = await $http.comment.getChildComment(parent_id, childParams.value.page, childParams.value.size,
+		const res = await $http.trend.getChildComment(parent_id, childParams.value.page, childParams.value.size,
 			sort.value)
 		List.value[index].children = List.value[index].children.concat(res.data)
 	}
@@ -431,19 +431,14 @@
 		refresh()
 	}
 	const id = ref(null)
-	const hasLike = ref(false)
-	const getHasLike = async (id) => {
-		const res = await $http.trend.getHasLike(id)
-		hasLike.value = res.data
-	}
 	const addLike = async () => {
-		const res = await $http.trend.addLike(id.value)
+		const res = await $http.trend.addTrendLike(id.value)
 		if (res.msg == "like") {
 			++info.value.like
-			hasLike.value = true
+			info.value.has = true
 		} else {
 			--info.value.like
-			hasLike.value = false
+			info.value.has = false
 		}
 	}
 	const info = ref({
@@ -482,7 +477,6 @@
 			oneComment.value.child_id = Number(e.child_id)
 		}
 		getInfo(e.id)
-		getHasLike(e.id)
 		getList(false)
 		getUserInfoSimple()
 	})

@@ -43,7 +43,7 @@
 			</view>
 		</view> -->
 		<view class="cell">
-			<view class="cellitem" @click="goPage('mytrend')">
+			<view class="cellitem" @click="goPage('/trendpages/mytrend/mytrend')">
 				<p>我的动态</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>

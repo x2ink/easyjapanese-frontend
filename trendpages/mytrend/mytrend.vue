@@ -1,12 +1,15 @@
 <template>
 	<view>
-		<NavBar title="我的动态" style="background-color: #f3f3f5;"></NavBar>
+		<Navbar title="我的动态"></Navbar>
 		<view style="position: relative;">
 			<view v-if="noResult">
-				<wd-status-tip image="content" tip="没有动态" />
+				<wd-status-tip :image-size="{
+			        height: 60,
+			        width: 60
+			}" image="http://jp.x2.ink/images/blank.png" tip="还没有发布过动态" />
 			</view>
 			<view v-else class="list">
-				<view @click="getDetail(item.id)" class="item" v-for="item in List" :key="item.id">
+				<view @click="goPage('/trendpages/trenddetail/trenddetail',{id:item.id})" class="item" v-for="item in List" :key="item.id">
 					<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
 					<view style="flex: 1;">
 						<view class="head">
@@ -66,7 +69,7 @@
 		onShow,
 		onReachBottom
 	} from '@dcloudio/uni-app'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import $http from "@/api/index.js"
@@ -80,11 +83,10 @@
 			return "loading"
 		}
 	})
-	const getDetail = (id) => {
-		uni.navigateTo({
-			url: "/pages/trenddetail/trenddetail?id=" + id
-		})
-	}
+
+	import {
+		goPage
+	} from "@/utils/common.js"
 	onReachBottom(() => {
 		if (total.value > List.value.length) {
 			++page.value

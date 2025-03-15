@@ -31,13 +31,13 @@ if (!Math) {
   "./pages/likemsg/likemsg.js";
   "./pages/commentmsg/commentmsg.js";
   "./pages/ranking/ranking.js";
-  "./pages/mytrend/mytrend.js";
   "./pages/repwd/repwd.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
   "./pages/word/edithistory/edithistory.js";
   "./trendpages/addtrend/addtrend.js";
   "./trendpages/trenddetail/trenddetail.js";
+  "./trendpages/mytrend/mytrend.js";
   "./userpages/userinfo/userinfo.js";
   "./otherpages/browse/browse.js";
   "./otherpages/about/about.js";

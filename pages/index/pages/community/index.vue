@@ -100,7 +100,6 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const noResult = ref(false)
-
 	const loadMoreText = computed(() => {
 		if (total.value == List.value.length) {
 			return "finished"

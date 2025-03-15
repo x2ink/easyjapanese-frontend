@@ -177,12 +177,6 @@
 			}
 		},
 		{
-			"path": "pages/mytrend/mytrend",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/repwd/repwd",
 			"style": {
 				"navigationStyle": "custom"
@@ -217,6 +211,12 @@
 		},
 		{
 			"path": "trenddetail/trenddetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "mytrend/mytrend",
 			"style": {
 				"navigationStyle": "custom"
 			}

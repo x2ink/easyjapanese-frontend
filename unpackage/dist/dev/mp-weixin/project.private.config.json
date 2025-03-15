@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "trendpages/mytrend/mytrend",
+          "pathName": "trendpages/mytrend/mytrend",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "trendpages/trenddetail/trenddetail",
           "pathName": "trendpages/trenddetail/trenddetail",
           "query": "id=51",

@@ -134,11 +134,6 @@
 			getArticleLis()
 		}
 	})
-	const getArticleList = async () => {
-		const res = await $http.article.getList(articleParams.value.page, articleParams.value.size)
-		articleList.value = articleList.value.concat(res.data)
-		articleTotal.value = res.total
-	}
 
 	const progress = computed(() => {
 		if (info.value.learnnum) {
@@ -161,7 +156,6 @@
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
-		getArticleList()
 		getRecommend()
 	})
 	const getHomeInfo = async () => {

@@ -28,7 +28,6 @@
     "pages/likemsg/likemsg",
     "pages/commentmsg/commentmsg",
     "pages/ranking/ranking",
-    "pages/mytrend/mytrend",
     "pages/repwd/repwd",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
@@ -39,7 +38,8 @@
       "root": "trendpages",
       "pages": [
         "addtrend/addtrend",
-        "trenddetail/trenddetail"
+        "trenddetail/trenddetail",
+        "mytrend/mytrend"
       ]
     },
     {
