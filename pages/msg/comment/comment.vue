@@ -1,30 +1,38 @@
 <template>
 	<view>
-		<NavBar title="评论" style="background-color: #f3f3f5;"></NavBar>
+		<Navbar title="评论"></Navbar>
 		<!-- 评论 -->
 		<view class="commentlist">
-			<view class="commentitem" @click="openDetail(item,index)" :key="item.id" v-for="(item,index) in List">
+			<view style="margin-top: 40px;" v-if="noResult">
+				<wd-status-tip :image-size="{
+			        height: 60,
+			        width: 60
+			}" image="http://jp.x2.ink/images/blank.png" tip="还没有小伙伴互动" />
+			</view>
+			<view class="commentitem" @click="read(item.path,item.id,index)" :key="item.id"
+				v-for="(item,index) in List">
 				<view class="left">
-					<wd-badge is-dot :hidden="item.status!=0">
+					<wd-badge :is-dot="item.status==0">
 						<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
 					</wd-badge>
 				</view>
 				<view class="right">
 					<view class="nickname">{{item.from_user.nickname}}</view>
 					<view class="magtype">
-						<text>回复了你的{{item.comment.parent_id==null?'动态':'评论'}}</text>
+						<text>{{item.title}}</text>
 						<text>{{dayjs().to(dayjs(item.created_at))}}</text>
 					</view>
 					<view class="content">
-						<wd-text :text="item.comment.content" color="#000" size="14px" :lines="1"></wd-text>
+						<wd-text :text="JSON.parse(item.content).title" color="#000" size="14px" :lines="1"></wd-text>
 					</view>
 					<view class="tocontent">
 						<view class="hr"></view>
-						<wd-text :text="item.content" color="#999" size="12px" :lines="1"></wd-text>
+						<wd-text :text="JSON.parse(item.content).content" color="#999" size="12px" :lines="1"></wd-text>
 					</view>
 					<view class="btns">
 						<view @click.stop="addLike(item.comment.id,index)" class="btn _GCENTER">
-							<wd-icon v-if="!item.comment.like" name="heart" size="18px" color="#000"></wd-icon>
+							<wd-icon v-if="!JSON.parse(item.content).like" name="heart" size="18px"
+								color="#000"></wd-icon>
 							<wd-icon v-else name="heart-filled" color="#EF4651" size="18px"></wd-icon>
 							<text>点赞</text>
 						</view>
@@ -37,17 +45,17 @@
 			</view>
 		</view>
 		<!-- 回复消息 -->
-		<wd-popup v-model="commentShow" position="bottom" :safe-area-inset-bottom="true"
-			custom-style="border-radius:8px 8px 0 0;padding:15px">
-			<view>
+		<wd-popup :safe-area-inset-bottom="true" v-model="commentShow" :z-index="100" position="bottom"
+			custom-style="border-radius:8px 8px 0 0;padding:20px">
+			<view style="padding-bottom: env(safe-area-inset-bottom);">
 				<p class="commenttitle">回复<text>@{{toUser.nickname}}</text></p>
 				<wd-textarea :focus="commentShow" v-model="formData.content" clearable show-word-limit
 					placeholder="请发表你的想法" :maxlength="800" />
 				<wd-upload accept="image" :limit="1" custom-class="updload" :max-size="1024*1024*10" show-limit-num
 					image-mode="aspectFill" multiple :header="header" :action="`${http.baseUrl}upload`"
 					@change="handleChange"></wd-upload>
-				<view style="padding:0 10px;">
-					<wd-button @click="submit()" style="width: 100%;margin-top: 15px;">发布</wd-button>
+				<view style="padding:0 10px;margin-top: 15px;">
+					<wd-button @click="submit()" block>发布</wd-button>
 				</view>
 			</view>
 		</wd-popup>
@@ -68,12 +76,15 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	import {
 		userStore
 	} from "@/stores/index.js"
 	import http from '@/utils/request.js'
+	import {
+		goPage
+	} from "@/utils/common.js"
 	const header = ref({
 		"Authorization": userStore().token
 	})
@@ -91,7 +102,7 @@
 			toast.warning(`内容不可为空`)
 			return
 		}
-		const res = await $http.comment.add(formData.value)
+		const res = await $http.trend.addComment(formData.value)
 		toast.success(`回复成功`)
 		commentShow.value = false
 		formData.value.content = ""
@@ -109,17 +120,6 @@
 		avatar: "",
 		id: null
 	})
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
 	const handleChange = (files) => {
 		formData.value.images = []
 		files.fileList.map((item) => {
@@ -128,14 +128,14 @@
 			}
 		})
 	}
-	const replyOwner = (item, index) => {
+	const replyOwner = async (item, index) => {
 		toUser.value = item.from_user
 		commentShow.value = true
-		formData.value.parent_id = item.comment.id
+		formData.value.parent_id = JSON.parse(item.content).parent_id
 		formData.value.to = item.from_id
-		formData.value.target = item.target
-		formData.value.target_id = item.target_id
+		formData.value.trend_id = JSON.parse(item.content).trend_id
 		List.value[index].status = 1
+		await $http.common.readMessage(item.id)
 		$http.common.setMessageRead(item.id)
 	}
 	const addLike = async (id, index) => {
@@ -150,25 +150,19 @@
 	const size = ref(10)
 	const total = ref(0)
 	const List = ref([])
+	const noResult = ref(false)
 	const getList = async () => {
-		const res = await $http.common.getMessageList(page.value, size.value)
+		const res = await $http.common.getMessageList(page.value, size.value, "msg")
 		total.value = res.total
 		List.value = List.value.concat(res.data)
+		if (total.value == 0) {
+			noResult.value = true
+		}
 	}
-	const openDetail = (item, index) => {
-		$http.common.setMessageRead(item.id)
+	const read = async (path, id, index) => {
 		List.value[index].status = 1
-		let parent_id = 0,
-			child_id = 0;
-		if (item.parent_id) {
-			parent_id = item.comment.parent_id
-			child_id = item.comment.id
-		} else {
-			parent_id = item.comment.id
-		}
-		if (item.target == "trend") {
-			goPage("trenddetail", `?id=${item.target_id}&parent_id=${parent_id}&child_id=${child_id}`)
-		}
+		await $http.common.readMessage(id)
+		goPage(path)
 	}
 	onMounted(() => {
 		getList()

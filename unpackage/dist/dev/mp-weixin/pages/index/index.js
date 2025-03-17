@@ -19,7 +19,8 @@ const _sfc_main = {
     };
     const communityRef = common_vendor.ref(null);
     const msgTotal = common_vendor.ref({
-      comment_total: 0,
+      msg_total: 0,
+      notice_total: 0,
       like_total: 0
     });
     const getUnread = async () => {
@@ -47,7 +48,7 @@ const _sfc_main = {
         g: tabbar.value === 3,
         h: common_vendor.o(tabbarChange),
         i: common_vendor.p({
-          msg: msgTotal.value.comment_total + msgTotal.value.like_total
+          msg: msgTotal.value.msg_total + msgTotal.value.like_total + msgTotal.value.notice_total
         })
       };
     };

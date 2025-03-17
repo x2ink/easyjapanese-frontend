@@ -15,7 +15,7 @@
 				<Self></Self>
 			</scroll-view>
 		</view>
-		<Tabbar :msg="msgTotal.comment_total+msgTotal.like_total" @change="tabbarChange"></Tabbar>
+		<Tabbar :msg="msgTotal.msg_total+msgTotal.like_total+msgTotal.notice_total" @change="tabbarChange"></Tabbar>
 	</view>
 </template>
 
@@ -43,7 +43,8 @@
 	}
 	const communityRef = ref(null)
 	const msgTotal = ref({
-		comment_total: 0,
+		msg_total: 0,
+		notice_total: 0,
 		like_total: 0
 	})
 	const getUnread = async () => {
@@ -67,22 +68,24 @@
 	:deep(.recitebtn) {
 		width: 100% !important;
 	}
+
 	:deep(.wd-tabs__nav-item) {
 		font-size: 16px;
 	}
 
 	:deep(.tabs) {
-		background-color: transparent!important;
-		width: 250px!important;
+		background-color: transparent !important;
+		width: 250px !important;
 	}
 
 	:deep(.wd-tabs) {
-		background-color: transparent!important;
+		background-color: transparent !important;
 	}
 
 	:deep(.wd-tabs__nav) {
-		background-color: transparent!important;
+		background-color: transparent !important;
 	}
+
 	:deep(.reviewbtn) {
 		color: #4D80F0 !important;
 	}

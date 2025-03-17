@@ -4,6 +4,27 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/msg/comment/comment",
+          "pathName": "pages/msg/comment/comment",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/msg/comment/comment",
+          "pathName": "pages/msg/comment/comment",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/msg/like/like",
+          "pathName": "pages/msg/like/like",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "trendpages/mytrend/mytrend",
           "pathName": "trendpages/mytrend/mytrend",
           "query": "",

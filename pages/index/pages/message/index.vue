@@ -1,34 +1,43 @@
 <template>
 	<view>
+		<view :style="{height:navBarHeight}"></view>
 		<view style="padding: 15px;">
-			<h3>消息</h3>
+			<h3>互动</h3>
 			<view class="zanandcomment">
-				<view class="_GCENTER" @click="goPage('likemsg')">
+				<view class="_GCENTER" @click="goPage('/pages/msg/like/like')">
 					<wd-badge :modelValue="msgTotal.like_total">
 						<image src="http://jp.x2.ink/images/twemoji--brown-heart.png" mode="aspectFit"></image>
 					</wd-badge>
 					<text>点赞</text>
 				</view>
-				<view class="_GCENTER" @click="goPage('commentmsg')">
-					<wd-badge :modelValue="msgTotal.comment_total">
+				<view class="_GCENTER" @click="goPage('/pages/msg/comment/comment')">
+					<wd-badge :modelValue="msgTotal.msg_total">
 						<image src="http://jp.x2.ink/images/twemoji--speech-balloon.png" mode="aspectFit"></image>
 					</wd-badge>
 					<text>评论</text>
 				</view>
 			</view>
-			<h3 style="margin-top: 15px;">通知</h3>
+			<h3 style="margin-top: 15px;">消息</h3>
 			<view class="noticelist">
-				<view class="noticeitem" @click="goPage('noticedetail','?id='+item.id)" v-for="item in List"
-					:key="item.id">
+				<view style="margin-top: 40px;" v-if="noResult">
+					<wd-status-tip :image-size="{
+				        height: 60,
+				        width: 60
+				}" image="http://jp.x2.ink/images/envelope.png" tip="还没有收到消息" />
+				</view>
+				<view class="noticeitem" @click="goPage(item.path)" v-for="(item,index) in List" :key="item.id">
 					<view class="noticetime">
 						{{dayjs().to(dayjs(item.created_at))}}
 					</view>
 					<view class="noticebody">
-						<view class="noticetitle">{{item.title}}</view>
+						<view class="noticetitle">
+							<wd-tag custom-class="space" type="danger">未读</wd-tag>
+							<text>{{item.title}}</text>
+						</view>
 						<view class="noticecontent">{{item.content}}</view>
-						<image v-if="item.icon!=''" style="width: 100%;border-radius: 4px;" :src="item.icon"
+						<image v-if="item.cover!=''" style="width: 100%;border-radius: 4px;" :src="item.cover"
 							mode="widthFix"></image>
-						<view class="noticetag">#{{item.tag}}</view>
+						<view class="noticetag">{{item.tag}}</view>
 					</view>
 				</view>
 			</view>
@@ -46,6 +55,9 @@
 		onLoad,
 		onReachBottom
 	} from '@dcloudio/uni-app'
+	import {
+		goPage
+	} from "@/utils/common.js"
 	import $http from "@/api/index.js"
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
@@ -65,21 +77,14 @@
 	const size = ref(10)
 	const total = ref(0)
 	const List = ref([])
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
+	const noResult = ref(false)
 	const getList = async () => {
-		const res = await $http.common.getNoticeList(page.value, size.value)
+		const res = await $http.common.getMessageList(page.value, size.value, "notice")
 		total.value = res.total
 		List.value = List.value.concat(res.data)
+		if (total.value == 0) {
+			noResult.value = true
+		}
 	}
 	onReachBottom(() => {
 		if (total.value > List.value.length) {
@@ -87,7 +92,11 @@
 			getList()
 		}
 	})
+	const navBarHeight = ref(0)
 	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
 		getList()
 	})
 </script>
@@ -202,7 +211,11 @@
 			background-color: white;
 			border-radius: 8px;
 
-			.noticetitle {}
+			.noticetitle {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+			}
 
 			.noticetag {
 				margin-top: 5px;

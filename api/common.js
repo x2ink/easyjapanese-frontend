@@ -15,22 +15,16 @@ export default {
 	feedback(data) {
 		return http.post(`feedback`, data)
 	},
-	getNoticeList(page, size) {
-		return http.get(`notice/list/${page}/${size}`)
+	getMessageList(page, size, type) {
+		return http.get(`message/${type}/${page}/${size}`)
 	},
-	getNoticeInfo(id) {
-		return http.get(`notice/info/${id}`)
+	readMessage(id) {
+		return http.get(`message/read/${id}`)
 	},
-	getLikeRecordList(page, size) {
-		return http.get(`likerecord/${page}/${size}`)
-	},
-	getMessageList(page, size) {
-		return http.get(`message/${page}/${size}`)
-	},
-	getUnread() {
+	getUnread(id) {
 		return http.get(`unread`)
 	},
-	setMessageRead(id) {
-		return http.get(`message/read/${id}`)
+	getMessageInfo(id) {
+		return http.get(`message/info/${id}`)
 	}
 }

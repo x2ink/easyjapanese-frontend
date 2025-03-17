@@ -98,6 +98,7 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+
 	const toast = useToast()
 	const noResult = ref(false)
 	const loadMoreText = computed(() => {
@@ -154,8 +155,6 @@
 			getTrendList(false, page.value, size.value, tabList.value[currentTab.value].id)
 		}
 	}
-
-
 	const List = ref([])
 	const getTrendList = async (refresh, page, size, section) => {
 		const res = await $http.trend.getTrendList(page, size, section)

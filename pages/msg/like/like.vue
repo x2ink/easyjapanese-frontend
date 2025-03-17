@@ -1,16 +1,25 @@
 <template>
 	<view>
-		<NavBar title="点赞" style="background-color: #f3f3f5;"></NavBar>
+		<Navbar title="点赞"></Navbar>
 		<!-- 点赞 -->
 		<view class="commentlist">
-			<view class="commentitem" @click="openDetail(item)" :key="item.id" v-for="item in List">
+			<view style="margin-top: 40px;" v-if="noResult">
+				<wd-status-tip :image-size="{
+			        height: 60,
+			        width: 60
+			}" image="http://jp.x2.ink/images/blank.png" tip="还没有小伙伴点赞" />
+			</view>
+			<view class="commentitem" @click="read(item.path,item.id,index)" :key="item.id"
+				v-for="(item,index) in List">
 				<view class="left">
-					<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
+					<wd-badge :is-dot="item.status==0">
+						<uv-avatar size="40" :src="item.from_user.avatar"></uv-avatar>
+					</wd-badge>
 				</view>
 				<view class="right">
 					<view class="nickname">{{item.from_user.nickname}}</view>
 					<view class="magtype">
-						<text>点赞了你的{{item.parent_id||item.child_id!=0?'评论':'动态'}}</text>
+						<text>{{item.title}}</text>
 						<text>{{dayjs().to(dayjs(item.created_at))}}</text>
 					</view>
 					<view class="tocontent">
@@ -33,20 +42,32 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
+	import {
+		goPage
+	} from "@/utils/common.js"
 	import {
 		onPageScroll,
 		onReachBottom
 	} from "@dcloudio/uni-app"
+	const read = async (path, id, index) => {
+		List.value[index].status = 1
+		await $http.common.readMessage(id)
+		goPage(path)
+	}
 	const page = ref(1)
 	const size = ref(10)
 	const total = ref(0)
 	const List = ref([])
+	const noResult = ref(false)
 	const getList = async () => {
-		const res = await $http.common.getLikeRecordList(page.value, size.value)
+		const res = await $http.common.getMessageList(page.value, size.value, "like")
 		total.value = res.total
 		List.value = List.value.concat(res.data)
+		if (total.value == 0) {
+			noResult.value = true
+		}
 	}
 	onMounted(() => {
 		getList()
@@ -57,36 +78,6 @@
 			getList()
 		}
 	})
-	const openDetail = (item) => {
-		let parent_id = 0,
-			child_id = 0;
-		if (item.target == "trend") {
-			if (item.parent_id || item.child_id != 0) {
-				if (item.parent_id) {
-					parent_id = item.parent_id
-					child_id = item.child_id
-				} else {
-					parent_id = item.child_id
-				}
-				goPage("trenddetail", `?id=${item.target_id}&parent_id=${parent_id}&child_id=${child_id}`)
-			} else {
-				goPage("trenddetail", `?id=${item.target_id}`)
-			}
-
-		}
-
-	}
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
 </script>
 
 <style scoped lang="scss">

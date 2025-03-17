@@ -28,8 +28,8 @@ if (!Math) {
   "./pages/word/mybookswordlist/mybookswordlist.js";
   "./pages/translate/translate.js";
   "./pages/noticedetail/noticedetail.js";
-  "./pages/likemsg/likemsg.js";
-  "./pages/commentmsg/commentmsg.js";
+  "./pages/msg/like/like.js";
+  "./pages/msg/comment/comment.js";
   "./pages/ranking/ranking.js";
   "./pages/repwd/repwd.js";
   "./pages/word/followread/followread.js";

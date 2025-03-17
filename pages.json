@@ -158,13 +158,13 @@
 			}
 		},
 		{
-			"path": "pages/likemsg/likemsg",
+			"path": "pages/msg/like/like",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/commentmsg/commentmsg",
+			"path": "pages/msg/comment/comment",
 			"style": {
 				"navigationStyle": "custom"
 			}

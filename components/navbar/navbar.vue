@@ -2,7 +2,7 @@
 	<view class="navwrap">
 		<view :style="{height:navBarHeight}"></view>
 		<view class="navbar">
-			<view class="left" @click="back">
+			<view v-if="showleft" class="left" @click="back">
 				<wd-icon name="thin-arrow-left" :color="color" size="18px"></wd-icon>
 				<slot name="left"></slot>
 			</view>
@@ -32,6 +32,10 @@
 		})
 	}
 	const props = defineProps({
+		showleft: {
+			default: true,
+			type: Boolean
+		},
 		color: {
 			default: '#000000',
 			type: String
