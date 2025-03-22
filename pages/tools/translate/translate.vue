@@ -1,17 +1,19 @@
 <template>
-	<NavBar :title="ai?'AI翻译':'标准翻译'">
-		<template #right>
-			<view @click="ai=!ai" class="swap">
-				<wd-icon name="swap" size="18px"></wd-icon>
-				<text>{{ai?'标准翻译':'AI翻译'}}</text>
-			</view>
+	<Navbar>
+		<template #left>
+			<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
+				<view class="search-type">
+					<text>{{ current }}</text>
+					<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
+				</view>
+			</wd-popover>
 		</template>
-	</NavBar>
+	</Navbar>
 	<view v-if="ai" style="padding-bottom: 40px;">
-		<wd-textarea style="margin: 0 15px;border-radius: 8px;" v-model="value" clearable show-word-limit
-			placeholder="输入中文或日文" :maxlength="400" />
-		<view style="padding:10px;margin-top: 15px;">
-			<wd-button @click="aisubmit()" style="width: 100%;">翻译</wd-button>
+		<wd-textarea custom-class="textarea" v-model="value" clearable show-word-limit placeholder="输入中文或日文"
+			:maxlength="400" />
+		<view style="padding:15px;">
+			<wd-button @click="aisubmit()" block>翻译</wd-button>
 		</view>
 		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
 		<view class="result">
@@ -34,16 +36,16 @@
 		</view>
 	</view>
 	<view v-else style="padding-bottom: 40px;">
-		<wd-textarea style="margin: 0 15px;border-radius: 8px;" v-model="value" clearable show-word-limit
-			placeholder="输入中文或日文" :maxlength="400" />
+		<wd-textarea custom-class="textarea" v-model="value" clearable show-word-limit placeholder="输入中文或日文"
+			:maxlength="400" />
 		<view style="background-color: white;padding: 10px;margin: 15px;border-radius: 8px;">
 			<wd-radio-group v-model="type" shape="button">
 				<wd-radio value="中译日">中译日</wd-radio>
 				<wd-radio value="日译中">日译中</wd-radio>
 			</wd-radio-group>
 		</view>
-		<view style="padding:10px;">
-			<wd-button @click="submit()" style="width: 100%;">翻译</wd-button>
+		<view style="padding:0 15px">
+			<wd-button @click="submit()" block>翻译</wd-button>
 		</view>
 		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
 		<view class="result">
@@ -79,10 +81,27 @@
 		watch
 	} from 'vue'
 	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	import sha256 from 'crypto-js/sha256';
+	const current = ref('标准翻译')
+	const menu = ref([{
+			content: '标准翻译'
+		},
+		{
+			content: 'AI翻译'
+		}
+	])
+	const changeSearchType = (e) => {
+		current.value = e.item.content
+		if (current.value == "AI翻译") {
+			ai.value = true
+		} else {
+			ai.value = false
+		}
+	}
 	const ai = ref(false)
 	watch(ai, (newVal, oldVal) => {
 		result.value = ""
@@ -98,7 +117,7 @@
 		});
 	}
 	const toast = useToast()
-	const value = ref("")
+	const value = ref("我是中国人")
 	const loading = ref(false)
 	const result = ref("");
 	const type = ref("中译日")
@@ -132,7 +151,9 @@
 		let curtime = Math.round(new Date().getTime() / 1000);
 		let query = value.value;
 		let str1 = appKey + truncate(query) + salt + curtime + key;
-		var sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex);
+		console.log(sha256);
+		var sign = sha256(str1).toString();
+		console.log(sign);
 		uni.request({
 			url: 'https://openapi.youdao.com/api',
 			method: "GET",
@@ -146,7 +167,6 @@
 				curtime: curtime,
 			},
 			success: function(res) {
-				console.log(res.data);
 				result.value = res.data.translation[0]
 				loading.value = false
 			}
@@ -224,6 +244,11 @@
 		text {
 			font-size: 14px;
 		}
+	}
+
+	:deep(.textarea) {
+		margin: 0 15px;
+		border-radius: 8px;
 	}
 
 	.translate {

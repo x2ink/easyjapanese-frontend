@@ -9,6 +9,9 @@ export default {
 	getTrendList(page, size, section) {
 		return http.get(`trend/${section}/${page}/${size}`)
 	},
+	searchTrend(page, size,val) {
+		return http.get(`trend/search/${page}/${size}/${val}`)
+	},
 	getTrendInfo(id) {
 		return http.get(`trend/info/${id}`)
 	},

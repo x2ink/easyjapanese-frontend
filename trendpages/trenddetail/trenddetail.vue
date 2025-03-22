@@ -3,41 +3,40 @@
 		<Navbar title="动态详情">
 		</Navbar>
 		<view class="item">
-			<uv-avatar size="40" :src="info.user.avatar"></uv-avatar>
-			<view>
-				<view class="userinfo">
+			<view class="userinfo">
+				<view>
+					<uv-avatar size="40" :src="info.user.avatar"></uv-avatar>
+					<text>{{info.user.nickname}}</text>
+					<wd-tag v-if="info.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
+					<wd-tag v-else-if="info.user.role=='普通'" custom-class="space" type="success">普通</wd-tag>
+					<wd-tag v-else-if="info.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
+					<wd-tag v-else-if="info.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+				</view>
+				<wd-icon name="more" @click="moreShow=true" size="20px"></wd-icon>
+			</view>
+			<view class="body">
+				<rich-text :nodes="info.content.replace(/\n/g, '<br>')" user-select></rich-text>
+				<view class="images">
+					<view @click="previewImage(image,info.images)" class="image" v-for="image in info.images"
+						:key="image">
+						<uv-image mode="aspectFill" radius="4px" width="100%" height="100%" :src="image"></uv-image>
+					</view>
+				</view>
+			</view>
+			<view class="footer">
+				<p class="left">{{dayjs().to(dayjs(info.created_at))}}</p>
+				<view class="right">
 					<view>
-						<text>{{info.user.nickname}}</text>
-						<wd-tag v-if="info.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
-						<wd-tag v-else-if="info.user.role=='普通'" custom-class="space" type="success">普通</wd-tag>
-						<wd-tag v-else-if="info.user.role=='官方'" custom-class="space" type="primary">官方</wd-tag>
-						<wd-tag v-else-if="info.user.role=='会员'" custom-class="space" type="danger">会员</wd-tag>
+						<wd-icon name="heart" color="#999" size="18px"></wd-icon>
+						<text>{{info.like}}</text>
 					</view>
-					<wd-icon name="more" @click="moreShow=true" size="20px"></wd-icon>
-				</view>
-				<view class="body">
-					<p class="content" v-html="info.content.replace(/\n/g,'<br>')"></p>
-					<view class="images">
-						<view class="image" v-for="image in info.images" :key="image">
-							<uv-image mode="aspectFill" radius="4px" width="100%" height="100%" :src="image"></uv-image>
-						</view>
+					<view>
+						<wd-icon name="browse" color="#999" size="18px"></wd-icon>
+						<text>{{info.browse}}</text>
 					</view>
-				</view>
-				<view class="footer">
-					<p class="left">{{dayjs().to(dayjs(info.created_at))}}</p>
-					<view class="right">
-						<view>
-							<wd-icon name="heart" color="#999" size="18px"></wd-icon>
-							<text>{{info.like}}</text>
-						</view>
-						<view>
-							<wd-icon name="browse" color="#999" size="18px"></wd-icon>
-							<text>{{info.browse}}</text>
-						</view>
-						<view>
-							<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
-							<text>{{count}}</text>
-						</view>
+					<view>
+						<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
+						<text>{{count}}</text>
 					</view>
 				</view>
 			</view>
@@ -70,8 +69,8 @@
 							<view class="body">
 								<view v-html="item.content.replace(/\n/g,'<br>')"></view>
 							</view>
-							<image v-for="image in item.images" :key="image" class="image" :src="image"
-								mode="aspectFill">
+							<image @click="previewImage(image,item.images)" v-for="image in item.images" :key="image"
+								class="image" :src="image" mode="aspectFill">
 							</image>
 						</view>
 						<view class="childcommont" v-for="(child,index1) in item.children" :key="child.id">
@@ -92,10 +91,10 @@
 								<view
 									@click="replyUser(item.id,child.from_user,child.id,true,false,child.content,false)">
 									<view class="childcontent">
-										<text v-if="child.to_user.id!=item.from_user.id">回复</text>
-										<text v-if="child.to_user.id!=item.from_user.id"
+										<text v-if="child.to_comment!=item.id">回复</text>
+										<text v-if="child.to_comment!=item.id"
 											class="text">{{child.to_user.nickname}}</text><text
-											v-if="child.to_user.id!=item.from_user.id">：</text>
+											v-if="child.to_comment!=item.id">：</text>
 										<view v-html="child.content.replace(/\n/g,'<br>')"></view>
 									</view>
 									<image v-for="image in child.images" :key="image" class="image" :src="image"
@@ -197,6 +196,12 @@
 		goPage,
 		copy
 	} from "@/utils/common.js"
+	const previewImage = (img, imgs) => {
+		wx.previewImage({
+			current: img,
+			urls: imgs
+		})
+	}
 	const select = async (e) => {
 		if (e.item.name == "删除动态") {
 			message.alert({
@@ -204,6 +209,7 @@
 				title: '温馨提示'
 			}).then(async () => {
 				const res = await $http.trend.deleteTrend(info.value.id)
+				uni.$emit("delTrend", true);
 				uni.navigateBack({
 					delta: 1
 				})
@@ -374,6 +380,12 @@
 		page: 1,
 		size: 10
 	})
+	onReachBottom(() => {
+		if (count.value > List.value.length) {
+			++commentParams.value.page
+			getList(false)
+		}
+	})
 	const refresh = () => {
 		oneComment.value.parent_id = 0
 		commentParams.value = {
@@ -528,6 +540,7 @@
 	}
 
 	.fixed {
+		z-index: 9;
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -593,7 +606,7 @@
 	}
 
 	.commentwrap {
-		margin: 10px;
+		margin: 15px;
 		border-radius: 8px;
 		background-color: white;
 
@@ -643,6 +656,8 @@
 
 
 							.childcontent {
+								display: flex;
+								flex-wrap: wrap;
 								padding: 5px 5px 5px 0;
 
 								.text {
@@ -699,86 +714,82 @@
 
 	.item {
 		background-color: white;
-		padding: 10px 15px;
-		margin: 0 10px;
+		padding: 15px;
+		margin: 0 15px;
 		border-radius: 8px;
 		display: flex;
+		flex-direction: column;
 		gap: 10px;
 
-		>view {
-			flex: 1;
+		.footer {
+			justify-content: space-between;
+			display: flex;
+			align-items: center;
 
-			.footer {
-				justify-content: space-between;
+			.right {
 				display: flex;
 				align-items: center;
+				gap: 10px;
 
-				.right {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-
-					text {
-						font-size: $uni-font-size-sm;
-						color: $uni-text-color-grey;
-					}
-
-					>view {
-						display: flex;
-						align-items: center;
-						gap: 5px;
-					}
-				}
-
-				.left {
+				text {
 					font-size: $uni-font-size-sm;
 					color: $uni-text-color-grey;
 				}
-			}
-
-			.body {
-
-				.images {
-					display: grid;
-					grid-template-columns: repeat(3, 1fr);
-					gap: 10px;
-					margin-bottom: 15px;
-
-					.image {
-						object-fit: cover;
-						width: 100%;
-						aspect-ratio: 1;
-						border-radius: $uni-border-radius-base;
-					}
-				}
-
-				.content {
-					margin: 5px 0 10px 0;
-					font-size: $uni-font-size-base;
-				}
-			}
-
-			.userinfo {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-
-
 
 				>view {
 					display: flex;
 					align-items: center;
 					gap: 5px;
+				}
+			}
 
-					text {
-						&:nth-of-type(1) {
-							font-size: $uni-font-size-lg;
-						}
+			.left {
+				font-size: $uni-font-size-sm;
+				color: $uni-text-color-grey;
+			}
+		}
 
-						&:nth-of-type(2) {
-							font-size: $uni-font-size-sm;
-							color: $uni-text-color-grey;
-						}
+		.body {
+
+			.images {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 10px;
+				margin-bottom: 15px;
+				margin-top: 10px;
+
+				.image {
+					object-fit: cover;
+					width: 100%;
+					aspect-ratio: 1;
+					border-radius: $uni-border-radius-base;
+				}
+			}
+
+			.content {
+				margin: 5px 0 10px 0;
+				font-size: $uni-font-size-base;
+			}
+		}
+
+		.userinfo {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			>view {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+
+				text {
+					&:nth-of-type(1) {
+						font-size: $uni-font-size-lg;
+					}
+
+					&:nth-of-type(2) {
+						font-size: $uni-font-size-sm;
+						color: $uni-text-color-grey;
 					}
 				}
 			}

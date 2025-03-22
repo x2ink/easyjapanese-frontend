@@ -78,6 +78,9 @@
 				top: 50%;
 				transform: translateY(-50%);
 				left: 10px;
+				display:flex;
+				gap: 5px;
+				align-items: center;
 			}
 
 			.right {

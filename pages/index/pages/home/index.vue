@@ -185,25 +185,21 @@
 	const toolList = ref([{
 		name: '文本翻译',
 		image: 'http://jp.x2.ink/images/duo-icons--g-translate.png',
-		path: "translate"
+		path: "/pages/tools/translate/translate"
 	}, {
 		name: '语法学习',
 		image: 'http://jp.x2.ink/images/duo-icons--book.png',
-		path: 'grammar'
+		path: "/pages/tools/grammar/grammar"
 	}, {
 		name: '五十音图',
 		image: 'http://jp.x2.ink/images/duo-icons--dashboard.png',
-		path: 'fiftysounds'
+		path: '/pages/tools/fiftysounds/fiftysounds'
 	}, {
 		name: '动词变形',
 		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
-		path: "verbtransfiguration"
+		path: "/pages/tools/verbtransfiguration/verbtransfiguration"
 	}, {
-		name: '动词变形',
-		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
-		path: "verbtransfiguration"
-	}, {
-		name: '动词变形',
+		name: '常用单词',
 		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
 		path: "verbtransfiguration"
 	}])
@@ -221,7 +217,7 @@
 		height: 45px;
 		display: flex;
 		align-items: center;
-		padding: 0 10px;
+		padding: 0 15px;
 
 		text {
 			&:nth-of-type(1) {
@@ -239,7 +235,7 @@
 		height: 40px;
 		background: #fff;
 		padding: 5px 15px;
-		margin: 0 10px 10px 10px;
+		margin: 0 15px 15px 15px;
 		font-size: $uni-font-size-lg;
 		box-sizing: border-box;
 		border-radius: 40px;
@@ -269,11 +265,11 @@
 				flex-direction: column;
 
 				&:first-child {
-					margin-left: 10px;
+					margin-left: 15px;
 				}
 
 				&:last-child {
-					margin-right: 10px;
+					margin-right: 15px;
 				}
 
 				&__image {
@@ -297,7 +293,7 @@
 
 	.recite {
 		padding: 15px;
-		margin: 0 10px 10px 10px;
+		margin: 0 15px 15px 15px;
 		border-radius: 8px;
 		background-color: white;
 
@@ -369,75 +365,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	.maintool {
-		display: flex;
-		align-items: center;
-		margin: 10px;
-		gap: 15px;
-
-		>view {
-			position: relative;
-			border-radius: $uni-border-radius-base;
-			flex: 1;
-			padding: 15px;
-			background-size: 60%;
-			background-position: center right;
-			background-repeat: no-repeat;
-			background-color: white;
-
-			image {
-				position: absolute;
-				right: 15px;
-				top: 50%;
-				transform: translateY(-50%);
-				width: 50px;
-				height: 50px;
-			}
-
-			p {
-				&:nth-of-type(1) {
-					font-size: $uni-font-size-lg;
-					// font-weight: bold;
-				}
-
-				&:nth-of-type(2) {
-					margin-top: 3px;
-					color: #999;
-					font-size: $uni-font-size-sm;
-				}
-			}
-
-			&:nth-of-type(1) {
-				// background: linear-gradient(135deg, #fa4350, #ffa39e);
-				// background-image: url('http://jp.x2.ink/images/ai.png');
-			}
-
-			&:nth-of-type(2) {
-				// background: linear-gradient(135deg, #4D80F0, #B0C4DE);
-				// background-image: url('http://jp.x2.ink/images/yufa.png');
-			}
-		}
-	}
-
-
 	.smalltitle {
-		margin: 0 10px;
+		margin: 0 15px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

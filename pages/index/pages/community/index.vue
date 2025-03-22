@@ -10,65 +10,20 @@
 				</block>
 			</wd-tabs>
 		</view>
-		<view @click="goPage('search')" class="search">
+		<view @click="goPage('/trendpages/search/search')" class="search">
 			<wd-icon name="search" size="18px" color="#979797"></wd-icon>
 			<text>搜索动态内容</text>
 		</view>
-		<view style="position: relative;">
+		<view style="position: relative;padding-top: 15px;">
 			<view v-if="noResult">
-				<view style="margin-top: 40px;" v-if="noResult">
+				<view style="margin-top: 25px;" v-if="noResult">
 					<wd-status-tip :image-size="{
 				        height: 60,
 				        width: 60
 				}" image="http://jp.x2.ink/images/blank.png" tip="还没有动态" />
 				</view>
 			</view>
-			<view v-else class="list">
-				<view @click="goPage('/trendpages/trenddetail/trenddetail',{id:item.id})" class="item" v-for="item in List" :key="item.id">
-					<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
-					<view style="flex: 1;">
-						<view class="head">
-							<view class="userinfo">
-								<p>{{item.user.nickname}}</p>
-								<view style="display: flex;align-items: center;">
-									<wd-tag v-if="item.user.role=='嘉宾'" custom-class="space">嘉宾</wd-tag>
-									<wd-tag v-else-if="item.user.role=='官方'" custom-class="space"
-										type="primary">官方</wd-tag>
-									<wd-tag v-else-if="item.user.role=='会员'" custom-class="space"
-										type="danger">会员</wd-tag>
-								</view>
-							</view>
-						</view>
-						<view class="body">
-
-							<p class="content" v-html="item.content.replace(/\n/g,'<br>')"></p>
-							<view class="images">
-								<view class="image" v-for="image in item.images" :key="image">
-									<uv-image mode="aspectFill" radius="4px" width="100%" height="100%"
-										:src="image"></uv-image>
-								</view>
-							</view>
-						</view>
-						<view class="footer">
-							<p class="left">{{dayjs().to(dayjs(item.created_at))}}</p>
-							<view class="right">
-								<view>
-									<wd-icon name="heart" color="#999" size="18px"></wd-icon>
-									<text>{{item.like}}</text>
-								</view>
-								<view>
-									<wd-icon name="browse" color="#999" size="18px"></wd-icon>
-									<text>{{item.browse}}</text>
-								</view>
-								<view>
-									<wd-icon name="chat1" color="#999" size="18px"></wd-icon>
-									<text>{{item.comment}}</text>
-								</view>
-							</view>
-						</view>
-					</view>
-				</view>
-			</view>
+			<TrendList v-else :list="List"></TrendList>
 			<wd-loadmore v-if="List.length>0&&loadMoreShow" custom-class="loadmore" :state="loadMoreText" />
 		</view>
 		<wd-fab type="warning" position="right-bottom">
@@ -87,18 +42,12 @@
 		ref,
 		watch,
 		onMounted,
-		getCurrentInstance,
 		computed
 	} from 'vue'
-	import dayjs from 'dayjs'
-	import relativeTime from 'dayjs/plugin/relativeTime'
-	import 'dayjs/locale/zh'
-	dayjs.locale('zh')
-	dayjs.extend(relativeTime)
+	import TrendList from '@/components/trendlist/trendlist.vue'
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-
 	const toast = useToast()
 	const noResult = ref(false)
 	const loadMoreText = computed(() => {
@@ -109,9 +58,7 @@
 		}
 	})
 	import {
-		onShow,
-		onLoad,
-		onReachBottom
+		onShow
 	} from '@dcloudio/uni-app'
 	import $http from "@/api/index.js"
 	import {
@@ -121,6 +68,12 @@
 		uni.$once("addTrend", (data) => {
 			if (data) {
 				toast.success(`发布成功`)
+				refresh()
+			}
+		});
+		uni.$once("delTrend", (data) => {
+			if (data) {
+				toast.success(`删除成功`)
 				refresh()
 			}
 		});
@@ -175,13 +128,6 @@
 			noResult.value = false
 		}
 	}
-	const instance = getCurrentInstance();
-	const query = uni.createSelectorQuery().in(instance.proxy);
-	const scroll = (e) => {
-		query.select('.wd-sticky__container').boundingClientRect(rect => {
-			console.log(rect.top);
-		}).exec();
-	}
 	const navBarHeight = ref(0)
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
@@ -229,110 +175,6 @@
 
 		>view {
 			margin: 0;
-		}
-	}
-
-	.list {
-		background-color: #f5f5f5;
-		padding: 0 15px;
-		margin-top: 15px;
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-
-		.item {
-			display: flex;
-			background-color: white;
-			padding: 15px;
-			gap: 15px;
-			border-radius: 8px;
-
-			.footer {
-				justify-content: space-between;
-				display: flex;
-				align-items: center;
-
-				.right {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-
-					text {
-						font-size: $uni-font-size-sm;
-						color: $uni-text-color-grey;
-					}
-
-					>view {
-						display: flex;
-						align-items: center;
-						gap: 5px;
-					}
-				}
-
-				.left {
-					font-size: $uni-font-size-sm;
-					color: $uni-text-color-grey;
-				}
-			}
-
-			.body {
-
-
-				.images {
-					display: grid;
-					grid-template-columns: repeat(3, 1fr);
-					gap: 10px;
-					margin-bottom: 5px;
-
-					.image {
-						object-fit: cover;
-						width: 100%;
-						aspect-ratio: 1;
-						border-radius: $uni-border-radius-base;
-					}
-				}
-
-				.content {
-					display: -webkit-box;
-					-webkit-box-orient: vertical;
-					-webkit-line-clamp: 4;
-					/* 显示最多4行 */
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: normal;
-					/* 允许换行 */
-					margin: 5px 0;
-					font-size: $uni-font-size-base;
-				}
-			}
-
-			.head {
-				display: flex;
-				gap: 10px;
-				position: relative;
-
-				.btn {
-					position: absolute;
-					right: 0;
-				}
-
-				.userinfo {
-					display: flex;
-					gap: 5px;
-					// align-items: center;
-
-					p {
-						&:nth-of-type(1) {
-							font-size: 15px;
-						}
-
-						&:nth-of-type(2) {
-							font-size: 14px;
-							color: $uni-text-color-grey;
-						}
-					}
-				}
-			}
 		}
 	}
 </style>

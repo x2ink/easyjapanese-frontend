@@ -5,15 +5,24 @@ export const test_searchrecordModule = defineStore('test_searchrecord', {
 	unistorage: true, // 是否持久化
 	state: () => {
 		return {
-			list: []
+			wordlist: [],
+			trendlist: []
 		}
 	},
 	actions: {
-		push(val) {
-			this.list.unshift(val)
+		push(val, type) {
+			if (type == 'word') {
+				this.wordlist.unshift(val)
+			} else {
+				this.trendlist.unshift(val)
+			}
 		},
-		clear() {
-			this.list = []
+		clear(type) {
+			if (type == 'word') {
+				this.wordlist = []
+			} else {
+				this.trendlist = []
+			}
 		}
 	}
 })

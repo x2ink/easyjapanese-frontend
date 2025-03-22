@@ -8,8 +8,9 @@
 					<view v-if="!userInfo.avatar!=''" class="img _GCENTER">
 						<wd-icon name="fill-camera" size="25" custom-class="img-icon"></wd-icon>
 					</view>
-					<wd-img v-if="userInfo.avatar!=''" round width="80px" height="80px" :src="userInfo.avatar"
-						mode="aspectFit" custom-class="profile-img" />
+					<uv-avatar v-if="userInfo.avatar!=''" size="80" :src="userInfo.avatar"></uv-avatar>
+				<!-- 	<wd-img v-if="userInfo.avatar!=''" round width="80px" height="80px" :src="userInfo.avatar"
+						mode="aspectFit" custom-class="profile-img" /> -->
 				</view>
 			</view>
 			<!-- 分割线 -->

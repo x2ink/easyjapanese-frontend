@@ -12,22 +12,20 @@
     "pages/writefrommemory/writefrommemory",
     "pages/todaylearn/todaylearn",
     "pages/review/review",
-    "pages/articledetail/articledetail",
     "pages/todayreview/todayreview",
-    "pages/verbtransfiguration/verbtransfiguration",
-    "pages/fiftysounds/fiftysounds",
-    "pages/grammar/grammar",
-    "pages/grammardetail/grammardetail",
-    "pages/radiostation/radiostation",
-    "pages/player/player",
-    "pages/commonwords/commonwords",
+    "pages/tools/verbtransfiguration/verbtransfiguration",
+    "pages/tools/fiftysounds/fiftysounds",
+    "pages/tools/grammar/grammar",
+    "pages/tools/grammardetail/grammardetail",
+    "pages/tools/radiostation/radiostation",
+    "pages/tools/player/player",
+    "pages/tools/commonwords/commonwords",
     "pages/word/mybooks/mybooks",
     "pages/word/mybookswordlist/mybookswordlist",
-    "pages/translate/translate",
+    "pages/tools/translate/translate",
     "pages/noticedetail/noticedetail",
     "pages/msg/like/like",
     "pages/msg/comment/comment",
-    "pages/ranking/ranking",
     "pages/repwd/repwd",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
@@ -39,7 +37,8 @@
       "pages": [
         "addtrend/addtrend",
         "trenddetail/trenddetail",
-        "mytrend/mytrend"
+        "mytrend/mytrend",
+        "search/search"
       ]
     },
     {
@@ -51,6 +50,7 @@
     {
       "root": "otherpages",
       "pages": [
+        "ranking/ranking",
         "browse/browse",
         "about/about",
         "share/share",

@@ -1,21 +1,21 @@
 <template>
 	<view>
-		<NavBar title="语法学习" style="background-color:#F3F3F5;">
-			<template #bottom>
-				<wd-tabs slidable custom-class="tabs" v-model="current">
-					<block v-for="(item,index) in tabList" :key="item">
-						<wd-tab :title="item.name">
-						</wd-tab>
-					</block>
-				</wd-tabs>
+		<Navbar>
+			<template #left>
+				<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
+					<view class="search-type">
+						<text>{{ current }}语法</text>
+						<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
+					</view>
+				</wd-popover>
 			</template>
-			<template #right>
-				<!-- <SearchInput @change="inputChange"></SearchInput> -->
-			</template>
-		</NavBar>
+		</Navbar>
+		<SearchInput @confirm="search" @change="inputChange">
+		</SearchInput>
 		<view class="list">
-			<view class="item" @click="goPage('grammardetail','?id='+item.id)" :key="item.id" v-for="item in grammars">
-				<wd-text style="flex: 1;" size="14px" :lines="1" color="#000" :text="item.grammar"></wd-text>
+			<view class="item" @click="goPage('/pages/tools/grammardetail/grammardetail',{id:item.id})" :key="item.id"
+				v-for="item in grammars">
+				<wd-text style="flex: 1;" size="16px" :lines="1" color="#000" :text="item.grammar"></wd-text>
 				<wd-tag custom-class="space" color="#0083ff" bg-color="#d0e8ff"
 					v-if="item.level=='N1'">{{item.level}}</wd-tag>
 				<wd-tag custom-class="space" color="#57D09B" bg-color="#D0F4E5" v-else-if="item.level=='N2'"
@@ -39,39 +39,39 @@
 		computed
 	} from 'vue'
 	import $http from "@/api/index.js"
-	import NavBar from '@/components/navbar.vue'
-	// import SearchInput from '@/components/searchinput.vue'
-	const tabList = ref([{
-		name: 'N1'
-	}, {
-		name: 'N2'
-	}, {
-		name: 'N3'
-	}, {
-		name: 'N4'
-	}, {
-		name: 'N5'
-	}])
-	const current = ref(0)
+	import Navbar from '@/components/navbar/navbar.vue';
+	import SearchInput from '@/components/searchinput/searchinput.vue'
+	import {
+		goPage
+	} from "@/utils/common.js"
+	const current = ref('N1')
+	const changeSearchType = (e) => {
+		current.value = e.item.content
+	}
+	const menu = ref([{
+			content: 'N1'
+		},
+		{
+			content: 'N2'
+		},
+		{
+			content: 'N3'
+		},
+		{
+			content: 'N4'
+		},
+		{
+			content: 'N5'
+		}
+	])
 	const List = ref([])
 	const value = ref('')
 	const inputChange = (e) => {
 		value.value = e
 	}
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
-		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
-		}
-	}
 	const grammars = computed(() => {
 		if (value.value == "" || value.value.length == 0) {
-			return List.value.filter(item => item.level == tabList.value[current.value].name)
+			return List.value.filter(item => item.level == current.value)
 		} else {
 			return List.value.filter(item => item.grammar.indexOf(value.value) >= 0)
 		}
@@ -87,16 +87,13 @@
 </script>
 
 <style scoped lang="scss">
-	:deep(.wd-tabs__nav) {
-		height: 30px;
-	}
-
-	:deep(.wd-tabs__nav-item) {
-		height: 30px;
-	}
-
-	:deep(.wd-tabs__line) {
-		bottom: 0;
+	:deep(.search) {
+		flex: 1;
+		background-color: #fff;
+		padding: 7px 10px;
+		box-sizing: border-box;
+		border-radius: 38px;
+		margin: 0 15px;
 	}
 
 	:deep(.space) {
@@ -105,35 +102,22 @@
 		border-radius: 4px;
 	}
 
-	:deep(.wd-tabs) {
-		background-color: transparent;
-	}
-
-	:deep(.wd-tabs__nav) {
-		background-color: transparent;
-	}
-
 	.list {
-		padding: 0 10px;
-		margin-top: 10px;
+		padding: 0 15px 15px 15px;
+		margin-top: 15px;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 15px;
 
 		.item {
 			border-radius: 8px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			height: 50px;
+			height: 60px;
 			background-color: white;
-			padding: 0 10px;
+			padding: 0 15px;
 			box-sizing: border-box;
 		}
-	}
-
-	:deep(.search) {
-		width: 200px;
-		padding-right: 0 !important;
 	}
 </style>

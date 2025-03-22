@@ -7,18 +7,21 @@
 		</view>
 		<WordDetail @openBook="bookShow=true" :jcinfo="jcinfo" :cjinfo="cjinfo" :type="type" v-show="!loading">
 		</WordDetail>
-		<wd-toast />
+		<wd-toast selector="detail"/>
 	</page-meta>
 	<!-- 生词本 -->
-	<wd-popup v-model="bookShow" :z-index="99" position="bottom" :safe-area-inset-bottom="true"
-		custom-style="border-radius:16px 16px 0 0;">
-		<view class="books">
-			<text>生词本</text>
-			<scroll-view class="scroll-view_H" scroll-x="true">
-				<BookList :wordId="id" type="select"></BookList>
-			</scroll-view>
-		</view>
-	</wd-popup>
+	<view>
+		<wd-popup v-model="bookShow" :z-index="99" position="bottom" :safe-area-inset-bottom="true"
+			custom-style="border-radius:16px 16px 0 0;">
+			<view class="books">
+				<text>生词本</text>
+				<scroll-view class="scroll-view_H" scroll-y="true">
+					<BookList  @add="bookShow=false;addbook.show = true;" ref="booklist" :wordId="id" type="select"></BookList>
+				</scroll-view>
+			</view>
+		</wd-popup>
+		<AddBook @success="booklist.getList();bookShow=true;" ref="addbook"></AddBook>
+	</view>
 </template>
 
 <script setup>
@@ -35,11 +38,14 @@
 	import WordList from "@/components/wordlist/wordlist.vue"
 	import WordDetail from "@/components/worddetail/worddetail.vue"
 	import BookList from '@/components/booklist/booklist.vue';
+	import AddBook from '@/components/addbook/addbook.vue'
+	const addbook = ref(null)
+	const booklist = ref(null)
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const bookShow = ref(false)
-	const toast = useToast()
+	const toast = useToast('detail')
 	const type = ref('jc')
 	const loading = ref(true)
 	const jcinfo = ref({

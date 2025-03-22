@@ -1,7 +1,7 @@
 <template>
-	<view style="min-height: 100vh;background-color: #F3F3F5;">
-		<NavBar title="语法详情" style="background-color: #F3F3F5;">
-		</NavBar>
+	<view>
+		<Navbar title="语法详情">
+		</Navbar>
 		<view style="padding: 0 10px 20px 10px; display: flex;flex-direction: column;gap: 10px;">
 			<view class="head">
 				<view class="word">
@@ -66,7 +66,7 @@
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	const data = ref({})
 	const getInfo = async (id) => {

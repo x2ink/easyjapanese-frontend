@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<Navbar title="发布动态"></Navbar>
-		<wd-textarea custom-class="textarea" v-model="formData.content" clearable show-word-limit placeholder="请发表你的想法"
+		<wd-textarea adjust-position custom-class="textarea" v-model="formData.content" clearable show-word-limit placeholder="请发表你的想法"
 			:maxlength="800" />
-		<view style="background-color: white;padding: 10px;margin:10px;border-radius: 8px;">
+		<view style="background-color: white;padding: 10px;margin:15px;border-radius: 8px;">
 			<wd-radio-group v-model="formData.section_id" shape="button">
 				<wd-radio v-for="item in section" :key="item.id" :value="item.id">{{item.name}}</wd-radio>
 			</wd-radio-group>
@@ -13,7 +13,7 @@
 			show-limit-num image-mode="aspectFill" multiple :header="header"
 			:action="`${http.baseUrl}upload`"></wd-upload>
 
-		<view style="padding:0 10px;margin-top: 15px;">
+		<view style="padding:0 15px;margin-top: 15px;">
 			<wd-button @click="submit()" block>发布</wd-button>
 		</view>
 		<wd-toast />
@@ -115,12 +115,12 @@
 
 <style scoped lang="scss">
 	:deep(.textarea) {
-		margin: 0 10px;
+		margin: 0 15px;
 		border-radius: 8px;
 	}
 
 	:deep(.updload) {
-		margin: 15px 10px 0 10px;
+		margin: 15px;
 	}
 
 	:deep(.wd-upload__preview) {

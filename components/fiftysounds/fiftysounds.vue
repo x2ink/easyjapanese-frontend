@@ -1,25 +1,27 @@
 <template>
 	<view style="background-color: white;margin:0 15px;border-radius: 8px;padding: 10px;">
-		<h3>{{title}}</h3>
+		<view class="bigtitle">{{title}}</view>
 		<view class="unvoicedsound">
 			<view class="kana" v-for="[key, value] in data.entries()" :key="key">
 				<view class="head _GCENTER">{{key}}</view>
 				<view @click="openPopup(item)" :style="{aspectRatio: key==''?2/1:1}" class="item _GCENTER"
 					v-for="item in value" :key="item">
-					<image v-if="key!=''" :src="`http://jp.x2.ink/images/${type}/${item}.png`" mode="aspectFit"></image>
+					<image v-if="key!=''&&item!=''" :src="`http://jp.x2.ink/images/${type}/${item}.png`"
+						mode="aspectFit"></image>
 					<text class="head" v-else>{{item}}</text>
 				</view>
 			</view>
 		</view>
 		<wd-popup :z-index="999" v-model="showDetail" custom-style="border-radius:32rpx;">
 			<view class="detail">
-				<view class="head">
-					<text>罗马音</text>
+				<view class="head" @click="playAudio()">
+					<text style="color: #5880F2;">罗马音</text>
 					<wd-icon name="sound" size="18px" color="#5880F2"></wd-icon>
 				</view>
 				<view class="rome">{{rome}}</view>
 				<view class="spell">
-					<image v-if="boardShow" :src="`http://jp.x2.ink/images/hiragana/detail/${rome}.png`" mode="aspectFit"></image>
+					<image v-if="boardShow" :src="`http://jp.x2.ink/images/${type}/detail/${rome}.png`"
+						mode="aspectFit"></image>
 					<view v-if="boardShow" class="drawingboard">
 						<l-signature disableScroll ref="signatureRef" :penColor="penColor" :penSize="penSize"
 							:openSmooth="openSmooth"></l-signature>
@@ -58,6 +60,7 @@
 	const openSmooth = ref(true);
 	const signatureRef = ref(null);
 	const boardShow = ref(false)
+	const emits = defineEmits(['save'])
 	const onClick = (type) => {
 		if (type === 'openSmooth') {
 			openSmooth.value = !openSmooth.value;
@@ -66,8 +69,7 @@
 		if (type === 'save') {
 			signatureRef.value.canvasToTempFilePath({
 				success: (res) => {
-					console.log(res.isEmpty);
-					url.value = res.tempFilePath;
+					emits('save', res)
 				}
 			});
 			return;
@@ -89,13 +91,25 @@
 	})
 	const showDetail = ref(false)
 	const rome = ref('')
+	const innerAudioContext = uni.createInnerAudioContext();
+	const playAudio = () => {
+		innerAudioContext.src = `http://jp.x2.ink/audio/${rome.value}.mp3`;
+		innerAudioContext.play()
+		innerAudioContext.onPlay(() => {
+			console.log('开始播放');
+		});
+		innerAudioContext.onStop(() => {
+			console.log('停止播放');
+		});
+	}
 	const openPopup = (data) => {
 		onClick('clear')
 		if (data == "") {
 			return
 		}
-		showDetail.value = true
 		rome.value = data
+		playAudio()
+		showDetail.value = true
 		setTimeout(() => {
 			boardShow.value = true
 		}, 1000)
@@ -103,9 +117,11 @@
 </script>
 
 <style scoped lang="scss">
-	h3 {
+	.bigtitle {
 		text-align: center;
 		margin: 10px 0;
+		font-size: 22px;
+		font-weight: bold;
 	}
 
 	:deep(.btn) {

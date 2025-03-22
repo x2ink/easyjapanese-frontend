@@ -1,21 +1,23 @@
 <template>
-	<NavBar title="动词变形"></NavBar>
-	<view class="input">
-		<wd-input  custom-class="input1"  no-border type="text" v-model="value" placeholder="请输入动词" />
-		<wd-button custom-class="btn" @click="getVerbTrans()" >立即变形</wd-button>
+	<view>
+		<Navbar title="动词变形"></Navbar>
+		<view class="input">
+			<wd-input custom-class="input1" no-border type="text" v-model="value" placeholder="请输入动词" />
+			<wd-button custom-class="btn" @click="getVerbTrans()">立即变形</wd-button>
+		</view>
+		<wd-table :data="data" v-if="data.length>0">
+			<wd-table-col width="150" prop="category" label="类别" fixed></wd-table-col>
+			<wd-table-col width="100%" prop="result" label="变形"></wd-table-col>
+		</wd-table>
+		<wd-toast />
 	</view>
-	<wd-table :data="data" v-if="data.length>0">
-		<wd-table-col width="150" prop="category" label="类别" fixed></wd-table-col>
-		<wd-table-col width="100%" prop="result" label="变形"></wd-table-col>
-	</wd-table>
-	<wd-toast />
 </template>
 
 <script setup>
 	import {
 		ref
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	import {
 		useToast
@@ -42,13 +44,14 @@
 		margin-top: 15px;
 		width: 100%;
 	}
+
 	:deep(.input1) {
 		padding: 8px 15px;
 		border-radius: 44px;
 	}
 
 	.input {
-		padding:0 15px;
+		padding: 0 15px;
 		gap: 15px;
 	}
 </style>

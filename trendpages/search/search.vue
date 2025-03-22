@@ -1,16 +1,8 @@
 <template>
 	<view>
-		<Navbar>
-			<template #left>
-				<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
-					<view class="search-type">
-						<text>{{ current }}</text>
-						<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
-					</view>
-				</wd-popover>
-			</template>
+		<Navbar title="搜索">
 		</Navbar>
-		<SearchInput @confirm="search" @change="inputChange">
+		<SearchInput placeholder="请输入关键词" @confirm="search" @change="inputChange">
 		</SearchInput>
 		<view class="title" v-if="total==0">
 			<text>搜索历史</text>
@@ -30,8 +22,9 @@
 			        width: 60
 			}" image="http://jp.x2.ink/images/blank.png" tip="没有搜到结果哦" />
 		</view>
-		<WordList v-if="List.length>0" :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
-		</WordList>
+		<view v-if="List.length>0" style="padding-top: 15px;">
+			<TrendList :list="List"></TrendList>
+		</view>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<wd-toast />
@@ -49,6 +42,7 @@
 	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	import SearchInput from '@/components/searchinput/searchinput.vue'
+	import TrendList from '@/components/trendlist/trendlist.vue'
 	import {
 		searchrecordStore
 	} from "@/stores/index.js"
@@ -65,6 +59,7 @@
 		scrollTop.value = e.scrollTop
 	})
 	const inputChange = (e) => {
+		console.log(e);
 		val.value = e
 	}
 	const loadmore = computed(() => {
@@ -79,25 +74,15 @@
 	const clear = () => {
 		moreShow.value = false
 		history.value = []
-		searchrecordStore().clear('word')
+		searchrecordStore().clear('trend')
 	}
-	const current = ref('日中词典')
-	const menu = ref([{
-			content: '日中词典'
-		},
-		{
-			content: '中日词典'
-		}
-	])
-	const changeSearchType = (e) => {
-		current.value = e.item.content
-	}
+
 	const lookmore = () => {
 		moreShow.value = false
-		history.value = searchrecordStore().wordlist
+		history.value = searchrecordStore().trendlist
 	}
 	onMounted(() => {
-		let record = searchrecordStore().wordlist
+		let record = searchrecordStore().trendlist
 		if (record.length > 10) {
 			moreShow.value = true
 		}
@@ -109,15 +94,6 @@
 	const List = ref([])
 	const total = ref(0)
 	const noResult = ref(false)
-	watch(current, (newVal, oldVal) => {
-		noResult.value = false
-		List.value = []
-		page.value = 1
-		if (val.value.length > 0) {
-			toast.loading('正在查询中...')
-		}
-		getList()
-	})
 	onReachBottom(() => {
 		if (total.value > List.value.length) {
 			++page.value
@@ -129,9 +105,9 @@
 		search()
 	}
 	const search = async () => {
-		if (!searchrecordStore().wordlist.includes(val.value)) {
+		if (!searchrecordStore().trendlist.includes(val.value)) {
 			history.value.unshift(val.value)
-			searchrecordStore().push(val.value, 'word')
+			searchrecordStore().push(val.value, 'trend')
 		}
 		toast.loading('正在查询中...')
 		noResult.value = false
@@ -140,12 +116,7 @@
 		getList()
 	}
 	const getList = async () => {
-		let res;
-		if (current.value == '日中词典') {
-			res = await $http.word.jcSearch(page.value, size.value, val.value)
-		} else {
-			res = await $http.word.cjSearch(page.value, size.value, val.value)
-		}
+		const res = await $http.trend.searchTrend(page.value, size.value, val.value)
 		toast.close()
 		total.value = res.total
 		if (total.value === 0) {
@@ -153,7 +124,6 @@
 			return
 		}
 		List.value = List.value.concat(res.data)
-
 	}
 </script>
 

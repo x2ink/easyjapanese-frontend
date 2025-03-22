@@ -79,55 +79,49 @@
 			}
 		},
 		{
-			"path": "pages/articledetail/articledetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/todayreview/todayreview",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/verbtransfiguration/verbtransfiguration",
+			"path": "pages/tools/verbtransfiguration/verbtransfiguration",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/fiftysounds/fiftysounds",
+			"path": "pages/tools/fiftysounds/fiftysounds",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/grammar/grammar",
+			"path": "pages/tools/grammar/grammar",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/grammardetail/grammardetail",
+			"path": "pages/tools/grammardetail/grammardetail",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/radiostation/radiostation",
+			"path": "pages/tools/radiostation/radiostation",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/player/player",
+			"path": "pages/tools/player/player",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/commonwords/commonwords",
+			"path": "pages/tools/commonwords/commonwords",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -145,7 +139,7 @@
 			}
 		},
 		{
-			"path": "pages/translate/translate",
+			"path": "pages/tools/translate/translate",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -170,12 +164,6 @@
 			}
 		},
 
-		{
-			"path": "pages/ranking/ranking",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
 		{
 			"path": "pages/repwd/repwd",
 			"style": {
@@ -204,23 +192,30 @@
 	"subPackages": [{
 		"root": "trendpages",
 		"pages": [{
-			"path": "addtrend/addtrend",
-			"style": {
-				"navigationStyle": "custom"
+				"path": "addtrend/addtrend",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "trenddetail/trenddetail",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "mytrend/mytrend",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "search/search",
+				"style": {
+					"navigationStyle": "custom"
+				}
 			}
-		},
-		{
-			"path": "trenddetail/trenddetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "mytrend/mytrend",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}]
+		]
 	}, {
 		"root": "userpages",
 		"pages": [{
@@ -232,6 +227,11 @@
 	}, {
 		"root": "otherpages",
 		"pages": [{
+				"path": "ranking/ranking",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			}, {
 				"path": "browse/browse",
 				"style": {
 					"navigationStyle": "default"

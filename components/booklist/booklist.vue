@@ -13,29 +13,19 @@
 						<view class="describe">{{item.describe}}</view>
 					</view>
 				</view>
-				<wd-button v-if="type=='select'&&!item.has" @click.stop="addWordBooks(item.id)" plain
-					size="small">加入</wd-button>
-				<wd-button type="error" v-if="type=='select'&&item.has" @click.stop="deleteMyBooksWord(item.id)" plain
-					size="small">移除</wd-button>
+				<wd-button hover-stop-propagation v-if="type=='select'&&!item.has" @click.stop="addWordBooks(item.id)"
+					plain size="small">加入</wd-button>
+				<wd-button hover-stop-propagation type="error" v-if="type=='select'&&item.has"
+					@click.stop="deleteMyBooksWord(item.id)" plain size="small">移除</wd-button>
 			</view>
-			<view class="item" @click="show=true">
+			<view class="item" @click="emits('add')">
 				<view class="add _GCENTER" style="border: 2px solid #d9d9d9;">
 					<wd-icon name="add" size="22px" color="#d9d9d9"></wd-icon>
 				</view>
 				<text class="addtext">新增单词本</text>
 			</view>
 		</view>
-		<wd-toast />
-		<wd-popup v-model="show" :z-index="100" position="bottom" custom-style="border-radius:16px 16px 0 0;">
-			<view class="popup">
-				<text>新增单词本</text>
-				<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />
-				<wd-input type="text" v-model="formData.describe" size="large" placeholder="请输入单词本描述" />
-				<view style="padding:10px;margin-top: 15px;">
-					<wd-button @click="create()" block>立即创建</wd-button>
-				</view>
-			</view>
-		</wd-popup>
+		<wd-toast selector="booklist" />
 	</view>
 </template>
 
@@ -45,20 +35,23 @@
 		onMounted
 	} from 'vue'
 	import {
-		useToast
-	} from '@/uni_modules/wot-design-uni'
-	import {
 		goPage
 	} from "@/utils/common.js"
+	import $http from "@/api/index.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast('booklist')
+	const emits = defineEmits(['add'])
 	onMounted(() => {
 		getList()
 	})
-	const deleteMyBooksWord = async (bookid) => {
+	const deleteMyBooksWord = async (event, bookid) => {
 		const res = await $http.word.deleteMyBooksWord(Number(props.wordId), bookid)
 		toast.success(`移除`)
 		getList()
 	}
-	const addWordBooks = async (bookid) => {
+	const addWordBooks = async (event, bookid) => {
 		try {
 			const res = await $http.word.addMyBooksWord({
 				word_id: Number(props.wordId),
@@ -70,32 +63,10 @@
 			toast.warning(`单词已经在该生词本内`)
 		}
 	}
-	const toast = useToast()
-	import $http from "@/api/index.js"
-	const show = ref(false)
-	const formData = ref({
-		name: '',
-		describe: ''
-	})
 	const List = ref([])
 	const getList = async () => {
 		const res = await $http.word.getMyBooks(props.wordId)
 		List.value = res.data
-	}
-	const create = async () => {
-		if (formData.value.name == "" || formData.value.name.length == 0) {
-			toast.warning(`名称不可为空`)
-			return
-		}
-		try {
-			const res = await $http.word.addMyBooks(formData.value)
-			show.value = false
-			getList()
-			toast.success(`创建成功`)
-		} catch (err) {
-			console.log(err);
-			toast.warning(`单词本最多可以创建5个`)
-		}
 	}
 	const props = defineProps({
 		type: {
@@ -107,20 +78,12 @@
 			type: Number
 		}
 	})
+	defineExpose({
+		getList
+	})
 </script>
 
 <style scoped lang="scss">
-	.popup {
-		padding: 20px;
-
-		text {
-			font-size: 16px;
-			font-weight: bold;
-		}
-	}
-
-
-
 	.primary {
 		margin: 0 15px;
 		gap: 15px;

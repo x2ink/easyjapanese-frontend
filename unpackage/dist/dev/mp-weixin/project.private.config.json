@@ -4,6 +4,104 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/tools/verbtransfiguration/verbtransfiguration",
+          "pathName": "pages/tools/verbtransfiguration/verbtransfiguration",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/fiftysounds/fiftysounds",
+          "pathName": "pages/tools/fiftysounds/fiftysounds",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/fiftysounds/fiftysounds",
+          "pathName": "pages/tools/fiftysounds/fiftysounds",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/grammar/grammar",
+          "pathName": "pages/tools/grammar/grammar",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/translate/translate",
+          "pathName": "pages/tools/translate/translate",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/translate/translate",
+          "pathName": "pages/tools/translate/translate",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=152807&type=jc",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybooks/mybooks",
+          "pathName": "pages/word/mybooks/mybooks",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "trendpages/search/search",
+          "pathName": "trendpages/search/search",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "trendpages/trenddetail/trenddetail",
+          "pathName": "trendpages/trenddetail/trenddetail",
+          "query": "id=54",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "otherpages/feedback/feedback",
+          "pathName": "otherpages/feedback/feedback",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "userpages/userinfo/userinfo",
+          "pathName": "userpages/userinfo/userinfo",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "trendpages/trenddetail/trenddetail",
+          "pathName": "trendpages/trenddetail/trenddetail",
+          "query": "id=51",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/msg/comment/comment",
           "pathName": "pages/msg/comment/comment",
           "query": "",
