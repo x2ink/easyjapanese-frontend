@@ -25,7 +25,7 @@
 			}
 		},
 		{
-			"path": "pages/thesaurus/thesaurus",
+			"path": "pages/word/thesaurus/thesaurus",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -37,7 +37,7 @@
 			}
 		},
 		{
-			"path": "pages/wordlist/wordlist",
+			"path": "pages/word/wordlist/wordlist",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -109,18 +109,6 @@
 			}
 		},
 		{
-			"path": "pages/tools/radiostation/radiostation",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/player/player",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/tools/commonwords/commonwords",
 			"style": {
 				"navigationStyle": "custom"
@@ -184,6 +172,18 @@
 		},
 		{
 			"path": "pages/word/edithistory/edithistory",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tools/composition/composition",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tools/compositiondetail/compositiondetail",
 			"style": {
 				"navigationStyle": "custom"
 			}

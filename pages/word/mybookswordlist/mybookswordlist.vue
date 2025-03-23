@@ -2,22 +2,8 @@
 	<view>
 		<Navbar :title="formData.name">
 		</Navbar>
-		<view class="wordlist" v-if="List.length>0">
-			<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id,type:'jc'})" :key="item.id"
-				v-for="item in List">
-				<view class="worditem">
-					<view class="head jpfont">
-						<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
-					</view>
-					<wd-text size="14px" :lines="2" custom-class="bodytext" color="#999"
-						:text="item.meaning.join('\n')"></wd-text>
-					<view style="margin-top: 5px;display: flex;justify-content: flex-end;">
-						<wd-icon @click.stop="deleteWord(item.id)" name="delete-thin" color="#999" class="delete"
-							size="18px"></wd-icon>
-					</view>
-				</view>
-			</view>
-		</view>
+		<WordList v-if="List.length>0" type="jc" :list="List">
+		</WordList>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<view v-if="noResult" style="margin-top: 40px;">
@@ -69,7 +55,7 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	import Navbar from '@/components/navbar/navbar.vue';
-	import WordList from "@/components/wordlist.vue"
+import WordList from "@/components/wordlist/wordlist.vue"
 	import {
 		goPage
 	} from "@/utils/common.js"

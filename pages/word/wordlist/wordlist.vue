@@ -1,9 +1,12 @@
 <template>
-	<NavBar :title="title" style="background-color:#f5f5f5;"></NavBar>
-	<WordList v-if="List.length>0" type="jc" style="margin: 10px 15px 15px 15px;" :list="List">
-	</WordList>
-	<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
-	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+	<view>
+		<Navbar :title="title">
+		</Navbar>
+		<WordList v-if="List.length>0" type="jc" :list="List">
+		</WordList>
+		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
+		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+	</view>
 </template>
 
 <script setup>
@@ -16,8 +19,8 @@
 		onPageScroll,
 		onReachBottom
 	} from "@dcloudio/uni-app"
-	import NavBar from '@/components/navbar.vue'
-	import WordList from "@/components/wordlist.vue"
+	import Navbar from '@/components/navbar/navbar.vue';
+		import WordList from "@/components/wordlist/wordlist.vue"
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop

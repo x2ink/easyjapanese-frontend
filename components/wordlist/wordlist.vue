@@ -41,8 +41,8 @@
 	.wordlist {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
-		padding: 10px;
+		gap: 15px;
+		padding:0 15px;
 
 		.worditem {
 			background-color: white;

@@ -31,7 +31,7 @@
 			<wd-progress custom-class="customprogress" :percentage="progress" hide-text />
 			<view class="progress">
 				<view><text>{{info.learnnum}}</text>/<text>{{info.wordnum}}</text></view>
-				<wd-button @click="goPage('thesaurus')" plain size="small">词汇列表</wd-button>
+				<wd-button @click="goPage('/pages/word/thesaurus/thesaurus')" plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
 				<wd-button @click="review()" size="large" custom-class="reviewbtn recitebtn"
@@ -60,12 +60,14 @@
 		</view>
 		<!-- 单词列表 -->
 		<view class="wordlist">
-			<view class="worditem" @click="goPage('worddetail','?id=' + item.id + '&type=jc')" :key="item.id"
-				v-for="item in recommendWord">
+			<view class="worditem" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id,type:'jc'})"
+				:key="item.id" v-for="item in recommendWord">
 				<view class="wordhead">
 					<text>{{item.word}}</text>
-					<wd-tag v-for="tag in item.level" custom-class="tag" color="#0083ff"
-						bg-color="#d0e8ff">{{tag}}</wd-tag>
+					<view style="display: flex;align-items: center;gap: 3px;">
+						<wd-tag v-for="tag in item.book" :key="tag" custom-class="space"
+							:color="tagColor.get(tag).color" :bg-color="tagColor.get(tag).bgcolor">{{tag}}</wd-tag>
+					</view>
 				</view>
 				<view class="explain">
 					<wd-text size="14px" :lines="2" color="#999" :text="item.meaning.join(';')"></wd-text>
@@ -113,7 +115,44 @@
 	import {
 		goPage
 	} from "@/utils/common.js"
-
+	const tagColor = ref(new Map([
+		["N1", {
+			color: "#0083ff",
+			bgcolor: "#d0e8ff"
+		}],
+		["N2", {
+			color: "#57D09B",
+			bgcolor: "#D0F4E5"
+		}],
+		["N3", {
+			color: "#f5222d",
+			bgcolor: "#FAC8C8"
+		}],
+		["N4", {
+			color: "#E78938",
+			bgcolor: "#F5D6B9"
+		}],
+		["N5", {
+			color: "#13c2c2",
+			bgcolor: "#A6E6E6"
+		}],
+		["高考", {
+			color: "#8A2BE2", // 紫色
+			bgcolor: "#E6D5F5" // 浅紫色
+		}],
+		["考研", {
+			color: "#FF69B4", // 粉色
+			bgcolor: "#FFE6F3" // 浅粉色
+		}],
+		["新编", {
+			color: "#FF4500", // 橙红色
+			bgcolor: "#FFE4D6" // 浅橙红色
+		}],
+		["新标", {
+			color: "#20B2AA", // 浅海绿色
+			bgcolor: "#D1F2F0" // 浅浅海绿色
+		}]
+	]));
 	const review = () => {
 		if (info.value.review == 0) {
 			toast.warning(`今日没有需要复习的单词`)
@@ -163,7 +202,7 @@
 		info.value = res.data
 	}
 	onShow(() => {
-		getHomeInfo()
+		// getHomeInfo()
 	})
 	const startLearn = () => {
 		if (setPlanRef.value.config.mode == "学习模式") {
@@ -199,9 +238,13 @@
 		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
 		path: "/pages/tools/verbtransfiguration/verbtransfiguration"
 	}, {
-		name: '常用单词',
-		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
+		name: '常用词汇',
+		image: 'http://jp.x2.ink/images/message.png',
 		path: "verbtransfiguration"
+	}, {
+		name: '写作真题',
+		image: 'http://jp.x2.ink/images/duo-icons--file.png',
+		path: "/pages/tools/composition/composition"
 	}])
 </script>
 
@@ -386,10 +429,12 @@
 		overflow: hidden;
 	}
 
-	:deep(.tag) {
+	:deep(.space) {
+		margin-left: 10px;
 		padding: 2px 8px;
 		border-radius: 4px;
 	}
+
 
 	.wordlist {
 		display: flex;

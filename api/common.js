@@ -26,5 +26,11 @@ export default {
 	},
 	getMessageInfo(id) {
 		return http.get(`message/info/${id}`)
+	},
+	getCompositionList(page, size) {
+		return http.get(`composition/list/${page}/${size}`)
+	},
+	getCompositionInfo(id) {
+		return http.get(`composition/info/${id}`)
 	}
 }

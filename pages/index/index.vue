@@ -73,11 +73,6 @@
 		font-size: 16px;
 	}
 
-	:deep(.tabs) {
-		background-color: transparent !important;
-		width: 250px !important;
-	}
-
 	:deep(.wd-tabs) {
 		background-color: transparent !important;
 	}

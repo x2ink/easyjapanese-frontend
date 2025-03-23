@@ -64,15 +64,17 @@
 					<view v-if="jcinfo.wordtype" class="wordtype">
 						{{jcinfo.wordtype}}
 					</view>
-					<view style="display: flex;flex-direction: column;gap: 10px;">
-						<text class="title">释义</text>
-						<view class="meanings" :key="item.meaning" v-for="(item,index) in jcinfo.meaning">
-							<view class="meaning">
-								<view class="text jpfont">
-									{{item.meaning}}
-								</view>
+					<text class="title">简明释义</text>
+					<view class="meanings">
+						<view class="meaning" :key="item.meaning" v-for="(item,index) in jcinfo.meaning">
+							<view class="text jpfont">
+								{{item.meaning}}
 							</view>
 						</view>
+					</view>
+					<text class="title">详细释义</text>
+					<view style="margin-top: 10px;font-size: 14px;">
+						{{jcinfo.detail}}
 					</view>
 				</view>
 			</view>
@@ -106,7 +108,7 @@
 					wordid,
 					wordtype:type
 				})" style="margin-top: 20px;">
-				<wd-button  type="info" size="small" plain hairline icon="edit">纠错</wd-button>
+				<wd-button type="info" size="small" plain hairline icon="edit">纠错</wd-button>
 			</view>
 		</view>
 
@@ -159,12 +161,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
-		margin: 15px 10px 10px 10px;
+		margin: 15px;
 
 		.wordlist {
 			display: flex;
 			flex-direction: column;
-			padding: 10px;
+			padding: 15px;
 			background-color: white;
 			border-radius: 8px;
 
@@ -174,11 +176,16 @@
 			}
 
 			.wordtype {
-				margin: 5px 0;
+				margin: 10px 0;
 				font-size: $uni-font-size-base;
 			}
 
 			.meanings {
+				margin: 10px 0;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+
 				.meaning {
 					.text {
 						font-weight: bold;

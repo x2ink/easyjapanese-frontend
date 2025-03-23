@@ -29,10 +29,6 @@
 .data-v-1cf27b2a .wd-tabs__nav-item {
   font-size: 16px;
 }
-.data-v-1cf27b2a .tabs {
-  background-color: transparent !important;
-  width: 250px !important;
-}
 .data-v-1cf27b2a .wd-tabs {
   background-color: transparent !important;
 }

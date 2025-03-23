@@ -3,9 +3,9 @@
     "pages/index/index",
     "pages/login/login",
     "pages/register/register",
-    "pages/thesaurus/thesaurus",
+    "pages/word/thesaurus/thesaurus",
     "pages/word/search/search",
-    "pages/wordlist/wordlist",
+    "pages/word/wordlist/wordlist",
     "pages/learn/learn",
     "pages/word/worddetail/worddetail",
     "pages/fastmode/fastmode",
@@ -17,8 +17,6 @@
     "pages/tools/fiftysounds/fiftysounds",
     "pages/tools/grammar/grammar",
     "pages/tools/grammardetail/grammardetail",
-    "pages/tools/radiostation/radiostation",
-    "pages/tools/player/player",
     "pages/tools/commonwords/commonwords",
     "pages/word/mybooks/mybooks",
     "pages/word/mybookswordlist/mybookswordlist",
@@ -29,7 +27,9 @@
     "pages/repwd/repwd",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
-    "pages/word/edithistory/edithistory"
+    "pages/word/edithistory/edithistory",
+    "pages/tools/composition/composition",
+    "pages/tools/compositiondetail/compositiondetail"
   ],
   "subPackages": [
     {

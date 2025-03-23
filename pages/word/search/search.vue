@@ -30,8 +30,10 @@
 			        width: 60
 			}" image="http://jp.x2.ink/images/blank.png" tip="没有搜到结果哦" />
 		</view>
-		<WordList v-if="List.length>0" :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
-		</WordList>
+		<view v-if="List.length>0" style="padding-top: 15px;">
+			<WordList :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
+			</WordList>
+		</view>
 		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<wd-toast />

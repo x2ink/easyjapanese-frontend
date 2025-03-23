@@ -4,6 +4,41 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/word/mybookswordlist/mybookswordlist",
+          "pathName": "pages/word/mybookswordlist/mybookswordlist",
+          "query": "id=22&name=444&describe=444",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/thesaurus/thesaurus",
+          "pathName": "pages/word/thesaurus/thesaurus",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=152807&type=jc",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/compositiondetail/compositiondetail",
+          "pathName": "pages/tools/compositiondetail/compositiondetail",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/composition/composition",
+          "pathName": "pages/tools/composition/composition",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/tools/verbtransfiguration/verbtransfiguration",
           "pathName": "pages/tools/verbtransfiguration/verbtransfiguration",
           "query": "",

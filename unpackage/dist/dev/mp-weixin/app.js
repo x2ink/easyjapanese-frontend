@@ -6,9 +6,9 @@ if (!Math) {
   "./pages/index/index.js";
   "./pages/login/login.js";
   "./pages/register/register.js";
-  "./pages/thesaurus/thesaurus.js";
+  "./pages/word/thesaurus/thesaurus.js";
   "./pages/word/search/search.js";
-  "./pages/wordlist/wordlist.js";
+  "./pages/word/wordlist/wordlist.js";
   "./pages/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
   "./pages/fastmode/fastmode.js";
@@ -20,8 +20,6 @@ if (!Math) {
   "./pages/tools/fiftysounds/fiftysounds.js";
   "./pages/tools/grammar/grammar.js";
   "./pages/tools/grammardetail/grammardetail.js";
-  "./pages/tools/radiostation/radiostation.js";
-  "./pages/tools/player/player.js";
   "./pages/tools/commonwords/commonwords.js";
   "./pages/word/mybooks/mybooks.js";
   "./pages/word/mybookswordlist/mybookswordlist.js";
@@ -33,6 +31,8 @@ if (!Math) {
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
   "./pages/word/edithistory/edithistory.js";
+  "./pages/tools/composition/composition.js";
+  "./pages/tools/compositiondetail/compositiondetail.js";
   "./trendpages/addtrend/addtrend.js";
   "./trendpages/trenddetail/trenddetail.js";
   "./trendpages/mytrend/mytrend.js";

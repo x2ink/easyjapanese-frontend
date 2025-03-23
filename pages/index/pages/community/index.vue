@@ -3,7 +3,7 @@
 		<view :style="{height:navBarHeight}"></view>
 		<!-- 顶部区域 -->
 		<view style="padding: 0 10px;">
-			<wd-tabs slidable custom-class="tabs" v-model="currentTab">
+			<wd-tabs slidable="always" custom-class="tabs" v-model="currentTab">
 				<block v-for="(item,index) in tabList" :key="item.name">
 					<wd-tab :title="item.name">
 					</wd-tab>

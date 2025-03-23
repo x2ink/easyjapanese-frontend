@@ -1,18 +1,16 @@
 <template>
 	<view>
-		<NavBar title="词库列表" style="background-color: #f5f5f5;">
-			<template #right>
-				<wd-icon name="help-circle" size="25px"></wd-icon>
-			</template>
-		</NavBar>
+		<Navbar title="词库列表">
+		</Navbar>
 		<wd-tabs v-model="current">
 			<block v-for="[key, value] in bookList.entries()" :key="key">
 				<wd-tab :title="key">
 					<view class="rankinglist">
-						<view class="rankingitem" @click="goPages(item.id,item.name)" v-for="item in value"
-							:key="item.id">
+						<view class="rankingitem"
+							@click="goPage('/pages/word/wordlist/wordlist',{id:item.id,name:item.name})"
+							v-for="item in value" :key="item.id">
 							<wd-button @click.stop="updateConfig(item.id)" v-if="config.book_id!=item.id"
-								custom-class="btn" size="small">切换词书</wd-button>
+								custom-class="changebtn" size="small">切换词书</wd-button>
 							<image mode="aspectFill" :src="item.icon">
 							</image>
 							<view>
@@ -21,7 +19,8 @@
 									<wd-text :lines="3" size="14px" style="margin-top: 6px;"
 										:text="item.describe"></wd-text>
 								</view>
-								<p class="number">{{item.words}}词<span v-if="config.book_id==item.id">正在学习</span></p>
+								<view class="number">{{item.words}}词<span v-if="config.book_id==item.id">正在学习</span>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -47,7 +46,7 @@
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop
 	})
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	const current = ref(0)
 	import $http from "@/api/index.js"
 	import {
@@ -55,11 +54,9 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const bookList = ref(new Map())
-	const goPages = (id, name) => {
-		uni.navigateTo({
-			url: "/pages/wordlist/wordlist?id=" + id + "&name=" + name
-		})
-	}
+	import {
+		goPage
+	} from "@/utils/common.js"
 	const config = ref({
 		id: null,
 		user_id: null,
@@ -90,7 +87,6 @@
 			return acc;
 		}, new Map());
 		bookList.value = map
-		console.log(map);
 	}
 	onMounted(() => {
 		getWordBook()
@@ -99,21 +95,30 @@
 </script>
 
 <style lang="scss" scoped>
+	:deep(.changebtn) {
+		position: absolute !important;
+		right: 10px !important;
+		top: 50% !important;
+		transform: translateY(-50%) !important;
+	}
+
 	:deep(.wd-tabs__nav) {
 		height: 30px;
 		background-color: transparent !important;
 	}
-	
+
 	:deep(.wd-tabs__nav-item) {
 		height: 30px;
 	}
-	
+
 	:deep(.wd-tabs__line) {
 		bottom: 0;
 	}
+
 	:deep(.wd-tabs) {
 		background-color: transparent !important;
 	}
+
 	.number {
 		color: $uni-text-color-grey;
 		font-size: $uni-font-size-base;
@@ -126,22 +131,19 @@
 	}
 
 	.rankinglist {
+		padding-bottom: calc(env(safe-area-inset-bottom) + 15px);
 		margin: 15px;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
+
 		.rankingitem {
 			padding: 10px;
 			border-radius: 8px;
 			display: flex;
 			position: relative;
 			background-color: white;
-			.btn {
-				position: absolute;
-				right: 10px;
-				top: 50%;
-				transform: translateY(-50%);
-			}
+
 
 			>view {
 
