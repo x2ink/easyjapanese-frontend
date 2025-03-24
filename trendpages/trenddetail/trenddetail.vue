@@ -154,11 +154,11 @@
 				</view>
 			</view>
 		</wd-popup>
-		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="false" cancel-text="取消" v-model="moreShow"
+		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="true" cancel-text="取消" v-model="moreShow"
 			:actions="actions" @close="moreShow=false" @select="select" />
 		<wd-toast />
 		<!-- 操作自己的评论 -->
-		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="false" cancel-text="取消" v-model="commentEdit"
+		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="true" cancel-text="取消" v-model="commentEdit"
 			:actions="commentActions" @close="commentEdit=false" @select="selectEdit" />
 		<wd-toast />
 		<wd-message-box></wd-message-box>

@@ -13,10 +13,11 @@
 						<view class="describe">{{item.describe}}</view>
 					</view>
 				</view>
-				<wd-button hover-stop-propagation v-if="type=='select'&&!item.has" @click.stop="addWordBooks(item.id)"
-					plain size="small">加入</wd-button>
-				<wd-button hover-stop-propagation type="error" v-if="type=='select'&&item.has"
-					@click.stop="deleteMyBooksWord(item.id)" plain size="small">移除</wd-button>
+				<view v-if="type=='select'&&!item.has" @click.stop="addWordBooks(item.id)">
+					<wd-button plain size="small">加入</wd-button>
+				</view>
+				<view v-if="type=='select'&&item.has" @click.stop="deleteMyBooksWord(item.id)"><wd-button type="error" plain
+						size="small">移除</wd-button></view>
 			</view>
 			<view class="item" @click="emits('add')">
 				<view class="add _GCENTER" style="border: 2px solid #d9d9d9;">
@@ -46,12 +47,12 @@
 	onMounted(() => {
 		getList()
 	})
-	const deleteMyBooksWord = async (event, bookid) => {
+	const deleteMyBooksWord = async (bookid) => {
 		const res = await $http.word.deleteMyBooksWord(Number(props.wordId), bookid)
 		toast.success(`移除`)
 		getList()
 	}
-	const addWordBooks = async (event, bookid) => {
+	const addWordBooks = async (bookid) => {
 		try {
 			const res = await $http.word.addMyBooksWord({
 				word_id: Number(props.wordId),

@@ -12,7 +12,7 @@
 			        width: 60
 			}" image="http://jp.x2.ink/images/blank.png" tip="空空如也" />
 		</view>
-		<wd-popup v-model="show" :safe-area-inset-bottom="true" :z-index="99" position="bottom" custom-style="border-radius:16px 16px 0 0;">
+		<wd-popup v-model="show" :safe-area-inset-bottom="true" :z-index="999" position="bottom" custom-style="border-radius:16px 16px 0 0;">
 			<view class="popup">
 				<h3>修改资料</h3>
 				<wd-input type="text" v-model="formData.name" size="large" placeholder="请输入单词本名称" />

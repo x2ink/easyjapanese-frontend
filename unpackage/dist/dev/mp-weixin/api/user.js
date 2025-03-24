@@ -33,6 +33,9 @@ const user = {
   },
   repwd(data) {
     return utils_request.http.post(`repwd`, data);
+  },
+  reemail(data) {
+    return utils_request.http.post(`reemail`, data);
   }
 };
 exports.user = user;

@@ -7,7 +7,8 @@
 			<p style="color: #666666;margin-top: 5px;font-size: 13px;">v.{{version}}</p>
 		</view>
 		<view style="margin: 15px;border-radius: 8px;padding:10px 20px;background-color: white;font-size: 14px;">
-			<view @click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})"
+			<view
+				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})"
 				style="display: flex;justify-content: space-between;padding: 10px 0px;">
 				<p>更新日志</p>
 				<wd-icon name="arrow-right" size="18px" color="#666666"></wd-icon>
@@ -33,7 +34,7 @@
 			</view>
 		</view>
 		<view style="position: fixed;bottom:env(safe-area-inset-bottom);text-align: center;width: 100%;"
-			@click="goPage('browse','?src=https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke')">
+			@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
 			<p style="text-decoration:underline;color: #3c9cff;">服务条款 | 隐私政策</p>
 			<p style="color: #666666;font-size: 13px;margin-top: 5px;">Copyright © 2023-2025 小二网络.All Rights Reserved
 				<br>

@@ -163,7 +163,7 @@
 
 		.id {
 			font-size: $uni-font-size-base;
-			margin-top: 5px;
+			margin-top: 2px;
 		}
 	}
 

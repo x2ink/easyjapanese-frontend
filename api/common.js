@@ -32,5 +32,9 @@ export default {
 	},
 	getCompositionInfo(id) {
 		return http.get(`composition/info/${id}`)
+	},
+	getDailyTalk(page, size) {
+		console.log(page, size);
+		return http.get(`dailytalk/${page}/${size}`)
 	}
 }

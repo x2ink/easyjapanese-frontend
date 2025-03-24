@@ -2,20 +2,16 @@
 	<view>
 		<Navbar title="设置"></Navbar>
 		<view class="cell" style="margin-top: 5px;">
-			<view class="cellitem" @click="goPage('repwd','?email='+userInfo.email)">
+			<view class="cellitem" @click="setpwd()">
 				<p>修改密码</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
+			<view class="cellitem" @click="goPage('/userpages/reemail/reemail')">
 				<p>更换邮箱</p>
 				<view class="_GCENTER">
-					<text style="font-size: 14px;color: #000;">{{userInfo.email}}</text>
+					<text style="font-size: 12px;color: #999;">{{email}}</text>
 					<wd-icon name="arrow-right" size="20px"></wd-icon>
 				</view>
-			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
-				<p>注销账号</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
 		</view>
 		<view class="cell">
@@ -25,20 +21,9 @@
 			</view>
 		</view>
 		<view class="cell">
-			<view class="cellitem" @click="goPage('mybooks')">
-				<p>服务条款</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
-			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
-				<p>隐私协议</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
-			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
-				<p>个人信息收集清单</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
-			</view>
-			<view class="cellitem" @click="goPage('mybooks')">
-				<p>应用权限说明</p>
+			<view class="cellitem"
+				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
+				<p>服务条款&隐私协议</p>
 				<wd-icon name="arrow-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('mybooks')">
@@ -46,47 +31,43 @@
 				<text>皖ICP备2024032367号-2A</text>
 			</view>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed
 	} from 'vue'
 	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
-	const userInfo = ref({
-		avatar: '',
-		nickname: '',
-		role: "",
-		email: ''
-	})
 	import {
 		userStore
 	} from "@/stores/index.js"
-	onMounted(() => {
-		getUserInfoSimple()
-	})
-	const getUserInfoSimple = async () => {
-		try {
-			const res = await $http.user.getUserInfoSimple()
-			userInfo.value = res.data
-			userStore().setUserInfo(userInfo.value)
-		} catch (err) {
-			console.log("登录错误", err);
-		}
-	}
-	const goPage = (path, params) => {
-		if (params) {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}${params}`
-			})
+	import {
+		goPage
+	} from "@/utils/common.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	const email = computed(() => {
+		if (userStore().userInfo.email == '' || userStore().userInfo.email == null) {
+			return "未绑定"
 		} else {
-			uni.navigateTo({
-				url: `/pages/${path}/${path}`
-			})
+			return userStore().userInfo.email
 		}
+	})
+	const setpwd = () => {
+		if (userStore().userInfo.email == '' || userStore().userInfo.email == null) {
+			toast.warning(`未绑定邮箱，无法修改密码`)
+			return
+		}
+		goPage('/userpages/repwd/repwd', {
+			email: userStore().userInfo.email
+		})
 	}
 </script>
 

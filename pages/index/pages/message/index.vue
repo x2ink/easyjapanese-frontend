@@ -25,16 +25,19 @@
 				        width: 60
 				}" image="http://jp.x2.ink/images/envelope.png" tip="还没有收到消息" />
 				</view>
-				<view class="noticeitem" @click="goPage(item.path)" v-for="(item,index) in List" :key="item.id">
+				<view class="noticeitem" @click="read(item.path,item.id,index)" v-for="(item,index) in List"
+					:key="item.id">
 					<view class="noticetime">
 						{{dayjs().to(dayjs(item.created_at))}}
 					</view>
 					<view class="noticebody">
 						<view class="noticetitle">
-							<wd-tag custom-class="space" type="danger">未读</wd-tag>
+							<wd-tag v-if="item.status==0" custom-class="space" type="danger">未读</wd-tag>
 							<text>{{item.title}}</text>
 						</view>
-						<view class="noticecontent">{{item.content}}</view>
+						<view class="noticecontent">
+							<wd-text size="14px" :lines="4" color="#999" :text="item.content"></wd-text>
+						</view>
 						<image v-if="item.cover!=''" style="width: 100%;border-radius: 4px;" :src="item.cover"
 							mode="widthFix"></image>
 						<view class="noticetag">{{item.tag}}</view>
@@ -64,6 +67,11 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
+	const read = async (path, id, index) => {
+		List.value[index].status = 1
+		await $http.common.readMessage(id)
+		goPage(path)
+	}
 	const props = defineProps({
 		msgTotal: {
 			default: {
@@ -225,8 +233,6 @@
 			}
 
 			.noticecontent {
-				color: #999;
-				font-size: 14px;
 				margin: 8px 0;
 			}
 		}

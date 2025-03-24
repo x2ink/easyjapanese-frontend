@@ -63,7 +63,7 @@
 			<view class="worditem" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id,type:'jc'})"
 				:key="item.id" v-for="item in recommendWord">
 				<view class="wordhead">
-					<text>{{item.word}}</text>
+					<text>{{item.word!=item.kana?`${item.kana}【${item.word}】`:item.word}}</text>
 					<view style="display: flex;align-items: center;gap: 3px;">
 						<wd-tag v-for="tag in item.book" :key="tag" custom-class="space"
 							:color="tagColor.get(tag).color" :bg-color="tagColor.get(tag).bgcolor">{{tag}}</wd-tag>
@@ -113,46 +113,8 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	import {
-		goPage
+		goPage,tagColor 
 	} from "@/utils/common.js"
-	const tagColor = ref(new Map([
-		["N1", {
-			color: "#0083ff",
-			bgcolor: "#d0e8ff"
-		}],
-		["N2", {
-			color: "#57D09B",
-			bgcolor: "#D0F4E5"
-		}],
-		["N3", {
-			color: "#f5222d",
-			bgcolor: "#FAC8C8"
-		}],
-		["N4", {
-			color: "#E78938",
-			bgcolor: "#F5D6B9"
-		}],
-		["N5", {
-			color: "#13c2c2",
-			bgcolor: "#A6E6E6"
-		}],
-		["高考", {
-			color: "#8A2BE2", // 紫色
-			bgcolor: "#E6D5F5" // 浅紫色
-		}],
-		["考研", {
-			color: "#FF69B4", // 粉色
-			bgcolor: "#FFE6F3" // 浅粉色
-		}],
-		["新编", {
-			color: "#FF4500", // 橙红色
-			bgcolor: "#FFE4D6" // 浅橙红色
-		}],
-		["新标", {
-			color: "#20B2AA", // 浅海绿色
-			bgcolor: "#D1F2F0" // 浅浅海绿色
-		}]
-	]));
 	const review = () => {
 		if (info.value.review == 0) {
 			toast.warning(`今日没有需要复习的单词`)
@@ -238,9 +200,9 @@
 		image: 'http://jp.x2.ink/images/duo-icons--palette.png',
 		path: "/pages/tools/verbtransfiguration/verbtransfiguration"
 	}, {
-		name: '常用词汇',
+		name: '日常会话',
 		image: 'http://jp.x2.ink/images/message.png',
-		path: "verbtransfiguration"
+		path: "/pages/tools/commonwords/commonwords"
 	}, {
 		name: '写作真题',
 		image: 'http://jp.x2.ink/images/duo-icons--file.png',

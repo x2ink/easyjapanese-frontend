@@ -1,11 +1,10 @@
 <template>
 	<view>
-		<NavBar title="修改密码"></NavBar>
+		<Navbar title="重置邮箱"></Navbar>
 		<view class="input">
 			<wd-input :disabled="email" custom-class="input1" no-border type="text" v-model="formData.email"
-				placeholder="请输入邮箱">
+				placeholder="请输入新邮箱">
 			</wd-input>
-			<wd-input custom-class="input1" no-border type="text" v-model="formData.password" placeholder="请输入新密码" />
 			<view style="display: flex;align-items: center;justify-content: space-between;gap: 10px;">
 				<wd-input style="flex: 1;" custom-class="input1" no-border type="text" v-model="formData.captcha"
 					placeholder="请输入验证码" />
@@ -13,7 +12,7 @@
 					plain>{{btnText}}</wd-button>
 			</view>
 
-			<wd-button custom-class="btn" @click="submit()">立即修改</wd-button>
+			<wd-button block @click="submit()">立即重置</wd-button>
 		</view>
 		<wd-toast />
 	</view>
@@ -28,7 +27,7 @@
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import $http from "@/api/index.js"
 	import {
 		useToast
@@ -38,15 +37,16 @@
 	} from "@/utils/common.js"
 	const submit = async () => {
 		try {
-			const res = await $http.user.repwd(formData.value)
+			const res = await $http.user.reemail(formData.value)
 			toast.success('修改成功')
-			setTimeout(() => {
-				uni.navigateTo({
-					url: "/pages/login/login"
-				})
-			}, 1000)
+			userStore().setUserInfo()
 		} catch (err) {
-			toast.warning('验证码错误或表单有误')
+			console.log(err);
+			if (err.code == 4002) {
+				toast.warning('邮箱已被绑定，请换个邮箱')
+			} else {
+				toast.warning('验证码错误或表单有误')
+			}
 		}
 	}
 	const email = ref(null)
@@ -59,8 +59,7 @@
 	const toast = useToast()
 	const formData = ref({
 		email: "",
-		captcha: "",
-		password: ""
+		captcha: ""
 	})
 	const countdown = ref(0)
 	const btnText = computed(() => {
@@ -86,7 +85,7 @@
 		}
 		if (isEmail(formData.value.email)) {
 			try {
-				const res = await $http.user.getCaptcha('repwd', formData.value.email)
+				const res = await $http.user.getCaptcha('reemail', formData.value.email)
 				toast.success('发送成功，请注意查收')
 				startCountDown()
 			} catch (error) {
@@ -105,14 +104,9 @@
 	}
 
 	.input {
-		margin-top: 5px;
 		padding: 0 15px;
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
-	}
-
-	:deep(.btn) {
-		width: 100%;
 	}
 </style>

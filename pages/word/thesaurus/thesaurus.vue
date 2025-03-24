@@ -2,7 +2,7 @@
 	<view>
 		<Navbar title="词库列表">
 		</Navbar>
-		<wd-tabs v-model="current">
+		<wd-tabs slidable="always" v-model="current">
 			<block v-for="[key, value] in bookList.entries()" :key="key">
 				<wd-tab :title="key">
 					<view class="rankinglist">
@@ -19,7 +19,7 @@
 									<wd-text :lines="3" size="14px" style="margin-top: 6px;"
 										:text="item.describe"></wd-text>
 								</view>
-								<view class="number">{{item.words}}词<span v-if="config.book_id==item.id">正在学习</span>
+								<view class="number">{{item.words}}词<text v-if="config.book_id==item.id">正在学习</text>
 								</view>
 							</view>
 						</view>
@@ -124,7 +124,7 @@
 		font-size: $uni-font-size-base;
 		font-weight: bold;
 
-		span {
+		text {
 			margin-left: 10px;
 			color: $uni-color-warning;
 		}

@@ -24,10 +24,9 @@ if (!Math) {
   "./pages/word/mybooks/mybooks.js";
   "./pages/word/mybookswordlist/mybookswordlist.js";
   "./pages/tools/translate/translate.js";
-  "./pages/noticedetail/noticedetail.js";
+  "./pages/msg/noticedetail/noticedetail.js";
   "./pages/msg/like/like.js";
   "./pages/msg/comment/comment.js";
-  "./pages/repwd/repwd.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
   "./pages/word/edithistory/edithistory.js";
@@ -38,6 +37,8 @@ if (!Math) {
   "./trendpages/mytrend/mytrend.js";
   "./trendpages/search/search.js";
   "./userpages/userinfo/userinfo.js";
+  "./userpages/repwd/repwd.js";
+  "./userpages/reemail/reemail.js";
   "./otherpages/ranking/ranking.js";
   "./otherpages/browse/browse.js";
   "./otherpages/about/about.js";

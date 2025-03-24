@@ -20,7 +20,7 @@
 		onReachBottom
 	} from "@dcloudio/uni-app"
 	import Navbar from '@/components/navbar/navbar.vue';
-		import WordList from "@/components/wordlist/wordlist.vue"
+	import WordList from "@/components/wordlist/wordlist.vue"
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop
@@ -28,7 +28,7 @@
 	const title = ref('')
 	import $http from "@/api/index.js"
 	const page = ref(1)
-	const size = ref(10)
+	const size = ref(20)
 	const total = ref(0)
 	const List = ref([])
 	const getList = async () => {

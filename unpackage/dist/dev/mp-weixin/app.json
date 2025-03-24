@@ -21,10 +21,9 @@
     "pages/word/mybooks/mybooks",
     "pages/word/mybookswordlist/mybookswordlist",
     "pages/tools/translate/translate",
-    "pages/noticedetail/noticedetail",
+    "pages/msg/noticedetail/noticedetail",
     "pages/msg/like/like",
     "pages/msg/comment/comment",
-    "pages/repwd/repwd",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
     "pages/word/edithistory/edithistory",
@@ -44,7 +43,9 @@
     {
       "root": "userpages",
       "pages": [
-        "userinfo/userinfo"
+        "userinfo/userinfo",
+        "repwd/repwd",
+        "reemail/reemail"
       ]
     },
     {

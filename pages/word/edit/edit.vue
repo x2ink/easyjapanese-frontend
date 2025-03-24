@@ -29,6 +29,7 @@
 			</view>
 			<wd-button custom-class="btn" @click="submit()">立即提交</wd-button>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -45,6 +46,10 @@
 		onShow
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	const id = ref(null)
 	const formData = ref({
 		meaning: "",
@@ -79,7 +84,12 @@
 	}
 	const submit = async () => {
 		const res = await $http.word.editWord(formData.value)
-		console.log(res);
+		toast.success('提交成功，请等待审核')
+		setTimeout(() => {
+			uni.navigateBack({
+				delta: 1
+			})
+		}, 1000)
 	}
 </script>
 

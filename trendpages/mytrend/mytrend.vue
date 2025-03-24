@@ -17,7 +17,8 @@
 <script setup>
 	import {
 		ref,
-		computed
+		computed,
+		onMounted
 	} from 'vue'
 	import {
 		onShow,
@@ -71,8 +72,16 @@
 		total.value = 0
 		getTrendList(page.value, size.value)
 	}
-	onShow(() => {
+	onMounted(()=>{
 		refresh()
+	})
+	onShow(() => {
+		uni.$once("delTrend", (data) => {
+			if (data) {
+				toast.success(`删除成功`)
+				refresh()
+			}
+		});
 	})
 </script>
 

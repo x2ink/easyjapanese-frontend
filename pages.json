@@ -134,7 +134,7 @@
 		},
 
 		{
-			"path": "pages/noticedetail/noticedetail",
+			"path": "pages/msg/noticedetail/noticedetail",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -147,13 +147,6 @@
 		},
 		{
 			"path": "pages/msg/comment/comment",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-
-		{
-			"path": "pages/repwd/repwd",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -219,11 +212,25 @@
 	}, {
 		"root": "userpages",
 		"pages": [{
-			"path": "userinfo/userinfo",
-			"style": {
-				"navigationStyle": "custom"
+				"path": "userinfo/userinfo",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+
+			{
+				"path": "repwd/repwd",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "reemail/reemail",
+				"style": {
+					"navigationStyle": "custom"
+				}
 			}
-		}]
+		]
 	}, {
 		"root": "otherpages",
 		"pages": [{

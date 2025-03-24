@@ -6,7 +6,7 @@
 		})" :key="item.id" v-for="item in list">
 			<view class="worditem">
 				<view v-if="type=='jc'" class="head jpfont">
-					<p>{{item.word}}{{item.word!=item.kana?'['+item.kana+']':''}}</p>
+					<p>{{item.word!=item.kana?`${item.kana}【${item.word}】`:item.word}}</p>
 				</view>
 				<view v-else class="head">
 					<p>{{item.ch}}</p>

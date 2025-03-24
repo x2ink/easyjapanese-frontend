@@ -32,5 +32,8 @@ export default {
 	},
 	repwd(data) {
 		return http.post(`repwd`, data)
+	},
+	reemail(data) {
+		return http.post(`reemail`, data)
 	}
 }

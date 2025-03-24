@@ -1,8 +1,7 @@
 <template>
 	<view>
-		<NavBar :title="info.title" style="background-color: #f3f3f5;"></NavBar>
-		<view class="content" v-html="info.data">
-
+		<Navbar :title="info.title"></Navbar>
+		<view class="content" v-html="info.content">
 		</view>
 		<view class="noticetime">
 			{{dayjs().to(dayjs(info.created_at))}}
@@ -15,7 +14,7 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	import Navbar from '@/components/navbar/navbar.vue';
 	import {
 		onLoad
 	} from '@dcloudio/uni-app'
@@ -32,7 +31,7 @@
 	})
 	onLoad(async (op) => {
 		id.value = op.id
-		const res = await $http.common.getNoticeInfo(op.id)
+		const res = await $http.common.getMessageInfo(op.id)
 		info.value = res.data
 	})
 </script>
@@ -41,7 +40,7 @@
 	.content {
 		background-color: white;
 		padding: 15px;
-		margin: 0 15px 15px 15px;
+		margin: 0 15px 15px;
 		border-radius: 8px;
 	}
 
