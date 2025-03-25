@@ -2,11 +2,10 @@
   "pages": [
     "pages/index/index",
     "pages/login/login",
-    "pages/register/register",
     "pages/word/thesaurus/thesaurus",
     "pages/word/search/search",
     "pages/word/wordlist/wordlist",
-    "pages/learn/learn",
+    "pages/word/learn/learn",
     "pages/word/worddetail/worddetail",
     "pages/fastmode/fastmode",
     "pages/writefrommemory/writefrommemory",
@@ -56,7 +55,8 @@
         "about/about",
         "share/share",
         "feedback/feedback",
-        "setting/setting"
+        "setting/setting",
+        "setplan/setplan"
       ]
     }
   ],

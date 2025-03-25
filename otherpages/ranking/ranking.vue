@@ -1,6 +1,6 @@
 <template>
 	<view style="padding-bottom: 15px;">
-		<NavBar title="排行榜" style="background-color: #f3f3f5;"></NavBar>
+		<!-- <NavBar title="排行榜" style="background-color: #f3f3f5;"></NavBar> -->
 		<view class="top">
 			<view>
 				<view class="_GCENTER">
@@ -54,7 +54,7 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
+	// import NavBar from '@/components/navbar.vue'
 	import $http from "@/api/index.js"
 	const top = ref([])
 	const other = ref([])

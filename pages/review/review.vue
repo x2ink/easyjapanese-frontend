@@ -1,5 +1,4 @@
 <template>
-	<NavBar title="记忆复习"></NavBar>
 	<view v-show="loading" class="loading _GCENTER">
 		<wd-loading />
 	</view>
@@ -24,7 +23,7 @@
 				</MeaningThinkWord>
 			</view>
 			<view v-else>
-				<WordDetail :wordinfo="wordInfo" type="jc"></WordDetail>
+				<!-- <WordDetail :wordinfo="wordInfo" type="jc"></WordDetail> -->
 				<view class="next">
 					<wd-button v-if="showButton" @click="rememberError" custom-class="btn" :round="false" size="large"
 						type="info">记错了</wd-button>
@@ -43,10 +42,8 @@
 		watch,
 		nextTick
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
 	import WordsThinkMeaning from '@/components/review/wordsThinkMeaning.vue';
 	import MeaningThinkWord from '@/components/review/meaningThinkWord.vue';
-	import WordDetail from "@/components/worddetail.vue"
 	import $http from "@/api/index.js"
 	import WordsSelectMeaning from "@/components/learnword/wordsSelectMeaning.vue"
 	import {

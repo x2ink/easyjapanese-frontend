@@ -9,8 +9,9 @@
 						<view class="rankingitem"
 							@click="goPage('/pages/word/wordlist/wordlist',{id:item.id,name:item.name})"
 							v-for="item in value" :key="item.id">
-							<wd-button @click.stop="updateConfig(item.id)" v-if="config.book_id!=item.id"
-								custom-class="changebtn" size="small">切换词书</wd-button>
+							<view @click.stop="updateConfig(item.id)" v-if="config.book_id!=item.id">
+							<wd-button custom-class="changebtn" size="small">切换词书</wd-button>	
+							</view>
 							<image mode="aspectFill" :src="item.icon">
 							</image>
 							<view>

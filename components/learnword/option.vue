@@ -4,8 +4,9 @@
 		<!-- 选项 -->
 		<view class="options">
 			<view :key="item.text" @click="select(item.answer,index)" class="option" :class="item.class"
-				v-for="(item,index) in options">
-				<p>{{noList[index]}}.{{item.text}}</p>
+				v-for="item in options">
+				<view class="han">蒸発</view>
+				<view style="font-size: 14px;">{{item.text.join('；')}}</view>
 			</view>
 		</view>
 		<wd-toast />
@@ -14,11 +15,15 @@
 
 <script setup>
 	import {
-		ref
+		ref,
+		onMounted
 	} from 'vue'
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	import {
+		onShow
+	} from '@dcloudio/uni-app'
 	const toast = useToast()
 	const props = defineProps({
 		data: {
@@ -43,16 +48,12 @@
 		}
 		done.value = true
 	}
-	const noList = ref(["A", "B", "C", "D"])
-	const setOption = (option) => {
+	onMounted(() => {
 		done.value = false
-		options.value = option.sort(() => Math.random() - 0.5).map((item) => {
+		options.value = props.data.sort(() => Math.random() - 0.5).map((item) => {
 			item.class = ''
 			return item
 		})
-	}
-	defineExpose({
-		setOption
 	})
 </script>
 
@@ -81,6 +82,11 @@
 			border-radius: $uni-border-radius-base;
 			background-color: white;
 			padding: 15px;
+			display: flex;
+			flex-direction: column;
+			.han {
+				font-weight: bold;
+			}
 		}
 	}
 </style>

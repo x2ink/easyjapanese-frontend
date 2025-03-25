@@ -16,7 +16,7 @@
 				</view>
 			</view>
 			<!-- 列表 -->
-			<WordList style="margin: 15px;background-color: transparent;" :list="cjinfo.result"></WordList>
+			<!-- <WordList style="margin: 15px;background-color: transparent;" :list="cjinfo.result"></WordList> -->
 		</view>
 		<view class="wordinfo" v-else>
 			<view style="padding: 0 15px;">
@@ -84,7 +84,7 @@
 						<text class="title">例句</text>
 						<view class="examples">
 							<view class="example" :key="item.id" v-for="item in jcinfo.example">
-								<view style="flex: 1;">
+								<view>
 									<view class="ja jpfont">
 										<view class="worditem" v-for="item1 in item.read">
 											<view class="top">{{item1.top}}</view>
@@ -94,9 +94,6 @@
 									<view class="ch">
 										<wd-tag custom-class="space" type="warning">译</wd-tag>{{item.ch}}
 									</view>
-								</view>
-								<view class="operate">
-									<wd-icon name="sound" size="20" color="#909699" />
 								</view>
 							</view>
 						</view>
@@ -120,7 +117,7 @@
 		ref,
 		computed,
 	} from "vue"
-	import WordList from "@/components/wordlist.vue"
+	// import WordList from "@/components/wordlist.vue"
 	import {
 		goPage
 	} from "@/utils/common.js"
@@ -236,26 +233,22 @@
 		background-color: #F6F6F6;
 		border-radius: 4px;
 		padding: 10px;
-		gap: 10px;
+		gap: 5px;
 
 		.example {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 
-			.operate {
-				display: flex;
-				justify-content: flex-end;
-			}
-
 			.ch {
+				padding: 5px;
 				display: flex;
 				align-items: center;
-				gap: 3px;
+				gap: 5px;
 				font-size: $uni-font-size-base;
 				color: $uni-text-color-grey;
 				background-color: $uni-bg-color-grey;
-				border-radius: $uni-border-radius-base;
+				border-radius: 4px;
 			}
 
 			.ja {

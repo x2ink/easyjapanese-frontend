@@ -61,3 +61,12 @@ export const tagColor = new Map([
 		bgcolor: "#D1F2F0"
 	}]
 ])
+export const formatWordName = (word, kana) => {
+	if (/^[\u30A1-\u30FA\u31F0-\u31FF\u30FC\u30C3]+$/.test(word)) {
+		return word
+	} else if (word == kana) {
+		return word
+	} else {
+		return `${kana}【${word}】`
+	}
+}

@@ -6,7 +6,11 @@
 		})" :key="item.id" v-for="item in list">
 			<view class="worditem">
 				<view v-if="type=='jc'" class="head jpfont">
-					<p>{{item.word!=item.kana?`${item.kana}【${item.word}】`:item.word}}</p>
+					<text>{{formatWordName(item.word,item.kana)}}</text>
+					<view style="display: flex;align-items: center;gap: 3px;">
+						<wd-tag v-for="tag in item.book" :key="tag" custom-class="space"
+							:color="tagColor.get(tag).color" :bg-color="tagColor.get(tag).bgcolor">{{tag}}</wd-tag>
+					</view>
 				</view>
 				<view v-else class="head">
 					<p>{{item.ch}}</p>
@@ -24,7 +28,7 @@
 		ref
 	} from 'vue'
 	import {
-		goPage
+		goPage,tagColor,formatWordName
 	} from "@/utils/common.js"
 	const props = defineProps({
 		list: {

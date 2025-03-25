@@ -1,21 +1,6 @@
 <template>
 	<view>
-		<NavBar title="今日学习" style="background-color: #f3f3f5;">
-			<template #right>
-				<view @click="goPage('writefrommemory')" class="swap">
-					<wd-icon name="edit" size="18px"></wd-icon>
-					<text>默写</text>
-				</view>
-			</template>
-			<template #bottom>
-				<wd-tabs slidable custom-class="tabs" v-model="currentTab">
-					<block v-for="(item,index) in tabList" :key="item.name">
-						<wd-tab :title="item.name">
-						</wd-tab>
-					</block>
-				</wd-tabs>
-			</template>
-		</NavBar>
+	
 		<view class="list">
 			<view class="item" @click="getInfo(item.id)" :key="item.id" v-for="(item,index) in array">
 				<view class="head">
@@ -41,7 +26,6 @@
 		computed
 	} from 'vue'
 	import $http from "@/api/index.js"
-	import NavBar from '@/components/navbar.vue'
 	import {
 		todaylearnStore
 	} from '@/stores/index.js'

@@ -105,4 +105,8 @@
 		right: 15px !important;
 		bottom: calc(80px + env(safe-area-inset-bottom)) !important;
 	}
+
+	:deep(.uv-scroll-list) {
+		padding-bottom: 0 !important;
+	}
 </style>

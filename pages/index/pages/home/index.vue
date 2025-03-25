@@ -12,7 +12,7 @@
 			<view class="plan">
 				<text>{{info.bookname}}</text>
 				<view>
-					<text @click="openPlan">
+					<text @click="goPage('/otherpages/setplan/setplan')">
 						修改计划
 					</text>
 					<wd-icon name="arrow-right" size="19px"></wd-icon>
@@ -31,7 +31,7 @@
 			<wd-progress custom-class="customprogress" :percentage="progress" hide-text />
 			<view class="progress">
 				<view><text>{{info.learnnum}}</text>/<text>{{info.wordnum}}</text></view>
-				<wd-button @click="goPage('/pages/word/thesaurus/thesaurus')" plain size="small">词汇列表</wd-button>
+				<wd-button plain size="small">词汇列表</wd-button>
 			</view>
 			<view class="btns">
 				<wd-button @click="review()" size="large" custom-class="reviewbtn recitebtn"
@@ -63,7 +63,7 @@
 			<view class="worditem" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id,type:'jc'})"
 				:key="item.id" v-for="item in recommendWord">
 				<view class="wordhead">
-					<text>{{item.word!=item.kana?`${item.kana}【${item.word}】`:item.word}}</text>
+					<text>{{formatWordName(item.word,item.kana)}}</text>
 					<view style="display: flex;align-items: center;gap: 3px;">
 						<wd-tag v-for="tag in item.book" :key="tag" custom-class="space"
 							:color="tagColor.get(tag).color" :bg-color="tagColor.get(tag).bgcolor">{{tag}}</wd-tag>
@@ -84,8 +84,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 修改计划 -->
-		<Setplan ref="setPlanRef"></Setplan>
 		<wd-toast />
 	</view>
 </template>
@@ -106,14 +104,15 @@
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import Setplan from "@/components/setplan.vue"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	import {
-		goPage,tagColor 
+		goPage,
+		tagColor,
+		formatWordName
 	} from "@/utils/common.js"
 	const review = () => {
 		if (info.value.review == 0) {
@@ -122,20 +121,6 @@
 			goPage('review')
 		}
 	}
-
-	const articleList = ref([])
-	const articleTotal = ref(0)
-	const articleParams = ref({
-		page: 1,
-		size: 10
-	})
-	onReachBottom(() => {
-		if (articleTotal.value > articleList.value.length) {
-			++articleParams.value.page
-			getArticleLis()
-		}
-	})
-
 	const progress = computed(() => {
 		if (info.value.learnnum) {
 			return (info.value.learnnum / info.value.wordnum) * 100
@@ -143,7 +128,6 @@
 			return 0
 		}
 	})
-
 	const info = ref({
 		bookname: "",
 		day: 0,
@@ -164,19 +148,22 @@
 		info.value = res.data
 	}
 	onShow(() => {
-		// getHomeInfo()
+		getHomeInfo()
+		getConfig()
+	})
+	const getConfig = async () => {
+		const res = await $http.user.getConfig()
+		config.value = res.data
+	}
+	const config = ref({
+		mode: ""
 	})
 	const startLearn = () => {
-		if (setPlanRef.value.config.mode == "学习模式") {
-			goPage('learn')
+		if (config.value.mode == "学习模式") {
+			goPage('/pages/word/learn/learn')
 		} else {
 			goPage('fastmode')
 		}
-	}
-
-	const setPlanRef = ref(null)
-	const openPlan = () => {
-		setPlanRef.value.show = true
 	}
 	const recommendWord = ref([])
 	const getRecommend = async () => {
@@ -401,12 +388,12 @@
 	.wordlist {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
-		padding: 10px;
+		gap: 15px;
+		padding: 15px;
 
 		.worditem {
 			border-radius: 8px;
-			padding: 10px;
+			padding: 15px;
 			background-color: white;
 
 			.wordfooter {

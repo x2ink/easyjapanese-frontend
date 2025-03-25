@@ -19,12 +19,6 @@
 			}
 		},
 		{
-			"path": "pages/register/register",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/word/thesaurus/thesaurus",
 			"style": {
 				"navigationStyle": "custom"
@@ -43,7 +37,7 @@
 			}
 		},
 		{
-			"path": "pages/learn/learn",
+			"path": "pages/word/learn/learn",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -262,6 +256,12 @@
 			},
 			{
 				"path": "setting/setting",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path": "setplan/setplan",
 				"style": {
 					"navigationStyle": "custom"
 				}

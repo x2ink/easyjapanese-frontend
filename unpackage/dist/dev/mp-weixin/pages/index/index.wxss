@@ -55,3 +55,6 @@
   right: 15px !important;
   bottom: calc(80px + env(safe-area-inset-bottom)) !important;
 }
+.data-v-1cf27b2a .uv-scroll-list {
+  padding-bottom: 0 !important;
+}

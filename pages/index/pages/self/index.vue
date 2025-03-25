@@ -60,33 +60,33 @@
 		<view class="cell">
 			<view class="cellitem" @click="goPage('/trendpages/mytrend/mytrend')">
 				<p>我的动态</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('/pages/word/mybooks/mybooks')">
 				<p>单词本</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('ranking')">
 				<p>排行榜</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('/otherpages/setting/setting')">
 				<p>设置</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 		</view>
 		<view class="cell">
 			<view class="cellitem" @click="goPage('/otherpages/feedback/feedback')">
 				<p>意见反馈</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('/otherpages/about/about')">
 				<p>关于我们</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('/otherpages/share/share')">
 				<p>分享App</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 		</view>
 	</view>

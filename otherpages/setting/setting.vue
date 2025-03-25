@@ -1,30 +1,29 @@
 <template>
 	<view>
 		<Navbar title="设置"></Navbar>
-		<view class="cell" style="margin-top: 5px;">
+		<view class="cell" style="margin-top: 0;">
 			<view class="cellitem" @click="setpwd()">
 				<p>修改密码</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('/userpages/reemail/reemail')">
 				<p>更换邮箱</p>
 				<view class="_GCENTER">
-					<text style="font-size: 12px;color: #999;">{{email}}</text>
-					<wd-icon name="arrow-right" size="20px"></wd-icon>
+					<text>{{email}}</text>
 				</view>
 			</view>
 		</view>
 		<view class="cell">
-			<view class="cellitem" @click="goPage('mybooks')">
+			<view class="cellitem" @click="goPage('/otherpages/setplan/setplan')">
 				<p>背单计划</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 		</view>
 		<view class="cell">
 			<view class="cellitem"
 				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
 				<p>服务条款&隐私协议</p>
-				<wd-icon name="arrow-right" size="20px"></wd-icon>
+				<wd-icon name="chevron-right" size="20px"></wd-icon>
 			</view>
 			<view class="cellitem" @click="goPage('mybooks')">
 				<p>ICP备案号</p>
@@ -86,7 +85,7 @@
 			font-size: 14px;
 
 			text {
-				font-size: 12px;
+				font-size: 14px;
 				color: #999;
 			}
 		}

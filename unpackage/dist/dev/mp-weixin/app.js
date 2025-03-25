@@ -5,11 +5,10 @@ const uni_modules_piniaPluginUnistorage_index = require("./uni_modules/pinia-plu
 if (!Math) {
   "./pages/index/index.js";
   "./pages/login/login.js";
-  "./pages/register/register.js";
   "./pages/word/thesaurus/thesaurus.js";
   "./pages/word/search/search.js";
   "./pages/word/wordlist/wordlist.js";
-  "./pages/learn/learn.js";
+  "./pages/word/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
   "./pages/fastmode/fastmode.js";
   "./pages/writefrommemory/writefrommemory.js";
@@ -45,6 +44,7 @@ if (!Math) {
   "./otherpages/share/share.js";
   "./otherpages/feedback/feedback.js";
   "./otherpages/setting/setting.js";
+  "./otherpages/setplan/setplan.js";
 }
 const _sfc_main = {
   onLaunch: function() {

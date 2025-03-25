@@ -1,7 +1,6 @@
 <template>
 	<view>
-		<NavBar title="等待复习" style="background-color: #f3f3f5;">
-		</NavBar>
+
 		<view class="list">
 			<view class="item" @click="getInfo(item.id)" :key="item.id" v-for="(item,index) in List">
 				<view class="head">
@@ -27,7 +26,6 @@
 		computed
 	} from 'vue'
 	import $http from "@/api/index.js"
-	import NavBar from '@/components/navbar.vue'
 	const showEmpty = computed(() => {
 		if (loading.value) {
 			return false

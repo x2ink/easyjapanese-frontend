@@ -1,10 +1,6 @@
 <template>
 	<view style="min-height: 100vh;background-color: #f5f5f5;display: flex;flex-direction: column;">
-		<NavBar title="快速背词" style="background-color: white;">
-			<template #right>
-				<wd-icon @click="openPlan()" name="setting1" size="25px"></wd-icon>
-			</template>
-		</NavBar>
+	
 		<view v-if="wordList.length==0&&!loading" class="learnsuccess">
 			<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
 			<text>{{total}}个单词背诵完成！赶紧默写吧！</text>
@@ -51,8 +47,6 @@
 				</view> -->
 			</view>
 		</view>
-		<!-- 修改计划 -->
-		<Setplan ref="setPlanRef" @change="changePlan"></Setplan>
 	</view>
 </template>
 
@@ -61,12 +55,10 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import NavBar from '@/components/navbar.vue'
 	import $http from "@/api/index.js"
 	import {
 		fastmodeStore
 	} from "@/stores/index.js"
-	import Setplan from "@/components/setplan.vue"
 	const setPlanRef = ref(null)
 	const wordList = ref([])
 	const total = ref(0)

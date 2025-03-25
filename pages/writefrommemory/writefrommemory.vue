@@ -1,5 +1,5 @@
 <template>
-	<NavBar title="单词默写"></NavBar>
+	<!-- <NavBar title="单词默写"></NavBar> -->
 	<view v-if="doneTask" class="learnsuccess">
 		<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
 		<text>单词已默写完成！</text>
@@ -31,7 +31,7 @@
 	import {
 		todaylearnStore
 	} from '@/stores/index.js'
-	import NavBar from '@/components/navbar.vue'
+	// import NavBar from '@/components/navbar.vue'
 	import {
 		useToast,
 		useMessage
