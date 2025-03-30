@@ -212,14 +212,6 @@
 			border-radius: 24px;
 			height: 24px;
 			background-color: #5880F2;
-			// &:nth-of-type(1) {
-
-			// }
-
-			// &:nth-of-type(2) {
-			// 	background-color: #5880F2;
-			// }
-
 			text {
 				font-size: $uni-font-size-sm;
 				line-height: $uni-font-size-sm;

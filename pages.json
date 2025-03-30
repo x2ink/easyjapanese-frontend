@@ -55,7 +55,7 @@
 			}
 		},
 		{
-			"path": "pages/writefrommemory/writefrommemory",
+			"path": "pages/word/writefrommemory/writefrommemory",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -171,6 +171,18 @@
 		},
 		{
 			"path": "pages/tools/compositiondetail/compositiondetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/test/test",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/word/lookwords/lookwords",
 			"style": {
 				"navigationStyle": "custom"
 			}

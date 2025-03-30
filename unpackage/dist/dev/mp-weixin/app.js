@@ -11,7 +11,7 @@ if (!Math) {
   "./pages/word/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
   "./pages/fastmode/fastmode.js";
-  "./pages/writefrommemory/writefrommemory.js";
+  "./pages/word/writefrommemory/writefrommemory.js";
   "./pages/todaylearn/todaylearn.js";
   "./pages/review/review.js";
   "./pages/todayreview/todayreview.js";
@@ -31,6 +31,8 @@ if (!Math) {
   "./pages/word/edithistory/edithistory.js";
   "./pages/tools/composition/composition.js";
   "./pages/tools/compositiondetail/compositiondetail.js";
+  "./pages/test/test.js";
+  "./pages/word/lookwords/lookwords.js";
   "./trendpages/addtrend/addtrend.js";
   "./trendpages/trenddetail/trenddetail.js";
   "./trendpages/mytrend/mytrend.js";

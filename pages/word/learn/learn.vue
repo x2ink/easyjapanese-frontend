@@ -1,150 +1,92 @@
 <template>
-	<Navbar :title="`单词${recite?'背诵':'学习'}`">
-		<template #bottom>
-			<wd-progress :percentage="progress" hide-text />
-		</template>
+	<Navbar title="单词学习">
 	</Navbar>
 	<view v-show="loading" class="loading _GCENTER">
 		<wd-loading />
 	</view>
 	<view v-if="!loading">
-		<view v-if="!learnSuccess">
-			<view style="padding:10px 15px;">
-				<view class="word jpfont">
-					<text>{{wordinfo.word.word}}</text>
-				</view>
-				<view class="hira jpfont">
-					<span>{{wordinfo.word.kana}}{{wordinfo.word.tone}}</span>|
-					<span>{{wordinfo.word.rome}}</span>
-				</view>
-				<view class="tools">
-					<view class="item">
-						<text>发音</text>
-						<wd-icon name="sound" size="14px"></wd-icon>
-					</view>
-					<view class="item" @click="goPage(`/pages/word/followread/followread`,{
-						word:wordinfo.word.kana,
-						id:wordinfo.word.id
-					})">
-						<text>默写</text>
-						<wd-icon name="edit" size="14px"></wd-icon>
-					</view>
-					<view class="item" @click="emits('openBook')">
-						<text>生词本</text>
-						<wd-icon name="books" size="14px"></wd-icon>
-					</view>
-				</view>
+		<view style="padding:10px 15px;">
+			<view class="word">
+				<text>{{formatWordName(wordinfo.word,wordinfo.kana)}}</text>
+				<text style="font-size: 18px;">{{wordinfo.tone}}</text>
 			</view>
-			<view class="examples">
-				<wd-skeleton theme="text" />
-				<wd-skeleton theme="text" />
-				<wd-skeleton theme="text" />
-				<view class="example" :key="item.id" v-for="item in wordinfo.word.example.slice(0, 3)">
-					<view>
-						<view class="ja jpfont">
-							<view class="worditem" v-for="item1 in item.read">
-								<view class="top">{{item1.top}}</view>
-								<view :class="{underline:item1.top}" class="body">{{item1.body}}</view>
-							</view>
-						</view>
-						<view class="ch">
-							<wd-tag custom-class="space" type="warning">译</wd-tag>
-							<!-- <text>{{item.ch}}</text> -->
-							<view>点击查看翻译</view>
-						</view>
-					</view>
-				</view>
+			<view class="hira">
+				<span>{{wordinfo.rome}}</span>|
+				<span>{{wordinfo.wordtype}}</span>
 			</view>
-			<!-- <Option @answer="answer" :data="wordinfo.meaning_option"></Option> -->
-			<view class="_GCENTER" @click="goPage('/otherpages/feedback/feedback', {
-					type:'单词纠错',
-					wordid,
-					wordtype:'jc'
-				})" style="margin-top: 20px;gap: 10px;">
-				<wd-button type="info" size="small" plain hairline icon="rollback">上一个</wd-button>
-				<wd-button type="info" size="small" plain hairline icon="edit">纠错</wd-button>
-				<wd-button type="info" size="small" plain hairline icon="tips">标熟</wd-button>
+			<view class="tools">
+				<view class="item">
+					<text>发音</text>
+					<wd-icon name="sound" size="14px"></wd-icon>
+				</view>
+				<view class="item" @click="emits('openBook')">
+					<text>生词本</text>
+					<wd-icon name="books" size="14px"></wd-icon>
+				</view>
 			</view>
 		</view>
-		<view v-else>
-			<view v-if="!recite" class="learnsuccess">
-				<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
-				<text>{{total}}个单词已学习完成！</text>
-				<wd-button style="margin-top: 40px;" size="large" @click="startRecite">开始背词</wd-button>
+		<view class="meanings">
+			<view style="padding-bottom: 10px;">
+				<text class="title">简明释义</text>
 			</view>
+			<wd-skeleton v-if="hideMeaning" :rowCol="[1,1]" theme="text" />
 			<view v-else>
-				<view v-if="!doneTodayTask">
-					<wd-progress :percentage="reciteDone" hide-text />
-					<view v-if="!showWord">
-						<!-- 汉字选择假名 -->
-						<SelectKana ref="selectKanaRef" @answer="answerResult" v-if="currentProgress==0"
-							:wordinfo="wordinfo">
-						</SelectKana>
-						<!-- 单词选择意思 -->
-						<WordsSelectMeaning ref="wordsSelectMeaningRef" @answer="answerResult"
-							v-else-if="currentProgress==1" :wordinfo="wordinfo">
-						</WordsSelectMeaning>
-						<!-- 意思选择单词 -->
-						<MeaningSelectWords ref="meaningSelectWordsRef" @answer="answerResult"
-							v-else-if="currentProgress==2" :wordinfo="wordinfo">
-						</MeaningSelectWords>
-						<!-- 发音选择单词 -->
-						<SoundSelectWord ref="soundSelectWordRef" @answer="answerResult" v-else-if="currentProgress==3"
-							:wordinfo="wordinfo"></SoundSelectWord>
-					</view>
-					<view v-else>
-						<!-- <WordDetail :wordinfo="wordinfo" type="jc"></WordDetail> -->
-						<view class="next">
-							<wd-button @click="continueNext" custom-class="btn" :round="false"
-								size="large">继续</wd-button>
-						</view>
-					</view>
-				</view>
-				<view v-else class="learnsuccess">
-					<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
-					<text>{{total}}个单词已练习完成！赶紧默写吧！</text>
-					<view style="display: flex;gap: 15px;margin-top: 40px;">
-						<wd-button size="large" @click="goPage('todaylearn')">立刻默写</wd-button>
-						<wd-button size="large" type="info" @click="init()">再来一组</wd-button>
-					</view>
-					<view class="recitelist">
-						<view v-for="item in doneWord" :key="item.id" class="reciteitem">
-							<text>{{item.word}}</text>
-							<text>错误 {{item.error_count}} 次</text>
-						</view>
+				<view class="meaning" :key="item.meaning" v-for="(item,index) in wordinfo.meaning">
+					<view class="text">
+						{{item.meaning}}
 					</view>
 				</view>
 			</view>
+		</view>
+		<view class="examples">
+			<text class="title">例句</text>
+			<view v-if="hideMeaning">
+				<wd-skeleton theme="text" :rowCol="[1,1,1,1,1,1]" />
+			</view>
+			<view v-else class="example" :key="item.id" v-for="item in wordinfo.example.slice(0, 3)">
+				<view>
+					<view class="ja">
+						<view class="worditem" v-for="item1 in item.read">
+							<view class="top">{{item1.top}}</view>
+							<view :class="{underline:item1.top}" class="body">{{item1.body}}</view>
+						</view>
+					</view>
+					<view class="ch">
+						<text>{{item.ch}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="_GCENTER" @click="goPage('/otherpages/feedback/feedback', {
+				type:'单词纠错',
+				wordid,
+				wordtype:'jc'
+			})" style="margin-top: 20px;gap: 10px;">
+			<wd-button type="info" size="small" plain hairline icon="edit">纠错</wd-button>
+			<wd-button type="info" size="small" plain hairline icon="tips">标熟</wd-button>
+			<!-- 	<wd-button @click="goPage('/pages/word/writefrommemory/writefrommemory')" type="info" size="small" plain
+				hairline icon="edit">去默写</wd-button> -->
 		</view>
 	</view>
 	<!-- 占位 -->
-	<view style="height: calc(60px + env(safe-area-inset-bottom));">
+	<view style="height: calc(80px + env(safe-area-inset-bottom));">
 
 	</view>
 	<view class="handle">
-		<!-- 	<view class="btn _GCENTER">
-			<text>看答案</text>
-			<view style="background-color: #F0883A;"></view>
-		</view> -->
-		<view class="btn _GCENTER">
-			<text>认识</text>
-			<view style="background-color: #34D19D;"></view>
+		<!-- <wd-progress :percentage="percentage" hide-text /> -->
+		<view>
+			<view @click="previous()" class="btn _GCENTER">
+				<text>上一个</text>
+				<view style="background-color: #E78938;"></view>
+			</view>
+			<wd-icon @click="hideMeaning=!hideMeaning" v-if="!hideMeaning" name="browse" size="25px"
+				color="#999"></wd-icon>
+			<wd-icon @click="hideMeaning=!hideMeaning" v-else name="browse-off" size="25px" color="#999"></wd-icon>
+			<view @click="next()" class="btn _GCENTER">
+				<text>下一个</text>
+				<view style="background-color: #34D19D;"></view>
+			</view>
 		</view>
-		<view class="btn _GCENTER">
-			<text>不认识</text>
-			<view style="background-color: #F0883A;"></view>
-		</view>
-		<!-- 		<view class="btn _GCENTER">
-			<text>下一个</text>
-			<view style="background-color: #34D19D;"></view>
-		</view>
-		<view class="btn _GCENTER">
-			<text>记错了</text>
-			<view style="background-color: #F0883A;"></view>
-		</view> -->
-		<!-- <wd-button @click="previousWord" :round="false" size="large" type="info">上一个</wd-button> -->
-		<!-- <wd-button @click="nextWord" :round="false" size="large">看答案</wd-button> -->
-		<!-- <wd-button @click="nextWord" :round="false" size="large">下一个</wd-button> -->
 	</view>
 	<wd-toast />
 </template>
@@ -162,173 +104,66 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	import Option from '@/components/learnword/option.vue'
+	import {
+		goPage,
+		tagColor,
+		formatWordName
+	} from "@/utils/common.js"
 	const toast = useToast()
 	const loading = ref(true)
+	const position = ref(0)
+	const previous = () => {
+		if (position.value == 0) {
+			position.value = wordList.value.length - 1
+		} else {
+			--position.value
+		}
+	}
+	const next = () => {
+		if (position.value == wordList.value.length - 1) {
+			position.value = 0
+		} else {
+			++position.value
+		}
+	}
 	const wordinfo = ref({})
-	const wordsSelectMeaningRef = ref(null)
+	const wordList = ref([])
+	watch(
+		() => position.value,
+		(newValues, oldValues) => {
+			wordinfo.value = wordList.value[newValues]
+		}
+	);
+	const total = ref(0)
+	const hideMeaning = ref(false)
 	const init = async () => {
 		const res = await $http.word.todayWord()
 		wordList.value = res.data
+		total.value = res.total
 		wordinfo.value = res.data[0]
 		loading.value = false
 	}
 	onMounted(() => {
 		init()
 	})
-
-
-
-
-
-
-
-
-
-
-
-	import WordsSelectMeaning from "@/components/learnword/wordsSelectMeaning.vue"
-	import MeaningSelectWords from "@/components/learnword/meaningSelectWords.vue"
-	import SelectKana from "@/components/learnword/selectKana.vue"
-	import SoundSelectWord from "@/components/learnword/soundSelectWord.vue"
-	// import WordDetail from "@/components/worddetail.vue"
-
-	import {
-		learnmodeStore
-	} from "@/stores/index.js"
-
-	// 需要被缓存的变量
-	const current = ref(0)
-	const wordList = ref([])
-	const total = ref(0)
-	const recite = ref(false)
-	const doneTodayTask = ref(false)
-	const currentProgress = ref(0)
-	const showWord = ref(false)
-	const doneWord = ref([])
-	const learnSuccess = ref(false)
-
-
-	const selectKanaRef = ref(null)
-
-	const meaningSelectWordsRef = ref(null)
-	const soundSelectWordRef = ref(null)
-	const goPage = (path) => {
-		uni.redirectTo({
-			url: `/pages/${path}/${path}`
-		})
-	}
-	const reciteDone = computed(() => {
-		return (doneWord.value.length / total.value) * 100
-	})
-	const setOption = () => {
-		if (currentProgress.value == 0) {
-			selectKanaRef.value.setOption(wordinfo.value.kana_option)
-		} else if (currentProgress.value == 1) {
-			wordsSelectMeaningRef.value.setOption(wordinfo.value.meaning_option)
-		} else if (currentProgress.value == 2) {
-			meaningSelectWordsRef.value.setOption(wordinfo.value.word_option)
-		} else if (currentProgress.value == 3) {
-			soundSelectWordRef.value.setOption(wordinfo.value.voice_option)
-		}
-	}
-	const continueNext = () => {
-		if (wordinfo.value.progress.findIndex(item => !item) == -1) {
-			wordinfo.value.done = true
-			doneWord.value.push({
-				id: wordinfo.value.id,
-				word: wordinfo.value.word,
-				error_count: wordinfo.value.error_count,
-			})
-		}
-		getWord()
-		showWord.value = false
-	}
-	const answerResult = (e) => {
-		if (e) {
-			wordinfo.value.progress[currentProgress.value] = true
-		} else {
-			++wordinfo.value.error_count
-			if (wordinfo.value.kana == wordinfo.value.word) {
-				wordinfo.value.progress = [true, false, false, false]
-			} else {
-				wordinfo.value.progress = [false, false, false, false]
-			}
-		}
-		setTimeout(() => {
-			showWord.value = true
-			setObject()
-		}, 500)
-	}
-	const progress = computed(() => {
-		return (current.value / (wordList.value.length)) * 100
-	})
-	const getWord = async () => {
-		if (wordList.value.every(item => item.done)) {
-			doneTodayTask.value = true
-			await $http.word.recordlearn({
-				words: doneWord.value.map(item => item.id)
-			})
-			learnmodeStore().clear()
-			return
-		} else {
-			let index = wordList.value.findIndex(item => !item.done)
-			current.value = index
-			wordinfo.value = wordList.value[index]
-			currentProgress.value = wordinfo.value.progress.findIndex(item => !item)
-			setTimeout(() => {
-				setOption()
-			}, 10)
-			let temp = wordList.value[0]
-			wordList.value.splice(0, 1)
-			wordList.value.push(temp)
-		}
-	}
-	const startRecite = () => {
-		getWord()
-		recite.value = true
-	}
-	const setObject = () => {
-		learnmodeStore().setObj({
-			current: current.value,
-			wordList: wordList.value,
-			total: total.value,
-			recite: recite.value,
-			doneTodayTask: doneTodayTask.value,
-			currentProgress: currentProgress.value,
-			showWord: showWord.value,
-			doneWord: doneWord.value,
-			learnSuccess: learnSuccess.value,
-			wordinfo: wordinfo.value
-		})
-	}
-	const nextWord = () => {
-		if (current.value >= wordList.value.length - 1) {
-			learnSuccess.value = true
-		} else {
-			++current.value
-		}
-		setObject()
-	}
-	const previousWord = () => {
-		if (current.value <= 0) {
-			toast.warning(`没有上一个了`)
-		} else {
-			--current.value
-		}
-		setObject()
-	}
-
-	watch(current, (newVal, oldVal) => {
-		if (!learnSuccess.value) {
-			wordinfo.value = wordList.value[newVal]
-		}
-	})
 </script>
 
 <style lang="scss" scoped>
 	:deep(.wd-progress) {
 		padding-top: 0px;
+	}
+
+	.title {
+		font-size: $uni-font-size-sm;
+		color: $uni-text-color-grey;
+	}
+
+	.meanings {
+		background-color: white;
+		border-radius: 8px;
+		padding: 15px;
+		margin: 0 15px 15px;
+		font-size: 18px;
 	}
 
 	.examples {
@@ -348,7 +183,7 @@
 				display: flex;
 				align-items: center;
 				gap: 5px;
-				font-size: $uni-font-size-base;
+				font-size: 16px;
 				color: $uni-text-color-grey;
 				background-color: $uni-bg-color-grey;
 				border-radius: 4px;
@@ -365,51 +200,32 @@
 					justify-content: center;
 
 					.top {
-						// color: #57D09B;
-						font-size: 8px;
-						height: 8px;
+						font-size: 14px;
+						height: 14px;
 						margin: 0 2px;
 					}
 
 					.body {
-						font-size: $uni-font-size-base;
+						font-size: 18px;
 					}
 
 					.underline {
-						// color: #57D09B;
-						text-decoration: underline;
+						// text-decoration: underline;
 					}
 				}
 			}
 		}
 	}
 
-	.recitelist {
-		width: calc(100vw - 30px);
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		background-color: #fff;
-		padding: 20px 30px;
-		margin-top: 20px;
-		box-sizing: border-box;
-		border-radius: $uni-border-radius-base;
 
-		.reciteitem {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
+	:deep(.wd-progress) {
+		padding-top: 0 !important;
 	}
 
 	.handle {
 		border-top: #f5f5f5 2px solid;
+		padding-top: 10px;
 		background-color: white;
-		padding: 15px;
-		gap: 15px;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
 		padding-bottom: env(safe-area-inset-bottom);
 		position: fixed;
 		bottom: 0px;
@@ -417,19 +233,28 @@
 		left: 0;
 		z-index: 9999;
 
-		.btn {
-			flex-direction: column;
-			gap: 5px;
+		>view {
+			gap: 15px;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
 
-			>text {
-				font-size: 14px;
-				font-weight: bold;
-			}
+			.btn {
+				width: 80px;
+				height: 40px;
+				flex-direction: column;
+				gap: 5px;
 
-			>view {
-				width: 15px;
-				height: 3px;
-				border-radius: 3px;
+				>text {
+					font-size: 14px;
+					font-weight: bold;
+				}
+
+				>view {
+					width: 15px;
+					height: 3px;
+					border-radius: 3px;
+				}
 			}
 		}
 	}
@@ -441,12 +266,12 @@
 	.word {
 		display: flex;
 		align-items: center;
-		gap: 5px;
 		font-size: $uni-font-size-subtitle;
 		font-weight: bold;
 	}
 
 	.hira {
+		margin: 10px 0;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px;
@@ -467,7 +292,7 @@
 
 	.tools {
 		display: flex;
-		margin-top: 10px;
+		margin: 15px 0 10px 0;
 		gap: 10px;
 
 		>.item {
@@ -481,13 +306,6 @@
 			border-radius: 24px;
 			height: 24px;
 			background-color: #5880F2;
-			// &:nth-of-type(1) {
-
-			// }
-
-			// &:nth-of-type(2) {
-			// 	background-color: #5880F2;
-			// }
 
 			text {
 				font-size: $uni-font-size-sm;

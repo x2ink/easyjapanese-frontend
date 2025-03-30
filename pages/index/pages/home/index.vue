@@ -19,12 +19,12 @@
 				</view>
 			</view>
 			<view class="task">
-				<view @click="goPage('todayreview')">
+				<view @click="goPage('/pages/word/lookwords/lookwords',{type:'review',title:'等待复习'})">
 					<text>等待复习</text>
 					<text>{{info.review}}</text>
 				</view>
-				<view @click="goPage('todaylearn')">
-					<text>今日学习</text>
+				<view @click="goPage('/pages/word/lookwords/lookwords',{type:'new',title:'今日目标'})">
+					<text>今日目标</text>
 					<text>{{info.learn}}</text>
 				</view>
 			</view>

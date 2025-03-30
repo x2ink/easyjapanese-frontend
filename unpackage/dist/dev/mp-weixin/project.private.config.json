@@ -4,22 +4,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/word/learn/learn",
-          "pathName": "pages/word/learn/learn",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/word/worddetail/worddetail",
-          "pathName": "pages/word/worddetail/worddetail",
-          "query": "id=7040&type=jc",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/word/learn/learn",
-          "pathName": "pages/word/learn/learn",
+          "name": "pages/word/writefrommemory/writefrommemory",
+          "pathName": "pages/word/writefrommemory/writefrommemory",
           "query": "",
           "launchMode": "default",
           "scene": null

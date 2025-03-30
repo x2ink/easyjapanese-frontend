@@ -8,7 +8,7 @@
     "pages/word/learn/learn",
     "pages/word/worddetail/worddetail",
     "pages/fastmode/fastmode",
-    "pages/writefrommemory/writefrommemory",
+    "pages/word/writefrommemory/writefrommemory",
     "pages/todaylearn/todaylearn",
     "pages/review/review",
     "pages/todayreview/todayreview",
@@ -27,7 +27,9 @@
     "pages/word/edit/edit",
     "pages/word/edithistory/edithistory",
     "pages/tools/composition/composition",
-    "pages/tools/compositiondetail/compositiondetail"
+    "pages/tools/compositiondetail/compositiondetail",
+    "pages/test/test",
+    "pages/word/lookwords/lookwords"
   ],
   "subPackages": [
     {
