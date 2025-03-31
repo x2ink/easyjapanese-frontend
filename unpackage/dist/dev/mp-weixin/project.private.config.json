@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/word/learn/learn",
+          "pathName": "pages/word/learn/learn",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/writefrommemory/writefrommemory",
           "pathName": "pages/word/writefrommemory/writefrommemory",
           "query": "",
