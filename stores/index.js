@@ -5,11 +5,11 @@ import {
 	test_userModule
 } from '@/stores/test/user.js';
 import {
-	searchrecordModule
-} from '@/stores/release/searchrecord.js';
+	historyrecordModule
+} from '@/stores/release/historyrecord.js';
 import {
-	test_searchrecordModule
-} from '@/stores/test/searchrecord.js';
+	test_historyrecordModule
+} from '@/stores/test/historyrecord.js';
 import {
 	learnmodeModule
 } from '@/stores/release/learnmode.js';
@@ -41,11 +41,11 @@ export const userStore = () => {
 		return userModule()
 	}
 }
-export const searchrecordStore = () => {
+export const historyrecordStore = () => {
 	if (process.env.NODE_ENV === 'development') {
-		return test_searchrecordModule()
+		return test_historyrecordModule()
 	} else {
-		return searchrecordModule()
+		return historyrecordModule()
 	}
 }
 export const learnmodeStore = () => {

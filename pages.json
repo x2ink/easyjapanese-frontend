@@ -158,12 +158,6 @@
 			}
 		},
 		{
-			"path": "pages/word/edithistory/edithistory",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/tools/composition/composition",
 			"style": {
 				"navigationStyle": "custom"
@@ -204,12 +198,6 @@
 			},
 			{
 				"path": "mytrend/mytrend",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "search/search",
 				"style": {
 					"navigationStyle": "custom"
 				}

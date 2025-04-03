@@ -1,240 +1,443 @@
 <template>
-	<view>
-		<Navbar>
-			<template #left>
-				<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
-					<view class="search-type">
-						<text>{{ current }}</text>
-						<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
-					</view>
-				</wd-popover>
-			</template>
-		</Navbar>
-		<SearchInput @confirm="search" @change="inputChange">
-		</SearchInput>
-		<view class="title" v-if="total==0">
-			<text>搜索历史</text>
-			<wd-icon name="clear" @click="clear()" size="20px" color="#999" />
-		</view>
-		<view class="history" v-if="total==0">
-			<view @click="clickrecord(item)" class="item" v-for="item in history" :key="item">
-				{{item}}
-			</view>
-			<view class="more" @click="lookmore()" v-if="moreShow">
-				<wd-icon size="18px" name="chevron-down" color="#000" />
-			</view>
-		</view>
-		<view style="margin-top: 40px;" v-if="noResult">
-			<wd-status-tip :image-size="{
-			        height: 60,
-			        width: 60
-			}" image="http://jp.x2.ink/images/blank.png" tip="没有搜到结果哦" />
-		</view>
-		<view v-if="List.length>0" style="padding-top: 15px;">
-			<WordList :type="`${current=='日中词典'?'jc':'cj'}`" :list="List">
-			</WordList>
-		</view>
-		<wd-loadmore v-if="List.length>0&&total>List.length" custom-class="loadmore" :state="loadmore" />
+	<div class="page-container">
+		<!-- 顶部导航栏 -->
+		<div :style="{paddingTop:navBarHeight}" class="search-header">
+			<div class="search-bar-container">
+				<!-- 黑色单调返回按钮 -->
+				<text @click="back()" class="fas fa-chevron-left back-btn"></text>
+				<!-- 搜索框 -->
+				<div class="search-input-container">
+					<input v-model="value" confirm-type="search" @confirm="confirm" type="text" placeholder="输入关键词搜索"
+						class="search-input">
+					<text class="fas fa-search search-icon"></text>
+				</div>
+			</div>
+
+			<!-- 语言切换标签 -->
+			<div class="language-tabs">
+				<view @click="current='jc'" :class="{active:current=='jc',inactive:current!='jc'}" class="search-tab">
+					日语搜索</view>
+				<view @click="current='cj'" :class="{active:current=='cj',inactive:current!='cj'}" class="search-tab">
+					中文搜索</view>
+			</div>
+		</div>
+
+		<!-- 主要内容 -->
+		<div class="main-content">
+			<!-- 搜索历史 -->
+			<div v-if="total==0">
+				<div class="section-title" style="margin-top: 12px;">
+					<span>搜索历史</span>
+					<view class="clear-btn" @click="clear()">清空</view>
+				</div>
+
+				<div class="history-container">
+					<text @click="fastlook(item)" v-for="item in history" :key="item"
+						class="history-chip _GCENTER">{{item}}<text @click.stop="clearVal(item)"
+							class="fas fa-times close-icon"></text></text>
+				</div>
+			</div>
+
+			<!-- 热门搜索 -->
+			<div class="hot-words" v-if="total==0">
+				<div class="section-title">
+					<span>热门搜索</span>
+				</div>
+
+				<div class="hot-words-container">
+					<text @click="fastlook(item)" v-for="item in recommendWord" :key="item"
+						class="hot-word">{{item}}</text>
+				</div>
+			</div>
+			<!-- 搜索结果示例 -->
+			<div style="padding-bottom: env(safe-area-inset-bottom);">
+				<!-- 日语单词项 -->
+				<view v-if="total>0&&current=='jc'">
+					<div @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
+						v-for="item in List" :key="item.id">
+						<div class="word-header">
+							<div>
+								<span class="word-kanji">{{formatWordName(item.word,item.kana)}}</span>
+							</div>
+							<!-- <span class="word-level level-n5">N5</span> -->
+						</div>
+						<div class="word-meaning">
+							<wd-text color="#424242" size="14px" :text="item.meaning.join('')"></wd-text>
+						</div>
+						<!-- 	<div class="word-stats">
+							<text class="fas fa-search"></text>查询{{item.browse}}次
+						</div> -->
+					</div>
+				</view>
+				<!-- 日中词典项 -->
+				<!-- 	<view>
+					<div class="dict-item">
+						<div class="dict-chinese">漂亮</div>
+						<div class="dict-pinyin">piào liang</div>
+					</div>
+				</view> -->
+			</div>
+		</div>
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<wd-toast />
-	</view>
+	</div>
 </template>
 
 <script setup>
 	import {
 		ref,
-		onMounted,
-		watch,
-		computed
+		onMounted
 	} from 'vue'
-	import WordList from "@/components/wordlist/wordlist.vue"
-	import Navbar from '@/components/navbar/navbar.vue';
-	import $http from "@/api/index.js"
-	import SearchInput from '@/components/searchinput/searchinput.vue'
 	import {
-		searchrecordStore
-	} from "@/stores/index.js"
-	import {
+		onLoad,
+		onShow,
 		onReachBottom,
 		onPageScroll,
 	} from "@dcloudio/uni-app"
 	import {
+		goPage,
+		formatWordName
+	} from "@/utils/common.js"
+	import $http from "@/api/index.js"
+	import {
+		historyrecordStore
+	} from "@/stores/index.js"
+	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	const toast = useToast()
-	const scrollTop = ref(0)
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
-	const inputChange = (e) => {
-		val.value = e
-	}
-	const loadmore = computed(() => {
-		if (total.value == List.value.length) {
-			return "finished"
-		} else {
-			return "loading"
-		}
-	})
-	const history = ref([])
-	const moreShow = ref(false)
-	const clear = () => {
-		moreShow.value = false
-		history.value = []
-		searchrecordStore().clear('word')
-	}
-	const current = ref('日中词典')
-	const menu = ref([{
-			content: '日中词典'
-		},
-		{
-			content: '中日词典'
-		}
-	])
-	const changeSearchType = (e) => {
-		current.value = e.item.content
-	}
-	const lookmore = () => {
-		moreShow.value = false
-		history.value = searchrecordStore().wordlist
-	}
-	onMounted(() => {
-		let record = searchrecordStore().wordlist
-		if (record.length > 10) {
-			moreShow.value = true
-		}
-		history.value = record.slice(0, 10)
-	})
-	const page = ref(1)
-	const size = ref(20)
-	const val = ref('')
-	const List = ref([])
-	const total = ref(0)
-	const noResult = ref(false)
-	watch(current, (newVal, oldVal) => {
-		noResult.value = false
-		List.value = []
-		page.value = 1
-		if (val.value.length > 0) {
-			toast.loading('正在查询中...')
-		}
-		getList()
-	})
 	onReachBottom(() => {
 		if (total.value > List.value.length) {
 			++page.value
 			getList()
 		}
 	})
-	const clickrecord = (item) => {
-		val.value = item
-		search()
+	const back = () => {
+		uni.navigateBack({
+			delta: 1
+		})
 	}
-	const search = async () => {
-		if (!searchrecordStore().wordlist.includes(val.value)) {
-			history.value.unshift(val.value)
-			searchrecordStore().push(val.value, 'word')
-		}
-		toast.loading('正在查询中...')
-		noResult.value = false
-		List.value = []
-		page.value = 1
-		getList()
+	const scrollTop = ref(0)
+	onPageScroll((e) => {
+		scrollTop.value = e.scrollTop
+	})
+	const toast = useToast()
+	const current = ref('jc')
+	const navBarHeight = ref(0)
+	const recommendWord = ref([])
+	const total = ref(0)
+	const history = ref([])
+	const page = ref(1)
+	const size = ref(20)
+	const List = ref([])
+	const value = ref('')
+	const fastlook = (val) => {
+		value.value = val
+		search()
 	}
 	const getList = async () => {
 		let res;
-		if (current.value == '日中词典') {
-			res = await $http.word.jcSearch(page.value, size.value, val.value)
+		if (current.value == 'jc') {
+			res = await $http.word.jcSearch(page.value, size.value, value.value)
 		} else {
-			res = await $http.word.cjSearch(page.value, size.value, val.value)
+			res = await $http.word.cjSearch(page.value, size.value, value.value)
 		}
 		toast.close()
 		total.value = res.total
 		if (total.value === 0) {
-			noResult.value = true
 			return
 		}
 		List.value = List.value.concat(res.data)
-
 	}
-</script>
-
-<style scoped lang="scss">
-	:deep(.body) {
-		margin-top: 5px;
+	const getRecommend = async () => {
+		const res = await $http.word.getRecommend()
+		recommendWord.value = res.data
 	}
-
-	:deep(.search) {
-		flex: 1;
-		background-color: #fff;
-		padding: 7px 10px;
-		box-sizing: border-box;
-		border-radius: 38px;
-		margin: 0 10px;
+	const clear = () => {
+		history.value = []
+		historyrecordStore().clear('word')
 	}
-
-	:deep(.loadmore) {
-		background-color: #f4f4f4;
-		margin: 0;
-
-		>view {
-			margin: 0;
+	const clearVal = (val) => {
+		historyrecordStore().del('word', val)
+		let record = historyrecordStore().wordlist
+		history.value = record.slice(0, 10)
+	}
+	const confirm = ({
+		detail
+	}) => {
+		if (detail.value.trim().length === 0) {
+			toast.warning("搜索内容为空")
+			return
 		}
+		if (!historyrecordStore().wordlist.includes(detail.value.trim())) {
+			history.value.unshift(detail.value.trim())
+			historyrecordStore().push(detail.value.trim(), 'word')
+		}
+		value.value = detail.value.trim()
+		search()
 	}
-
-	:deep(.wd-search__cover) {
-		background-color: #EFEFEF;
+	const search = () => {
+		toast.loading('正在查询中...')
+		List.value = []
+		page.value = 1
+		getList()
 	}
-
-	:deep(.wd-search__search-left-icon) {
-		color: var(--wot-search-icon-color, var(--wot-color-icon, #d9d9d9)) !important;
-		z-index: 9 !important;
+	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
+		getRecommend()
+		let record = historyrecordStore().wordlist
+		history.value = record.slice(0, 10)
+	})
+</script>
+<style>
+	page {
+		background-color: white;
 	}
-
-	:deep(.wd-search__input) {
-		background-color: #EFEFEF;
-		border-radius: var(--wot-search-input-radius, 15px);
-	}
-
-	.search-type {
-		margin-left: 10px;
-	}
-
-	.title {
-		padding: 15px;
+</style>
+<style scoped lang="scss">
+	.page-container {
 		display: flex;
-		font-size: 14px;
-		align-items: center;
-		justify-content: space-between;
+		flex-direction: column;
 	}
 
-	.history {
-		padding: 0 10px;
+	/* 顶部导航栏 */
+	.search-header {
+		padding: 14px 16px 12px;
+		background-color: white;
+		border-bottom: 1px solid #f0f0f0;
+		position: sticky;
+		top: 0;
+	}
+
+	.search-bar-container {
+		display: flex;
+		align-items: center;
+	}
+
+	/* 黑色单调返回按钮 */
+	.back-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 8px;
+		background-color: transparent;
+		color: #212121;
+		font-size: 18px;
+	}
+
+	.search-input-container {
+		flex: 1;
+		position: relative;
+	}
+
+	.search-input {
+		padding: 8px 12px 8px 36px;
+		border-radius: 20px;
+		border: none;
+		background-color: #f5f5f5;
+		font-size: 14px;
+		outline: none;
+	}
+
+	.search-input:focus {
+		box-shadow: 0 0 0 1px #07C160;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #999;
+		font-size: 14px;
+	}
+
+	.language-tabs {
+		display: flex;
+		margin-top: 12px;
+		align-items: center;
+	}
+
+	.search-tab {
+		padding: 6px 12px;
+		border-radius: 16px;
+		font-size: 14px;
+		margin-right: 8px;
+		border: none;
+		cursor: pointer;
+	}
+
+	.search-tab.active {
+		background-color: #07C160;
+		color: white;
+	}
+
+	.search-tab.inactive {
+		background-color: #f0f0f0;
+		color: #757575;
+	}
+
+	/* 主要内容区 */
+	.main-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: 0 16px;
+	}
+
+	/* 搜索历史 */
+	.section-title {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 14px;
+		font-weight: 500;
+		color: #333;
+	}
+
+	.clear-btn {
+		font-size: 12px;
+		color: #999;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.history-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 6px;
+		margin: 12px 0;
+	}
 
-		>view {
-			background-color: #EFEFEF;
-		}
+	.history-chip {
+		padding: 6px 12px;
+		background-color: #f5f5f5;
+		border-radius: 16px;
+		font-size: 13px;
+		color: #424242;
+	}
 
+	.history-chip .close-icon {
+		color: #999;
+		margin-left: 4px;
+		font-size: 12px;
+	}
 
+	/* 热门搜索 */
+	.hot-words-container {
+		display: flex;
+		flex-wrap: wrap;
+		margin-top: 12px;
+		gap: 6px;
+	}
 
-		.item {
-			font-size: $uni-font-size-sm;
-			height: 28px;
-			line-height: 28px;
-			padding: 0 15px;
-			border-radius: 28px;
-		}
+	.hot-word {
+		display: inline-block;
+		padding: 8px 16px;
+		background-color: #E8F5E9;
+		border-radius: 20px;
+		font-size: 14px;
+		color: #2E7D32;
+		font-weight: 500;
+	}
 
-		.more {
-			border-radius: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 28px;
-			width: 28px;
-		}
+	.word-item {
+		padding: 12px 0;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	.word-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.word-kanji {
+		font-size: 18px;
+		font-weight: 600;
+		color: #212121;
+	}
+
+	.word-furigana {
+		font-size: 14px;
+		color: #757575;
+		margin-left: 8px;
+	}
+
+	.word-katakana {
+		font-size: 14px;
+		color: #757575;
+		font-style: italic;
+	}
+
+	.word-level {
+		font-size: 12px;
+		padding: 2px 6px;
+		border-radius: 4px;
+		color: white;
+		font-weight: 500;
+	}
+
+	.level-n5 {
+		background-color: #4CAF50;
+	}
+
+	.level-n4 {
+		background-color: #2196F3;
+	}
+
+	.level-n3 {
+		background-color: #9C27B0;
+	}
+
+	.level-n2 {
+		background-color: #FF9800;
+	}
+
+	.level-n1 {
+		background-color: #F44336;
+	}
+
+	.word-meaning {
+		font-size: 14px;
+		color: #424242;
+		margin-top: 6px;
+		line-height: 1.4;
+	}
+
+	.word-stats {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-top: 8px;
+		font-size: 12px;
+		color: #9E9E9E;
+	}
+
+	.word-stats i {
+		margin-right: 4px;
+	}
+
+	/* 日中词典结果项 */
+	.dict-item {
+		background-color: white;
+		border-radius: 8px;
+		padding: 12px;
+		margin-bottom: 12px;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	.dict-chinese {
+		font-size: 16px;
+		font-weight: 500;
+		color: #212121;
+	}
+
+	.dict-pinyin {
+		font-size: 14px;
+		color: #757575;
+		margin-top: 4px;
 	}
 </style>

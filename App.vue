@@ -1,6 +1,26 @@
 <script>
 	export default {
 		onLaunch: function() {
+			// uni.loadFontFace({
+			// 	family: 'Font Awesome 6 Free',
+			// 	source: 'url("https://jp.x2.ink/font/fa-regular-400.woff2")',
+			// 	success() {
+			// 		console.log('success')
+			// 	},
+			// 	fail(res) {
+			// 		console.log("加载字体图标失败", res);
+			// 	}
+			// })
+			// uni.loadFontFace({
+			// 	family: 'Font Awesome 6 Free',
+			// 	source: 'url("https://jp.x2.ink/font/fa-solid-900.woff2")',
+			// 	success() {
+			// 		console.log('success')
+			// 	},
+			// 	fail(res) {
+			// 		console.log("加载字体图标失败", res);
+			// 	}
+			// })
 			console.log('App Launch')
 		},
 		onShow: function() {
@@ -13,14 +33,35 @@
 </script>
 
 <style>
-	/* 	@font-face {
-		font-family: 'jp';
-		src: url('~http://jp.x2.ink/images/font/jp.ttf');
-	} */
+	@import url("./static/css/all.css");
+
+	button::after {
+
+		border: none;
+
+	}
+
+	button {
+
+		background-color: transparent;
+
+		padding-left: 0;
+
+		padding-right: 0;
+
+		line-height: inherit;
+
+	}
+
+	button {
+
+		border-radius: 0;
+
+	}
 
 
 	page {
-		background: #F3F3F5;
+		background: #f8f9fa;
 		background-attachment: fixed;
 	}
 

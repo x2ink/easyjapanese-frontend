@@ -1,7 +1,7 @@
 import {
 	defineStore
 } from 'pinia'
-export const searchrecordModule = defineStore('searchrecord', {
+export const historyrecordModule = defineStore('historyrecord', {
 	unistorage: true, // 是否持久化
 	state: () => {
 		return {

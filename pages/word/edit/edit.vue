@@ -1,88 +1,114 @@
 <template>
-	<view>
-		<Navbar title="单词编辑">
-		</Navbar>
-		<view style="padding: 0 15px;">
-			<view class="word">
-				<text>{{jcinfo.word}}</text>
-			</view>
-			<view class="hira">
-				<span>{{jcinfo.kana}}{{jcinfo.tone}}</span>|
-				<span>{{jcinfo.rome}}</span>
-			</view>
-		</view>
-		<view class="edit">
-			<text class="title">词性</text>
-			<wd-input no-border custom-class="input" type="text" v-model="formData.wordtype" clearable
-				placeholder="请输入词性" />
-			<text class="title">解释</text>
-			<wd-textarea custom-class="textarea" v-model="formData.meaning" placeholder="请填写单词解释" />
-			<text class="title">添加例句</text>
-			<wd-textarea custom-class="textarea" v-model="formData.example" placeholder="请填写例句如(私は中国人です/我是中国人)" />
-			<view class="history" v-if="avatars.length>0">
-				<text>编辑历史</text>
-				<view @click="goPage('/pages/word/edithistory/edithistory',{
-					id:formData.word_id
-				})">
-					<uv-avatar-group :urls="avatars" size="35" gap="0.4"></uv-avatar-group>
+	<div class="flex-col">
+		<NavbarDefault title="编辑单词"></NavbarDefault>
+		<!-- 单词标题 -->
+		<div class="word-title">
+			<div class="word-text">{{jcinfo.word}}</div>
+			<div class="word-reading">{{jcinfo.kana}}{{jcinfo.tone}} · {{jcinfo.rome}}</div>
+		</div>
+
+		<!-- 表单内容区域 -->
+		<div class="form-container">
+			<!-- 基本释义 -->
+			<div class="form-group">
+				<label for="basic-meaning" class="form-label">基本释义</label>
+				<textarea v-model="formData.meaning" placeholder="请输入单词基本释义" id="detailed-meaning"
+					class="form-textarea"></textarea>
+			</div>
+
+			<!-- 详细解释 -->
+			<div class="form-group">
+				<label for="detailed-meaning" class="form-label">详细解释</label>
+				<textarea v-model="formData.detail" placeholder="请输入单词详细解释" id="detailed-meaning"
+					class="form-textarea"></textarea>
+			</div>
+
+			<!-- 保存按钮 -->
+			<button @click="submit()" class="save-btn _GCENTER">
+				<text class="fas fa-save mr-1" style="margin-right: 8px;"></text>保存修改
+			</button>
+
+			<!-- 历史记录 -->
+			<div class="history-container">
+				<div class="history-title">修改历史</div>
+				<view style="display: flex;flex-direction: column;gap: 12px;">
+					<div class="history-item" :key="item.id" v-for="item in List">
+						<div class="history-meta">
+							<span>{{dayjs(item.time).format('YYYY-MM-DD HH:mm')}}</span>
+							<span>{{item.user.nickname}}</span>
+						</div>
+						<div class="history-content">
+							<div class="history-field">
+								<span class="history-field-label">备注:</span>
+								<span>{{item.comment}}</span>
+							</div>
+						</div>
+					</div>
 				</view>
-			</view>
-			<wd-button custom-class="btn" @click="submit()">立即提交</wd-button>
-		</view>
+			</div>
+		</div>
 		<wd-toast />
-	</view>
+	</div>
 </template>
 
 <script setup>
 	import {
-		ref
+		ref,
+		onMounted
 	} from 'vue'
-	import Navbar from '@/components/navbar/navbar.vue';
-	import {
-		goPage
-	} from "@/utils/common.js"
-	import {
-		onLoad,
-		onShow
-	} from "@dcloudio/uni-app"
+	import dayjs from 'dayjs'
 	import $http from "@/api/index.js"
+	import NavbarDefault from "@/components/navbar/default"
+	const navBarHeight = ref(0)
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
+	import {
+		onLoad,
+		onShow
+	} from "@dcloudio/uni-app"
 	const id = ref(null)
 	const formData = ref({
 		meaning: "",
-		example: "",
 		word_id: null,
-		wordtype: ""
+		detail: ""
 	})
-	const avatars = ref([])
-	const getAvatar = async (id) => {
-		const res = await $http.word.getEditWord(id)
-		avatars.value = res.data.map(item => item.user.avatar)
-	}
 	const jcinfo = ref({
 		word: null,
 		voice: null,
 		tone: null,
 		rome: null,
 		kana: null,
-		meaning: [],
-		example: []
+		meaning: "",
+		example: [],
+		detail: ""
 	})
-	onLoad((op) => {
-		formData.value.word_id = Number(op.id)
-		getJcInfo(op.id)
-		getAvatar(op.id)
-	})
+	const List = ref([])
+	const getList = async (id) => {
+		const res = await $http.word.getEditWord(id)
+		List.value = res.data
+	}
 	const getJcInfo = async (id) => {
 		const res = await $http.word.jcInfo(id)
 		jcinfo.value = res.data
-		formData.value.wordtype = res.data.wordtype
-		formData.value.meaning = res.data.meaning.map(item => item.meaning).join('\n')
+		jcinfo.value.meaning = res.data.meaning.map(item => item.meaning).join('\n')
+		formData.value.detail = res.data.detail
+		formData.value.meaning = jcinfo.value.meaning
 	}
 	const submit = async () => {
+		if (formData.value.detail.trim().length === 0) {
+			toast.warning("详细解释为空")
+			return
+		}
+		if (formData.value.meaning.trim().length === 0) {
+			toast.warning("基本解释为空")
+			return
+		}
+		if (formData.value.meaning == jcinfo.value.meaning && formData.value.detail == jcinfo.value.detail) {
+			toast.warning("你的编辑好像没变化")
+			return
+		}
 		const res = await $http.word.editWord(formData.value)
 		toast.success('提交成功，请等待审核')
 		setTimeout(() => {
@@ -91,56 +117,132 @@
 			})
 		}, 1000)
 	}
+	onLoad((op) => {
+		formData.value.word_id = Number(op.id)
+		getJcInfo(op.id)
+		getList(op.id)
+	})
+	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
+	})
 </script>
 
-<style scoped lang="scss">
-	:deep(.btn) {
-		width: 100%;
-		margin-top: 15px;
+<style lang="scss" scoped>
+	/* 表单样式 */
+	.form-container {
+		padding: 16px;
+		flex: 1;
+		overflow-y: auto;
+		background-color: #f8f9fa;
 	}
 
-	:deep(.input) {
-		padding: 8px 15px;
+	.form-group {
+		margin-bottom: 16px;
+		background: white;
 		border-radius: 8px;
-		margin-top: 5px;
+		padding: 16px;
 	}
 
-	:deep(.textarea) {
-		margin-top: 5px;
+	.form-label {
+		display: block;
+		font-weight: 500;
+		margin-bottom: 8px;
+		font-size: 14px;
 	}
 
-	.history {
+
+
+	.form-textarea {
+		width: auto;
+		min-height: 100px;
+		padding: 8px 12px;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		font-size: 14px;
+	}
+
+
+
+	/* 保存按钮 */
+	.save-btn {
+		display: block;
+		margin: 16px auto;
+		padding: 12px;
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-weight: 500;
+		font-size: 16px;
+	}
+
+	/* 历史记录 */
+	.history-container {
+		margin-top: 16px;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.history-title {
+		font-weight: 500;
+		margin-bottom: 12px;
+		font-size: 14px;
+	}
+
+	.history-item {
+		background: white;
+		border-radius: 8px;
+		padding: 12px 16px;
+	}
+
+	.history-meta {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		margin-top: 15px;
-
-		>text {
-			font-size: 14px;
-		}
+		font-size: 12px;
+		color: #666;
+		margin-bottom: 8px;
 	}
 
-	.title {
-		font-size: $uni-font-size-sm;
-		color: $uni-text-color-grey;
+	.history-content {
+		font-size: 13px;
+		color: #333;
 	}
 
-	.edit {
-		padding: 15px;
+	.history-field {
+		margin-bottom: 6px;
 	}
 
-	.word {
+	.history-field-label {
+		font-weight: 500;
+		color: #07C160;
+		margin-right: 8px;
+	}
+
+	/* 布局 */
+	.flex-col {
 		display: flex;
-		align-items: center;
-		gap: 5px;
-		font-size: $uni-font-size-subtitle;
+		flex-direction: column;
+		height: 100%;
+	}
+
+
+	/* 单词标题 */
+	.word-title {
+		border-top: 1px solid #eee;
+		padding: 16px;
+		background-color: white;
+		border-bottom: 1px solid #eee;
+	}
+
+	.word-text {
+		font-size: 20px;
 		font-weight: bold;
+		margin-bottom: 4px;
 	}
 
-	.hira {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 5px;
-		color: $uni-text-color-grey;
+	.word-reading {
+		font-size: 14px;
+		color: #666;
 	}
 </style>

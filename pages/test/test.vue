@@ -1,157 +1,248 @@
 <template>
-	<view>
-		<Navbar title="日语输入键盘"></Navbar>
+	<div class="flex-col">
+		<NavbarDefault title="编辑单词"></NavbarDefault>
+		<!-- 单词标题 -->
+		<div class="word-title">
+			<div class="word-text">{{jcinfo.word}}</div>
+			<div class="word-reading">{{jcinfo.kana}}{{jcinfo.tone}} · {{jcinfo.rome}}</div>
+		</div>
 
-	</view>
+		<!-- 表单内容区域 -->
+		<div class="form-container">
+			<!-- 基本释义 -->
+			<div class="form-group">
+				<label for="basic-meaning" class="form-label">基本释义</label>
+				<textarea v-model="formData.meaning" placeholder="请输入单词基本释义" id="detailed-meaning"
+					class="form-textarea"></textarea>
+			</div>
+
+			<!-- 详细解释 -->
+			<div class="form-group">
+				<label for="detailed-meaning" class="form-label">详细解释</label>
+				<textarea v-model="formData.detail" placeholder="请输入单词详细解释" id="detailed-meaning"
+					class="form-textarea"></textarea>
+			</div>
+
+			<!-- 保存按钮 -->
+			<button @click="submit()" class="save-btn _GCENTER">
+				<text class="fas fa-save mr-1" style="margin-right: 8px;"></text>保存修改
+			</button>
+
+			<!-- 历史记录 -->
+			<div class="history-container">
+				<div class="history-title">修改历史</div>
+				<view style="display: flex;flex-direction: column;gap: 12px;">
+					<div class="history-item" :key="item.id" v-for="item in List">
+						<div class="history-meta">
+							<span>{{dayjs(item.time).format('YYYY-MM-DD HH:mm')}}</span>
+							<span>{{item.user.nickname}}</span>
+						</div>
+						<div class="history-content">
+							<div class="history-field">
+								<span class="history-field-label">备注:</span>
+								<span>{{item.comment}}</span>
+							</div>
+						</div>
+					</div>
+				</view>
+			</div>
+		</div>
+		<wd-toast />
+	</div>
 </template>
 
 <script setup>
 	import {
 		ref,
-		computed
+		onMounted
 	} from 'vue'
-	import Navbar from '@/components/navbar/navbar.vue';
-
-	const rows = [
-		['あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ'],
-		['さ', 'し', 'す', 'せ', 'そ', 'た', 'ち', 'つ', 'て', 'と'],
-		['な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ'],
-		['ま', 'み', 'む', 'め', 'も', 'ら', 'り', 'る', 'れ', 'ろ'],
-		['や', 'ゆ', 'よ', 'わ', 'を', 'ん', 'ー']
-	]
-
-	const shiftActive = ref(false)
-	const inputText = ref('')
-	const handleKeyPress = (key) => {
-		inputText.value = key
+	import dayjs from 'dayjs'
+	import $http from "@/api/index.js"
+	import NavbarDefault from "@/components/navbar/default"
+	const navBarHeight = ref(0)
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	import {
+		onLoad,
+		onShow
+	} from "@dcloudio/uni-app"
+	const id = ref(null)
+	const formData = ref({
+		meaning: "",
+		word_id: null,
+		detail: ""
+	})
+	const jcinfo = ref({
+		word: null,
+		voice: null,
+		tone: null,
+		rome: null,
+		kana: null,
+		meaning: "",
+		example: [],
+		detail: ""
+	})
+	const List = ref([])
+	const getList = async (id) => {
+		const res = await $http.word.getEditWord(id)
+		List.value = res.data
 	}
-	const handleFunction = (type) => {
-		if (type == 'del') {
-			inputText.value = inputText.value.slice(0, -1)
+	const getJcInfo = async (id) => {
+		const res = await $http.word.jcInfo(id)
+		jcinfo.value = res.data
+		jcinfo.value.meaning = res.data.meaning.map(item => item.meaning).join('\n')
+		formData.value.detail = res.data.detail
+		formData.value.meaning = jcinfo.value.meaning
+	}
+	const submit = async () => {
+		if (formData.value.detail.trim().length === 0) {
+			toast.warning("详细解释为空")
+			return
 		}
+		if (formData.value.meaning.trim().length === 0) {
+			toast.warning("基本解释为空")
+			return
+		}
+		if (formData.value.meaning == jcinfo.value.meaning && formData.value.detail == jcinfo.value.detail) {
+			toast.warning("你的编辑好像没变化")
+			return
+		}
+		const res = await $http.word.editWord(formData.value)
+		toast.success('提交成功，请等待审核')
+		setTimeout(() => {
+			uni.navigateBack({
+				delta: 1
+			})
+		}, 1000)
 	}
-	const keys = ref(new Map([
-		['あ', ['あ', 'ア', 'ぁ', 'ァ']],
-		['い', ['い', 'イ', 'ぃ', 'ィ']],
-		['う', ['う', 'ウ', 'ぅ', 'ゥ']],
-		['え', ['え', 'エ', 'ぇ', 'ェ']],
-		['お', ['お', 'オ', 'ぉ', 'ォ']],
-		['か', ['か', 'カ', 'が', 'ガ']],
-		['き', ['き', 'キ', 'ぎ', 'ギ']],
-		['く', ['く', 'ク', 'ぐ', 'グ']],
-		['け', ['け', 'ケ', 'げ', 'ゲ']],
-		['こ', ['こ', 'コ', 'ご', 'ゴ']],
-		['さ', ['さ', 'サ', 'ざ', 'ザ']],
-		['し', ['し', 'シ', 'じ', 'ジ']],
-		['す', ['す', 'ス', 'ず', 'ズ']],
-		['せ', ['せ', 'セ', 'ぜ', 'ゼ']],
-		['そ', ['そ', 'ソ', 'ぞ', 'ゾ']],
-		['た', ['た', 'タ', 'だ', 'ダ']],
-		['ち', ['ち', 'チ', 'ぢ', 'ヂ']],
-		['つ', ['つ', 'ツ', 'づ', 'ヅ', 'っ', 'ッ']],
-		['て', ['て', 'テ', 'で', 'デ']],
-		['と', ['と', 'ト', 'ど', 'ド']],
-		['な', ['な', 'ナ']],
-		['に', ['に', 'ニ']],
-		['ぬ', ['ぬ', 'ヌ']],
-		['ね', ['ね', 'ネ']],
-		['の', ['の', 'ノ']],
-		['は', ['は', 'ハ', 'ば', 'バ', 'ぱ', 'パ']],
-		['ひ', ['ひ', 'ヒ', 'び', 'ビ', 'ぴ', 'ピ']],
-		['ふ', ['ふ', 'フ', 'ぶ', 'ブ', 'ぷ', 'プ']],
-		['へ', ['へ', 'ヘ', 'べ', 'ベ', 'ぺ', 'ペ']],
-		['ほ', ['ほ', 'ホ', 'ぼ', 'ボ', 'ぽ', 'ポ']],
-		['ま', ['ま', 'マ']],
-		['み', ['み', 'ミ']],
-		['む', ['む', 'ム']],
-		['め', ['め', 'メ']],
-		['も', ['も', 'モ']],
-		['や', ['や', 'ヤ', 'ゃ', 'ャ']],
-		['ゆ', ['ゆ', 'ユ', 'ゅ', 'ュ']],
-		['よ', ['よ', 'ヨ', 'ょ', 'ョ']],
-		['わ', ['わ', 'ワ', 'ゎ', 'ヮ']],
-		['を', ['を', 'ヲ']],
-		['ん', ['ん', 'ン']],
-		['ー', ['ー', '−', '―', '‐']]
-	]));
-	const currentKanaOptions = computed(() => {
-		return keys.value.get(inputText.value)
+	onLoad((op) => {
+		formData.value.word_id = Number(op.id)
+		getJcInfo(op.id)
+		getList(op.id)
+	})
+	onMounted(() => {
+		const systemInfo = wx.getSystemInfoSync();
+		const statusBarHeight = systemInfo.statusBarHeight;
+		navBarHeight.value = statusBarHeight + 'px'
 	})
 </script>
 
-<style scoped lang="scss">
-	.content {
-		padding: 5px;
-		background-color: #f5f5f5;
-		border-bottom: 1px solid #ddd;
-
-		.input-preview {
-			font-size: 24px;
-			min-height: 36px;
-		}
-
-		.scroll-view_H {
-			white-space: nowrap;
-			width: 100%;
-			height: 30px;
-		}
-
-		.kana-option {
-			display: inline-block;
-			height: 30px;
-			line-height: 30px;
-			text-align: center;
-			font-size: 18px;
-			padding: 0 10px;
-
-			&:active {
-				background-color: #d0d0d0;
-			}
-		}
+<style lang="scss" scoped>
+	/* 表单样式 */
+	.form-container {
+		padding: 16px;
+		flex: 1;
+		overflow-y: auto;
+		background-color: #f8f9fa;
 	}
 
-	.keyboard {
-		padding: 5px;
-		background-color: #D0D0DA;
+	.form-group {
+		margin-bottom: 16px;
+		background: white;
+		border-radius: 8px;
+		padding: 16px;
+	}
 
-		.row {
-			display: flex;
-			justify-content: center;
-			margin-bottom: 5px;
-			gap: 5px;
+	.form-label {
+		display: block;
+		font-weight: 500;
+		margin-bottom: 8px;
+		font-size: 14px;
+	}
 
-			&:not(.last-row) .key {
-				width: calc((100% - 5px * 9) / 10);
-				aspect-ratio: 1;
-			}
 
-			&.last-row {
-				.key {
-					width: calc((100% - 5px * 9) / 10);
-					aspect-ratio: 1;
 
-					&.function {
-						flex-grow: 1;
-						aspect-ratio: inherit;
-						background-color: #c0c0d0;
-					}
-				}
-			}
-		}
+	.form-textarea {
+		width: auto;
+		min-height: 100px;
+		padding: 8px 12px;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		font-size: 14px;
+	}
 
-		.key {
-			border-radius: 8px;
-			background-color: white;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 18px;
-			font-weight: bold;
-			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 
-			&:active {
-				background-color: #e0e0e0;
-			}
-		}
+
+	/* 保存按钮 */
+	.save-btn {
+		display: block;
+		margin: 16px auto;
+		padding: 12px;
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-weight: 500;
+		font-size: 16px;
+	}
+
+	/* 历史记录 */
+	.history-container {
+		margin-top: 16px;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.history-title {
+		font-weight: 500;
+		margin-bottom: 12px;
+		font-size: 14px;
+	}
+
+	.history-item {
+		background: white;
+		border-radius: 8px;
+		padding: 12px 16px;
+	}
+
+	.history-meta {
+		display: flex;
+		justify-content: space-between;
+		font-size: 12px;
+		color: #666;
+		margin-bottom: 8px;
+	}
+
+	.history-content {
+		font-size: 13px;
+		color: #333;
+	}
+
+	.history-field {
+		margin-bottom: 6px;
+	}
+
+	.history-field-label {
+		font-weight: 500;
+		color: #07C160;
+		margin-right: 8px;
+	}
+
+	/* 布局 */
+	.flex-col {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+
+	/* 单词标题 */
+	.word-title {
+		border-top: 1px solid #eee;
+		padding: 16px;
+		background-color: white;
+		border-bottom: 1px solid #eee;
+	}
+
+	.word-text {
+		font-size: 20px;
+		font-weight: bold;
+		margin-bottom: 4px;
+	}
+
+	.word-reading {
+		font-size: 14px;
+		color: #666;
 	}
 </style>

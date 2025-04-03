@@ -1,21 +1,31 @@
 <template>
 	<view>
 		<view class="swiper">
-			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll home">
+			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
-			<scroll-view @scrolltolower="communityRef.loadMore()" v-show="tabbar===1" scroll-y="true"
-				class="scroll community">
-				<Community ref="communityRef"></Community>
+			<scroll-view v-show="tabbar===1" scroll-y="true" class="scroll">
+				<Word></Word>
 			</scroll-view>
-			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll learn">
-				<Message :msgTotal="msgTotal"></Message>
-			</scroll-view>
-			<scroll-view v-show="tabbar===3" scroll-y="true" class="scroll self">
+			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll">
 				<Self></Self>
 			</scroll-view>
 		</view>
-		<Tabbar :msg="msgTotal.msg_total+msgTotal.like_total+msgTotal.notice_total" @change="tabbarChange"></Tabbar>
+		<!-- 底部导航 -->
+		<view class="tab-bar">
+			<view @click="tabbar=0" :class="{active:tabbar==0}" class="tab-item">
+				<text class="icon-home tab-icon fas fa-home"></text>
+				<text class="tab-text">首页</text>
+			</view>
+			<view @click="tabbar=1" :class="{active:tabbar==1}" class="tab-item">
+				<text class="icon-book tab-icon fas fa-book"></text>
+				<text class="tab-text">单词</text>
+			</view>
+			<view @click="tabbar=2" :class="{active:tabbar==2}" class="tab-item">
+				<text class="icon-user tab-icon fas fa-user"></text>
+				<text class="tab-text">我的</text>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -29,84 +39,69 @@
 		onShow
 	} from '@dcloudio/uni-app'
 	import $http from "@/api/index.js"
-	import Community from "./pages/community/index.vue"
-	import Message from "./pages/message/index.vue"
-	import Home from "./pages/home/index.vue"
-	import Self from "./pages/self/index.vue"
-	import Tabbar from "./components/tabbar/tabbar.vue"
 	import {
 		userStore
 	} from "@/stores"
+	import Home from './pages/home/home.vue';
+	import Word from './pages/word/word.vue';
+	import Self from './pages/self/self.vue';
 	const tabbar = ref(0)
-	const tabbarChange = (e) => {
-		tabbar.value = e.value
-	}
-	const communityRef = ref(null)
-	const msgTotal = ref({
-		msg_total: 0,
-		notice_total: 0,
-		like_total: 0
-	})
-	const getUnread = async () => {
-		const res = await $http.common.getUnread()
-		msgTotal.value = res
-	}
-	onShow(() => {
-		getUnread()
-	})
 	onMounted(() => {
 		userStore().setUserInfo()
-		// $http.user.getChartList().then(res => {
-		// 	console.log(res);
-		// })
-		// console.log(store.state.username);
-		// console.log(process.env.NODE_ENV);
 	})
 </script>
 
 <style lang="scss" scoped>
-	:deep(.recitebtn) {
-		width: 100% !important;
-	}
+	.tab-bar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		z-index: 1;
+		justify-content: space-around;
+		padding: 8px 0 env(safe-area-inset-bottom) 0;
+		background-color: #fff;
+		border-top: 1px solid #f0f0f0;
 
-	:deep(.wd-tabs__nav-item) {
-		font-size: 16px;
-	}
+		.tab-item {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 
-	:deep(.wd-tabs) {
-		background-color: transparent !important;
-	}
+			.tab-icon {
+				font-size: 20px;
+				color: #999;
+			}
 
-	:deep(.wd-tabs__nav) {
-		background-color: transparent !important;
-	}
+			.tab-text {
+				font-size: 12px;
+				color: #999;
+				margin-top: 4px;
+			}
 
-	:deep(.reviewbtn) {
-		color: #4D80F0 !important;
-	}
+			&.active {
 
-	:deep(.wd-progress__outer) {
-		height: 5px !important;
-		border-radius: 5px !important;
-	}
+				.tab-icon,
+				.tab-text {
+					color: #07C160;
+				}
 
-	.swiper {
-		width: 100%;
-		height: calc(100vh - 50px - env(safe-area-inset-bottom));
+				position: relative;
 
-		.scroll {
-			height: 100%;
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: -7px;
+					left: 50%;
+					transform: translateX(-50%);
+					width: 18px;
+					height: 3px;
+					background-color: #07C160;
+					border-radius: 3px;
+				}
+			}
 		}
-	}
-
-	:deep(.wd-fab) {
-		left: inherit !important;
-		top: inherit !important;
-		right: 15px !important;
-		bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-	}
-
-	:deep(.uv-scroll-list) {
-		padding-bottom: 0 !important;
 	}
 </style>

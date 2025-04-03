@@ -25,7 +25,6 @@
     "pages/msg/comment/comment",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
-    "pages/word/edithistory/edithistory",
     "pages/tools/composition/composition",
     "pages/tools/compositiondetail/compositiondetail",
     "pages/test/test",
@@ -37,8 +36,7 @@
       "pages": [
         "addtrend/addtrend",
         "trenddetail/trenddetail",
-        "mytrend/mytrend",
-        "search/search"
+        "mytrend/mytrend"
       ]
     },
     {

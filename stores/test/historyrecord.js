@@ -1,7 +1,7 @@
 import {
 	defineStore
 } from 'pinia'
-export const test_searchrecordModule = defineStore('test_searchrecord', {
+export const test_historyrecordModule = defineStore('test_historyrecord', {
 	unistorage: true, // 是否持久化
 	state: () => {
 		return {
@@ -22,6 +22,13 @@ export const test_searchrecordModule = defineStore('test_searchrecord', {
 				this.wordlist = []
 			} else {
 				this.trendlist = []
+			}
+		},
+		del(type, val) {
+			if (type == 'word') {
+				this.wordlist = this.wordlist.filter(item => item != val)
+			} else {
+				this.trendlist = this.trendlist.filter(item => item != val)
 			}
 		}
 	}

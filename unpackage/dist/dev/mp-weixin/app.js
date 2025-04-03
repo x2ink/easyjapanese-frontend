@@ -28,7 +28,6 @@ if (!Math) {
   "./pages/msg/comment/comment.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
-  "./pages/word/edithistory/edithistory.js";
   "./pages/tools/composition/composition.js";
   "./pages/tools/compositiondetail/compositiondetail.js";
   "./pages/test/test.js";
@@ -36,7 +35,6 @@ if (!Math) {
   "./trendpages/addtrend/addtrend.js";
   "./trendpages/trenddetail/trenddetail.js";
   "./trendpages/mytrend/mytrend.js";
-  "./trendpages/search/search.js";
   "./userpages/userinfo/userinfo.js";
   "./userpages/repwd/repwd.js";
   "./userpages/reemail/reemail.js";
@@ -50,13 +48,13 @@ if (!Math) {
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
+    common_vendor.index.__f__("log", "at App.vue:24", "App Launch");
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:27", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:30", "App Hide");
   }
 };
 function createApp() {

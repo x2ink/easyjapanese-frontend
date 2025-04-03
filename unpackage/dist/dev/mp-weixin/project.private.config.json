@@ -4,6 +4,41 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=261388",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/test/test",
+          "pathName": "pages/test/test",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/search/search",
+          "pathName": "pages/word/search/search",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/login/login",
+          "pathName": "pages/login/login",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/grammar/grammar",
+          "pathName": "pages/tools/grammar/grammar",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/learn/learn",
           "pathName": "pages/word/learn/learn",
           "query": "",
