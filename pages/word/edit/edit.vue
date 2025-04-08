@@ -1,6 +1,6 @@
 <template>
 	<div class="flex-col">
-		<NavbarDefault title="编辑单词"></NavbarDefault>
+		<NavbarDefault border title="编辑单词"></NavbarDefault>
 		<!-- 单词标题 -->
 		<div class="word-title">
 			<div class="word-text">{{jcinfo.word}}</div>
@@ -229,7 +229,6 @@
 
 	/* 单词标题 */
 	.word-title {
-		border-top: 1px solid #eee;
 		padding: 16px;
 		background-color: white;
 		border-bottom: 1px solid #eee;

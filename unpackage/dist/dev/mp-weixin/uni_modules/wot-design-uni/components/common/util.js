@@ -139,12 +139,6 @@ function isPromise(value) {
 function isUndefined(value) {
   return typeof value === "undefined";
 }
-function isOdd(value) {
-  if (typeof value !== "number") {
-    throw new Error("输入必须为数字");
-  }
-  return value % 2 === 1;
-}
 function objToStyle(styles) {
   if (isArray(styles)) {
     return styles.filter(function(item) {
@@ -284,10 +278,6 @@ function isImageUrl(url) {
   const imageRegex = /\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg|image)/i;
   return imageRegex.test(url);
 }
-const isH5 = /* @__PURE__ */ (() => {
-  let isH52 = false;
-  return isH52;
-})();
 function omitBy(obj, predicate) {
   const newObj = deepClone(obj);
   Object.keys(newObj).forEach((key) => predicate(newObj[key], key) && delete newObj[key]);
@@ -310,11 +300,9 @@ exports.isDate = isDate;
 exports.isDef = isDef;
 exports.isEqual = isEqual;
 exports.isFunction = isFunction;
-exports.isH5 = isH5;
 exports.isImageUrl = isImageUrl;
 exports.isNumber = isNumber;
 exports.isObj = isObj;
-exports.isOdd = isOdd;
 exports.isPromise = isPromise;
 exports.isString = isString;
 exports.isUndefined = isUndefined;

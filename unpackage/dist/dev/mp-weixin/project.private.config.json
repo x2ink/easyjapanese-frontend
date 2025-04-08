@@ -4,16 +4,37 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/word/worddetail/worddetail",
-          "pathName": "pages/word/worddetail/worddetail",
-          "query": "id=261388",
+          "name": "pages/tools/grammardetail/grammardetail",
+          "pathName": "pages/tools/grammardetail/grammardetail",
+          "query": "id=5477",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "pages/test/test",
           "pathName": "pages/test/test",
-          "query": "id=152807",
+          "query": "id=5484",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybookswordlist/mybookswordlist",
+          "pathName": "pages/word/mybookswordlist/mybookswordlist",
+          "query": "id=22",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybooks/mybooks",
+          "pathName": "pages/word/mybooks/mybooks",
+          "query": "wordId=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=261388",
           "launchMode": "default",
           "scene": null
         },

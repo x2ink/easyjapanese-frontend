@@ -1,61 +1,69 @@
 <template>
 	<view>
-		<Navbar title="语法详情">
-		</Navbar>
-		<view style="padding: 0 10px 20px 10px; display: flex;flex-direction: column;gap: 10px;">
-			<view class="head">
-				<view class="word">
-					<text>{{data.grammar}}</text>
-				</view>
-				<view class="tools">
-					<view class="item">
-						<text>朗读</text>
-						<wd-icon name="sound" size="14px"></wd-icon>
-					</view>
-				</view>
-			</view>
-			<view class="body">
-				<text class="tip">语法意义</text>
-				<view v-html="data.explain"></view>
-			</view>
-			<view class="body">
-				<text class="tip">基本结构</text>
-				<view v-html="data.struct"></view>
-			</view>
-			<view class="body">
-				<text class="tip">使用场景</text>
-				<view v-html="data.scene"></view>
-			</view>
-			<view class="body">
-				<text class="tip">注意事项</text>
-				<view v-html="data.warning"></view>
-			</view>
-			<view class="body">
-				<text class="tip">例句</text>
-				<view class="examples">
-					<view class="example" :key="item.ch" v-for="item in data.example">
-						<view style="flex: 1;">
-							<view class="ja jpfont">
-								<view class="worditem" v-for="item1 in item.read">
-									<view class="top">{{item1.top}}</view>
-									<view :class="{underline:item1.top}" class="bottom">{{item1.body}}</view>
-								</view>
-							</view>
-							<view class="ch">
-								<wd-tag custom-class="space" type="warning">译</wd-tag>{{item.ch}}
-							</view>
-						</view>
-						<view class="operate">
-							<wd-icon name="sound" size="20" color="#909699" />
-						</view>
-					</view>
-				</view>
-			</view>
-			<view class="body">
-				<text class="tip">总结</text>
-				<view v-html="data.summary"></view>
-			</view>
+		<view class="head">
+			<NavbarDefault border title="语法详情"></NavbarDefault>
 		</view>
+		<div class="info bg-white">
+			<div style="display: flex;flex-direction: column;gap: 8px;align-items: flex-start;">
+				<view class="grammar">{{data.grammar}}</view>
+				<text class="level-tag N3">{{data.level}}语法</text>
+			</div>
+			<div class="explain" v-html="data.explain.replace('<br>','')">
+			</div>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">基本结构</div>
+			<div v-html="data.struct.replace('<br>','')" style="font-size: 14px;">
+			</div>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">使用场景</div>
+			<div v-html="data.scene.replace('<br>','')" style="font-size: 14px;">
+			</div>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">例句</div>
+			<view class="examples">
+				<view class="example" :key="item.id" v-for="item in data.example">
+					<view>
+						<view class="ja jpfont">
+							<view class="worditem" v-for="item1 in item.read">
+								<view class="top">{{item1.top}}</view>
+								<view :class="{underline:item1.top}" class="body">{{item1.body}}</view>
+							</view>
+						</view>
+						<view class="ch">
+							{{item.ch}}
+						</view>
+					</view>
+				</view>
+			</view>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">注意事项</div>
+			<div v-html="data.warning.replace('<br>','')" style="font-size: 14px;">
+			</div>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">总结</div>
+			<div v-html="data.summary.replace('<br>','')" style="font-size: 14px;">
+			</div>
+		</div>
+		<view style="height: calc(env(safe-area-inset-bottom) + 60px);">
+		
+		</view>
+		<!-- 操作栏 -->
+		<div class="bottom-actions">
+			<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
+				<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 收藏
+			</view>
+			<view class="bottom-btn btn-gray">
+				<text class="fas fa-search" style="margin-right: 4.5px;"></text> 全网搜索
+			</view>
+			<view class="bottom-btn btn-gray">
+				<text class="fas fa-pen-to-square" style="margin-right: 4.5px;"></text> 笔记
+			</view>
+		</div>
 	</view>
 </template>
 
@@ -64,11 +72,20 @@
 		ref,
 	} from 'vue'
 	import {
-		onLoad
-	} from '@dcloudio/uni-app'
-	import Navbar from '@/components/navbar/navbar.vue';
+		onLoad,
+	} from "@dcloudio/uni-app"
+	import {
+		goPage
+	} from "@/utils/common.js"
+	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-	const data = ref({})
+	const data = ref({
+		explain: '',
+		struct: '',
+		scene: '',
+		warning: '',
+		summary: ''
+	})
 	const getInfo = async (id) => {
 		const res = await $http.common.getGrammarInfo(id)
 		data.value = res.data
@@ -79,34 +96,57 @@
 	})
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+	/* 底部操作栏 */
+	.bottom-actions {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px;
+		border-top: 1px solid #e5e7eb;
+		background: white;
+		padding: 12px 16px 0 16px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.bottom-btn {
+		padding: 8px;
+		border-radius: 8px;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.btn-gray {
+		background: #f3f4f6;
+		color: #374151;
+	}
+
+
 	.examples {
 		display: flex;
 		flex-direction: column;
-		background-color: #F6F6F6;
-		border-radius: 4px;
-		padding: 10px;
-		margin-top: 10px;
-		gap: 10px;
+		gap: 12px;
 
 		.example {
+			border-left: 3px solid #07C160;
+			padding-left: 12px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 
-			.operate {
-				display: flex;
-				justify-content: flex-end;
-			}
-
 			.ch {
+				padding-top: 4px;
 				display: flex;
 				align-items: center;
-				gap: 3px;
-				font-size: $uni-font-size-base;
+				gap: 5px;
+				font-size: 14px;
 				color: $uni-text-color-grey;
-				background-color: $uni-bg-color-grey;
-				border-radius: $uni-border-radius-base;
+				border-radius: 4px;
 			}
 
 			.ja {
@@ -117,22 +157,17 @@
 					display: flex;
 					flex-direction: column;
 					align-items: center;
-					justify-content: center;
+					justify-content: flex-end;
 
 					.top {
 						// color: #57D09B;
-						font-size: 8px;
-						height: 8px;
-						margin: 0 2px;
+						font-size: 12px;
+						// height: 12px;
+						margin: 2px;
 					}
 
-					.bottom {
-						font-size: $uni-font-size-base;
-					}
-
-					.underline {
-						// color: #57D09B;
-						text-decoration: underline;
+					.body {
+						font-size: 16px;
 					}
 				}
 			}
@@ -140,72 +175,80 @@
 	}
 
 	.head {
-		padding: 10px;
-		border-radius: 8px;
-		background-color: white;
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
 
-		.word {
-			display: flex;
-			align-items: center;
-			gap: 5px;
-			font-size: 20px;
+	.level-tag {
+		font-size: 10px;
+		padding: 2px 6px;
+		border-radius: 4px;
+		font-weight: bold;
+	}
+
+	.section-title {
+		position: relative;
+		padding-left: 12px;
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 10px;
+	}
+
+	.section-title:before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 3px;
+		height: 16px;
+		background-color: #07C160;
+		border-radius: 3px;
+	}
+
+	.bg-white {
+		margin: 16px;
+		background-color: white;
+		border-radius: 8px;
+		padding: 12px;
+	}
+
+	.info {
+		.grammar {
+			font-size: 22px;
 			font-weight: bold;
 		}
-	}
 
-	.body {
-		padding: 10px;
-		background-color: white;
-		border-radius: 8px;
-
-		text {
+		.explain {
+			color: #4b5563;
 			font-size: 14px;
-			color: #999;
+			margin-top: 8px;
 		}
 	}
 
-	.list {
-		margin-top: 10px;
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-
-		.item {
-			line-height: 50px;
-			background-color: white;
-			padding: 0 10px;
-			box-sizing: border-box;
-		}
+	.N1 {
+		background-color: #F44336;
+		color: white;
 	}
 
+	.N2 {
+		background-color: #FF9800;
+		color: white;
+	}
 
+	.N3 {
+		background-color: #4CAF50;
+		color: white;
+	}
 
-	.tools {
-		display: flex;
-		margin-top: 10px;
-		gap: 10px;
+	.N4 {
+		background-color: #2196F3;
+		color: white;
+	}
 
-		>.item {
-
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 2px;
-			padding: 3px 10px;
-			color: white;
-			border-radius: 18px;
-
-			&:nth-of-type(1) {
-				background-color: #5880F2;
-			}
-
-			&:nth-of-type(2) {
-				background-color: #5880F2;
-			}
-
-			text {
-				font-size: $uni-font-size-sm;
-			}
-		}
+	.N5 {
+		background-color: #9C27B0;
+		color: white;
 	}
 </style>

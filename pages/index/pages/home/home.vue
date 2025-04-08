@@ -64,13 +64,13 @@
 
 			<!-- 工具入口 -->
 			<view class="tool-buttons">
-				<view class="tool-btn" @click="navigateTo('translate')">
+				<view class="tool-btn" @click="goPage('/pages/tools/translate/translate')">
 					<view class="tool-icon">
 						<text class="fas fa-language"></text>
 					</view>
 					<text class="tool-text">文本翻译</text>
 				</view>
-				<view class="tool-btn" @click="navigateTo('grammar')">
+				<view class="tool-btn" @click="goPage('/pages/tools/grammar/grammar')">
 					<view class="tool-icon">
 						<text class="fas fa-book-open"></text>
 					</view>
@@ -82,7 +82,7 @@
 					</view>
 					<text class="tool-text">五十音图</text>
 				</view>
-				<view class="tool-btn" @click="navigateTo('conjugation')">
+				<view class="tool-btn" @click="goPage('/pages/tools/verbtransfiguration/verbtransfiguration')">
 					<view class="tool-icon">
 						<text class="fas fa-random"></text>
 					</view>

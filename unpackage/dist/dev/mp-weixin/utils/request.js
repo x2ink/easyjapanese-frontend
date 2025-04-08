@@ -43,9 +43,10 @@ const http = {
       method: "PUT"
     });
   },
-  delete(url) {
+  delete(url, data) {
     return this.request({
       url,
+      data,
       method: "DELETE"
     });
   }
@@ -67,7 +68,7 @@ const beforeResponse = async (config, response) => {
       if (data.code === 4001) {
         try {
           const tokenRes = await api_index.$http.common.retoken(stores_index.userStore().userInfo.id);
-          common_vendor.index.__f__("log", "at utils/request.js:75", tokenRes);
+          common_vendor.index.__f__("log", "at utils/request.js:76", tokenRes);
           stores_index.userStore().setToken(tokenRes.data);
           config.header = {
             "Authorization": tokenRes.data
@@ -109,7 +110,7 @@ const beforeResponse = async (config, response) => {
   }
 };
 const errorHandle = (err) => {
-  common_vendor.index.__f__("log", "at utils/request.js:118", "网络异常,", err);
+  common_vendor.index.__f__("log", "at utils/request.js:119", "网络异常,", err);
 };
 exports.http = http;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

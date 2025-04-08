@@ -1,248 +1,265 @@
 <template>
-	<div class="flex-col">
-		<NavbarDefault title="编辑单词"></NavbarDefault>
-		<!-- 单词标题 -->
-		<div class="word-title">
-			<div class="word-text">{{jcinfo.word}}</div>
-			<div class="word-reading">{{jcinfo.kana}}{{jcinfo.tone}} · {{jcinfo.rome}}</div>
-		</div>
-
-		<!-- 表单内容区域 -->
-		<div class="form-container">
-			<!-- 基本释义 -->
-			<div class="form-group">
-				<label for="basic-meaning" class="form-label">基本释义</label>
-				<textarea v-model="formData.meaning" placeholder="请输入单词基本释义" id="detailed-meaning"
-					class="form-textarea"></textarea>
+	<view>
+		<view class="head">
+			<NavbarDefault border title="语法详情"></NavbarDefault>
+			<!-- 搜索栏 -->
+			<div style="padding:16px; background:#FFFFFF; border-bottom:1px solid #F0F0F0;">
+				<div style="display:flex; gap:8px;">
+					<input v-model="value" type="text" placeholder="输入动词原形 (ます形/基本形)"
+						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
+					<button @click="confirm" class="btn _GCENTER">查询</button>
+				</div>
 			</div>
-
-			<!-- 详细解释 -->
-			<div class="form-group">
-				<label for="detailed-meaning" class="form-label">详细解释</label>
-				<textarea v-model="formData.detail" placeholder="请输入单词详细解释" id="detailed-meaning"
-					class="form-textarea"></textarea>
-			</div>
-
-			<!-- 保存按钮 -->
-			<button @click="submit()" class="save-btn _GCENTER">
-				<text class="fas fa-save mr-1" style="margin-right: 8px;"></text>保存修改
-			</button>
-
-			<!-- 历史记录 -->
-			<div class="history-container">
-				<div class="history-title">修改历史</div>
-				<view style="display: flex;flex-direction: column;gap: 12px;">
-					<div class="history-item" :key="item.id" v-for="item in List">
-						<div class="history-meta">
-							<span>{{dayjs(item.time).format('YYYY-MM-DD HH:mm')}}</span>
-							<span>{{item.user.nickname}}</span>
-						</div>
-						<div class="history-content">
-							<div class="history-field">
-								<span class="history-field-label">备注:</span>
-								<span>{{item.comment}}</span>
-							</div>
-						</div>
+		</view>
+		<!-- 主体内容区 -->
+		<div class="content-container">
+			<!-- 基本变形组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>基本变形</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 基本型 -->
+					<div class="transform-item">
+						<div class="transform-label">基本形</div>
+						<div class="transform-value">{{get('基本形')}}</div>
 					</div>
-				</view>
+					<!-- ます形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">ます形</div>
+						<div class="transform-value">{{get('ます形')}}</div>
+					</div>
+					<!-- て形 -->
+					<div class="transform-item">
+						<div class="transform-label">て形</div>
+						<div class="transform-value">{{get('て形')}}</div>
+					</div>
+					<!-- た形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">た形</div>
+						<div class="transform-value">{{get('た形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 否定与命令组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>否定与命令</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- ない形 -->
+					<div class="transform-item">
+						<div class="transform-label">ない形</div>
+						<div class="transform-value">{{get('ない形')}}</div>
+					</div>
+					<!-- 命令形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">命令形</div>
+						<div class="transform-value">{{get('命令形')}}</div>
+					</div>
+					<!-- 禁止形 -->
+					<div class="transform-item">
+						<div class="transform-label">禁止形</div>
+						<div class="transform-value">{{get('禁止形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 可能被动使役组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>可能/被动/使役</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 可能形 -->
+					<div class="transform-item">
+						<div class="transform-label">可能形</div>
+						<div class="transform-value">{{get('可能形')}}</div>
+					</div>
+					<!-- 被动形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">被动形</div>
+						<div class="transform-value">{{get('被动形')}}</div>
+					</div>
+					<!-- 使役形 -->
+					<div class="transform-item">
+						<div class="transform-label">使役形</div>
+						<div class="transform-value">{{get('使役形')}}</div>
+					</div>
+					<!-- 使役被动形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">使役被动形</div>
+						<div class="transform-value">{{get('使役被动形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 其他变形组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>其他变形</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 假定形 -->
+					<div class="transform-item">
+						<div class="transform-label">假定形</div>
+						<div class="transform-value">{{get('假定形')}}</div>
+					</div>
+					<!-- 意向形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">意向形</div>
+						<div class="transform-value">{{get('意向形')}}</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<wd-toast />
-	</div>
+	</view>
 </template>
 
 <script setup>
 	import {
 		ref,
-		onMounted
 	} from 'vue'
-	import dayjs from 'dayjs'
-	import $http from "@/api/index.js"
+	import {
+		onLoad,
+	} from "@dcloudio/uni-app"
+	import {
+		goPage
+	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
-	const navBarHeight = ref(0)
+	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	import {
-		onLoad,
-		onShow
-	} from "@dcloudio/uni-app"
-	const id = ref(null)
-	const formData = ref({
-		meaning: "",
-		word_id: null,
-		detail: ""
-	})
-	const jcinfo = ref({
-		word: null,
-		voice: null,
-		tone: null,
-		rome: null,
-		kana: null,
-		meaning: "",
-		example: [],
-		detail: ""
-	})
-	const List = ref([])
-	const getList = async (id) => {
-		const res = await $http.word.getEditWord(id)
-		List.value = res.data
-	}
-	const getJcInfo = async (id) => {
-		const res = await $http.word.jcInfo(id)
-		jcinfo.value = res.data
-		jcinfo.value.meaning = res.data.meaning.map(item => item.meaning).join('\n')
-		formData.value.detail = res.data.detail
-		formData.value.meaning = jcinfo.value.meaning
-	}
-	const submit = async () => {
-		if (formData.value.detail.trim().length === 0) {
-			toast.warning("详细解释为空")
-			return
+	const data = ref([])
+	const value = ref('負かる')
+	const get = (key) => {
+		const res = data.value.find(({
+			category
+		}) => category == key)
+		if (res) {
+			return res.result
+		} else {
+			return res
 		}
-		if (formData.value.meaning.trim().length === 0) {
-			toast.warning("基本解释为空")
-			return
-		}
-		if (formData.value.meaning == jcinfo.value.meaning && formData.value.detail == jcinfo.value.detail) {
-			toast.warning("你的编辑好像没变化")
-			return
-		}
-		const res = await $http.word.editWord(formData.value)
-		toast.success('提交成功，请等待审核')
-		setTimeout(() => {
-			uni.navigateBack({
-				delta: 1
-			})
-		}, 1000)
 	}
-	onLoad((op) => {
-		formData.value.word_id = Number(op.id)
-		getJcInfo(op.id)
-		getList(op.id)
-	})
-	onMounted(() => {
-		const systemInfo = wx.getSystemInfoSync();
-		const statusBarHeight = systemInfo.statusBarHeight;
-		navBarHeight.value = statusBarHeight + 'px'
-	})
+	const confirm = async () => {
+		try {
+			if (value.value.trim().length == 0) {
+				toast.warning(`单词不可为空`)
+				return
+			}
+			const res = await $http.common.getVerbTrans(value.value.trim())
+			data.value = res.data
+		} catch (err) {
+			toast.warning(`这个单词不是动词`)
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
-	/* 表单样式 */
-	.form-container {
+	/* General Styles */
+	.content-container {
 		padding: 16px;
-		flex: 1;
 		overflow-y: auto;
-		background-color: #f8f9fa;
-	}
-
-	.form-group {
-		margin-bottom: 16px;
-		background: white;
-		border-radius: 8px;
-		padding: 16px;
-	}
-
-	.form-label {
-		display: block;
-		font-weight: 500;
-		margin-bottom: 8px;
-		font-size: 14px;
-	}
-
-
-
-	.form-textarea {
-		width: auto;
-		min-height: 100px;
-		padding: 8px 12px;
-		border: 1px solid #ddd;
-		border-radius: 6px;
-		font-size: 14px;
-	}
-
-
-
-	/* 保存按钮 */
-	.save-btn {
-		display: block;
-		margin: 16px auto;
-		padding: 12px;
-		background-color: #07C160;
-		color: white;
-		border: none;
-		border-radius: 8px;
-		font-weight: 500;
-		font-size: 16px;
-	}
-
-	/* 历史记录 */
-	.history-container {
-		margin-top: 16px;
 		padding-bottom: env(safe-area-inset-bottom);
 	}
 
-	.history-title {
-		font-weight: 500;
-		margin-bottom: 12px;
+	/* Transform Group Styles */
+	.transform-group {
+		margin-bottom: 16px;
+		background: #FFFFFF;
+		border-radius: 8px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	}
+
+	.group-header {
+		padding: 12px 16px;
+		border-bottom: 1px solid #F0F0F0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.group-header h2 {
+		font-size: 16px;
+		color: #212121;
+		margin: 0;
+	}
+
+	.expand-icon {
+		color: #757575;
 		font-size: 14px;
 	}
 
-	.history-item {
-		background: white;
-		border-radius: 8px;
+	.group-content {
+		padding: 8px 0;
+	}
+
+	/* Transform Item Styles */
+	.transform-item {
+		display: flex;
 		padding: 12px 16px;
 	}
 
-	.history-meta {
-		display: flex;
-		justify-content: space-between;
-		font-size: 12px;
-		color: #666;
-		margin-bottom: 8px;
+	.transform-item.striped {
+		background: #FAFAFA;
 	}
 
-	.history-content {
-		font-size: 13px;
-		color: #333;
-	}
-
-	.history-field {
-		margin-bottom: 6px;
-	}
-
-	.history-field-label {
-		font-weight: 500;
-		color: #07C160;
-		margin-right: 8px;
-	}
-
-	/* 布局 */
-	.flex-col {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-	}
-
-
-	/* 单词标题 */
-	.word-title {
-		border-top: 1px solid #eee;
-		padding: 16px;
-		background-color: white;
-		border-bottom: 1px solid #eee;
-	}
-
-	.word-text {
-		font-size: 20px;
-		font-weight: bold;
-		margin-bottom: 4px;
-	}
-
-	.word-reading {
+	.transform-label {
+		flex: 1;
+		color: #757575;
 		font-size: 14px;
-		color: #666;
+	}
+
+	.transform-value {
+		font-size: 16px;
+		color: #212121;
+		font-weight: 500;
+	}
+
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
+
+	.btn {
+		background: #07C160;
+		color: white;
+		border-radius: 8px;
+		padding: 0 16px;
+		font-size: 16px;
+	}
+
+	.search-bar {
+		background-color: #FAFAFA;
+		border-radius: 8px;
+		padding: 8px 12px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+
+		input {
+			flex: 1;
+		}
+
+		text {
+			font-size: 18px;
+			color: #9DA3AF;
+		}
+	}
+
+	.search-bg {
+		background-color: white;
+		padding: 12px 16px;
 	}
 </style>

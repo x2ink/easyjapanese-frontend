@@ -1,37 +1,162 @@
 <template>
 	<view>
-		<Navbar title="动词变形"></Navbar>
-		<view class="input">
-			<wd-input custom-class="input1" no-border type="text" v-model="value" placeholder="请输入动词" />
-			<wd-button custom-class="btn" @click="getVerbTrans()">立即变形</wd-button>
+		<view class="head">
+			<NavbarDefault border title="动词变形"></NavbarDefault>
+			<!-- 搜索栏 -->
+			<div style="padding:16px; background:#FFFFFF; border-bottom:1px solid #F0F0F0;">
+				<div style="display:flex; gap:8px;">
+					<input v-model="value" type="text" placeholder="输入动词原形 (ます形/基本形)"
+						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
+					<button @click="confirm" class="btn _GCENTER">查询</button>
+				</div>
+			</div>
 		</view>
-		<wd-table :data="data" v-if="data.length>0">
-			<wd-table-col width="150" prop="category" label="类别" fixed></wd-table-col>
-			<wd-table-col width="100%" prop="result" label="变形"></wd-table-col>
-		</wd-table>
+		<!-- 主体内容区 -->
+		<div class="content-container">
+			<!-- 基本变形组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>基本变形</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 基本型 -->
+					<div class="transform-item">
+						<div class="transform-label">基本形</div>
+						<div class="transform-value">{{get('基本形')}}</div>
+					</div>
+					<!-- ます形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">ます形</div>
+						<div class="transform-value">{{get('ます形')}}</div>
+					</div>
+					<!-- て形 -->
+					<div class="transform-item">
+						<div class="transform-label">て形</div>
+						<div class="transform-value">{{get('て形')}}</div>
+					</div>
+					<!-- た形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">た形</div>
+						<div class="transform-value">{{get('た形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 否定与命令组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>否定与命令</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- ない形 -->
+					<div class="transform-item">
+						<div class="transform-label">ない形</div>
+						<div class="transform-value">{{get('ない形')}}</div>
+					</div>
+					<!-- 命令形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">命令形</div>
+						<div class="transform-value">{{get('命令形')}}</div>
+					</div>
+					<!-- 禁止形 -->
+					<div class="transform-item">
+						<div class="transform-label">禁止形</div>
+						<div class="transform-value">{{get('禁止形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 可能被动使役组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>可能/被动/使役</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 可能形 -->
+					<div class="transform-item">
+						<div class="transform-label">可能形</div>
+						<div class="transform-value">{{get('可能形')}}</div>
+					</div>
+					<!-- 被动形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">被动形</div>
+						<div class="transform-value">{{get('被动形')}}</div>
+					</div>
+					<!-- 使役形 -->
+					<div class="transform-item">
+						<div class="transform-label">使役形</div>
+						<div class="transform-value">{{get('使役形')}}</div>
+					</div>
+					<!-- 使役被动形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">使役被动形</div>
+						<div class="transform-value">{{get('使役被动形')}}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 其他变形组 -->
+			<div class="transform-group">
+				<div class="group-header">
+					<h2>其他变形</h2>
+					<span class="expand-icon">▼</span>
+				</div>
+				<div class="group-content">
+					<!-- 假定形 -->
+					<div class="transform-item">
+						<div class="transform-label">假定形</div>
+						<div class="transform-value">{{get('假定形')}}</div>
+					</div>
+					<!-- 意向形 -->
+					<div class="transform-item striped">
+						<div class="transform-label">意向形</div>
+						<div class="transform-value">{{get('意向形')}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<wd-toast />
 	</view>
 </template>
 
 <script setup>
 	import {
-		ref
+		ref,
 	} from 'vue'
-	import Navbar from '@/components/navbar/navbar.vue';
+	import {
+		onLoad,
+	} from "@dcloudio/uni-app"
+	import {
+		goPage
+	} from "@/utils/common.js"
+	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	const value = ref("")
 	const data = ref([])
-	const getVerbTrans = async () => {
+	const value = ref('')
+	const get = (key) => {
+		const res = data.value.find(({
+			category
+		}) => category == key)
+		if (res) {
+			return res.result
+		} else {
+			return res
+		}
+	}
+	const confirm = async () => {
 		try {
-			if (value.value == "" || value.value.length == 0) {
+			if (value.value.trim().length == 0) {
 				toast.warning(`单词不可为空`)
 				return
 			}
-			const res = await $http.common.getVerbTrans(value.value)
+			const res = await $http.common.getVerbTrans(value.value.trim())
 			data.value = res.data
 		} catch (err) {
 			toast.warning(`这个单词不是动词`)
@@ -39,19 +164,102 @@
 	}
 </script>
 
-<style scoped lang="scss">
-	:deep(.btn) {
-		margin-top: 15px;
-		width: 100%;
+<style lang="scss" scoped>
+	/* General Styles */
+	.content-container {
+		padding: 16px;
+		overflow-y: auto;
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 
-	:deep(.input1) {
-		padding: 8px 15px;
-		border-radius: 44px;
+	/* Transform Group Styles */
+	.transform-group {
+		margin-bottom: 16px;
+		background: #FFFFFF;
+		border-radius: 8px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 
-	.input {
-		padding: 0 15px;
-		gap: 15px;
+	.group-header {
+		padding: 12px 16px;
+		border-bottom: 1px solid #F0F0F0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.group-header h2 {
+		font-size: 16px;
+		color: #212121;
+		margin: 0;
+	}
+
+	.expand-icon {
+		color: #757575;
+		font-size: 14px;
+	}
+
+	.group-content {
+		padding: 8px 0;
+	}
+
+	/* Transform Item Styles */
+	.transform-item {
+		display: flex;
+		padding: 12px 16px;
+	}
+
+	.transform-item.striped {
+		background: #FAFAFA;
+	}
+
+	.transform-label {
+		flex: 1;
+		color: #757575;
+		font-size: 14px;
+	}
+
+	.transform-value {
+		font-size: 16px;
+		color: #212121;
+		font-weight: 500;
+	}
+
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
+
+	.btn {
+		background: #07C160;
+		color: white;
+		border-radius: 8px;
+		padding: 0 16px;
+		font-size: 16px;
+	}
+
+	.search-bar {
+		background-color: #FAFAFA;
+		border-radius: 8px;
+		padding: 8px 12px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+
+		input {
+			flex: 1;
+		}
+
+		text {
+			font-size: 18px;
+			color: #9DA3AF;
+		}
+	}
+
+	.search-bg {
+		background-color: white;
+		padding: 12px 16px;
 	}
 </style>

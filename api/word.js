@@ -36,26 +36,46 @@ export default {
 	getHomeInfo() {
 		return http.get("learn/info")
 	},
-	addMyBooks(data) {
-		return http.post("mybooks/book", data)
+	// 新增单词本
+	addBook(data) {
+		return http.post("book", data)
 	},
-	getMyBooks(id) {
-		return http.get(`mybooks/book/${id}`)
+	// 获取我的单词本
+	getSelfBooks(id) {
+		return http.get(`book/self/${id}`)
 	},
-	setMyBooks(id, data) {
-		return http.post(`mybooks/set/${id}`, data)
+	// 获取我的单词本
+	getSelfBooks(id) {
+		return http.get(`book/self/${id}`)
 	},
-	addMyBooksWord(data) {
-		return http.post("mybooks/word", data)
+	// 修改我的单词本
+	setBook(id, data) {
+		return http.put(`book/${id}`, data)
 	},
-	getMyBooksWord(id, page, size) {
-		return http.get(`mybooks/word/${id}/${page}/${size}`)
+	// 发布单词本
+	releaseBook(id) {
+		return http.post(`book/release/${id}`)
 	},
-	deleteMyBooks(id) {
-		return http.delete(`mybooks/book/${id}`)
+	// 删除单词本
+	deleteBook(id) {
+		return http.delete(`book/${id}`)
 	},
-	deleteMyBooksWord(wordid, bookid) {
-		return http.delete(`mybooks/word/${wordid}/${bookid}`)
+	// 移除单词
+	removeBookWord(wordid, bookid) {
+		return http.delete(`book/word/${bookid}/${wordid}`)
+	},
+	// 移除单词
+	removeBookWords(bookid, data) {
+		console.log(data);
+		return http.delete(`book/word/${bookid}`, data)
+	},
+	// 加入单词
+	addBookWord(data) {
+		return http.post(`book/word`, data)
+	},
+	// 获取单词书的单词列表
+	getBookWord(id, page, size, val) {
+		return http.get(`book/word/${id}/${page}/${size}/${val}`)
 	},
 	getRecommend() {
 		return http.get(`recommend`)

@@ -23,6 +23,11 @@ export const copy = (data) => {
 		showToast: false
 	});
 }
+export const back = () => {
+	uni.navigateBack({
+		delta: 1
+	})
+}
 export const tagColor = new Map([
 	["N1", {
 		color: "#0083ff",

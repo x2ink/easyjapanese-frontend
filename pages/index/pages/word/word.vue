@@ -47,7 +47,7 @@
 
 				<!-- 功能入口 -->
 				<div class="feature-grid">
-					<div class="feature-card word-card">
+					<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
 						<div class="feature-icon blue">
 							<i class="fas fa-book"></i>
 						</div>
@@ -116,6 +116,9 @@
 		onMounted
 	} from 'vue'
 	const navBarHeight = ref(0)
+	import {
+		goPage
+	} from "@/utils/common.js"
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;

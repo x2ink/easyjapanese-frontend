@@ -46,9 +46,10 @@ const http = {
 			method: 'PUT'
 		})
 	},
-	delete(url) {
+	delete(url, data) {
 		return this.request({
 			url: url,
+			data: data,
 			method: 'DELETE'
 		})
 	}

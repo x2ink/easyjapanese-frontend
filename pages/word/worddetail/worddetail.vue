@@ -3,7 +3,7 @@
 		<!-- 单词标题区 -->
 		<div class="word-header" :style="{paddingTop:navBarHeight}">
 			<!-- 返回按钮 -->
-			<view class="back-btn">
+			<view class="back-btn" @click="back()">
 				<text class="fas fa-arrow-left"></text>
 			</view>
 			<div style="margin-top: 16px;">
@@ -37,8 +37,7 @@
 							class="tag tag-blue">{{item}}</span>
 					</div>
 					<div class="flex space-x-2">
-						<view @click="goPage('/pages/word/edit/edit',{id})"
-							style="color: #3b82f6;font-size: 14px;">
+						<view @click="goPage('/pages/word/edit/edit',{id})" style="color: #3b82f6;font-size: 14px;">
 							<text class="fas fa-edit" style="margin-right: 4px;"></text>编辑
 						</view>
 					</div>
@@ -108,7 +107,8 @@
 			</view>
 			<!-- 底部操作栏 -->
 			<div class="bottom-actions">
-				<view class="bottom-btn btn-gray">
+				<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})"
+					class="bottom-btn btn-gray">
 					<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 生词本
 				</view>
 				<view class="bottom-btn btn-blue">
@@ -135,7 +135,8 @@
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
-		formatWordName
+		formatWordName,
+		back
 	} from "@/utils/common.js"
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();

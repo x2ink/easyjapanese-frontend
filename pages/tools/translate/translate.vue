@@ -1,22 +1,41 @@
 <template>
-	<Navbar>
-		<template #left>
-			<wd-popover mode="menu" :content="menu" @menuclick="changeSearchType">
-				<view class="search-type">
-					<text>{{ current }}</text>
-					<wd-icon custom-class="icon-arrow" name="fill-arrow-down"></wd-icon>
-				</view>
-			</wd-popover>
-		</template>
-	</Navbar>
-	<view v-if="ai" style="padding-bottom: 40px;">
-		<wd-textarea custom-class="textarea" v-model="value" clearable show-word-limit placeholder="输入中文或日文"
-			:maxlength="400" />
-		<view style="padding:15px;">
-			<wd-button @click="aisubmit()" block>翻译</wd-button>
+	<view>
+		<NavbarDefault border title="翻译"></NavbarDefault>
+		<div class="translation-mode">
+			<div @click="current='标准翻译'" :class="{active:current=='标准翻译'}" class="mode-btn">标准翻译</div>
+			<div @click="current='AI翻译'" :class="{active:current=='AI翻译'}" class="mode-btn">AI翻译</div>
+		</div>
+		<div v-if="current=='标准翻译'" class="language-selector">
+			<div :class="{active:pattern=='cj'}" class="language-item">
+				<span>中文</span>
+			</div>
+			<button @click="patternChange()" class="swap-btn">
+				<i class="fas fa-exchange-alt" style="color: #757575;"></i>
+			</button>
+			<div :class="{active:pattern=='jc'}" class="language-item">
+				<span>日语</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<textarea v-model="value" class="form-textarea" placeholder="请输入需要翻译的内容"></textarea>
+		</div>
+		<button @click="submit()" class="translate-btn">
+			<text class="fas fa-language"></text>翻译
+		</button>
+		<view v-if="current=='标准翻译'" style="padding-top: 16px;">
+			<div class="output-area">
+				<textarea v-model="result" class="textarea" placeholder="翻译结果将显示在这里..."></textarea>
+				<div class="action-bar">
+					<button class="action-btn">
+						<i class="fas fa-volume-up"></i> 朗读
+					</button>
+					<button @click="copy(result)" class="action-btn">
+						<i class="fas fa-copy"></i> 复制
+					</button>
+				</div>
+			</div>
 		</view>
-		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-		<view class="result">
+		<view v-else class="result">
 			<view v-if="loading" class="loading _GCENTER">
 				<div class="loadership_KUDLC">
 					<div></div>
@@ -29,105 +48,43 @@
 					AI正在思考,大概需要10s
 				</text>
 			</view>
-
 			<view v-if="result.length>0&&!loading" class="translate">
 				<view v-html="result"></view>
 			</view>
 		</view>
+		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
+			@onFinish="finishCore" />
+		<wd-toast />
 	</view>
-	<view v-else style="padding-bottom: 40px;">
-		<wd-textarea custom-class="textarea" v-model="value" clearable show-word-limit placeholder="输入中文或日文"
-			:maxlength="400" />
-		<view style="background-color: white;padding: 10px;margin: 15px;border-radius: 8px;">
-			<wd-radio-group v-model="type" shape="button">
-				<wd-radio value="中译日">中译日</wd-radio>
-				<wd-radio value="日译中">日译中</wd-radio>
-			</wd-radio-group>
-		</view>
-		<view style="padding:0 15px">
-			<wd-button @click="submit()" block>翻译</wd-button>
-		</view>
-		<wd-gap bg-color="#F5f5f5" height="15px"></wd-gap>
-		<view class="result">
-			<view v-if="loading" class="loading _GCENTER">
-				<div class="loadership_KUDLC">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-			</view>
-			<view v-if="result.length>0&&!loading" class="translate">
-				<view>{{result}}</view>
-				<view class="tool">
-					<wd-icon @click="copy(result)" name="file-copy" color="#999" size="20px"></wd-icon>
-					<!-- <wd-icon name="sound" size="20px" color="#999"></wd-icon> -->
-				</view>
-			</view>
-
-		</view>
-	</view>
-	<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
-		@onFinish="finishCore" />
-	<wd-toast />
 </template>
 
 <script setup>
 	import {
 		ref,
 		onMounted,
-		computed,
-		watch
+		computed
 	} from 'vue'
-	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
-	import Navbar from '@/components/navbar/navbar.vue';
+	import {
+		onLoad,
+		onShow,
+		onReachBottom,
+		onPageScroll,
+	} from "@dcloudio/uni-app"
+	import {
+		goPage,
+		formatWordName
+	} from "@/utils/common.js"
+	import NavbarDefault from "@/components/navbar/default"
+	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
 	import sha256 from 'crypto-js/sha256';
 	const current = ref('标准翻译')
-	const menu = ref([{
-			content: '标准翻译'
-		},
-		{
-			content: 'AI翻译'
-		}
-	])
-	const changeSearchType = (e) => {
-		current.value = e.item.content
-		if (current.value == "AI翻译") {
-			ai.value = true
-		} else {
-			ai.value = false
-		}
-	}
-	const ai = ref(false)
-	watch(ai, (newVal, oldVal) => {
-		result.value = ""
-		value.value = ""
-	})
-	const copy = (data) => {
-		uni.setClipboardData({
-			data: data,
-			showToast: false,
-			success() {
-				toast.success(`复制成功`)
-			}
-		});
-	}
-	const toast = useToast()
-	const value = ref("我是中国人")
-	const loading = ref(false)
-	const result = ref("");
-	const type = ref("中译日")
-	const truncate = (q) => {
-		var len = q.length;
-		if (len <= 20) return q;
-		return q.substring(0, 10) + len + q.substring(len - 10, len);
-	}
+	const pattern = ref('cj')
 	const fromTo = computed(() => {
-		if (type.value == "中译日") {
+		if (pattern.value == "cj") {
 			return {
 				'from': 'zh-CHS',
 				'to': 'ja'
@@ -139,8 +96,40 @@
 			}
 		}
 	})
-	const submit = async () => {
-		if (value.value == "" || value.value.length == 0) {
+	const patternChange = () => {
+		if (pattern.value == 'jc') {
+			pattern.value = 'cj'
+		} else {
+			pattern.value = 'jc'
+		}
+	}
+	const copy = (data) => {
+		uni.setClipboardData({
+			data: data,
+			showToast: false,
+			success() {
+				toast.success(`复制成功`)
+			}
+		});
+	}
+	const toast = useToast()
+	const value = ref("我是中国人")
+	const result = ref("");
+	const loading = ref(false)
+	const truncate = (q) => {
+		var len = q.length;
+		if (len <= 20) return q;
+		return q.substring(0, 10) + len + q.substring(len - 10, len);
+	}
+	const submit = () => {
+		if (current.value == "标准翻译") {
+			ydsubmit()
+		} else {
+			aisubmit()
+		}
+	}
+	const ydsubmit = async () => {
+		if (value.value.trim().length == 0) {
 			toast.warning(`内容不可为空`)
 			return
 		}
@@ -151,9 +140,7 @@
 		let curtime = Math.round(new Date().getTime() / 1000);
 		let query = value.value;
 		let str1 = appKey + truncate(query) + salt + curtime + key;
-		console.log(sha256);
 		var sign = sha256(str1).toString();
-		console.log(sign);
 		uni.request({
 			url: 'https://openapi.youdao.com/api',
 			method: "GET",
@@ -172,7 +159,6 @@
 			}
 		})
 	}
-	// ai
 	const chatSSEClientRef = ref(null);
 	const openCore = () => {
 		loading.value = false
@@ -182,8 +168,11 @@
 		console.log("error sse：", err);
 	}
 	const messageCore = (msg) => {
-		let jsonData = JSON.parse(msg)
-		result.value += `${jsonData.choices[0].delta.content}`
+		const lines = msg.split('\n').filter(line => line.trim().startsWith('data:'));
+		const chunks = lines.map(line => JSON.parse(line.replace('data: ', '')));
+		chunks.map(item => {
+			result.value += item.choices[0].delta.content
+		})
 	}
 	const finishCore = () => {
 		console.log("finish sse")
@@ -234,39 +223,18 @@
 		})
 	}
 </script>
-
-<style scoped lang="scss">
-	.swap {
-		display: flex;
-		align-items: center;
-		gap: 5px;
-
-		text {
-			font-size: 14px;
-		}
-	}
-
-	:deep(.textarea) {
-		margin: 0 15px;
-		border-radius: 8px;
-	}
-
-	.translate {
-		padding: 15px;
+<style>
+	page {
 		background-color: white;
-		border-radius: 8px;
-		font-size: 14px;
-
-		.tool {
-			display: flex;
-			justify-content: flex-end;
-			gap: 5px;
-			margin-top: 10px;
-		}
+	}
+</style>
+<style lang="scss" scoped>
+	.form-group {
+		padding: 16px;
 	}
 
 	.result {
-		padding: 0 15px;
+		padding: 0 16px;
 
 		.smalltitle {
 			font-size: 14px;
@@ -353,5 +321,103 @@
 				opacity: 1;
 			}
 		}
+	}
+
+	.output-area {
+		margin: 0 16px 16px;
+		border-radius: 8px;
+		border: 1px solid #E0E0E0;
+	}
+
+	.textarea {
+		min-height: 120px;
+		width: auto;
+		border: none;
+		padding: 12px;
+		font-size: 16px;
+		resize: none;
+		outline: none;
+		box-sizing: border-box;
+	}
+
+	.action-bar {
+		display: flex;
+		justify-content: space-between;
+		padding: 8px 16px;
+		border-top: 1px solid #E0E0E0;
+	}
+
+	.action-btn {
+		background: none;
+		border: none;
+		color: #757575;
+		font-size: 14px;
+		cursor: pointer;
+	}
+
+	.translate-btn {
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 12px 24px;
+		font-size: 16px;
+		font-weight: 500;
+		margin: 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		justify-content: center;
+	}
+
+	.language-selector {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 16px;
+		padding: 8px 0;
+		border-bottom: 1px solid #E0E0E0;
+	}
+
+	.language-item {
+		display: flex;
+		align-items: center;
+		color: #757575;
+	}
+
+	.language-item.active {
+		color: #07C160;
+		font-weight: 500;
+	}
+
+	.form-textarea {
+		width: auto;
+		padding: 12px;
+		border: 1px solid #E0E0E0;
+		border-radius: 8px;
+		font-size: 15px;
+		min-height: 80px;
+		resize: none;
+	}
+
+	.translation-mode {
+		display: flex;
+		background-color: #F5F5F5;
+		border-radius: 8px;
+		margin: 12px 16px;
+		padding: 4px;
+	}
+
+	.mode-btn {
+		flex: 1;
+		text-align: center;
+		padding: 8px;
+		border-radius: 6px;
+		font-size: 14px;
+	}
+
+	.mode-btn.active {
+		background-color: #FFFFFF;
+		color: #07C160;
+		font-weight: 500;
 	}
 </style>
