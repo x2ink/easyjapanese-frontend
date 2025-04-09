@@ -1,40 +1,18 @@
 <template>
 	<view>
-		<Navbar title="单词跟读">
-		</Navbar>
-		<view class="word _GCENTER">
-			<text>{{word}}</text>
+		<view class="head">
+			<NavbarDefault border title="单词跟读"></NavbarDefault>
 		</view>
-		<wd-divider>用户发音</wd-divider>
-		<view style="margin-top: 40px;" v-if="noResult">
-			<wd-status-tip :image-size="{
-		        height: 60,
-		        width: 60
-		}" image="http://jp.x2.ink/images/blank.png" tip="还没有小伙伴跟读" />
-		</view>
-		<view class="readlist">
-			<view class="userread" v-for="(item,index) in List" :key="item.id">
-				<view class="right">
-					<view class="sound _GCENTER">
-						<wd-icon name="sound" size="20" color="#57D09B" />
-					</view>
-					<view class="userinfo">
-						<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
-						<view class="text">
-							<text>{{item.user.nickname}}</text>
-							<text>{{dayjs().to(dayjs(item.time))}}</text>
-						</view>
-					</view>
-				</view>
-				<view class="left _GCENTER" @click="like(index,item.id)">
-					<wd-icon v-if="item.has" size="20" name="heart-filled" color="#EF4651" />
-					<wd-icon v-else size="20" name="heart" color="#999" />
-					<text>{{item.like}}</text>
-				</view>
-			</view>
-		</view>
-		<view class="followbtn">
-			<wd-button type="error" size="large" @longpress="startRecord" @touchend="endRecord">
+		<!-- 单词展示区 -->
+		<div class="word-display">
+			<div class="word-kanji">{{word.word}}</div>
+			<div class="word-furigana">{{word.kana}}</div>
+			<div class="word-meaning">{{word.meaning.map(item=>item.meaning).join('；')}}</div>
+		</div>
+
+		<!-- 录音控制区 -->
+		<div class="recording-control">
+			<button @longpress="startRecord" @touchend="endRecord" class="record-btn _GCENTER">
 				<view v-if="recording" class="loadership_XNYIJ">
 					<view></view>
 					<view></view>
@@ -42,31 +20,68 @@
 					<view></view>
 					<view></view>
 				</view>
-				<text v-else>长按录音</text>
-			</wd-button>
-		</view>
-		<!-- 发布 -->
-		<wd-popup v-model="recorded" :z-index="100" position="bottom" custom-style="border-radius:16px 16px 0 0;"
-			@close="handleClose">
-			<view class="result">
-				<view class="wordtitle">{{word}}</view>
-				<text>录音</text>
-				<view class="chat" @click="playRecord()">
-					<wd-icon name="sound" size="18px"></wd-icon>
-					<text style="font-size: 14px;">{{Math.round(recordDuration/1000)}}"</text>
-				</view>
-				<view class="agree">
-					<wd-checkbox v-model="agree">
-						<view class="agreement">我已同意并阅读<text>《轻松日语用户发音功能使用协议》</text></view>
-					</wd-checkbox>
-				</view>
-				<view class="btns">
-					<wd-button type="info" custom-class="btn" @click="recorded=false">取消</wd-button>
-					<wd-button custom-class="btn" @click="submit()">上传</wd-button>
-				</view>
+				<i v-else class="fas fa-microphone"></i>
+			</button>
+			<div class="recording-time">点击麦克风开始录音</div>
+
+			<!-- 录音操作按钮组 (初始隐藏) -->
+			<div class="recording-actions" style="display: none;">
+				<button class="action-btn">取消</button>
+				<button class="action-btn primary">发布</button>
+			</div>
+		</div>
+		<!-- 其他用户录音列表 -->
+		<div class="recordings-list">
+			<div class="section-title">大家的发音</div>
+
+			<!-- 录音项1 -->
+			<div class="recording-item" v-for="(item,index) in List" :key="item.id">
+				<div class="user-info">
+					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
+					<div class="user-name">
+						<view>{{item.user.nickname}}</view>
+						<div class="recording-meta">{{dayjs().to(dayjs(item.time))}}</div>
+					</div>
+					<div class="recording-actions">
+						<button @click="like(index,item.id)" class="like-btn" :class="{liked:item.has}">
+							<i class="fas fa-heart"></i>
+							<span class="like-count">{{item.like}}</span>
+						</button>
+						<button class="play-btn">
+							<i class="fas fa-play"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 发布弹窗 -->
+		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
+			@close="recorded=false">
+			<view class="release">
+				<div class="modal-header">录音完成</div>
+
+				<div class="playback-controls">
+					<button @click="playRecord()" class="playback-btn">
+						<i class="fas fa-play"></i>
+					</button>
+				</div>
+				<div class="playback-time">{{Math.round(recordDuration/1000)}}"</div>
+
+				<div class="agreement-checkbox">
+					<div class="checkbox checked">
+						<i class="fas fa-check" style="font-size: 12px;"></i>
+					</div>
+					<div class="agreement-text">
+						我已阅读并同意<text class="agreement-link">《轻松日语用户发音功能使用协议》</text>
+					</div>
+				</div>
+
+				<div class="modal-actions">
+					<button @click="recorded=false" class="modal-btn cancel-btn">取消</button>
+					<button @click="submit()" class="modal-btn confirm-btn">发布</button>
+				</div>
 			</view>
 		</wd-popup>
-		<wd-toast />
 	</view>
 </template>
 
@@ -75,81 +90,27 @@
 		ref,
 		onMounted
 	} from 'vue'
-	import Navbar from '@/components/navbar/navbar.vue';
 	import {
 		onLoad,
-		onShow,
-		onUnload,
-		onReachBottom
+		onReachBottom,
+		onUnload
 	} from "@dcloudio/uni-app"
+	import {
+		goPage,
+
+	} from "@/utils/common.js"
+	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	const toast = useToast()
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
-	import http from '@/utils/request.js'
-	const recorderManager = uni.getRecorderManager();
-	const innerAudioContext = uni.createInnerAudioContext();
-	innerAudioContext.autoplay = true;
-	const voicePath = ref(null)
-	const recordDuration = ref(null)
-	onMounted(() => {
-		recorderManager.onStop(function(res) {
-			voicePath.value = res.tempFilePath;
-			recordDuration.value = res.duration
-		});
-	})
-	const noResult = ref(false)
-	const id = ref(null)
-	const word = ref(null)
-	const total = ref(0)
-	const page = ref(1)
-	const size = ref(10)
-	const List = ref([])
-	const getList = async () => {
-		const res = await $http.word.getFollowRead(id.value, page.value, size.value)
-		total.value = res.total
-		List.value = List.value.concat(res.data.map(item => ({
-			...item,
-			has: false
-		})));
-		if (total.value == 0) {
-			noResult.value = true
-		}
-	}
-	const like = async (index, id) => {
-		if (List.value[index].has) {
-			await $http.word.unlikeFollowRead({
-					id
-				})
-				--List.value[index].like
-		} else {
-			await $http.word.likeFollowRead({
-					id
-				})
-				++List.value[index].like
-		}
-		List.value[index].has = !List.value[index].has
-	}
-	onReachBottom(() => {
-		if (total.value > List.value.length) {
-			++page.value
-			getList()
-		}
-	})
-	onLoad((op) => {
-		id.value = op.id
-		word.value = op.word
-		getList()
-	})
-	onUnload(() => {
-		recorderManager.stop();
-	})
+	const toast = useToast()
+	// 开始录音
 	const recording = ref(false)
 	const playRecord = () => {
 		if (voicePath.value) {
@@ -166,6 +127,29 @@
 		recorderManager.stop();
 		recording.value = false
 		recorded.value = true
+	}
+	// 加载用户发音
+	const id = ref(null)
+	const word = ref({
+		word: null,
+		kana: null,
+		meaning: []
+	})
+	const total = ref(0)
+	const page = ref(1)
+	const size = ref(10)
+	const List = ref([])
+	const noResult = ref(false)
+	const getList = async () => {
+		const res = await $http.word.getFollowRead(id.value, page.value, size.value)
+		total.value = res.total
+		List.value = List.value.concat(res.data.map(item => ({
+			...item,
+			has: false
+		})));
+		if (total.value == 0) {
+			noResult.value = true
+		}
 	}
 	const agree = ref(false)
 	const submit = () => {
@@ -194,31 +178,172 @@
 			}
 		});
 	}
-</script>
-
-<style scoped lang="scss">
-	:deep(.btn) {
-		width: 100%;
-	}
-
-	.agree {
-		margin-bottom: 15px;
-
-		.agreement {
-			font-size: 12px;
-			color: #999;
-
-			text {
-				color: #5880F2;
-			}
+	onReachBottom(() => {
+		if (total.value > List.value.length) {
+			++page.value
+			getList()
 		}
+	})
+	onLoad((op) => {
+		id.value = op.id
+		if (op.word) {
+			word.value = JSON.parse(op.word)
+		}
+		getList()
+	})
+	onUnload(() => {
+		recorderManager.stop();
+	})
+	const like = async (index, id) => {
+		if (List.value[index].has) {
+			await $http.word.unlikeFollowRead({
+					id
+				})
+				--List.value[index].like
+		} else {
+			await $http.word.likeFollowRead({
+					id
+				})
+				++List.value[index].like
+		}
+		List.value[index].has = !List.value[index].has
 	}
-
+	const recorderManager = uni.getRecorderManager();
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = true;
+	const voicePath = ref(null)
+	const recordDuration = ref(null)
+	onMounted(() => {
+		recorderManager.onStop(function(res) {
+			voicePath.value = res.tempFilePath;
+			recordDuration.value = res.duration
+		});
+	})
+</script>
+<style>
+	page {
+		background-color: white;
+	}
+</style>
+<style lang="scss" scoped>
 	.loadership_XNYIJ {
 		display: flex;
 		position: relative;
 		width: 23px;
 		height: 30px;
+	}
+
+
+	.modal-header {
+		font-size: 18px;
+		font-weight: 600;
+		color: #212121;
+		margin-bottom: 16px;
+		text-align: center;
+	}
+
+	.playback-controls {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 20px 0;
+	}
+
+	.playback-btn {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background-color: #07C160;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 20px;
+		border: none;
+		cursor: pointer;
+		margin: 0 12px;
+	}
+
+	.playback-time {
+		font-size: 14px;
+		color: #757575;
+		text-align: center;
+		margin-top: 8px;
+	}
+
+	.agreement-checkbox {
+		display: flex;
+		align-items: center;
+		margin: 16px 0;
+	}
+
+	.checkbox {
+		width: 18px;
+		height: 18px;
+		border: 1px solid #E0E0E0;
+		border-radius: 4px;
+		margin-right: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		background-color: white;
+		flex-shrink: 0;
+	}
+
+	.checkbox.checked {
+		background-color: #07C160;
+		border-color: #07C160;
+	}
+
+	.agreement-text {
+		font-size: 13px;
+		color: #757575;
+		line-height: 1.4;
+		flex: 1;
+	}
+
+	.agreement-link {
+		color: #07C160;
+	}
+
+	.modal-actions {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 20px;
+	}
+
+	.modal-btn {
+		flex: 1;
+		padding: 12px;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 500;
+		border: none;
+		cursor: pointer;
+	}
+
+	.cancel-btn {
+		background-color: white;
+		color: #757575;
+		border: 1px solid #E0E0E0;
+		margin-right: 8px;
+	}
+
+	.confirm-btn {
+		background-color: #07C160;
+		color: white;
+		margin-left: 8px;
+	}
+
+	.confirm-btn:disabled {
+		background-color: #E0E0E0;
+		cursor: not-allowed;
+	}
+
+
+	.release {
+		padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
 	}
 
 	.loadership_XNYIJ view {
@@ -282,124 +407,175 @@
 		}
 	}
 
-	.result {
-		padding: 15px;
-		padding-bottom: env(safe-area-inset-bottom);
-
-		.wordtitle {
-			text-align: center;
-			font-size: 24px;
-			font-weight: bold;
-		}
-
-		>text {
-			font-size: 14px;
-		}
-
-		.chat {
-			display: flex;
-			width: 60%;
-			align-items: center;
-			line-height: 35px;
-			justify-content: space-between;
-			background-color: #57D09B;
-			color: white;
-			padding: 0 10px;
-			border-radius: 4px 35px 35px 35px;
-			margin: 15px 0;
-		}
-
-		.btns {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 15px;
-		}
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
 	}
 
-	.followbtn {
+	/* 单词展示区 */
+	.word-display {
+		padding: 24px 16px;
+		text-align: center;
+		background-color: #FAFAFA;
+		border-bottom: 1px solid #E0E0E0;
+	}
+
+	.word-kanji {
+		font-size: 32px;
+		font-weight: 600;
+		color: #212121;
+		margin-bottom: 8px;
+	}
+
+	.word-furigana {
+		font-size: 18px;
+		color: #757575;
+	}
+
+	.word-meaning {
+		font-size: 16px;
+		color: #424242;
+		margin-top: 12px;
+	}
+
+	/* 录音控制区 */
+	.recording-control {
+		padding: 24px 16px;
+		text-align: center;
+	}
+
+	.record-btn {
+		width: 72px;
+		height: 72px;
+		border-radius: 50%;
+		background-color: #07C160;
+		color: white;
+		border: none;
+		font-size: 24px;
+		cursor: pointer;
+		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+		transition: all 0.2s ease;
+	}
+
+	.record-btn:active {
+		transform: scale(0.95);
+	}
+
+	.recording-time {
+		font-size: 14px;
+		color: #757575;
+		margin-top: 12px;
+	}
+
+	/* 录音操作按钮组 */
+	.recording-actions {
+		display: flex;
+		justify-content: center;
+		gap: 16px;
+	}
+
+	.action-btn {
+		padding: 8px 16px;
+		border-radius: 20px;
+		font-size: 14px;
+		border: 1px solid #E0E0E0;
+		background-color: white;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.action-btn.primary {
+		background-color: #07C160;
+		color: white;
+		border-color: #07C160;
+	}
+
+	.action-btn:active {
+		transform: scale(0.95);
+	}
+
+	/* 其他用户录音列表 */
+	.recordings-list {
+		flex: 1;
+		overflow-y: auto;
+		padding: 16px;
+		background-color: white;
+	}
+
+	.section-title {
+		font-size: 16px;
+		font-weight: 600;
+		color: #212121;
+		padding-bottom: 8px;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	/* 录音项 */
+	.recording-item {
+		background-color: white;
+		padding: 12px;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	.user-info {
+		display: flex;
+		align-items: center;
+	}
+
+
+
+	.user-name {
+		margin-left: 8px;
+		font-size: 14px;
+		font-weight: 500;
+		color: #212121;
+		flex: 1;
+	}
+
+	.recording-meta {
+		font-size: 12px;
+		color: #9E9E9E;
+		margin-left: auto;
+	}
+
+
+
+	.recording-actions {
+		display: flex;
+		align-items: center;
+	}
+
+	.like-btn {
+		color: #9E9E9E;
+		font-size: 14px;
+		margin-left: 8px;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.like-btn.liked {
+		color: #F44336;
+	}
+
+	.like-count {
+		font-size: 12px;
+		color: #9E9E9E;
+		margin-left: 4px;
+	}
+
+	.play-btn {
+		width: 32px;
+		height: 32px;
+		font-size: 16px;
+		border-radius: 50%;
+		background-color: #07C160;
+		color: white;
+		border: none;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex-direction: column;
-		gap: 10px;
-		position: fixed;
-		bottom: 0;
-		right: 0;
-		left: 0;
-		padding: 20px 15px calc(env(safe-area-inset-bottom)) 15px;
-		background: white;
-		border-top: #f5f5f5 2px solid;
-	}
-
-	.word {
-		margin: 0 10px;
-		background-color: white;
-		border-radius: 8px;
-		padding: 15px;
-
-		text {
-			font-size: 28px;
-			font-weight: bold;
-		}
-	}
-
-	.readlist {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		margin: 10px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
-
-		.userread {
-			background-color: white;
-			border-radius: 8px;
-			display: flex;
-			padding: 15px;
-			align-items: center;
-			justify-content: space-between;
-
-			.left {
-				color: #999;
-				gap: 5px;
-			}
-
-			.right {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-
-				.sound {
-					width: 30px;
-					height: 30px;
-					background-color: #f5f5f5;
-					border-radius: 8px;
-				}
-
-				.userinfo {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-
-					.text {
-						display: flex;
-						flex-direction: column;
-
-						text {
-							&:nth-of-type(1) {
-								font-size: 14px;
-							}
-
-							&:nth-of-type(2) {
-								font-size: 12px;
-								color: #999;
-								margin-top: 3px;
-							}
-						}
-					}
-
-				}
-			}
-		}
+		cursor: pointer;
 	}
 </style>

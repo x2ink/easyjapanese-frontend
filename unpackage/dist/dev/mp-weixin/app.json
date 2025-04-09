@@ -25,10 +25,12 @@
     "pages/msg/comment/comment",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
-    "pages/tools/composition/composition",
-    "pages/tools/compositiondetail/compositiondetail",
     "pages/test/test",
-    "pages/word/lookwords/lookwords"
+    "pages/word/lookwords/lookwords",
+    "pages/other/feedback/feedback",
+    "pages/other/about/about",
+    "pages/tools/notedetail/notedetail",
+    "pages/tools/notes/notes"
   ],
   "subPackages": [
     {
@@ -52,9 +54,7 @@
       "pages": [
         "ranking/ranking",
         "browse/browse",
-        "about/about",
         "share/share",
-        "feedback/feedback",
         "setting/setting",
         "setplan/setplan"
       ]

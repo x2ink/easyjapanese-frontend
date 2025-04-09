@@ -1,26 +1,6 @@
 <script>
 	export default {
 		onLaunch: function() {
-			// uni.loadFontFace({
-			// 	family: 'Font Awesome 6 Free',
-			// 	source: 'url("https://jp.x2.ink/font/fa-regular-400.woff2")',
-			// 	success() {
-			// 		console.log('success')
-			// 	},
-			// 	fail(res) {
-			// 		console.log("加载字体图标失败", res);
-			// 	}
-			// })
-			// uni.loadFontFace({
-			// 	family: 'Font Awesome 6 Free',
-			// 	source: 'url("https://jp.x2.ink/font/fa-solid-900.woff2")',
-			// 	success() {
-			// 		console.log('success')
-			// 	},
-			// 	fail(res) {
-			// 		console.log("加载字体图标失败", res);
-			// 	}
-			// })
 			console.log('App Launch')
 		},
 		onShow: function() {

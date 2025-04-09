@@ -76,7 +76,7 @@
 					</view>
 					<text class="tool-text">语法学习</text>
 				</view>
-				<view class="tool-btn" @click="navigateTo('hiragana')">
+				<view class="tool-btn" @click="goPage('/pages/tools/fiftysounds/fiftysounds')">
 					<view class="tool-icon">
 						<text class="fa-solid fa-turkish-lira-sign"></text>
 					</view>
@@ -89,40 +89,6 @@
 					<text class="tool-text">动词变形</text>
 				</view>
 			</view>
-
-			<!-- 今日任务 -->
-			<view class="section-header">
-				<text class="section-title">今日任务</text>
-				<view class="section-more">
-					<text class="more-text">全部</text>
-					<text class="iconfont icon-arrow-right more-icon"></text>
-				</view>
-			</view>
-
-			<view class="task-list">
-				<view class="task-item">
-					<view class="task-info">
-						<text class="task-word">たべる【食べる】</text>
-						<text class="task-detail">吃;喝;生活</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
-				</view>
-				<view class="task-item">
-					<view class="task-info">
-						<text class="task-word">のむ【飲む】</text>
-						<text class="task-detail">喝</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
-				</view>
-				<view class="task-item">
-					<view class="task-info">
-						<text class="task-word">いく【行く】</text>
-						<text class="task-detail">去</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
-				</view>
-			</view>
-
 			<!-- 学习日历 -->
 			<view class="calendar-container">
 				<view class="section-header">
@@ -182,6 +148,40 @@
 					<text class="calendar-day inactive">3</text>
 				</view>
 			</view>
+			<!-- 今日任务 -->
+			<view class="section-header">
+				<text class="section-title">今日任务</text>
+				<view class="section-more">
+					<text class="more-text">全部</text>
+					<text class="iconfont icon-arrow-right more-icon"></text>
+				</view>
+			</view>
+
+			<view class="task-list">
+				<view class="task-item">
+					<view class="task-info">
+						<text class="task-word">たべる【食べる】</text>
+						<text class="task-detail">吃;喝;生活</text>
+					</view>
+					<text class="iconfont icon-volume task-icon"></text>
+				</view>
+				<view class="task-item">
+					<view class="task-info">
+						<text class="task-word">のむ【飲む】</text>
+						<text class="task-detail">喝</text>
+					</view>
+					<text class="iconfont icon-volume task-icon"></text>
+				</view>
+				<view class="task-item">
+					<view class="task-info">
+						<text class="task-word">いく【行く】</text>
+						<text class="task-detail">去</text>
+					</view>
+					<text class="iconfont icon-volume task-icon"></text>
+				</view>
+			</view>
+
+
 		</view>
 	</view>
 </template>

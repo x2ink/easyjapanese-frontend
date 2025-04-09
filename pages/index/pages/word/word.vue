@@ -39,9 +39,9 @@
 				<div class="daily-proverb">
 					<div class="quote-mark">「</div>
 					<div class="proverb-content">
-						<div class="proverb-text">猿も木から落ちる</div>
-						<div class="proverb-translation">智者千慮，必有一失</div>
-						<div class="proverb-source">— 《日本谚语大全》</div>
+						<div class="proverb-text">{{sentence.ja}}</div>
+						<div class="proverb-translation">{{sentence.ch}}</div>
+						<div class="proverb-source">— {{sentence.source}}</div>
 					</div>
 				</div>
 
@@ -119,10 +119,17 @@
 	import {
 		goPage
 	} from "@/utils/common.js"
+	import $http from "@/api/index.js"
+	const sentence = ref({})
+	const getSentence = async () => {
+		const res = await $http.common.getSentence()
+		sentence.value = res.data
+	}
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
+		getSentence()
 	})
 </script>
 
@@ -242,7 +249,6 @@
 
 		.proverb-text {
 			font-size: 16px;
-			font-weight: 500;
 			color: #333;
 		}
 

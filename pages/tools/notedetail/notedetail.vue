@@ -7,112 +7,56 @@
 		<div class="word-info">
 			<div class="word-header">
 				<div>
-					<span class="word-kanji">食べる</span>
-					<span class="word-furigana">たべる</span>
-					<span class="word-katakana">タベル</span>
+					<span class="word-kanji">{{formatWordName(word.word,word.kana)}}</span>
 				</div>
 			</div>
-			<div class="word-meaning">
-				1. 吃，食用<br>
-				2. 生活，过日子（食べていく）
+			<div class="word-meaning" v-html="word.meaning.join('<br>')">
 			</div>
 		</div>
 
 		<!-- 笔记编辑区 -->
 		<div class="note-editor">
-			<textarea class="note-textarea" placeholder="记录你的学习笔记..."></textarea>
-			<div class="note-actions" style="justify-content: space-between;">
+			<div v-if="quote.id!=null" class="quoted-note">
+				<span class="quoted-user">@{{quote.nickname}}</span> {{quote.content}}
+			</div>
+			<textarea v-model="formData.content" class="note-textarea" placeholder="记录你的学习笔记..."></textarea>
+			<div class="note-actions" style="justify-content: space-between;margin-top: 16px;">
 				<div class="publish-switch">
 					<span class="switch-label">公开笔记</span>
-					<label class="switch">
-						<input type="checkbox" checked>
-						<span class="slider"></span>
-					</label>
+					<wd-switch @change="change" active-color="#07C160" size="24px" v-model="formData.public" />
 				</div>
-				<button class="submit-btn">提交</button>
+				<button @click="submit()" class="submit-btn">{{type=='create'?'创建':'更新'}}</button>
 			</div>
 		</div>
-
 		<!-- 社区笔记 -->
 		<div class="community-notes">
-			<div class="section-title">社区笔记 (3)</div>
-
-			<!-- 笔记项1 -->
-			<div class="note-item">
-				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/women/44.jpg" class="user-avatar" alt="用户头像">
-					<div class="user-info">
-						<div class="user-name">日语学习者</div>
-						<div class="note-time">2023-06-15 14:30</div>
-					</div>
-				</div>
-				<div class="note-content">
-					这个词的过去式是「食べた」，否定形是「食べない」，て形是「食べて」。<br><br>
-					常用搭配：<br>
-					・朝ごはんを食べる (吃早餐)<br>
-					・外で食べる (在外面吃)
-				</div>
-				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 12
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
-				</div>
-			</div>
-
+			<div class="section-title">社区笔记 ({{total}})</div>
 			<!-- 笔记项2 (带引用) -->
-			<div class="note-item">
+			<div class="note-item" v-for="(item,index) in List" :key="item.id">
 				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/men/32.jpg" class="user-avatar" alt="用户头像">
+					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
 					<div class="user-info">
-						<div class="user-name">东京留学生</div>
-						<div class="note-time">2023-06-10 09:15</div>
+						<div class="user-name">{{item.user.nickname}}</div>
+						<div class="note-time">{{dayjs(item.created_at).format('YYYY-MM-DD')}}</div>
 					</div>
 				</div>
-				<div class="quoted-note">
-					<span class="quoted-user">@日语学习者</span> 提到的て形非常重要，在实际对话中经常使用，比如：
+				<div class="quoted-note" v-if="item.cite.id!=0">
+					<span class="quoted-user">@{{item.cite.nickname}}</span> {{item.cite.content}}
 				</div>
 				<div class="note-content">
-					1. 「食べてください」- 请吃 (礼貌请求)<br>
-					2. 「食べています」- 正在吃 (进行时)<br>
-					3. 「食べてもいいですか」- 可以吃吗？ (请求许可)<br><br>
-					这些是日常会话中非常实用的表达方式。
+					{{item.content}}
 				</div>
 				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 8
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
-				</div>
-			</div>
-
-			<!-- 笔记项3 -->
-			<div class="note-item">
-				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/women/68.jpg" class="user-avatar" alt="用户头像">
-					<div class="user-info">
-						<div class="user-name">JLPT备考中</div>
-						<div class="note-time">2023-06-05 18:42</div>
-					</div>
-				</div>
-				<div class="note-content">
-					记忆技巧：把「食べる」联想为"tab(标签)+er(人)"，想象一个人正在吃标签纸，虽然奇怪但容易记住。<br><br>
-					注意与「飲む」(喝)的区别，固体用「食べる」，液体用「飲む」。
-				</div>
-				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 15
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
+					<view :class="{active:item.has}" @click="like(index,item.id)" class="action-btn">
+						<text class="far fa-heart"></text>{{item.like}}
+					</view>
+					<view @click="quoteNote(item.id)" class="action-btn quote-btn">
+						<text class="fas fa-quote-left"></text> 引用
+					</view>
 				</div>
 			</div>
 		</div>
+		<wd-toast />
 	</view>
 </template>
 
@@ -123,14 +67,118 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onReachBottom,
-		onUnload
+		onReachBottom
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
+		formatWordName
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	import dayjs from 'dayjs'
+	onReachBottom(() => {
+		if (total.value > List.value.length) {
+			++page.value
+			getList()
+		}
+	})
+	const like = async (index, id) => {
+		if (List.value[index].has) {
+			await $http.common.likeNote("unlike", id)
+				--List.value[index].like
+		} else {
+			await $http.common.likeNote("like", id)
+				++List.value[index].like
+		}
+		List.value[index].has = !List.value[index].has
+	}
+	const toast = useToast()
+	const total = ref(0)
+	const page = ref(1)
+	const size = ref(10)
+	const List = ref([])
+	const noResult = ref(false)
+	const getList = async () => {
+		const res = await $http.common.getNoteList(wordId.value, page.value, size.value)
+		total.value = res.total
+		List.value = List.value.concat(res.data.map(item => ({
+			...item,
+			has: false
+		})));
+		if (total.value == 0) {
+			noResult.value = true
+		}
+	}
+	const wordId = ref(null)
+	const word = ref({
+		kana: null,
+		word: null,
+		meaning: []
+	})
+	const type = ref('')
+	const formData = ref({
+		cite_id: null,
+		content: "",
+		word_id: null,
+		public: false
+	})
+	const change = ({
+		value
+	}) => {
+		submit()
+	}
+	const quoteNote = async (id) => {
+		formData.value.cite_id = id
+		submit()
+	}
+	const submit = async () => {
+		if (formData.value.content.trim().length == 0) {
+			toast.warning("内容不可为空")
+			return
+		}
+		const res = await $http.common.addNote(formData.value)
+		if (type.value == "update") {
+			toast.success("更新成功")
+		} else {
+			toast.success("创建成功")
+		}
+		getInfo(wordId.value)
+	}
+	const quote = ref({})
+	const getInfo = async (id) => {
+		try {
+			const res = await $http.common.getNoteInfo(id)
+			formData.value.content = res.data.content
+			formData.value.public = res.data.public
+			formData.value.cite_id = res.data.cite.id
+			quote.value = res.data.cite
+			type.value = "update"
+			word.value = {
+				word: res.data.word,
+				kana: res.data.kana,
+				meaning: res.data.meaning,
+			}
+		} catch (err) {
+			type.value = "create"
+			word.value = {
+				word: res.data.word,
+				kana: res.data.kana,
+				meaning: res.data.meaning,
+			}
+		}
+
+	}
+	onLoad((e) => {
+		if (e.wordId) {
+			wordId.value = e.wordId
+			formData.value.word_id = Number(e.wordId)
+			getInfo(e.wordId)
+			getList()
+		}
+	})
 </script>
 <style>
 	page {
@@ -162,19 +210,6 @@
 		font-weight: 600;
 		color: #212121;
 	}
-
-	.word-furigana {
-		font-size: 16px;
-		color: #757575;
-		margin-left: 8px;
-	}
-
-	.word-katakana {
-		font-size: 16px;
-		color: #757575;
-		font-style: italic;
-	}
-
 
 	.word-meaning {
 		font-size: 15px;
@@ -288,7 +323,8 @@
 
 	/* 社区笔记区 */
 	.community-notes {
-		margin-top: 16px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+		margin: 16px;
 	}
 
 	.section-title {
@@ -304,9 +340,8 @@
 	.note-item {
 		background-color: white;
 		border-radius: 8px;
-		padding: 16px;
-		margin-bottom: 12px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+		border-bottom: 1px solid #f0f0f0;
+		padding: 12px 0;
 	}
 
 	.note-header {
@@ -315,15 +350,9 @@
 		margin-bottom: 12px;
 	}
 
-	.user-avatar {
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		object-fit: cover;
-		margin-right: 12px;
-	}
 
 	.user-info {
+		margin-left: 8px;
 		flex: 1;
 	}
 
@@ -350,11 +379,13 @@
 	}
 
 	.note-actions {
+		margin: 0;
 		display: flex;
 		justify-content: flex-end;
 	}
 
 	.action-btn {
+		gap: 4px;
 		display: flex;
 		align-items: center;
 		padding: 6px 12px;
@@ -368,13 +399,13 @@
 		transition: all 0.2s ease;
 	}
 
-	.action-btn i {
+	.action-btn text {
 		margin-right: 4px;
 		font-size: 12px;
 	}
 
-	.action-btn:active {
-		background-color: #e0e0e0;
+	.action-btn.active {
+		color: #F44336;
 	}
 
 	.quote-btn {

@@ -156,7 +156,6 @@
 
 	.form-textarea {
 		width: auto;
-		min-height: 100px;
 		padding: 8px 12px;
 		border: 1px solid #ddd;
 		border-radius: 6px;

@@ -44,28 +44,28 @@
 
 				<!-- 功能入口 -->
 				<div class="function-list">
-					<div class="function-item wave-effect">
+					<div class="function-item">
 						<div class="function-icon orange">
 							<i class="fas fa-cog"></i>
 						</div>
 						<span class="function-name">系统设置</span>
 						<i class="fas fa-chevron-right arrow-icon"></i>
 					</div>
-					<div class="function-item wave-effect">
+					<div @click="goPage('/pages/other/feedback/feedback')" class="function-item">
 						<div class="function-icon red">
 							<i class="fas fa-comment-dots"></i>
 						</div>
 						<span class="function-name">意见反馈</span>
 						<i class="fas fa-chevron-right arrow-icon"></i>
 					</div>
-					<div class="function-item wave-effect">
+					<div @click="goPage('/pages/other/about/about')" class="function-item">
 						<div class="function-icon gray">
 							<i class="fas fa-info-circle"></i>
 						</div>
 						<span class="function-name">关于我们</span>
 						<i class="fas fa-chevron-right arrow-icon"></i>
 					</div>
-					<div class="function-item wave-effect">
+					<div class="function-item">
 						<div class="function-icon blue">
 							<i class="fas fa-share-alt"></i>
 						</div>

@@ -158,18 +158,6 @@
 			}
 		},
 		{
-			"path": "pages/tools/composition/composition",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/compositiondetail/compositiondetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/test/test",
 			"style": {
 				"navigationStyle": "custom"
@@ -177,6 +165,29 @@
 		},
 		{
 			"path": "pages/word/lookwords/lookwords",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/other/feedback/feedback",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/other/about/about",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tools/notedetail/notedetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tools/notes/notes",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -238,18 +249,7 @@
 					"navigationStyle": "default"
 				}
 			}, {
-				"path": "about/about",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			}, {
 				"path": "share/share",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "feedback/feedback",
 				"style": {
 					"navigationStyle": "custom"
 				}

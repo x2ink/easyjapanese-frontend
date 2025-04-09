@@ -28,10 +28,12 @@ if (!Math) {
   "./pages/msg/comment/comment.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
-  "./pages/tools/composition/composition.js";
-  "./pages/tools/compositiondetail/compositiondetail.js";
   "./pages/test/test.js";
   "./pages/word/lookwords/lookwords.js";
+  "./pages/other/feedback/feedback.js";
+  "./pages/other/about/about.js";
+  "./pages/tools/notedetail/notedetail.js";
+  "./pages/tools/notes/notes.js";
   "./trendpages/addtrend/addtrend.js";
   "./trendpages/trenddetail/trenddetail.js";
   "./trendpages/mytrend/mytrend.js";
@@ -40,21 +42,19 @@ if (!Math) {
   "./userpages/reemail/reemail.js";
   "./otherpages/ranking/ranking.js";
   "./otherpages/browse/browse.js";
-  "./otherpages/about/about.js";
   "./otherpages/share/share.js";
-  "./otherpages/feedback/feedback.js";
   "./otherpages/setting/setting.js";
   "./otherpages/setplan/setplan.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:24", "App Launch");
+    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:27", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:30", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
   }
 };
 function createApp() {

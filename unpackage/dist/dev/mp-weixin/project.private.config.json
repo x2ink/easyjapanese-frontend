@@ -4,16 +4,65 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/tools/grammardetail/grammardetail",
-          "pathName": "pages/tools/grammardetail/grammardetail",
-          "query": "id=5477",
+          "name": "pages/tools/notes/notes",
+          "pathName": "pages/tools/notes/notes",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notedetail/notedetail",
+          "pathName": "pages/tools/notedetail/notedetail",
+          "query": "wordId=152807&word={\"word\":\"子供\",\"kana\":\"こども\",\"meaning\":[{\"id\":25834,\"word_id\":152807,\"meaning\":\"自己的儿女\"},{\"id\":25835,\"word_id\":152807,\"meaning\":\"儿童，小孩\"},{\"id\":25836,\"word_id\":152807,\"meaning\":\"仔，崽（动物的）\"},{\"id\":25837,\"word_id\":152807,\"meaning\":\"幼稚\"}]}",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notedetail/notedetail",
+          "pathName": "pages/tools/notedetail/notedetail",
+          "query": "wordId=152807&word={\"word\":\"子供\",\"kana\":\"こども\",\"meaning\":[{\"id\":25834,\"word_id\":152807,\"meaning\":\"自己的儿女\"},{\"id\":25835,\"word_id\":152807,\"meaning\":\"儿童，小孩\"},{\"id\":25836,\"word_id\":152807,\"meaning\":\"仔，崽（动物的）\"},{\"id\":25837,\"word_id\":152807,\"meaning\":\"幼稚\"}]}",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notedetail/notedetail",
+          "pathName": "pages/tools/notedetail/notedetail",
+          "query": "wordId=152807&word=%7B%22word%22%3A%22%E5%AD%90%E4%BE%9B%22%2C%22kana%22%3A%22%E3%81%93%E3%81%A9%E3%82%82%22%2C%22meaning%22%3A%5B%7B%22id%22%3A25834%2C%22word_id%22%3A152807%2C%22meaning%22%3A%22%E8%87%AA%E5%B7%B1%E7%9A%84%E5%84%BF%E5%A5%B3%22%7D%2C%7B%22id%22%3A25835%2C%22word_id%22%3A152807%2C%22meaning%22%3A%22%E5%84%BF%E7%AB%A5%EF%BC%8C%E5%B0%8F%E5%AD%A9%22%7D%2C%7B%22id%22%3A25836%2C%22word_id%22%3A152807%2C%22meaning%22%3A%22%E4%BB%94%EF%BC%8C%E5%B4%BD%EF%BC%88%E5%8A%A8%E7%89%A9%E7%9A%84%EF%BC%89%22%7D%2C%7B%22id%22%3A25837%2C%22word_id%22%3A152807%2C%22meaning%22%3A%22%E5%B9%BC%E7%A8%9A%22%7D%5D%7D",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notedetail/notedetail",
+          "pathName": "pages/tools/notedetail/notedetail",
+          "query": "wordId=152807",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "pages/test/test",
           "pathName": "pages/test/test",
-          "query": "id=5484",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/grammardetail/grammardetail",
+          "pathName": "pages/tools/grammardetail/grammardetail",
+          "query": "id=5477",
           "launchMode": "default",
           "scene": null
         },

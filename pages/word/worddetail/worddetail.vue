@@ -19,7 +19,10 @@
 						<view class="action-btn">
 							<text class="fas fa-volume-up"></text>
 						</view>
-						<view class="action-btn">
+						<view @click="goPage('/pages/word/followread/followread',{
+								id:id,
+								word:JSON.stringify({word:jcinfo.word,kana:jcinfo.kana,meaning:jcinfo.meaning})
+							})" class="action-btn">
 							<text class="fas fa-microphone"></text>
 						</view>
 					</div>
@@ -58,7 +61,7 @@
 			<div class="card">
 				<div class="flex justify-between items-center" style="margin-bottom: 12px;">
 					<div class=" text-bold">例句</div>
-					<view style="color: #10b981;">
+					<view @click="addExampleShow=true" style="color: #10b981;">
 						<text class="fas fa-plus-circle" style="margin-right: 4px;"></text>添加例句
 					</view>
 				</div>
@@ -107,18 +110,46 @@
 			</view>
 			<!-- 底部操作栏 -->
 			<div class="bottom-actions">
-				<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})"
-					class="bottom-btn btn-gray">
+				<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
 					<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 生词本
 				</view>
 				<view class="bottom-btn btn-blue">
 					<text class="fas fa-search" style="margin-right: 4.5px;"></text> 全网搜索
 				</view>
-				<view class="bottom-btn btn-green">
-					<text class="fas fa-robot" style="margin-right: 4.5px;"></text> 问AI
+				<view class="bottom-btn btn-green" @click="goPage('/pages/tools/notedetail/notedetail',{
+								wordId:id,word:JSON.stringify({word:jcinfo.word,kana:jcinfo.kana,meaning:jcinfo.meaning})})">
+					<text class="fas fa-edit" style="margin-right: 4.5px;"></text>笔记
 				</view>
 			</div>
+			<!-- 新增例句 -->
+			<wd-popup position="bottom" v-model="addExampleShow" custom-style="border-radius:16px 16px 0 0;"
+				@close="addExampleShow=false">
+				<view class="addExample">
+					<div class="popup-container">
+						<div class="popup-header">
+							<div class="popup-title">添加例句</div>
+						</div>
+						<form id="exampleForm">
+							<div class="form-group">
+								<label for="japanese" class="form-label">日文例句</label>
+								<textarea auto-height :maxlength="100" v-model="formData.ja" class="form-textarea"
+									placeholder="请输入日文例句"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="chinese" class="form-label">中文翻译</label>
+								<textarea auto-height :maxlength="100" v-model="formData.ch" class="form-textarea"
+									placeholder="请输入中文翻译"></textarea>
+							</div>
+							<div class="popup-actions">
+								<button @click="addExampleShow=false" class="popup-btn popup-btn-cancel">取消</button>
+								<button @click="exampleSubmit()" class="popup-btn popup-btn-submit">添加</button>
+							</div>
+						</form>
+					</div>
+				</view>
+			</wd-popup>
 		</div>
+		<wd-toast />
 	</div>
 </template>
 
@@ -138,6 +169,36 @@
 		formatWordName,
 		back
 	} from "@/utils/common.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	// 添加例句
+	const addExampleShow = ref(false)
+	const formData = ref({
+		ch: "",
+		ja: ""
+	})
+	const exampleSubmit = async () => {
+		if (formData.value.ch.trim().length === 0) {
+			toast.warning("中文为空")
+			return
+		}
+		if (formData.value.ja.trim().length === 0) {
+			toast.warning("日文为空")
+			return
+		}
+		const res = await $http.word.editWord({
+			example: JSON.stringify(formData.value),
+			word_id: Number(id.value)
+		})
+		toast.success('提交成功，请等待审核')
+		addExampleShow.value = false
+		formData.value = {
+			ch: "",
+			ja: ""
+		}
+	}
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
@@ -173,6 +234,7 @@
 		const res = await $http.word.jcInfo(id.value)
 		jcinfo.value = res.data
 	}
+
 	onLoad((e) => {
 		id.value = e.id
 		getJcInfo()
@@ -180,7 +242,79 @@
 </script>
 
 <style lang="scss" scoped>
-	/* 内容容器 */
+	.popup-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #eee;
+	}
+
+	.popup-title {
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+
+	.form-group {
+		margin-bottom: 16px;
+	}
+
+	.form-label {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 14px;
+		color: #333;
+	}
+
+
+
+	.form-textarea {
+		width: auto;
+		min-height: 80px;
+		padding: 10px 12px;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		font-size: 14px;
+		resize: vertical;
+	}
+
+	.popup-actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 20px;
+	}
+
+	.popup-btn {
+		flex: 1;
+		padding: 12px;
+		border-radius: 8px;
+		font-weight: 500;
+		text-align: center;
+		cursor: pointer;
+		border: none;
+	}
+
+	.popup-btn-cancel {
+		background-color: #f5f5f5;
+		color: #333;
+	}
+
+	.popup-btn-submit {
+		background-color: #07C160;
+		color: white;
+	}
+
+
+	.popup-container {
+		transform: translateY(0);
+	}
+
+	.addExample {
+		padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
+	}
+
 	.content-container {
 		height: 100%;
 		display: flex;
@@ -188,7 +322,6 @@
 		background: #f9fafb;
 	}
 
-	/* 返回按钮 */
 	.back-btn {
 		width: 40px;
 		height: 40px;
@@ -202,7 +335,6 @@
 		font-size: 18px;
 	}
 
-	/* 单词标题区 */
 	.word-header {
 		position: sticky;
 		top: 0;

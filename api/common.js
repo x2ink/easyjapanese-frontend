@@ -18,6 +18,24 @@ export default {
 	feedback(data) {
 		return http.post(`feedback`, data)
 	},
+	addNote(data) {
+		return http.post(`notes`, data)
+	},
+	delNote(id) {
+		return http.delete(`notes/${id}`)
+	},
+	likeNote(type, id) {
+		return http.get(`notes/like/${type}/${id}`)
+	},
+	getNoteList(id, page, size) {
+		return http.get(`notes/list/${id}/${page}/${size}`)
+	},
+	getSelfNoteList(page, size) {
+		return http.get(`notes/self/${page}/${size}`)
+	},
+	getNoteInfo(id) {
+		return http.get(`notes/info/${id}`)
+	},
 	getMessageList(page, size, type) {
 		return http.get(`message/${type}/${page}/${size}`)
 	},
@@ -30,11 +48,8 @@ export default {
 	getMessageInfo(id) {
 		return http.get(`message/info/${id}`)
 	},
-	getCompositionList(page, size) {
-		return http.get(`composition/list/${page}/${size}`)
-	},
-	getCompositionInfo(id) {
-		return http.get(`composition/info/${id}`)
+	getSentence() {
+		return http.get(`sentence`)
 	},
 	getDailyTalk(page, size) {
 		console.log(page, size);
