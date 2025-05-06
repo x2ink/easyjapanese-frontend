@@ -4,6 +4,34 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/other/setplan/setplan",
+          "pathName": "pages/other/setplan/setplan",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/learn/review/review",
+          "pathName": "pages/learn/review/review",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/learn/learn/learn",
+          "pathName": "pages/learn/learn/learn",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/learn/learn",
+          "pathName": "pages/word/learn/learn",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/tools/notes/notes",
           "pathName": "pages/tools/notes/notes",
           "query": "",

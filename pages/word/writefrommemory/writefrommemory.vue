@@ -49,7 +49,7 @@
 		return text.match(/[\u3040-\u309F\u30A0-\u30FF][\u3099\u309A\uFF9E\uFF9F]?|./g) || [];
 	}
 	const init = async () => {
-		const res = await $http.word.todayWord()
+		const res = await $http.word.learnWord()
 		wordList.value = res.data.map(item => {
 			console.log(segmentation(item.word));
 		})

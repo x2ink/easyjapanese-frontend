@@ -37,7 +37,7 @@
 	} from "@/utils/common.js"
 	const List = ref([])
 	const getNewWords = async () => {
-		const res = await $http.word.todayWord()
+		const res = await $http.word.learnWord()
 		List.value = res.data
 	}
 	const title = ref("")

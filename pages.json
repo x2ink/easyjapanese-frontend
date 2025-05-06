@@ -7,7 +7,7 @@
 		}
 	},
 	"pages": [{
-			"path": "pages/index/index",
+			"path": "pages/index/index/index",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -31,12 +31,6 @@
 			}
 		},
 		{
-			"path": "pages/word/wordlist/wordlist",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/word/learn/learn",
 			"style": {
 				"navigationStyle": "custom"
@@ -49,31 +43,7 @@
 			}
 		},
 		{
-			"path": "pages/fastmode/fastmode",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/word/writefrommemory/writefrommemory",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/todaylearn/todaylearn",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/review/review",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/todayreview/todayreview",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -126,25 +96,6 @@
 				"navigationStyle": "custom"
 			}
 		},
-
-		{
-			"path": "pages/msg/noticedetail/noticedetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/msg/like/like",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/msg/comment/comment",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
 		{
 			"path": "pages/word/followread/followread",
 			"style": {
@@ -191,30 +142,33 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/learn/learn/learn",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/learn/review/review",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/other/browse/browse",
+			"style": {
+				"navigationStyle": "default"
+			}
+		},
+		{
+			"path": "pages/other/setplan/setplan",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"subPackages": [{
-		"root": "trendpages",
-		"pages": [{
-				"path": "addtrend/addtrend",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "trenddetail/trenddetail",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "mytrend/mytrend",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			}
-		]
-	}, {
 		"root": "userpages",
 		"pages": [{
 				"path": "userinfo/userinfo",
@@ -244,11 +198,6 @@
 					"navigationStyle": "custom"
 				}
 			}, {
-				"path": "browse/browse",
-				"style": {
-					"navigationStyle": "default"
-				}
-			}, {
 				"path": "share/share",
 				"style": {
 					"navigationStyle": "custom"
@@ -256,12 +205,6 @@
 			},
 			{
 				"path": "setting/setting",
-				"style": {
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "setplan/setplan",
 				"style": {
 					"navigationStyle": "custom"
 				}

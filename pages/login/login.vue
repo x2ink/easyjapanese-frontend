@@ -91,7 +91,7 @@
 						userStore().setToken(loginResult.data)
 						userStore().setUserInfo()
 						uni.navigateTo({
-							url: "/pages/index/index"
+							url: "/pages/index/index/index"
 						})
 					}
 				});

@@ -1,113 +1,84 @@
 <template>
-	<div class="screen">
-		<!-- 可滚动内容区域 -->
-		<view class="content-wrapper">
+	<view>
+		<!-- 功能入口 -->
+		<div :style="{paddingTop:`calc(${navBarHeight} + 16px)!important`}" class="action-buttons">
+			<div class="button-item">
+				<button class="action-button blue">
+					<i class="fas fa-history mr-1"></i> 回顾
+				</button>
+			</div>
+			<div class="button-item">
+				<button class="action-button green">
+					<i class="fas fa-calendar-day mr-1"></i> 预习
+				</button>
+			</div>
+			<div class="button-item">
+				<button class="action-button purple">
+					<i class="fas fa-pen-fancy mr-1"></i> 听写
+				</button>
+			</div>
+		</div>
+
+		<!-- 主要内容 -->
+		<div class="main-content">
+
+			<!-- 每日谚语 -->
+			<div class="daily-proverb">
+				<div class="quote-mark">「</div>
+				<div class="proverb-content">
+					<div class="proverb-text">{{sentence.ja}}</div>
+					<div class="proverb-translation">{{sentence.ch}}</div>
+					<div class="proverb-source">— {{sentence.source}}</div>
+				</div>
+			</div>
+
 			<!-- 功能入口 -->
-			<div :style="{paddingTop:`calc(${navBarHeight} + 10px)`}" class="action-buttons">
-				<div class="button-item">
-					<button class="action-button blue">
-						<i class="fas fa-history mr-1"></i> 回顾
-					</button>
+			<div class="feature-grid">
+				<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
+					<div class="feature-icon blue">
+						<i class="fas fa-book"></i>
+					</div>
+					<div class="feature-name">单词本</div>
 				</div>
-				<div class="button-item">
-					<button class="action-button green">
-						<i class="fas fa-calendar-day mr-1"></i> 预习
-					</button>
+				<div class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
+					<div class="feature-icon orange">
+						<i class="fas fa-sticky-note"></i>
+					</div>
+					<div class="feature-name">笔记</div>
 				</div>
-				<div class="button-item">
-					<button class="action-button purple">
-						<i class="fas fa-pen-fancy mr-1"></i> 听写
-					</button>
+				<div class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
+					<div class="feature-icon green">
+						<i class="fas fa-comment-dots"></i>
+					</div>
+					<div class="feature-name">日常会话</div>
 				</div>
-			</div>
-
-			<!-- 主要内容 -->
-			<div class="main-content">
-				<!-- 词书选择 -->
-				<div class="book-selector">
-					<div class="book-info">
-						<div class="book-level">N5</div>
-						<div class="book-details">
-							<div class="book-name">新标准日本语初级上</div>
-							<div class="book-progress">已学 128/500 · 记忆率 87%</div>
-						</div>
+				<div class="feature-card word-card" @click="goPage('/pages/other/setplan/setplan')">
+					<div class="feature-icon purple">
+						<i class="fas fa-sliders-h"></i>
 					</div>
-					<i class="fas fa-chevron-right text-gray-400"></i>
-				</div>
-
-				<!-- 每日谚语 -->
-				<div class="daily-proverb">
-					<div class="quote-mark">「</div>
-					<div class="proverb-content">
-						<div class="proverb-text">{{sentence.ja}}</div>
-						<div class="proverb-translation">{{sentence.ch}}</div>
-						<div class="proverb-source">— {{sentence.source}}</div>
-					</div>
-				</div>
-
-				<!-- 功能入口 -->
-				<div class="feature-grid">
-					<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
-						<div class="feature-icon blue">
-							<i class="fas fa-book"></i>
-						</div>
-						<div class="feature-name">单词本</div>
-					</div>
-					<div class="feature-card word-card">
-						<div class="feature-icon green">
-							<i class="fas fa-comment-dots"></i>
-						</div>
-						<div class="feature-name">句库</div>
-					</div>
-					<div class="feature-card word-card">
-						<div class="feature-icon orange">
-							<i class="fas fa-sticky-note"></i>
-						</div>
-						<div class="feature-name">笔记</div>
-					</div>
-					<div class="feature-card word-card">
-						<div class="feature-icon purple">
-							<i class="fas fa-sliders-h"></i>
-						</div>
-						<div class="feature-name">设置</div>
-					</div>
-				</div>
-
-				<!-- 排行榜 -->
-				<div class="ranking-header">
-					<div class="ranking-title">单词达人榜</div>
-					<div class="ranking-more">全部 <i class="fas fa-chevron-right ml-0.5"></i></div>
-				</div>
-
-				<div class="ranking-list">
-					<div class="ranking-item">
-						<div class="rank-number blue">1</div>
-						<div class="user-info">
-							<div class="username">日语小达人</div>
-							<div class="user-stats">已背 1280 个单词</div>
-						</div>
-						<uv-avatar size="35" src=""></uv-avatar>
-					</div>
-					<div class="ranking-item">
-						<div class="rank-number purple">2</div>
-						<div class="user-info">
-							<div class="username">学习狂魔</div>
-							<div class="user-stats">已背 980 个单词</div>
-						</div>
-						<uv-avatar size="35" src=""></uv-avatar>
-					</div>
-					<div class="ranking-item">
-						<div class="rank-number green">3</div>
-						<div class="user-info">
-							<div class="username">坚持就是胜利</div>
-							<div class="user-stats">已背 750 个单词</div>
-						</div>
-						<uv-avatar size="35" src=""></uv-avatar>
-					</div>
+					<div class="feature-name">设置</div>
 				</div>
 			</div>
-		</view>
-	</div>
+
+			<!-- 排行榜 -->
+			<div class="ranking-header">
+				<div class="ranking-title">单词达人榜</div>
+			</div>
+
+			<div class="ranking-list">
+				<div v-for="(item,index) in ranks" :key="item.user.id" class="ranking-item">
+					<div :class="{blue:index==0,purple:index==1,green:index==2,gray:index>2}" class="rank-number">
+						{{index+1}}
+					</div>
+					<div class="user-info">
+						<div class="username">{{item.user.nickname}}</div>
+						<div class="user-stats">已背 {{item.word_count}} 个单词</div>
+					</div>
+					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
+				</div>
+			</div>
+		</div>
+	</view>
 </template>
 
 <script setup>
@@ -125,11 +96,17 @@
 		const res = await $http.common.getSentence()
 		sentence.value = res.data
 	}
+	const ranks = ref([])
+	const getRanking = async () => {
+		const res = await $http.user.ranking()
+		ranks.value = res.data.slice(0, 10)
+	}
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 		getSentence()
+		getRanking()
 	})
 </script>
 
@@ -141,16 +118,7 @@
 	}
 
 
-	.content-wrapper {
-		flex: 1;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
 
-		/* 隐藏滚动条但保留滚动功能 */
-		&::-webkit-scrollbar {
-			display: none;
-		}
-	}
 
 	.action-buttons {
 		padding: 12px 16px;
@@ -335,14 +303,6 @@
 			font-weight: 500;
 		}
 
-		.ranking-more {
-			font-size: 12px;
-			color: #3b82f6;
-
-			i {
-				font-size: 10px;
-			}
-		}
 	}
 
 	.ranking-list {
@@ -380,6 +340,11 @@
 				&.green {
 					background: #dcfce7;
 					color: #16a34a;
+				}
+
+				&.gray {
+					background: #f3f4f6;
+					color: #4b5563;
 				}
 			}
 

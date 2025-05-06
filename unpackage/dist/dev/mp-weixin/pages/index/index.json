@@ -1,8 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "home": "./pages/home/home",
-    "word": "./pages/word/word",
-    "self": "./pages/self/self"
-  }
-}

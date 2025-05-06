@@ -77,7 +77,7 @@
 	const total = ref(0)
 	const hideMeaning = ref(false)
 	const init = async () => {
-		const res = await $http.word.todayWord()
+		const res = await $http.word.learnWord()
 		wordList.value = res.data
 		console.log(wordList.value.map(item => item.word));
 		total.value = res.total

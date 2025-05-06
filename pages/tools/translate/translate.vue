@@ -49,7 +49,7 @@
 				</text>
 			</view>
 			<view v-if="result.length>0&&!loading" class="translate">
-				<view v-html="result"></view>
+				<view @click="copy(result)" v-html="result"></view>
 			</view>
 		</view>
 		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
@@ -72,7 +72,8 @@
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
-		formatWordName
+		formatWordName,
+		copy
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
@@ -103,18 +104,36 @@
 			pattern.value = 'jc'
 		}
 	}
-	const copy = (data) => {
-		uni.setClipboardData({
-			data: data,
-			showToast: false,
-			success() {
-				toast.success(`复制成功`)
-			}
-		});
-	}
 	const toast = useToast()
 	const value = ref("我是中国人")
-	const result = ref("");
+	const result = ref(
+		`<div>
+  <h3>翻译：</h3>
+  <p>私は中国人です。</p>
+</div>
+
+<div>
+  <h3>翻译讲解：</h3>
+  
+  <h4>句子结构分析：</h4>
+  <p>这是一个典型的日语判断句结构，由"主语+は+名词+です"构成</p>
+  
+  <h4>关键词翻译：</h4>
+  <ul>
+    <li><strong>我</strong>：译为「私（わたし）」，是日语中最常用的第一人称代词</li>
+    <li><strong>中国人</strong>：直接使用汉字词「中国人（ちゅうごくじん）」，日语中很多汉语词汇保持原形</li>
+  </ul>
+  
+  <h4>语法点解析：</h4>
+  <ul>
+    <li><strong>判断句结构</strong>：「～は～です」是日语最基本的判断句式，相当于中文的"是"字句</li>
+    <li><strong>敬体表达</strong>：句末使用「です」构成礼貌体，适合日常交流使用</li>
+  </ul>
+  
+  <h4>翻译思路：</h4>
+  <p>中文的"是"字判断句在日语中通常对应「～は～です」结构。由于"中国人"在日语中有完全对应的汉字词，直接使用即可。考虑到这是自我介绍的场景，使用礼貌体的「です」最为恰当。</p>
+</div>`
+	);
 	const loading = ref(false)
 	const truncate = (q) => {
 		var len = q.length;
@@ -176,6 +195,7 @@
 	}
 	const finishCore = () => {
 		console.log("finish sse")
+		console.log(result.value);
 		loading.value = false;
 	}
 	const stop = () => {

@@ -167,6 +167,7 @@
 	import {
 		goPage,
 		formatWordName,
+		extractBracketContents,
 		back
 	} from "@/utils/common.js"
 	import {
@@ -215,20 +216,7 @@
 		example: [],
 		detail: ''
 	})
-	const extractBracketContents = (text) => {
-		const regex = /【([^】]*)】|([a-zA-Z]+)/g;
-		const matches = [...text.matchAll(regex)];
-		const result = [];
-		for (const match of matches) {
-			if (match[1]) {
-				result.push(match[1]);
-			} else if (match[2]) {
-				result.push(match[2]);
-			}
-		}
 
-		return result;
-	}
 	const id = ref(null)
 	const getJcInfo = async () => {
 		const res = await $http.word.jcInfo(id.value)

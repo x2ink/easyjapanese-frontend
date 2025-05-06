@@ -1,118 +1,31 @@
 <template>
 	<view>
 		<view class="head">
-			<NavbarDefault border title="笔记"></NavbarDefault>
+			<NavbarDefault border title="选择单词书"></NavbarDefault>
 		</view>
-		<!-- 单词信息区 -->
-		<div class="word-info">
-			<div class="word-header">
-				<div>
-					<span class="word-kanji">食べる</span>
-					<span class="word-furigana">たべる</span>
-					<span class="word-katakana">タベル</span>
-				</div>
-			</div>
-			<div class="word-meaning">
-				1. 吃，食用<br>
-				2. 生活，过日子（食べていく）
-			</div>
+		<!-- 分类标签 -->
+		<div class="tabs-container">
+			<div @click="current=key" :class="{tabactive:key==current}" v-for="[key, value] in bookList.entries()"
+				:key="key" class="tab-item">{{key}}</div>
 		</div>
-
-		<!-- 笔记编辑区 -->
-		<div class="note-editor">
-			<textarea class="note-textarea" placeholder="记录你的学习笔记..."></textarea>
-			<div class="note-actions" style="justify-content: space-between;">
-				<div class="publish-switch">
-					<span class="switch-label">公开笔记</span>
-					<label class="switch">
-						<input type="checkbox" checked>
-						<span class="slider"></span>
-					</label>
+		<view class="list">
+			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" class="item" :key="item.id"
+				v-for="item in bookList.get(current)">
+				<view class="book-cover  _GCENTER" :style="{background:item.icon.bg}">
+					<text v-if="item.icon.type=='text'">{{item.icon.data}}</text>
+					<text v-else style="font-size: 22px;" class="fas" :class="item.icon.data"></text>
+				</view>
+				<div class="info">
+					<div class="title">{{item.name}}</div>
+					<div class="describe">{{item.describe}}</div>
+					<div class="learnnum">{{item.word_num}}单词 · {{item.learn_num}}人正在学习</div>
 				</div>
-				<button class="submit-btn">提交</button>
+				<button @click.stop="updateConfig(item)" :class="{activebook:item.current,inactivebook:!item.current}"
+					class="switch-btn _GCENTER"><text v-if="item.current"
+						class="fas fa-check-circle"></text>{{item.current?'学习中':'立即切换'}}</button>
 			</div>
-		</div>
-
-		<!-- 社区笔记 -->
-		<div class="community-notes">
-			<div class="section-title">社区笔记 (3)</div>
-
-			<!-- 笔记项1 -->
-			<div class="note-item">
-				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/women/44.jpg" class="user-avatar" alt="用户头像">
-					<div class="user-info">
-						<div class="user-name">日语学习者</div>
-						<div class="note-time">2023-06-15 14:30</div>
-					</div>
-				</div>
-				<div class="note-content">
-					这个词的过去式是「食べた」，否定形是「食べない」，て形是「食べて」。<br><br>
-					常用搭配：<br>
-					・朝ごはんを食べる (吃早餐)<br>
-					・外で食べる (在外面吃)
-				</div>
-				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 12
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
-				</div>
-			</div>
-
-			<!-- 笔记项2 (带引用) -->
-			<div class="note-item">
-				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/men/32.jpg" class="user-avatar" alt="用户头像">
-					<div class="user-info">
-						<div class="user-name">东京留学生</div>
-						<div class="note-time">2023-06-10 09:15</div>
-					</div>
-				</div>
-				<div class="quoted-note">
-					<span class="quoted-user">@日语学习者</span> 提到的て形非常重要，在实际对话中经常使用，比如：
-				</div>
-				<div class="note-content">
-					1. 「食べてください」- 请吃 (礼貌请求)<br>
-					2. 「食べています」- 正在吃 (进行时)<br>
-					3. 「食べてもいいですか」- 可以吃吗？ (请求许可)<br><br>
-					这些是日常会话中非常实用的表达方式。
-				</div>
-				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 8
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
-				</div>
-			</div>
-
-			<!-- 笔记项3 -->
-			<div class="note-item">
-				<div class="note-header">
-					<img src="https://randomuser.me/api/portraits/women/68.jpg" class="user-avatar" alt="用户头像">
-					<div class="user-info">
-						<div class="user-name">JLPT备考中</div>
-						<div class="note-time">2023-06-05 18:42</div>
-					</div>
-				</div>
-				<div class="note-content">
-					记忆技巧：把「食べる」联想为"tab(标签)+er(人)"，想象一个人正在吃标签纸，虽然奇怪但容易记住。<br><br>
-					注意与「飲む」(喝)的区别，固体用「食べる」，液体用「飲む」。
-				</div>
-				<div class="note-actions">
-					<button class="action-btn">
-						<i class="far fa-thumbs-up"></i> 15
-					</button>
-					<button class="action-btn quote-btn">
-						<i class="fas fa-quote-left"></i> 引用
-					</button>
-				</div>
-			</div>
-		</div>
+		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -122,279 +35,142 @@
 		onMounted
 	} from 'vue'
 	import {
-		onLoad,
-		onReachBottom,
-		onUnload
-	} from "@dcloudio/uni-app"
-	import {
 		goPage,
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-</script>
-<style>
-	page {
-		background-color: white;
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	const bookList = ref(new Map())
+	const current = ref("全部")
+	const config = ref({
+		book_id: null
+	})
+	const getConfig = async () => {
+		const res = await $http.user.getConfig()
+		config.value = res.data
 	}
-</style>
+	const updateConfig = async (item) => {
+		if (item.current) {
+			return
+		}
+		config.value.book_id = item.id
+		const res = await $http.user.updateConfig(config.value)
+		toast.success(`更新成功`)
+		getWordBook()
+	}
+	const getWordBook = async () => {
+		const res = await $http.word.getWordBookList()
+		const map = res.data.reduce((acc, book) => {
+			if (!acc.has("全部")) {
+				acc.set("全部", []);
+			}
+			acc.get("全部").push(book);
+			if (!acc.has(book.category)) {
+				acc.set(book.category, []);
+			}
+			acc.get(book.category).push(book);
+			return acc;
+		}, new Map());
+		bookList.value = map
+	}
+	onMounted(() => {
+		getWordBook()
+		getConfig()
+	})
+</script>
+
 <style lang="scss" scoped>
+	.list {
+		display: flex;
+		flex-direction: column;
+		padding: 16px;
+		gap: 16px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+
+		.item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background-color: white;
+			padding: 12px;
+			border-radius: 8px;
+
+			.book-cover {
+				width: 60px;
+				height: 80px;
+				border-radius: 8px;
+				color: white;
+				font-weight: bold;
+				background-color: red;
+			}
+
+			.switch-btn {
+				padding: 0 12px;
+				margin: 0;
+				height: 30px;
+				border-radius: 30px;
+				font-size: 12px;
+				font-weight: 500;
+				line-height: 12px;
+			}
+
+			.inactivebook {
+				background: #07C160;
+				color: white;
+			}
+
+			.activebook {
+				background: #FAFAFA;
+				color: #07C160;
+				gap: 4px;
+			}
+
+			.info {
+				margin-left: 12px;
+				flex: 1;
+
+				.title {
+					font-size: 16px;
+					font-weight: bold;
+				}
+
+				.describe {
+					color: #6b7280;
+					font-size: 14px;
+					margin: 4px 0;
+				}
+
+				.learnnum {
+					color: #6b7280;
+					font-size: 12px;
+				}
+			}
+		}
+
+	}
+
 	.head {
 		position: sticky;
 		top: 0;
 		z-index: 9;
 	}
 
-	/* 单词信息区 */
-	.word-info {
+	.tabs-container {
 		padding: 16px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-
-	.word-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 8px;
-	}
-
-	.word-kanji {
-		font-size: 20px;
-		font-weight: 600;
-		color: #212121;
-	}
-
-	.word-furigana {
-		font-size: 16px;
-		color: #757575;
-		margin-left: 8px;
-	}
-
-	.word-katakana {
-		font-size: 16px;
-		color: #757575;
-		font-style: italic;
-	}
-
-
-	.word-meaning {
-		font-size: 15px;
-		color: #424242;
-		margin-top: 8px;
-		line-height: 1.5;
-	}
-
-	/* 笔记编辑区 */
-	.note-editor {
-		padding: 16px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-
-	.note-textarea {
-		width: auto;
-		min-height: 100px;
-		padding: 12px;
-		border: 1px solid #e0e0e0;
-		border-radius: 8px;
-		font-size: 14px;
-		line-height: 1.5;
-		resize: none;
-		outline: none;
-	}
-
-	.note-textarea:focus {
-		border-color: #07C160;
-	}
-
-	.note-actions {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-top: 12px;
-	}
-
-	.publish-switch {
-		display: flex;
-		align-items: center;
-	}
-
-	.switch-label {
-		font-size: 14px;
-		color: #757575;
-		margin-right: 8px;
-	}
-
-	.switch {
-		position: relative;
-		display: inline-block;
-		width: 44px;
-		height: 24px;
-	}
-
-	.switch input {
-		opacity: 0;
-		width: 0;
-		height: 0;
-	}
-
-	.slider {
-		position: absolute;
-		cursor: pointer;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: #e0e0e0;
-		transition: .4s;
-		border-radius: 24px;
-	}
-
-	.slider:before {
-		position: absolute;
-		content: "";
-		height: 20px;
-		width: 20px;
-		left: 2px;
-		bottom: 2px;
 		background-color: white;
-		transition: .4s;
-		border-radius: 50%;
-	}
-
-	input:checked+.slider {
-		background-color: #07C160;
-	}
-
-	input:checked+.slider:before {
-		transform: translateX(20px);
-	}
-
-	.submit-btn {
-		margin: 0;
-		padding: 8px 0;
-		width: 80px;
-		background-color: #07C160;
-		color: white;
-		border: none;
-		border-radius: 8px;
-		font-size: 14px;
-		font-weight: 500;
-		cursor: pointer;
-	}
-
-	.submit-btn:active {
-		opacity: 0.9;
-		transform: scale(0.98);
-	}
-
-	/* 社区笔记区 */
-	.community-notes {
-		margin-top: 16px;
-	}
-
-	.section-title {
-		font-size: 15px;
-		font-weight: 600;
-		color: #212121;
-		margin-bottom: 12px;
-		padding-bottom: 6px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-
-	/* 笔记项 */
-	.note-item {
-		background-color: white;
-		border-radius: 8px;
-		padding: 16px;
-		margin-bottom: 12px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-	}
-
-	.note-header {
 		display: flex;
-		align-items: center;
-		margin-bottom: 12px;
+		gap: 12px;
 	}
 
-	.user-avatar {
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		object-fit: cover;
-		margin-right: 12px;
-	}
-
-	.user-info {
-		flex: 1;
-	}
-
-	.user-name {
+	.tab-item {
 		font-size: 14px;
-		font-weight: 500;
-		color: #212121;
-		margin-bottom: 2px;
+		white-space: nowrap;
 	}
 
-	.note-time {
-		font-size: 12px;
-		color: #9E9E9E;
-	}
-
-	.note-content {
-		font-size: 14px;
-		color: #424242;
-		line-height: 1.5;
-		margin-bottom: 12px;
-		padding: 12px;
-		background-color: #fafafa;
-		border-radius: 8px;
-	}
-
-	.note-actions {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.action-btn {
-		display: flex;
-		align-items: center;
-		padding: 6px 12px;
-		background-color: #f5f5f5;
-		border-radius: 16px;
-		font-size: 13px;
-		color: #757575;
-		border: none;
-		cursor: pointer;
-		margin-left: 8px;
-		transition: all 0.2s ease;
-	}
-
-	.action-btn i {
-		margin-right: 4px;
-		font-size: 12px;
-	}
-
-	.action-btn:active {
-		background-color: #e0e0e0;
-	}
-
-	.quote-btn {
-		background-color: #E8F5E9;
-		color: #2E7D32;
-	}
-
-	/* 引用笔记样式 */
-	.quoted-note {
-		padding: 12px;
-		background-color: #f5f5f5;
-		border-left: 3px solid #07C160;
-		border-radius: 4px;
-		margin-bottom: 12px;
-		font-size: 13px;
-		color: #616161;
-	}
-
-	.quoted-user {
-		font-weight: 500;
+	.tabactive {
 		color: #07C160;
 	}
 </style>

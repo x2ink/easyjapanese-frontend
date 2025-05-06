@@ -13,13 +13,13 @@ export default {
 		return http.get(`cj/info/${id}`)
 	},
 	getWordBook() {
-		return http.get(`wordbook`)
+		return http.get(`book/list`)
 	},
-	getWordBookList(id, page, size) {
-		return http.get(`wordbook/${id}/${page}/${size}`)
+	getWordBookList() {
+		return http.get(`book/list`)
 	},
-	todayWord() {
-		return http.get("todayword")
+	learnWord() {
+		return http.get("learn/newword")
 	},
 	writeFromMemory() {
 		return http.get("learn/writefrommemory")
@@ -30,7 +30,7 @@ export default {
 	updaterecord(data) {
 		return http.post("learn/record/update", data)
 	},
-	getTodayReview() {
+	getReview() {
 		return http.get("learn/review")
 	},
 	getHomeInfo() {

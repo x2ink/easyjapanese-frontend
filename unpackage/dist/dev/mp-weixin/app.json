@@ -1,17 +1,12 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/index/index/index",
     "pages/login/login",
     "pages/word/thesaurus/thesaurus",
     "pages/word/search/search",
-    "pages/word/wordlist/wordlist",
     "pages/word/learn/learn",
     "pages/word/worddetail/worddetail",
-    "pages/fastmode/fastmode",
     "pages/word/writefrommemory/writefrommemory",
-    "pages/todaylearn/todaylearn",
-    "pages/review/review",
-    "pages/todayreview/todayreview",
     "pages/tools/verbtransfiguration/verbtransfiguration",
     "pages/tools/fiftysounds/fiftysounds",
     "pages/tools/grammar/grammar",
@@ -20,9 +15,6 @@
     "pages/word/mybooks/mybooks",
     "pages/word/mybookswordlist/mybookswordlist",
     "pages/tools/translate/translate",
-    "pages/msg/noticedetail/noticedetail",
-    "pages/msg/like/like",
-    "pages/msg/comment/comment",
     "pages/word/followread/followread",
     "pages/word/edit/edit",
     "pages/test/test",
@@ -30,17 +22,13 @@
     "pages/other/feedback/feedback",
     "pages/other/about/about",
     "pages/tools/notedetail/notedetail",
-    "pages/tools/notes/notes"
+    "pages/tools/notes/notes",
+    "pages/learn/learn/learn",
+    "pages/learn/review/review",
+    "pages/other/browse/browse",
+    "pages/other/setplan/setplan"
   ],
   "subPackages": [
-    {
-      "root": "trendpages",
-      "pages": [
-        "addtrend/addtrend",
-        "trenddetail/trenddetail",
-        "mytrend/mytrend"
-      ]
-    },
     {
       "root": "userpages",
       "pages": [
@@ -53,10 +41,8 @@
       "root": "otherpages",
       "pages": [
         "ranking/ranking",
-        "browse/browse",
         "share/share",
-        "setting/setting",
-        "setplan/setplan"
+        "setting/setting"
       ]
     }
   ],

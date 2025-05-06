@@ -3,18 +3,13 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const uni_modules_piniaPluginUnistorage_index = require("./uni_modules/pinia-plugin-unistorage/index.js");
 if (!Math) {
-  "./pages/index/index.js";
+  "./pages/index/index/index.js";
   "./pages/login/login.js";
   "./pages/word/thesaurus/thesaurus.js";
   "./pages/word/search/search.js";
-  "./pages/word/wordlist/wordlist.js";
   "./pages/word/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
-  "./pages/fastmode/fastmode.js";
   "./pages/word/writefrommemory/writefrommemory.js";
-  "./pages/todaylearn/todaylearn.js";
-  "./pages/review/review.js";
-  "./pages/todayreview/todayreview.js";
   "./pages/tools/verbtransfiguration/verbtransfiguration.js";
   "./pages/tools/fiftysounds/fiftysounds.js";
   "./pages/tools/grammar/grammar.js";
@@ -23,9 +18,6 @@ if (!Math) {
   "./pages/word/mybooks/mybooks.js";
   "./pages/word/mybookswordlist/mybookswordlist.js";
   "./pages/tools/translate/translate.js";
-  "./pages/msg/noticedetail/noticedetail.js";
-  "./pages/msg/like/like.js";
-  "./pages/msg/comment/comment.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
   "./pages/test/test.js";
@@ -34,17 +26,16 @@ if (!Math) {
   "./pages/other/about/about.js";
   "./pages/tools/notedetail/notedetail.js";
   "./pages/tools/notes/notes.js";
-  "./trendpages/addtrend/addtrend.js";
-  "./trendpages/trenddetail/trenddetail.js";
-  "./trendpages/mytrend/mytrend.js";
+  "./pages/learn/learn/learn.js";
+  "./pages/learn/review/review.js";
+  "./pages/other/browse/browse.js";
+  "./pages/other/setplan/setplan.js";
   "./userpages/userinfo/userinfo.js";
   "./userpages/repwd/repwd.js";
   "./userpages/reemail/reemail.js";
   "./otherpages/ranking/ranking.js";
-  "./otherpages/browse/browse.js";
   "./otherpages/share/share.js";
   "./otherpages/setting/setting.js";
-  "./otherpages/setplan/setplan.js";
 }
 const _sfc_main = {
   onLaunch: function() {

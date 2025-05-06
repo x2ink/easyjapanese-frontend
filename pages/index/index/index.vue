@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="swiper">
+		<view>
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
@@ -10,6 +10,9 @@
 			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll">
 				<Self></Self>
 			</scroll-view>
+		</view>
+		<view style="height: calc(env(safe-area-inset-bottom) + 48px);">
+			<!-- 占位 -->
 		</view>
 		<!-- 底部导航 -->
 		<view class="tab-bar">
@@ -42,9 +45,9 @@
 	import {
 		userStore
 	} from "@/stores"
-	import Home from './pages/home/home.vue';
-	import Word from './pages/word/word.vue';
-	import Self from './pages/self/self.vue';
+	import Home from '../home/home.vue';
+	import Word from '../word/word.vue';
+	import Self from '../self/self.vue';
 	const tabbar = ref(0)
 	onMounted(() => {
 		userStore().setUserInfo()

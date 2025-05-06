@@ -1,81 +1,68 @@
 <template>
 	<view>
-		<Navbar title="词库列表">
-		</Navbar>
-		<wd-tabs slidable="always" v-model="current">
-			<block v-for="[key, value] in bookList.entries()" :key="key">
-				<wd-tab :title="key">
-					<view class="rankinglist">
-						<view class="rankingitem"
-							@click="goPage('/pages/word/wordlist/wordlist',{id:item.id,name:item.name})"
-							v-for="item in value" :key="item.id">
-							<view @click.stop="updateConfig(item.id)" v-if="config.book_id!=item.id">
-							<wd-button custom-class="changebtn" size="small">切换词书</wd-button>	
-							</view>
-							<image mode="aspectFill" :src="item.icon">
-							</image>
-							<view>
-								<view>
-									<wd-text color="#000000" :lines="1" size="17px" :text="item.name"></wd-text>
-									<wd-text :lines="3" size="14px" style="margin-top: 6px;"
-										:text="item.describe"></wd-text>
-								</view>
-								<view class="number">{{item.words}}词<text v-if="config.book_id==item.id">正在学习</text>
-								</view>
-							</view>
-						</view>
-					</view>
-				</wd-tab>
-			</block>
-		</wd-tabs>
+		<view class="head">
+			<NavbarDefault border title="选择单词书"></NavbarDefault>
+		</view>
+		<!-- 分类标签 -->
+		<div class="tabs-container">
+			<div @click="current=key" :class="{tabactive:key==current}" v-for="[key, value] in bookList.entries()"
+				:key="key" class="tab-item">{{key}}</div>
+		</div>
+		<view class="list">
+			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" class="item" :key="item.id"
+				v-for="item in bookList.get(current)">
+				<view class="book-cover  _GCENTER" :style="{background:item.icon.bg}">
+					<text v-if="item.icon.type=='text'">{{item.icon.data}}</text>
+					<text v-else style="font-size: 22px;" class="fas" :class="item.icon.data"></text>
+				</view>
+				<div class="info">
+					<div class="title">{{item.name}}</div>
+					<div class="describe">{{item.describe}}</div>
+					<div class="learnnum">{{item.word_num}}单词 · {{item.learn_num}}人正在学习</div>
+				</div>
+				<button @click.stop="updateConfig(item)" :class="{activebook:item.current,inactivebook:!item.current}"
+					class="switch-btn _GCENTER"><text v-if="item.current"
+						class="fas fa-check-circle"></text>{{item.current?'学习中':'立即切换'}}</button>
+			</div>
+		</view>
+		<wd-toast />
 	</view>
-	<wd-toast />
-	<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 </template>
 
 <script setup>
 	import {
 		ref,
-		watch,
-		onMounted,
-		computed
+		onMounted
 	} from 'vue'
 	import {
-		onPageScroll
-	} from "@dcloudio/uni-app"
-	const scrollTop = ref(0)
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
-	import Navbar from '@/components/navbar/navbar.vue';
-	const current = ref(0)
+		goPage,
+	} from "@/utils/common.js"
+	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const bookList = ref(new Map())
-	import {
-		goPage
-	} from "@/utils/common.js"
+	const current = ref("全部")
 	const config = ref({
-		id: null,
-		user_id: null,
-		daily_learning: null,
-		mode: "",
 		book_id: null
 	})
-	const updateConfig = async (id) => {
-		config.value.book_id = id
-		const res = await $http.user.updateConfig(config.value)
-		toast.success(`更新成功`)
-	}
 	const getConfig = async () => {
 		const res = await $http.user.getConfig()
 		config.value = res.data
 	}
+	const updateConfig = async (item) => {
+		if (item.current) {
+			return
+		}
+		config.value.book_id = item.id
+		const res = await $http.user.updateConfig(config.value)
+		toast.success(`更新成功`)
+		getWordBook()
+	}
 	const getWordBook = async () => {
-		const res = await $http.word.getWordBook()
+		const res = await $http.word.getWordBookList()
 		const map = res.data.reduce((acc, book) => {
 			if (!acc.has("全部")) {
 				acc.set("全部", []);
@@ -96,78 +83,94 @@
 </script>
 
 <style lang="scss" scoped>
-	:deep(.changebtn) {
-		position: absolute !important;
-		right: 10px !important;
-		top: 50% !important;
-		transform: translateY(-50%) !important;
-	}
-
-	:deep(.wd-tabs__nav) {
-		height: 30px;
-		background-color: transparent !important;
-	}
-
-	:deep(.wd-tabs__nav-item) {
-		height: 30px;
-	}
-
-	:deep(.wd-tabs__line) {
-		bottom: 0;
-	}
-
-	:deep(.wd-tabs) {
-		background-color: transparent !important;
-	}
-
-	.number {
-		color: $uni-text-color-grey;
-		font-size: $uni-font-size-base;
-		font-weight: bold;
-
-		text {
-			margin-left: 10px;
-			color: $uni-color-warning;
-		}
-	}
-
-	.rankinglist {
-		padding-bottom: calc(env(safe-area-inset-bottom) + 15px);
-		margin: 15px;
+	.list {
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
+		padding: 16px;
+		gap: 16px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
 
-		.rankingitem {
-			padding: 10px;
-			border-radius: 8px;
+		.item {
 			display: flex;
-			position: relative;
+			align-items: center;
+			justify-content: space-between;
 			background-color: white;
+			padding: 12px;
+			border-radius: 8px;
 
-
-			>view {
-
-				&:last-child {
-					margin-left: 10px;
-					flex: 1;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-between;
-
-					.tags {
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-					}
-				}
-			}
-
-			image {
+			.book-cover {
 				width: 60px;
 				height: 80px;
-				border-radius: 5px;
+				border-radius: 8px;
+				color: white;
+				font-weight: bold;
+				background-color: red;
+			}
+
+			.switch-btn {
+				padding: 0 12px;
+				margin: 0;
+				height: 30px;
+				border-radius: 30px;
+				font-size: 12px;
+				font-weight: 500;
+				line-height: 12px;
+			}
+
+			.inactivebook {
+				background: #07C160;
+				color: white;
+			}
+
+			.activebook {
+				background: #FAFAFA;
+				color: #07C160;
+				gap: 4px;
+			}
+
+			.info {
+				margin-left: 12px;
+				flex: 1;
+
+				.title {
+					font-size: 16px;
+					font-weight: bold;
+				}
+
+				.describe {
+					color: #6b7280;
+					font-size: 14px;
+					margin: 4px 0;
+				}
+
+				.learnnum {
+					color: #6b7280;
+					font-size: 12px;
+				}
 			}
 		}
+
+	}
+
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
+
+	.tabs-container {
+		padding: 16px;
+		background-color: white;
+		display: flex;
+		gap: 12px;
+	}
+
+	.tab-item {
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.tabactive {
+		color: #07C160;
 	}
 </style>

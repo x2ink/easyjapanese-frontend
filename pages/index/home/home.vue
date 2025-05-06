@@ -1,7 +1,7 @@
 <template>
-	<view class="container">
+	<view>
 		<!-- 顶部搜索栏 -->
-		<view :style="{paddingTop:navBarHeight}" class="search-bar">
+		<view :style="{paddingTop:`calc(${navBarHeight} + 16px)`}" class="search-bar">
 			<view @click="goPage('/pages/word/search/search')" class="search-input-container">
 				<text class="icon-search search-icon fas fa-search"></text>
 				<view class="search-input _GCENTER">
@@ -9,30 +9,32 @@
 				</view>
 			</view>
 		</view>
-
 		<!-- 主要内容 -->
 		<view style="padding: 16px;">
 			<!-- 单词书统计卡片 -->
 			<view class="book-card">
-				<view class="book-cover">
-					N5
+				<view class="book-cover" :style="{background:learnInfo.book_info.icon.bg}">
+					<text v-if="learnInfo.book_info.icon.type=='text'">{{learnInfo.book_info.icon.data}}</text>
+					<text v-else style="font-size: 22px;" class="fas" :class="learnInfo.book_info.icon.data"></text>
 				</view>
 				<view class="book-info">
 					<view class="book-header">
-						<text class="book-title">新标准日本语初级上</text>
-						<view class="book-switch">
+						<text class="book-title">{{learnInfo.book_info.name}}</text>
+						<view class="book-switch" @click="goPage('/pages/word/thesaurus/thesaurus')">
 							<text class="switch-text">切换</text>
 							<text class="iconfont icon-arrow-right switch-icon"></text>
 						</view>
 					</view>
-					<text class="book-progress-text">已学习 128/500 · 记忆率 87%</text>
+					<text class="book-progress-text">已学习 {{learnInfo.learnnum}}/{{learnInfo.wordnum}} · 记忆率
+						{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(2)}}%</text>
 					<view class="progress-bar">
-						<view class="progress-fill" :style="{width: '25.6%'}"></view>
+						<view class="progress-fill" :style="{width: `${(learnInfo.learnnum/learnInfo.wordnum)*100}%`}">
+						</view>
 					</view>
 					<view class="book-stats">
-						<text class="stat-item">复习: 12个</text>
-						<text class="stat-item">新学: 5个</text>
-						<text class="stat-item">连续7天</text>
+						<text class="stat-item">今日复习: {{learnInfo.day_review}}个</text>
+						<text class="stat-item">今日新学: {{learnInfo.day_learn}}个</text>
+						<text class="stat-item">连续学习{{learnInfo.day}}天</text>
 					</view>
 				</view>
 			</view>
@@ -40,24 +42,24 @@
 			<!-- 学习/复习按钮 -->
 			<view class="action-buttons">
 				<!-- 智能复习按钮 -->
-				<view class="action-button review-button" @click="handleReview">
+				<view class="action-button review-button" @click="goReview()">
 					<view class="action-icon">
 						<text class="fas fa-sync-alt"></text>
 					</view>
 					<view class="action-content">
 						<text class="action-title">智能复习</text>
-						<text class="action-subtitle">12个单词待复习</text>
+						<text class="action-subtitle">{{learnInfo.review}}个单词待复习</text>
 					</view>
 				</view>
 
 				<!-- 开始学习按钮 -->
-				<view class="action-button learn-button" @click="handleLearn">
+				<view class="action-button learn-button" @click="goLearn()">
 					<view class="action-icon">
 						<text class="fas fa-play"></text>
 					</view>
 					<view class="action-content">
 						<text class="action-title">开始学习</text>
-						<text class="action-subtitle">今日新学5个单词</text>
+						<text class="action-subtitle">继续学习{{config.learn_group}}个单词</text>
 					</view>
 				</view>
 			</view>
@@ -101,81 +103,34 @@
 
 				<view class="weekdays">
 					<text class="weekday">日</text>
-					<text class="weekday">一</text>
-					<text class="weekday">二</text>
-					<text class="weekday">三</text>
-					<text class="weekday">四</text>
-					<text class="weekday">五</text>
-					<text class="weekday">六</text>
+					<text class="weekday">月</text>
+					<text class="weekday">火</text>
+					<text class="weekday">水</text>
+					<text class="weekday">木</text>
+					<text class="weekday">金</text>
+					<text class="weekday">土</text>
 				</view>
 
 				<view class="calendar-days">
-					<text class="calendar-day inactive">28</text>
-					<text class="calendar-day inactive">29</text>
-					<text class="calendar-day inactive">30</text>
-					<text class="calendar-day active">1</text>
-					<text class="calendar-day active">2</text>
-					<text class="calendar-day highlight">3</text>
-					<text class="calendar-day active">4</text>
-					<text class="calendar-day active">5</text>
-					<text class="calendar-day active">6</text>
-					<text class="calendar-day highlight">7</text>
-					<text class="calendar-day">8</text>
-					<text class="calendar-day">9</text>
-					<text class="calendar-day highlight">10</text>
-					<text class="calendar-day">11</text>
-					<text class="calendar-day">12</text>
-					<text class="calendar-day">13</text>
-					<text class="calendar-day highlight">14</text>
-					<text class="calendar-day">15</text>
-					<text class="calendar-day">16</text>
-					<text class="calendar-day">17</text>
-					<text class="calendar-day highlight">18</text>
-					<text class="calendar-day">19</text>
-					<text class="calendar-day">20</text>
-					<text class="calendar-day">21</text>
-					<text class="calendar-day highlight">22</text>
-					<text class="calendar-day">23</text>
-					<text class="calendar-day">24</text>
-					<text class="calendar-day">25</text>
-					<text class="calendar-day highlight">26</text>
-					<text class="calendar-day">27</text>
-					<text class="calendar-day">28</text>
-					<text class="calendar-day">29</text>
-					<text class="calendar-day highlight">30</text>
-					<text class="calendar-day inactive">1</text>
-					<text class="calendar-day inactive">2</text>
-					<text class="calendar-day inactive">3</text>
+					<text :class="{highlight:learnInfo.dates.includes(item.key),inactive:currentMonth!=item.month}"
+						v-for="item in calendar" :key="item.key" class="calendar-day">{{item.day}}</text>
 				</view>
 			</view>
-			<!-- 今日任务 -->
+			<!-- 单词任务 -->
 			<view class="section-header">
-				<text class="section-title">今日任务</text>
-				<view class="section-more">
-					<text class="more-text">全部</text>
+				<text class="section-title">单词任务</text>
+				<view class="section-more" @click="goPage('/pages/other/setplan/setplan')">
+					<text class="more-text">修改</text>
 					<text class="iconfont icon-arrow-right more-icon"></text>
 				</view>
 			</view>
 
 			<view class="task-list">
-				<view class="task-item">
+				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
+					v-for="item in wordTask" :key="item.id">
 					<view class="task-info">
-						<text class="task-word">たべる【食べる】</text>
-						<text class="task-detail">吃;喝;生活</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
-				</view>
-				<view class="task-item">
-					<view class="task-info">
-						<text class="task-word">のむ【飲む】</text>
-						<text class="task-detail">喝</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
-				</view>
-				<view class="task-item">
-					<view class="task-info">
-						<text class="task-word">いく【行く】</text>
-						<text class="task-detail">去</text>
+						<text class="task-word">{{formatWordName(item.word,item.kana)}}</text>
+						<text class="task-detail">{{item.meaning.map(item=>item.meaning).join("；")}}</text>
 					</view>
 					<text class="iconfont icon-volume task-icon"></text>
 				</view>
@@ -183,6 +138,7 @@
 
 
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -196,9 +152,29 @@
 		onShow
 	} from "@dcloudio/uni-app"
 	import {
-		goPage
+		goPage,
+		formatWordName
 	} from "@/utils/common.js"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
+	import $http from "@/api/index.js"
 	const navBarHeight = ref(0)
+	const goLearn = () => {
+		if (learnInfo.value.learnnum == learnInfo.value.wordnum) {
+			toast.warning("没有需要学习的单词了")
+		} else {
+			goPage('/pages/learn/learn/learn')
+		}
+	}
+	const goReview = () => {
+		if (learnInfo.value.review == 0) {
+			toast.warning("没有需要复习的单词了")
+		} else {
+			goPage('/pages/learn/review/review')
+		}
+	}
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
@@ -236,9 +212,97 @@
 			url
 		})
 	}
+	const learnInfo = ref({
+		"book_info": {
+			"name": "",
+			"id": 0,
+			"describe": "",
+			"icon": {
+				"bg": "",
+				"data": "",
+				"type": ""
+			}
+		},
+		"dates": [],
+		"day": 0,
+		"learn": 0,
+		"learnnum": 0,
+		"review": 0,
+		"wordnum": 0
+	})
+	const getInfo = async () => {
+		const res = await $http.word.getHomeInfo()
+		learnInfo.value = res.data
+	}
+	const getCalendarMatrix = (year, month) => {
+		// 1. 获取当月 1 号的星期几（0=日，1=一，...，6=六）
+		const firstDay = new Date(year, month - 1, 1).getDay();
 
+		// 2. 获取当月的总天数
+		const daysInMonth = new Date(year, month, 0).getDate();
+
+		// 3. 获取上个月的总天数（用于补全开头）
+		const prevMonthDays = new Date(year, month - 1, 0).getDate();
+
+		// 4. 计算日历总天数（固定 6 周 × 7 天 = 42 天）
+		const totalDays = 6 * 7;
+		const daysArray = [];
+
+		// 5. 生成日期数组
+		for (let i = 0; i < totalDays; i++) {
+			// 5.1 判断当前格子是上个月、当月还是下个月
+			let currentDay, currentYear, currentMonth;
+
+			if (i < firstDay) {
+				// 上个月的最后几天
+				currentDay = prevMonthDays - (firstDay - i - 1);
+				currentYear = month === 1 ? year - 1 : year;
+				currentMonth = month === 1 ? 12 : month - 1;
+			} else if (i < firstDay + daysInMonth) {
+				// 当月
+				currentDay = i - firstDay + 1;
+				currentYear = year;
+				currentMonth = month;
+			} else {
+				// 下个月的前几天
+				currentDay = i - (firstDay + daysInMonth) + 1;
+				currentYear = month === 12 ? year + 1 : year;
+				currentMonth = month === 12 ? 1 : month + 1;
+			}
+
+			// 5.2 生成对象并存入数组
+			daysArray.push({
+				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`, // "04-15"
+				day: currentDay,
+				year: currentYear,
+				month: currentMonth,
+				isCurrentMonth: currentMonth === month, // 是否属于当前月（可选）
+			});
+		}
+
+		return daysArray;
+	}
+	const currentDate = new Date();
+	const currentYear = currentDate.getFullYear();
+	const currentMonth = currentDate.getMonth() + 1;
+	const calendar = ref([])
+	const config = ref({
+		learn_group: 0
+	})
+	const getConfig = async () => {
+		const res = await $http.user.getConfig()
+		config.value = res.data
+	}
+	const wordTask = ref([])
+	const getWordTask = async () => {
+		const res = await $http.word.learnWord()
+		wordTask.value = res.data
+	}
 	onLoad(() => {
-		// 初始化数据
+		getConfig()
+		getInfo()
+		getWordTask()
+		calendar.value = getCalendarMatrix(currentYear, currentMonth);
 	})
 
 	onShow(() => {
@@ -253,11 +317,6 @@
 		font-style: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-	}
-
-	.container {
-		display: flex;
-		flex-direction: column;
 	}
 
 	.search-bar {
@@ -308,7 +367,6 @@
 			height: 80px;
 			margin-right: 16px;
 			border-radius: 4px;
-			background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -546,14 +604,15 @@
 	}
 
 	.task-list {
-		margin-bottom: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 
 		.task-item {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			padding: 12px;
-			margin-bottom: 8px;
 			background-color: #fff;
 			border-radius: 8px;
 

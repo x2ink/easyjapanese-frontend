@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<Navbar title="背词计划"></Navbar>
-		<view class="cell" style="margin-top: 0;">
+		<NavbarDefault border title="背词设置"></NavbarDefault>
+		<view class="cell">
 			<view class="cellitem" @click="goPage('/pages/word/thesaurus/thesaurus')">
 				<p>切换词书</p>
 				<view class="_GCENTER">
@@ -26,21 +26,15 @@
 					<text style="font-size: 14px;">{{config.remind}}</text>
 				</view>
 			</view>
-			<view class="cellitem">
-				<p>听音选意</p>
-				<view class="_GCENTER">
-					<wd-switch size="20px" @change="updateListen" v-model="config.listen_select" />
-				</view>
-			</view>
 		</view>
-		<view class="cell">
+<!-- 		<view class="cell">
 			<view class="cellitem" @click="modeShow=true">
 				<p>背词模式</p>
 				<view class="_GCENTER">
 					<text style="font-size: 14px;">{{config.mode}}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<wd-action-sheet :z-index="100" :safe-area-inset-bottom="true" cancel-text="取消" v-model="countShow"
 			:actions="countActions" @close="countShow=false" @select="countSelect" />
 		<wd-toast />
@@ -59,7 +53,7 @@
 	import {
 		onShow
 	} from '@dcloudio/uni-app'
-	import Navbar from '@/components/navbar/navbar.vue';
+	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
 		userStore

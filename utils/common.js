@@ -75,6 +75,20 @@ export const formatWordName = (word, kana) => {
 		return `${kana}【${word}】`
 	}
 }
+export const extractBracketContents = (text) => {
+		const regex = /【([^】]*)】|([a-zA-Z]+)/g;
+		const matches = [...text.matchAll(regex)];
+		const result = [];
+		for (const match of matches) {
+			if (match[1]) {
+				result.push(match[1]);
+			} else if (match[2]) {
+				result.push(match[2]);
+			}
+		}
+
+		return result;
+	}
 export const kanaData = [{
 		"rome": "a",
 		"hiragana": "あ",

@@ -1,12 +1,6 @@
 "use strict";
 const common_vendor = require("../../../../common/vendor.js");
 const uni_modules_wotDesignUni_components_common_AbortablePromise = require("./AbortablePromise.js");
-function uuid() {
-  return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
-}
-function s4() {
-  return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
-}
 function addUnit(num) {
   return Number.isNaN(Number(num)) ? `${num}` : `${num}px`;
 }
@@ -20,11 +14,6 @@ function getType(target) {
   return type;
 }
 const isDef = (value) => value !== void 0 && value !== null;
-const checkNumRange = (num, label = "value") => {
-  if (num < 0) {
-    throw new Error(`${label} shouldn't be less than zero`);
-  }
-};
 function rgbToHex(r, g, b) {
   const hex = (r << 16 | g << 8 | b).toString(16);
   const paddedHex = "#" + "0".repeat(Math.max(0, 6 - hex.length)) + hex;
@@ -270,10 +259,6 @@ const getPropByPath = (obj, path) => {
   }
 };
 const isDate = (val) => Object.prototype.toString.call(val) === "[object Date]" && !Number.isNaN(val.getTime());
-function isVideoUrl(url) {
-  const videoRegex = /\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|video)/i;
-  return videoRegex.test(url);
-}
 function isImageUrl(url) {
   const imageRegex = /\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg|image)/i;
   return imageRegex.test(url);
@@ -285,7 +270,6 @@ function omitBy(obj, predicate) {
 }
 exports.addUnit = addUnit;
 exports.camelCase = camelCase;
-exports.checkNumRange = checkNumRange;
 exports.context = context;
 exports.debounce = debounce;
 exports.deepAssign = deepAssign;
@@ -304,13 +288,10 @@ exports.isImageUrl = isImageUrl;
 exports.isNumber = isNumber;
 exports.isObj = isObj;
 exports.isPromise = isPromise;
-exports.isString = isString;
 exports.isUndefined = isUndefined;
-exports.isVideoUrl = isVideoUrl;
 exports.objToStyle = objToStyle;
 exports.omitBy = omitBy;
 exports.padZero = padZero;
 exports.pause = pause;
 exports.range = range;
-exports.uuid = uuid;
 //# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/common/util.js.map
