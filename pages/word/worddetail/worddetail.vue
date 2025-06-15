@@ -69,7 +69,7 @@
 					<view class="example" :key="item.id" v-for="item in jcinfo.example">
 						<view>
 							<view class="ja jpfont">
-								<view class="worditem" v-for="item1 in item.read">
+								<view class="worditem" :key="item1" v-for="item1 in item.read">
 									<view class="top">{{item1.top}}</view>
 									<view :class="{underline:item1.top}" class="body">{{item1.body}}</view>
 								</view>
@@ -307,7 +307,6 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		background: #f9fafb;
 	}
 
 	.back-btn {

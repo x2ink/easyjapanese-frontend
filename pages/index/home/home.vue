@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="height: calc(100vh - env(safe-area-inset-bottom) - 48px);">
 		<!-- 顶部搜索栏 -->
 		<view :style="{paddingTop:`calc(${navBarHeight} + 16px)`}" class="search-bar">
 			<view @click="goPage('/pages/word/search/search')" class="search-input-container">
@@ -321,11 +321,10 @@
 
 	.search-bar {
 		position: sticky;
-		top: 0;
 		z-index: 9;
 		padding: 0 16px 16px;
 		background-color: #fff;
-
+		top: 0;
 		.search-input-container {
 			position: relative;
 
@@ -698,41 +697,4 @@
 		}
 	}
 
-
-
-	/* 波纹效果 */
-	.wave-effect {
-		position: relative;
-		overflow: hidden;
-
-		&::after {
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 5px;
-			height: 5px;
-			background: rgba(255, 255, 255, 0.3);
-			opacity: 0;
-			border-radius: 100%;
-			transform: scale(1, 1) translate(-50%);
-			transform-origin: 50% 50%;
-		}
-
-		&:active::after {
-			animation: wave 0.5s ease-out;
-		}
-	}
-
-	@keyframes wave {
-		0% {
-			transform: scale(0, 0);
-			opacity: 0.5;
-		}
-
-		100% {
-			transform: scale(20, 20);
-			opacity: 0;
-		}
-	}
 </style>

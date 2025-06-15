@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="head">
-			<NavbarDefault border title="单词跟读"></NavbarDefault>
+			<NavbarDefault title="单词跟读"></NavbarDefault>
 		</view>
 		<!-- 单词展示区 -->
 		<div class="word-display">
@@ -22,8 +22,7 @@
 				</view>
 				<i v-else class="fas fa-microphone"></i>
 			</button>
-			<div class="recording-time">点击麦克风开始录音</div>
-
+			<div class="recording-time">长按麦克风开始录音</div>
 			<!-- 录音操作按钮组 (初始隐藏) -->
 			<div class="recording-actions" style="display: none;">
 				<button class="action-btn">取消</button>
@@ -126,6 +125,9 @@
 	const endRecord = () => {
 		recorderManager.stop();
 		recording.value = false
+		if (Math.round(recordDuration.value / 1000) == 0) {
+			return
+		}
 		recorded.value = true
 	}
 	// 加载用户发音
@@ -280,7 +282,6 @@
 	.checkbox {
 		width: 18px;
 		height: 18px;
-		border: 1px solid #E0E0E0;
 		border-radius: 4px;
 		margin-right: 8px;
 		display: flex;
@@ -416,20 +417,21 @@
 	/* 单词展示区 */
 	.word-display {
 		padding: 24px 16px;
+		margin: 16px 16px 0 16px;
+		border-radius: 8px;
 		text-align: center;
-		background-color: #FAFAFA;
-		border-bottom: 1px solid #E0E0E0;
+		background-color: #f8f9fa;
 	}
 
 	.word-kanji {
-		font-size: 32px;
+		font-size: 28px;
 		font-weight: 600;
 		color: #212121;
 		margin-bottom: 8px;
 	}
 
 	.word-furigana {
-		font-size: 18px;
+		font-size: 20px;
 		color: #757575;
 	}
 

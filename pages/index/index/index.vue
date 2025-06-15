@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view>
+		<view style="height: calc(100vh - env(safe-area-inset-bottom) - 48px);">
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
@@ -10,9 +10,6 @@
 			<scroll-view v-show="tabbar===2" scroll-y="true" class="scroll">
 				<Self></Self>
 			</scroll-view>
-		</view>
-		<view style="height: calc(env(safe-area-inset-bottom) + 48px);">
-			<!-- 占位 -->
 		</view>
 		<!-- 底部导航 -->
 		<view class="tab-bar">
@@ -57,16 +54,15 @@
 <style lang="scss" scoped>
 	.tab-bar {
 		position: fixed;
+		bottom: 0;
+		height: calc(env(safe-area-inset-bottom) + 36px);
 		left: 0;
 		right: 0;
-		bottom: 0;
 		display: flex;
-		z-index: 1;
 		justify-content: space-around;
-		padding: 8px 0 env(safe-area-inset-bottom) 0;
+		padding-top: 12px;
 		background-color: #fff;
 		border-top: 1px solid #f0f0f0;
-
 		.tab-item {
 			flex: 1;
 			display: flex;

@@ -1,6 +1,6 @@
 <template>
 	<!-- 顶部导航栏 -->
-	<div :class="{border}" class="navbar" :style="{paddingTop:navBarHeight}">
+	<div class="navbar" :style="{paddingTop:navBarHeight}">
 		<view @click="back()" class="nav-btn">
 			<text class="fas fa-arrow-left"></text>
 		</view>
@@ -29,26 +29,18 @@
 		title: {
 			type: String,
 			default: ""
-		},
-		border: {
-			type: Boolean,
-			default: false
 		}
 	})
 </script>
 
 <style scoped lang="scss">
-	.border {
-		border-bottom: 1px solid #eee;
-	}
 
 	.navbar {
 		background-color: white;
-		height: 40px;
+		height: 45px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		position: relative;
 		padding: 0 12px;
 
 		.navbar-title {

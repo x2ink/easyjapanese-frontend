@@ -16,9 +16,9 @@
 			<!-- 语言切换标签 -->
 			<div class="language-tabs">
 				<view @click="current='jc'" :class="{active:current=='jc',inactive:current!='jc'}" class="search-tab">
-					日语搜索</view>
+					日中词典</view>
 				<view @click="current='cj'" :class="{active:current=='cj',inactive:current!='cj'}" class="search-tab">
-					中文搜索</view>
+					中文词典</view>
 			</div>
 		</div>
 
@@ -223,7 +223,7 @@
 		margin-right: 8px;
 		background-color: transparent;
 		color: #212121;
-		font-size: 18px;
+		font-size: 20px;
 	}
 
 	.search-input-container {
