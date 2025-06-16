@@ -3,11 +3,95 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/word/dictation/dictation",
+          "pathName": "pages/word/dictation/dictation",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/review/review",
+          "pathName": "pages/word/review/review",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/writefrommemory/writefrommemory",
+          "pathName": "pages/word/writefrommemory/writefrommemory",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/learn/learn/learn",
+          "pathName": "pages/learn/learn/learn",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/other/about/about",
+          "pathName": "pages/other/about/about",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/other/setplan/setplan",
+          "pathName": "pages/other/setplan/setplan",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/verbtransfiguration/verbtransfiguration",
+          "pathName": "pages/tools/verbtransfiguration/verbtransfiguration",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/translate/translate",
+          "pathName": "pages/tools/translate/translate",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/thesaurus/thesaurus",
+          "pathName": "pages/word/thesaurus/thesaurus",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/thesaurus/thesaurus",
+          "pathName": "pages/word/thesaurus/thesaurus",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/edit/edit",
+          "pathName": "pages/word/edit/edit",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/worddetail/worddetail",
           "pathName": "pages/word/worddetail/worddetail",
           "query": "id=152807",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/worddetail/worddetail",
+          "pathName": "pages/word/worddetail/worddetail",
+          "query": "id=152807",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/word/search/search",
@@ -18,5 +102,6 @@
         }
       ]
     }
-  }
+  },
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html"
 }

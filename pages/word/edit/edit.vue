@@ -1,12 +1,11 @@
 <template>
 	<div class="flex-col">
-		<NavbarDefault border title="编辑单词"></NavbarDefault>
+		<NavbarDefault title="编辑单词"></NavbarDefault>
 		<!-- 单词标题 -->
 		<div class="word-title">
 			<div class="word-text">{{jcinfo.word}}</div>
 			<div class="word-reading">{{jcinfo.kana}}{{jcinfo.tone}} · {{jcinfo.rome}}</div>
 		</div>
-
 		<!-- 表单内容区域 -->
 		<div class="form-container">
 			<!-- 基本释义 -->
@@ -15,7 +14,6 @@
 				<textarea v-model="formData.meaning" placeholder="请输入单词基本释义" id="detailed-meaning"
 					class="form-textarea"></textarea>
 			</div>
-
 			<!-- 详细解释 -->
 			<div class="form-group">
 				<label for="detailed-meaning" class="form-label">详细解释</label>
@@ -132,10 +130,8 @@
 <style lang="scss" scoped>
 	/* 表单样式 */
 	.form-container {
-		padding: 16px;
+		padding: 16px 0;
 		flex: 1;
-		overflow-y: auto;
-		background-color: #f8f9fa;
 	}
 
 	.form-group {
@@ -167,7 +163,7 @@
 	/* 保存按钮 */
 	.save-btn {
 		display: block;
-		margin: 16px auto;
+		margin: 16px;
 		padding: 12px;
 		background-color: #07C160;
 		color: white;
@@ -180,7 +176,7 @@
 	/* 历史记录 */
 	.history-container {
 		margin-top: 16px;
-		padding-bottom: env(safe-area-inset-bottom);
+		padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
 	}
 
 	.history-title {
@@ -230,7 +226,6 @@
 	.word-title {
 		padding: 16px;
 		background-color: white;
-		border-bottom: 1px solid #eee;
 	}
 
 	.word-text {

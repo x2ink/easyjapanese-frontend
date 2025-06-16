@@ -13,7 +13,9 @@
 		<view style="padding: 16px;">
 			<!-- 单词书统计卡片 -->
 			<view class="book-card">
-				<view class="book-cover" :style="{background:learnInfo.book_info.icon.bg}">
+				<view v-if="learnInfo.book_info.icon.type=='image'" class="book-cover _BACKGROUND" :style="{backgroundImage:`url('${learnInfo.book_info.icon.data}')`}">
+				</view>
+				<view v-else class="book-cover" :style="{background:learnInfo.book_info.icon.bg}">
 					<text v-if="learnInfo.book_info.icon.type=='text'">{{learnInfo.book_info.icon.data}}</text>
 					<text v-else style="font-size: 22px;" class="fas" :class="learnInfo.book_info.icon.data"></text>
 				</view>

@@ -53,7 +53,7 @@
 		
 		</view>
 		<!-- 操作栏 -->
-		<div class="bottom-actions">
+	<!-- 	<div class="bottom-actions">
 			<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
 				<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 收藏
 			</view>
@@ -63,7 +63,7 @@
 			<view class="bottom-btn btn-gray">
 				<text class="fas fa-pen-to-square" style="margin-right: 4.5px;"></text> 笔记
 			</view>
-		</div>
+		</div> -->
 	</view>
 </template>
 

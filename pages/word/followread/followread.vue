@@ -32,7 +32,6 @@
 		<!-- 其他用户录音列表 -->
 		<div class="recordings-list">
 			<div class="section-title">大家的发音</div>
-
 			<!-- 录音项1 -->
 			<div class="recording-item" v-for="(item,index) in List" :key="item.id">
 				<div class="user-info">
@@ -46,12 +45,20 @@
 							<i class="fas fa-heart"></i>
 							<span class="like-count">{{item.like}}</span>
 						</button>
-						<button class="play-btn">
-							<i class="fas fa-play"></i>
+						<button class="play-btn" @click="playUserRecord(index,item.voice)">
+							<view v-if="item.play" class="loadership_XNYIJ" style="transform: scale(0.5);">
+								<view></view>
+								<view></view>
+								<view></view>
+								<view></view>
+								<view></view>
+							</view>
+							<i v-else class="fas fa-play"></i>
 						</button>
 					</div>
 				</div>
 			</div>
+			<wd-status-tip v-if="total==0" image="content" tip="还没有用户录音~" />
 		</div>
 		<!-- 发布弹窗 -->
 		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
@@ -61,26 +68,32 @@
 
 				<div class="playback-controls">
 					<button @click="playRecord()" class="playback-btn">
-						<i class="fas fa-play"></i>
+						<view v-if="playing" class="loadership_XNYIJ" style="transform: scale(0.8);">
+							<view></view>
+							<view></view>
+							<view></view>
+							<view></view>
+							<view></view>
+						</view>
+						<i v-else class="fas fa-play"></i>
 					</button>
 				</div>
 				<div class="playback-time">{{Math.round(recordDuration/1000)}}"</div>
-
 				<div class="agreement-checkbox">
-					<div class="checkbox checked">
+					<div @click="agree=!agree" :class="{checked:agree}" class="checkbox">
 						<i class="fas fa-check" style="font-size: 12px;"></i>
 					</div>
 					<div class="agreement-text">
 						我已阅读并同意<text class="agreement-link">《轻松日语用户发音功能使用协议》</text>
 					</div>
 				</div>
-
 				<div class="modal-actions">
 					<button @click="recorded=false" class="modal-btn cancel-btn">取消</button>
 					<button @click="submit()" class="modal-btn confirm-btn">发布</button>
 				</div>
 			</view>
 		</wd-popup>
+		<wd-toast />
 	</view>
 </template>
 
@@ -96,10 +109,10 @@
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
-
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	import http from '@/utils/request.js'
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
@@ -109,12 +122,37 @@
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
 	const toast = useToast()
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = false;
+	const playUserRecord = (index, url) => {
+		innerAudioContext.src = url;
+		innerAudioContext.play();
+		innerAudioContext.onPlay(() => {
+			List.value[index].play = true
+		});
+		innerAudioContext.onError((res) => {
+			List.value[index].play = false
+		});
+		innerAudioContext.onEnded((res) => {
+			List.value[index].play = false
+		})
+	}
 	// 开始录音
 	const recording = ref(false)
+	const playing = ref(false)
 	const playRecord = () => {
 		if (voicePath.value) {
 			innerAudioContext.src = voicePath.value;
 			innerAudioContext.play();
+			innerAudioContext.onPlay(() => {
+				playing.value = true
+			});
+			innerAudioContext.onError((res) => {
+				playing.value = false
+			});
+			innerAudioContext.onEnded((res) => {
+				playing.value = false
+			})
 		}
 	}
 	const startRecord = () => {
@@ -125,10 +163,6 @@
 	const endRecord = () => {
 		recorderManager.stop();
 		recording.value = false
-		if (Math.round(recordDuration.value / 1000) == 0) {
-			return
-		}
-		recorded.value = true
 	}
 	// 加载用户发音
 	const id = ref(null)
@@ -147,7 +181,8 @@
 		total.value = res.total
 		List.value = List.value.concat(res.data.map(item => ({
 			...item,
-			has: false
+			has: false,
+			play: false,
 		})));
 		if (total.value == 0) {
 			noResult.value = true
@@ -159,7 +194,7 @@
 			toast.warning(`请同意《轻松日语用户发音功能使用协议》`)
 			return
 		}
-		if (Math.round(recordDuration.value / 1000) == 0) {
+		if (Math.round(recordDuration.value / 500) == 0) {
 			toast.warning(`语音时间过短`)
 			recorded.value = false
 			return
@@ -210,15 +245,22 @@
 		}
 		List.value[index].has = !List.value[index].has
 	}
-	const recorderManager = uni.getRecorderManager();
-	const innerAudioContext = uni.createInnerAudioContext();
-	innerAudioContext.autoplay = true;
+	const recorderManager = uni.getRecorderManager()
 	const voicePath = ref(null)
-	const recordDuration = ref(null)
+	const recordDuration = ref(0)
 	onMounted(() => {
+		recorderManager.onStart(function(res) {
+			recordDuration.value = 0
+			console.log("开始录音");
+		});
 		recorderManager.onStop(function(res) {
+			if (Math.round(res.duration / 500) == 0) {
+				toast.warning(`录音时间过短`)
+				return
+			}
 			voicePath.value = res.tempFilePath;
 			recordDuration.value = res.duration
+			recorded.value = true
 		});
 	})
 </script>
@@ -287,12 +329,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: white;
+		color: #eeeeee;
 		background-color: white;
-		flex-shrink: 0;
+		border: 1px solid #eeeeee;
 	}
 
-	.checkbox.checked {
+	.checked {
 		background-color: #07C160;
 		border-color: #07C160;
 	}

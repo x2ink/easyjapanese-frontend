@@ -1,20 +1,27 @@
 <template>
 	<view>
+		<view class="logotext" :style="{paddingTop:`calc(${navBarHeight} + 16px)!important`}">
+			<image src="/static/logo.png" mode="aspectFit"></image>
+			<view>
+				<view class="title">轻松日语</view>
+				<view class="description">单词学习小助手</view>
+			</view>
+		</view>
 		<!-- 功能入口 -->
-		<div :style="{paddingTop:`calc(${navBarHeight} + 16px)!important`}" class="action-buttons">
-			<div class="button-item">
+		<div class="action-buttons">
+			<div class="button-item" @click="goPage('/pages/word/review/review')">
 				<button class="action-button blue">
 					<i class="fas fa-history mr-1"></i> 回顾
 				</button>
 			</div>
-			<div class="button-item">
+			<div class="button-item" @click="goPage('/pages/word/dictation/dictation')">
 				<button class="action-button green">
-					<i class="fas fa-calendar-day mr-1"></i> 预习
+					<i class="fa-solid fa-headphones mr-1"></i> 听写
 				</button>
 			</div>
-			<div class="button-item">
+			<div class="button-item" @click="goPage('/pages/word/writefrommemory/writefrommemory')">
 				<button class="action-button purple">
-					<i class="fas fa-pen-fancy mr-1"></i> 听写
+					<i class="fas fa-pen-fancy mr-1"></i> 默写
 				</button>
 			</div>
 		</div>
@@ -111,20 +118,35 @@
 </script>
 
 <style lang="scss">
-	.screen {
+	.logotext {
 		display: flex;
-		flex-direction: column;
-		position: relative;
+		align-items: center;
+		background-color: white;
+		padding: 0 16px;
+		gap: 8px;
+
+		image {
+			width: 40px;
+			height: 40px;
+		}
+
+		.title {
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		.description {
+			font-size: 10px;
+		}
+
 	}
-
-
-
 
 	.action-buttons {
 		padding: 12px 16px;
 		background: white;
 		display: flex;
 		justify-content: space-between;
+
 
 		.button-item {
 			flex: 1;
@@ -141,6 +163,10 @@
 			border-radius: 8px;
 			font-size: 14px;
 			font-weight: 500;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 8px;
 
 			&.blue {
 				background-color: #ebf5ff;

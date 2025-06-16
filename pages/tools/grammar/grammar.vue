@@ -10,14 +10,9 @@
 				</div>
 			</div>
 			<!-- 标签 -->
-			<scroll-view scroll-x="true">
-				<!-- 分类标签 -->
-				<div class="tabs-container">
-					<div @click="current=index" :class="{tabactive:current==index}" v-for="(item,index) in menu"
-						class="tab-item">{{item}}
-					</div>
-				</div>
-			</scroll-view>
+			<div class="tabs-container">
+				<TabSlider @changeTab="changeTab" :current="current" :tabList="menu"></TabSlider>
+			</div>
 		</view>
 		<view class="list">
 			<div class="item" @click="goPage('/pages/tools/grammardetail/grammardetail',{id:item.id})" :key="item.id"
@@ -61,9 +56,13 @@
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	import TabSlider from "@/components/slider/slider.vue"
 	const menu = ref(['全部', 'N1', 'N2', 'N3', 'N4', 'N5'])
 	const current = ref(0)
 	const scrollTop = ref(0)
+	const changeTab = (e) => {
+		current.value = e
+	}
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop
 	})
@@ -137,6 +136,11 @@
 		margin-left: 6px;
 	}
 
+	.tabs-container {
+		background-color: white;
+		padding: 8px 16px 16px 16px;
+	}
+
 	.N1 {
 		background-color: #F44336;
 		color: white;
@@ -204,7 +208,7 @@
 	.head {
 		position: sticky;
 		top: 0;
-		border-bottom: 1px solid #eee;
+		background-color: white;
 	}
 
 	.tab-item {
@@ -236,7 +240,6 @@
 	}
 
 	.search-bg {
-		background-color: white;
 		padding: 12px 16px;
 	}
 </style>

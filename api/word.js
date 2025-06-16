@@ -21,8 +21,8 @@ export default {
 	learnWord() {
 		return http.get("learn/newword")
 	},
-	writeFromMemory() {
-		return http.get("learn/writefrommemory")
+	writeFromMemory(data) {
+		return http.post("learn/writefrommemory", data)
 	},
 	recordlearn(data) {
 		return http.post("learn/record/add", data)

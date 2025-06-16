@@ -49,11 +49,13 @@
 			</div>
 			<!-- 单词卡片 -->
 			<div class="word-card">
-				<button v-if="answerShow||pattern!=2" class="pronounce-btn" title="发音">
+				<button @click="playUserRecord(wordinfo.voice)" v-if="answerShow||pattern!=2" class="pronounce-btn"
+					title="发音">
 					<i class="fas fa-volume-up"></i>
 				</button>
 				<div class="word-header _GCENTER">
-					<button v-if="pattern==2&&!answerShow" class="pronounce-btn pronounce-header" title="发音">
+					<button @click="playUserRecord(wordinfo.voice)" v-if="pattern==2&&!answerShow"
+						class="pronounce-btn pronounce-header" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
 					<view class="_GCENTER" style="flex-direction: column;" v-else>
@@ -69,7 +71,7 @@
 			[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
 					<div v-if="answerShow" class="detail-row">
 						<div class="detail-label">词性</div>
-						<div class="detail-content">{{extractBracketContents(wordinfo.wordtype).join('；')}}</div>
+						<div class="detail-content">{{wordinfo.wordtype}}</div>
 					</div>
 					<div v-if="answerShow" class="detail-row">
 						<div class="detail-label">释义</div>
@@ -130,6 +132,13 @@
 		goPage,
 		extractBracketContents,
 	} from "@/utils/common.js"
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = false;
+	const playUserRecord = (url) => {
+		innerAudioContext.stop();
+		innerAudioContext.src = url;
+		innerAudioContext.play();
+	}
 	const doneTask = ref(false)
 	const recordWord = async (data) => {
 		doneTask.value = true
@@ -256,6 +265,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段1", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		}
 		// 阶段2：交替获取复习词和新词
@@ -265,6 +275,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段2复习", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		} else {
 			let temp = getNewWord();
@@ -273,6 +284,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段2新词", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		}
 	}

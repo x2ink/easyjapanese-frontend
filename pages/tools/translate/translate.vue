@@ -1,6 +1,8 @@
 <template>
 	<view>
-		<NavbarDefault border title="翻译"></NavbarDefault>
+		<view class="head">
+			<NavbarDefault title="翻译"></NavbarDefault>
+		</view>
 		<div class="translation-mode">
 			<div @click="current='标准翻译'" :class="{active:current=='标准翻译'}" class="mode-btn">标准翻译</div>
 			<div @click="current='AI翻译'" :class="{active:current=='AI翻译'}" class="mode-btn">AI翻译</div>
@@ -26,7 +28,7 @@
 			<div class="output-area">
 				<textarea v-model="result" class="textarea" placeholder="翻译结果将显示在这里..."></textarea>
 				<div class="action-bar">
-					<button class="action-btn">
+					<button class="action-btn" @click="playVoice()">
 						<i class="fas fa-volume-up"></i> 朗读
 					</button>
 					<button @click="copy(result)" class="action-btn">
@@ -37,13 +39,13 @@
 		</view>
 		<view v-else class="result">
 			<view v-if="loading" class="loading _GCENTER">
-				<div class="loadership_KUDLC">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
+				<view class="loadership_KUDLC">
+					<view></view>
+					<view></view>
+					<view></view>
+					<view></view>
+					<view></view>
+				</view>
 				<text class="tip">
 					AI正在思考,大概需要10s
 				</text>
@@ -55,6 +57,7 @@
 		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
 			@onFinish="finishCore" />
 		<wd-toast />
+		<view style="height:env(safe-area-inset-bottom);"></view>
 	</view>
 </template>
 
@@ -82,6 +85,9 @@
 	} from '@/uni_modules/wot-design-uni'
 	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
 	import sha256 from 'crypto-js/sha256';
+	const playVoice = () => {
+		toast.warning(`服务暂未开放`)
+	}
 	const current = ref('标准翻译')
 	const pattern = ref('cj')
 	const fromTo = computed(() => {
@@ -105,35 +111,8 @@
 		}
 	}
 	const toast = useToast()
-	const value = ref("我是中国人")
-	const result = ref(
-		`<div>
-  <h3>翻译：</h3>
-  <p>私は中国人です。</p>
-</div>
-
-<div>
-  <h3>翻译讲解：</h3>
-  
-  <h4>句子结构分析：</h4>
-  <p>这是一个典型的日语判断句结构，由"主语+は+名词+です"构成</p>
-  
-  <h4>关键词翻译：</h4>
-  <ul>
-    <li><strong>我</strong>：译为「私（わたし）」，是日语中最常用的第一人称代词</li>
-    <li><strong>中国人</strong>：直接使用汉字词「中国人（ちゅうごくじん）」，日语中很多汉语词汇保持原形</li>
-  </ul>
-  
-  <h4>语法点解析：</h4>
-  <ul>
-    <li><strong>判断句结构</strong>：「～は～です」是日语最基本的判断句式，相当于中文的"是"字句</li>
-    <li><strong>敬体表达</strong>：句末使用「です」构成礼貌体，适合日常交流使用</li>
-  </ul>
-  
-  <h4>翻译思路：</h4>
-  <p>中文的"是"字判断句在日语中通常对应「～は～です」结构。由于"中国人"在日语中有完全对应的汉字词，直接使用即可。考虑到这是自我介绍的场景，使用礼貌体的「です」最为恰当。</p>
-</div>`
-	);
+	const value = ref("")
+	const result = ref(``);
 	const loading = ref(false)
 	const truncate = (q) => {
 		var len = q.length;
@@ -180,13 +159,13 @@
 	}
 	const chatSSEClientRef = ref(null);
 	const openCore = () => {
-		loading.value = false
 		console.log("open sse");
 	}
 	const errorCore = (err) => {
 		console.log("error sse：", err);
 	}
 	const messageCore = (msg) => {
+		loading.value = false
 		const lines = msg.split('\n').filter(line => line.trim().startsWith('data:'));
 		const chunks = lines.map(line => JSON.parse(line.replace('data: ', '')));
 		chunks.map(item => {
@@ -249,6 +228,12 @@
 	}
 </style>
 <style lang="scss" scoped>
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
+
 	.form-group {
 		padding: 16px;
 	}
@@ -279,7 +264,7 @@
 			height: 60px;
 		}
 
-		.loadership_KUDLC div {
+		.loadership_KUDLC view {
 			position: absolute;
 			width: 6px;
 			height: 20px;
@@ -291,27 +276,27 @@
 			animation-timing-function: ease-in-out;
 		}
 
-		.loadership_KUDLC div:nth-child(1) {
+		.loadership_KUDLC view:nth-child(1) {
 			animation-delay: 0s;
 			left: 0px;
 		}
 
-		.loadership_KUDLC div:nth-child(2) {
+		.loadership_KUDLC view:nth-child(2) {
 			animation-delay: 0.16s;
 			left: 10px;
 		}
 
-		.loadership_KUDLC div:nth-child(3) {
+		.loadership_KUDLC view:nth-child(3) {
 			animation-delay: 0.32s;
 			left: 20px;
 		}
 
-		.loadership_KUDLC div:nth-child(4) {
+		.loadership_KUDLC view:nth-child(4) {
 			animation-delay: 0.48s;
 			left: 30px;
 		}
 
-		.loadership_KUDLC div:nth-child(5) {
+		.loadership_KUDLC view:nth-child(5) {
 			animation-delay: 0.64s;
 			left: 40px;
 		}

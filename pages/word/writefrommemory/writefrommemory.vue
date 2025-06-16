@@ -1,23 +1,32 @@
 <template>
-	<Navbar title="单词默写">
-	</Navbar>
-	<view v-if="doneTask" class="learnsuccess">
-		<wd-icon style="margin-top: 40px;" name="check-circle-filled" size="80px" color="#34D19D"></wd-icon>
-		<text>单词已默写完成！</text>
+	<view class="head">
+		<NavbarDefault border title="单词默写"></NavbarDefault>
 	</view>
-	<view v-else>
-		<wd-progress :percentage="progress" hide-text />
-		<view class="input">
-			<wd-input custom-class="input" no-border type="text" clearable size="large" v-model="value"
-				placeholder="请输入单词" />
-		</view>
-		<view class="body">
-			<view class="meaning">单词意思</view>
-		</view>
-	</view>
-	<!-- 	<view class="keyboard">
-		<Keyboard></Keyboard>
-	</view> -->
+	<wd-progress custom-class="wdprogress" :percentage="progress" hide-text />
+	<!-- 单词展示区 -->
+	<div class="word-display">
+		<div class="japanese-word">{{wordinfo.meaning.map(item=>item.meaning).join('；')}}</div>
+	</div>
+	<!-- 输入区 -->
+	<div class="input-container">
+		<label class="input-label">请输入日语单词或假名</label>
+		<input v-model="value" type="text" placeholder="请输入答案">
+		<!-- 按钮区 -->
+		<button class="primary-button" @click="submit()">确认</button>
+	</div>
+
+
+	<div class="word-card" v-if="showAnwser">
+		<div class="card-header">
+			<div>
+				<div class="card-japanese">{{formatWordName(wordinfo.word,wordinfo.kana)}}</div>
+				<div class="card-pronunciation">{{wordinfo.rome}}</div>
+			</div>
+			<view @click="playUserRecord(wordinfo.voice)" class="icon">
+				<text class="fas fa-volume-up"></text>
+			</view>
+		</div>
+	</div>
 	<wd-toast />
 	<wd-message-box />
 </template>
@@ -28,157 +37,194 @@
 		onMounted,
 		computed
 	} from 'vue'
+	import {
+		onLoad,
+		onShow
+	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
-	import Navbar from '@/components/navbar/navbar.vue';
-	import Keyboard from '@/components/keyboard/keyboard.vue';
+	import NavbarDefault from "@/components/navbar/default"
+	import {
+		goPage,
+		formatWordName
+	} from "@/utils/common.js"
+	import {
+		writefrommemoryStore
+	} from "@/stores"
 	import {
 		useToast,
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const message = useMessage()
-	const doneTask = ref(false)
-	const wordinfo = ref({})
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = false;
+	const playUserRecord = (url) => {
+		innerAudioContext.stop();
+		innerAudioContext.src = url;
+		innerAudioContext.play();
+	}
+	const wordinfo = ref({
+		meaning: []
+	})
 	const wordList = ref([])
-	const total = ref(0)
+	const doneList = ref([])
 	const value = ref('')
 	const progress = computed(() => {
-		return 100
+		return (doneList.value.length / total.value) * 100
 	})
 	const segmentation = (text) => {
 		return text.match(/[\u3040-\u309F\u30A0-\u30FF][\u3099\u309A\uFF9E\uFF9F]?|./g) || [];
 	}
-	const init = async () => {
-		const res = await $http.word.learnWord()
-		wordList.value = res.data.map(item => {
-			console.log(segmentation(item.word));
+	const getAllWords = async () => {
+		const res = await $http.word.writeFromMemory({
+			remove: writefrommemoryStore().wordList.map(item => item.id)
 		})
-		total.value = res.total
-		wordinfo.value = res.data[0]
+		wordList.value = res.data
+		total.value = wordList.value.length
+		getNext()
+	}
+	const getNext = () => {
+		value.value = ""
+		showAnwser.value = false
+		wordinfo.value = wordList.value[0]
+	}
+	const showAnwser = ref(false)
+	const total = ref(0)
+	const submit = () => {
+		if (value.value.trim().length == 0) {
+			toast.warning(`答案不可为空`)
+			return
+		}
+		if (value.value == wordinfo.value.word || value.value == wordinfo.value.kana) {
+			// 答案正确
+			if (showAnwser.value) {
+				wordList.value.shift()
+				wordList.value.push(wordinfo.value)
+			} else {
+				const timestamp = new Date().setHours(0, 0, 0, 0);
+				if (writefrommemoryStore().time > timestamp) {
+					writefrommemoryStore().clear()
+				}
+				writefrommemoryStore().push(wordinfo.value)
+				toast.success("答案正确")
+				doneList.value.push(wordinfo.value)
+				wordList.value.shift()
+			}
+			getNext()
+		} else {
+			// 答案错误
+			value.value = ""
+			showAnwser.value = true
+			playUserRecord(wordinfo.value.voice)
+			toast.error("答案错误，请重新拼写")
+		}
 	}
 	onMounted(() => {
-		init()
+
 	})
+	onLoad(op => {
+		if (op.type == "local") {
 
-	// const value = ref('')
-	// const List = ref([])
-	// const current = ref(0)
-	// 
-	// const getInfo = (id) => {
-	// 	uni.navigateTo({
-	// 		url: "/pages/worddetail/worddetail?id=" + List.value[current.value].id + "&type=jc"
-	// 	})
-	// }
-
-	// const doneTask = ref(false)
-	// const updateStore = () => {
-	// 	let index = todaylearnStore().wordList.findIndex(item => item.id == List.value[current.value].id)
-	// 	List.value[current.value].done = true
-	// 	todaylearnStore().update(index, List.value[current.value])
-	// }
-	// const nextWord = (a) => {
-	// 	value.value = ''
-	// 	let dele = current.value
-	// 	let temp = current.value + 1
-	// 	if (temp >= List.value.length - 1) {
-	// 		current.value = 0
-	// 	} else {
-	// 		current.value = temp
-	// 	}
-	// 	if (a) {
-	// 		List.value.splice(dele, 1)
-	// 	}
-	// 	if (List.value.length === 0) {
-	// 		doneTask.value = true
-	// 	}
-	// }
-	// const verify = () => {
-	// 	if (value.value == List.value[current.value].kana || value.value == List.value[current.value].word) {
-	// 		updateStore()
-	// 		nextWord(true)
-	// 	} else {
-	// 		message.alert({
-	// 			msg: List.value[current.value].kana == List.value[current.value].word ? List.value[current
-	// 					.value].word : List.value[current.value].word + '或' +
-	// 				List.value[current.value].kana,
-	// 			title: '正确答案',
-	// 			confirmButtonText: '继续',
-	// 			closeOnClickModal: false
-	// 		}).then(() => {
-	// 			nextWord(false)
-	// 		})
-	// 	}
-	// }
-	// onMounted((e) => {
-	// 	todaylearnStore().wordList.forEach(item => {
-	// 		if (!item.done) {
-	// 			List.value.unshift(item)
-	// 		}
-	// 	})
-	// 	total.value = List.value.length
-	// 	if (total.value == 0) {
-	// 		doneTask.value = true
-	// 	}
-	// })
+		} else {
+			getAllWords()
+		}
+	})
 </script>
 
-<style scoped lang="scss">
-	
-	.keyboard {
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		padding-bottom: env(safe-area-inset-bottom);
+<style lang="scss">
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 9;
 	}
 
-	:deep(.input) {
+	.wdprogress {
+		padding: 0 !important;
+	}
+
+	.word-display {
+		background-color: #FFFFFF;
+		padding: 24px;
 		text-align: center;
-		border-radius: 8px;
-		margin: 20px;
-	}
-
-	:deep(.wd-progress) {
-		padding-top: 0px;
-	}
-
-	.learnsuccess {
+		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		gap: 15px;
-		margin-top: 40px;
 		justify-content: center;
+	}
 
-		text {
-			color: $uni-text-color-grey;
+	.japanese-word {
+		font-size: 20px;
+		font-weight: bold;
+		color: #212121;
+	}
+
+
+	/* 输入区 */
+	.input-container {
+		padding: 16px;
+		background-color: #FFFFFF;
+		margin: 16px 0;
+
+		input {
+			flex: 1;
+			padding: 12px 16px;
+			border: 1px solid #E0E0E0;
+			border-radius: 8px;
+			font-size: 16px;
+			margin-top: 16px;
 		}
 	}
 
-	.next {
-		padding: 0 15px;
-		gap: 15px;
+	.input-label {
+		display: block;
+		font-size: 14px;
+		color: #757575;
+		margin-bottom: 8px;
+	}
+
+
+
+	.primary-button {
+		flex: 1;
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 12px;
+		font-size: 16px;
+		font-weight: 500;
+		margin-top: 16px;
+	}
+
+	/* 单词卡片 (初始隐藏) */
+	.word-card {
+		background-color: white;
+		padding: 16px;
+		margin: 16px 0;
+	}
+
+	.card-header {
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-between;
 		align-items: center;
-		height: 60px;
-		position: absolute;
-		bottom: 15px;
-		right: 0;
-		left: 0;
-
-		.btn {
-			width: 50%;
-		}
-
 	}
 
-	.body {
-		.meaning {
-			margin-top: 20px;
-			font-size: $uni-font-size-lg;
-			font-weight: bold;
-			text-align: center;
-		}
+	.card-japanese {
+		font-size: 24px;
+		font-weight: bold;
 	}
+
+	.card-pronunciation {
+		font-size: 16px;
+		color: #757575;
+	}
+
+	/* 图标样式 */
+	.icon {
+		width: 24px;
+		height: 24px;
+		color: #757575;
+	}
+
+
 </style>

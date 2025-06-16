@@ -7,9 +7,7 @@
 		<div class="main-content">
 			<!-- 应用信息卡片 -->
 			<div class="app-card">
-				<div class="app-logo">
-					<i class="fas fa-language"></i>
-				</div>
+				<image src="/static/logo.png" mode="aspectFit" class="app-logo"></image>
 				<div class="app-name">轻松日语</div>
 				<div class="app-version">版本 {{version}}</div>
 				<div class="app-desc">
@@ -44,14 +42,16 @@
 			</div>
 
 			<!-- 法律条款 -->
-			<div class="info-item" @click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
+			<div class="info-item"
+				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
 				<div class="info-title">
 					<span>服务条款</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
 				</div>
 			</div>
 			<!-- 更新日志 -->
-			<div class="info-item" @click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})">
+			<div class="info-item"
+				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})">
 				<div class="info-title">
 					<span>更新日志</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
@@ -128,12 +128,6 @@
 		height: 80px;
 		border-radius: 16px;
 		margin-bottom: 16px;
-		background-color: #07C160;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		font-size: 32px;
 	}
 
 	.app-name {
@@ -159,7 +153,6 @@
 	/* 信息列表项 */
 	.info-item {
 		padding: 16px;
-		margin-bottom: 12px;
 		border-bottom: 1px solid #eee;
 	}
 
@@ -167,7 +160,6 @@
 		font-size: 15px;
 		font-weight: 500;
 		color: #212121;
-		margin-bottom: 8px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

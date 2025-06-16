@@ -34,6 +34,12 @@ import {
 import {
 	test_reviewModule
 } from '@/stores/test/review.js';
+import {
+	writefrommemoryModule
+} from '@/stores/release/writefrommemory.js';
+import {
+	test_writefrommemoryModule
+} from '@/stores/test/writefrommemory.js';
 export const userStore = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return test_userModule()
@@ -74,5 +80,12 @@ export const reviewStore = () => {
 		return test_reviewModule()
 	} else {
 		return reviewModule()
+	}
+}
+export const writefrommemoryStore = () => {
+	if (process.env.NODE_ENV === 'development') {
+		return test_writefrommemoryModule()
+	} else {
+		return writefrommemoryModule()
 	}
 }

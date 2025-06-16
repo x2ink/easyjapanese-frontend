@@ -5,13 +5,14 @@
 		</view>
 		<!-- 分类标签 -->
 		<div class="tabs-container">
-			<div @click="current=key" :class="{tabactive:key==current}" v-for="[key, value] in bookList.entries()"
-				:key="key" class="tab-item">{{key}}</div>
+			<TabSlider @changeTab="changeTab" :current="current" :tabList="tabList"></TabSlider>
 		</div>
 		<view class="list">
 			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" class="item" :key="item.id"
-				v-for="item in bookList.get(current)">
-				<view class="book-cover  _GCENTER" :style="{background:item.icon.bg}">
+				v-for="item in bookList.get(tabList[current])">
+				<view v-if="item.icon.type=='image'" class="book-cover _BACKGROUND" :style="{backgroundImage:`url('${item.icon.data}')`}">
+				</view>
+				<view v-else class="book-cover _GCENTER" :style="{background:item.icon.bg}">
 					<text v-if="item.icon.type=='text'">{{item.icon.data}}</text>
 					<text v-else style="font-size: 22px;" class="fas" :class="item.icon.data"></text>
 				</view>
@@ -32,22 +33,30 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed
 	} from 'vue'
 	import {
 		goPage,
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
+	import TabSlider from "@/components/slider/slider.vue"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const bookList = ref(new Map())
-	const current = ref("全部")
+	const current = ref(0)
 	const config = ref({
 		book_id: null
 	})
+	const tabList = computed(() => {
+		return [...bookList.value.keys()]
+	})
+	const changeTab = (e) => {
+		current.value = e
+	}
 	const getConfig = async () => {
 		const res = await $http.user.getConfig()
 		config.value = res.data
@@ -104,7 +113,6 @@
 				border-radius: 8px;
 				color: white;
 				font-weight: bold;
-				background-color: red;
 			}
 
 			.switch-btn {
@@ -159,10 +167,8 @@
 	}
 
 	.tabs-container {
-		padding: 16px;
 		background-color: white;
-		display: flex;
-		gap: 12px;
+		padding: 8px 16px 16px 16px;
 	}
 
 	.tab-item {

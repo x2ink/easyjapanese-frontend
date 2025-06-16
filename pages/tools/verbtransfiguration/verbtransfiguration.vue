@@ -3,7 +3,7 @@
 		<view class="head">
 			<NavbarDefault border title="动词变形"></NavbarDefault>
 			<!-- 搜索栏 -->
-			<div style="padding:16px; background:#FFFFFF; border-bottom:1px solid #F0F0F0;">
+			<div style="padding:16px; background:#FFFFFF;">
 				<div style="display:flex; gap:8px;">
 					<input v-model="value" type="text" placeholder="输入动词原形 (ます形/基本形)"
 						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
@@ -167,7 +167,7 @@
 <style lang="scss" scoped>
 	/* General Styles */
 	.content-container {
-		padding: 16px;
+		padding: 16px 0;
 		overflow-y: auto;
 		padding-bottom: env(safe-area-inset-bottom);
 	}
@@ -176,8 +176,6 @@
 	.transform-group {
 		margin-bottom: 16px;
 		background: #FFFFFF;
-		border-radius: 8px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 
 	.group-header {

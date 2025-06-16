@@ -16,7 +16,8 @@
 						</div>
 					</div>
 					<div class="flex" style="gap: 8px;">
-						<view class="action-btn">
+						<view @click="playUserRecord(jcinfo.voice)"
+							class="action-btn">
 							<text class="fas fa-volume-up"></text>
 						</view>
 						<view @click="goPage('/pages/word/followread/followread',{
@@ -36,8 +37,7 @@
 			<div class="card">
 				<div class="flex justify-between items-center" style="margin-bottom: 12px;">
 					<div>
-						<span :key="item" v-for="item in extractBracketContents(jcinfo.wordtype)"
-							class="tag tag-blue">{{item}}</span>
+						<span class="tag tag-blue">{{jcinfo.wordtype}}</span>
 					</div>
 					<div class="flex space-x-2">
 						<view @click="goPage('/pages/word/edit/edit',{id})" style="color: #3b82f6;font-size: 14px;">
@@ -113,7 +113,8 @@
 				<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
 					<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 生词本
 				</view>
-				<view class="bottom-btn btn-blue">
+				<view class="bottom-btn btn-blue"
+					@click="goPage('/pages/other/browse/browse',{type:'dict',word:jcinfo.word})">
 					<text class="fas fa-search" style="margin-right: 4.5px;"></text> 全网搜索
 				</view>
 				<view class="bottom-btn btn-green" @click="goPage('/pages/tools/notedetail/notedetail',{
@@ -222,7 +223,14 @@
 		const res = await $http.word.jcInfo(id.value)
 		jcinfo.value = res.data
 	}
-
+	// 单词发音
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = false;
+	const playUserRecord = (url) => {
+		innerAudioContext.stop();
+		innerAudioContext.src = url;
+		innerAudioContext.play();
+	}
 	onLoad((e) => {
 		id.value = e.id
 		getJcInfo()

@@ -152,17 +152,17 @@
 	}
 
 	.cell {
-		padding: 5px 15px;
-		margin: 15px;
+		padding: 8px 16px;
+		margin: 16px;
 		background-color: white;
-		border-radius: $uni-border-radius-base;
+		border-radius: 8px;
 
 		.cellitem {
 			height: 40px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			font-size: 14px;
+			font-size: 16px;
 
 			text {
 				color: #999;
