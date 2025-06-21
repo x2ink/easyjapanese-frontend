@@ -49,11 +49,13 @@
 			</div>
 			<!-- 单词卡片 -->
 			<div class="word-card">
-				<button v-if="answerShow||pattern!=2" class="pronounce-btn" title="发音">
+				<button @click="playUserRecord(wordinfo.voice)" v-if="answerShow||pattern!=2" class="pronounce-btn"
+					title="发音">
 					<i class="fas fa-volume-up"></i>
 				</button>
 				<div class="word-header _GCENTER">
-					<button v-if="pattern==2&&!answerShow" class="pronounce-btn pronounce-header" title="发音">
+					<button @click="playUserRecord(wordinfo.voice)" v-if="pattern==2&&!answerShow"
+						class="pronounce-btn pronounce-header" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
 					<view class="_GCENTER" style="flex-direction: column;" v-else>
@@ -127,9 +129,19 @@
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import {
+		localwordsStore
+	} from "@/stores"
+	import {
 		goPage,
 		extractBracketContents,
 	} from "@/utils/common.js"
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = false;
+	const playUserRecord = (url) => {
+		innerAudioContext.stop();
+		innerAudioContext.src = url;
+		innerAudioContext.play();
+	}
 	const doneTask = ref(false)
 	const recordWord = async (data) => {
 		doneTask.value = true
@@ -167,23 +179,38 @@
 	const knowBtnShow = ref(true)
 	const answerShow = ref(false)
 	const init = async () => {
-		const res = await $http.word.getReview()
-		wordList.value = res.data.map(item => {
-			return {
-				word: item,
-				id: item.id,
-				pattern: 0,
-				interval: 1,
-				error: 0,
-				first: true
-			}
-		})
-		total.value = res.total
-		pendingNew.value = [...wordList.value];
-		reviewQueue.value = [];
-		learned.value = [];
-		nextIsReview.value = false;
-		initialQueue.value = pendingNew.value.splice(0, 4);
+		const timestamp = new Date().setHours(0, 0, 0, 0);
+		if (localwordsStore().reviewTime >= timestamp) {
+			console.log("读取本地");
+			total.value = localwordsStore().reviewCache.total
+			pendingNew.value = localwordsStore().reviewCache.pendingNew;
+			reviewQueue.value = localwordsStore().reviewCache.reviewQueue;
+			learned.value = localwordsStore().reviewCache.learned;
+			nextIsReview.value = localwordsStore().reviewCache.learned;
+			initialQueue.value = localwordsStore().reviewCache.initialQueue;
+		} else {
+			console.log("读取网络");
+			localwordsStore().clearReviewCache()
+			localwordsStore().setReviewTime(new Date().getTime())
+			const res = await $http.word.getReview()
+			wordList.value = res.data.map(item => {
+				return {
+					word: item,
+					id: item.id,
+					pattern: 0,
+					interval: 1,
+					error: 0,
+					first: true
+				}
+			})
+			total.value = res.total
+			pendingNew.value = [...wordList.value];
+			reviewQueue.value = [];
+			learned.value = [];
+			nextIsReview.value = false;
+			initialQueue.value = pendingNew.value.splice(0, 4);
+			writeCache()
+		}
 		getNext()
 	}
 	const misrememberShow = ref(false)
@@ -207,12 +234,24 @@
 		}
 		reviewQueue.value.splice(3, 0, current.value)
 	}
+	const writeCache = () => {
+		localwordsStore().setReviewCache({
+			total: total.value,
+			pendingNew: pendingNew.value,
+			reviewQueue: reviewQueue.value,
+			learned: learned.value,
+			nextIsReview: nextIsReview.value,
+			initialQueue: initialQueue.value
+		})
+	}
 	const knowBtn = () => {
 		misrememberShow.value = true
 		knowBtnShow.value = false
 		answerShow.value = true
 		if (current.value.pattern >= 3 || current.value.first) {
 			learned.value.push(current.value);
+			console.log("记录到本地");
+			writeCache()
 			return;
 		}
 		current.value.pattern++;
@@ -255,6 +294,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段1", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		}
 		// 阶段2：交替获取复习词和新词
@@ -264,6 +304,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段2复习", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		} else {
 			let temp = getNewWord();
@@ -272,6 +313,7 @@
 			wordinfo.value = temp.word
 			current.value = temp
 			console.log("阶段2新词", wordinfo.value.word);
+			playUserRecord(wordinfo.value.voice)
 			return
 		}
 	}

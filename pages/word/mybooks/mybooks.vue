@@ -7,7 +7,10 @@
 			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" :key="item.id"
 				v-for="item in List" class="notebook-item">
 				<div class="notebook-header">
-					<div class="notebook-icon" :style="{backgroundColor: item.icon.bg}">
+					<view v-if="item.icon.type=='image'" class="notebook-icon _BACKGROUND"
+						:style="{backgroundImage:`url('${item.icon.data}')`}">
+					</view>
+					<div v-else class="notebook-icon" :style="{backgroundColor: item.icon.bg}">
 						<text v-if="item.icon.type=='icon'" class="fas" :class="item.icon.data"></text>
 						<text class="text" v-else>{{item.icon.data}}</text>
 					</div>
@@ -19,21 +22,23 @@
 								<text>已发布</text>
 							</text>
 						</div>
-						<div class="notebook-meta">创建于{{dayjs(item.created_at).format("YYYY.MM.DD")}}</div>
+						<div class="notebook-desc">{{item.describe}}</div>
+						<div class="notebook-footer">
+							<view class="timeandcount">
+								<div class="word-count">{{item.word}}个单词</div>
+								<div class="notebook-meta">创建于{{dayjs(item.created_at).format("YYYY.MM.DD")}}</div>
+							</view>
+							<div @click.stop="openMoreShow(item)" class="notebook-actions _GCENTER">
+								<text class="fas fa-ellipsis-h more-btn"></text>
+							</div>
+						</div>
 					</div>
-					<view class="btn" v-if="selectBook">
-						<button @click="removeWord(item)" v-if="item.has" class="action-btn remove-btn">移除</button>
-						<button @click="addWord(item)" v-else class="action-btn add-btn">加入</button>
-
+					<view class="selectbtn" v-if="selectBook">
+						<button @click.stop="removeWord(item)" v-if="item.has" class="action-btn remove-btn">移除</button>
+						<button @click.stop="addWord(item)" v-else class="action-btn add-btn">加入</button>
 					</view>
 				</div>
-				<div class="notebook-desc">{{item.describe}}</div>
-				<div class="notebook-footer">
-					<div class="word-count">{{item.word}}个单词</div>
-					<div @click="openMoreShow(item)" class="notebook-actions _GCENTER">
-						<text class="fas fa-ellipsis-h more-btn"></text>
-					</div>
-				</div>
+
 			</div>
 		</div>
 		<!-- 创建按钮 -->
@@ -456,14 +461,20 @@
 
 	.notebook-header {
 		display: flex;
-		align-items: center;
 		margin-bottom: 8px;
 		justify-content: space-between;
+		position: relative;
+	}
+
+	.selectbtn {
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
 
 	.notebook-icon {
-		width: 40px;
-		height: 40px;
+		width: 60px;
+		aspect-ratio: 3 / 4;
 		border-radius: 8px;
 		display: flex;
 		align-items: center;
@@ -480,11 +491,14 @@
 
 	.notebook-info {
 		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 
 	.notebook-name {
 		gap: 4px;
-		font-size: 16px;
+		font-size: 18px;
 		font-weight: 500;
 		margin-bottom: 2px;
 		display: flex;
@@ -505,6 +519,13 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
+		.timeandcount {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex: 1;
+		}
 	}
 
 	.word-count {
@@ -513,14 +534,12 @@
 	}
 
 	.notebook-actions {
-		display: flex;
-		width: 30px;
-		height: 30px;
+		margin-left: 16px;
 	}
 
 
 	.more-btn {
 		color: #757575;
-		font-size: 18px;
+		font-size: 20px;
 	}
 </style>

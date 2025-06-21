@@ -31,7 +31,7 @@
 			}
 		},
 		{
-			"path": "pages/word/learn/learn",
+			"path": "pages/learn/learn/learn",
 			"style": {
 				"navigationStyle": "custom"
 			}

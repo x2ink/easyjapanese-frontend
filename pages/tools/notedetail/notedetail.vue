@@ -180,11 +180,7 @@
 		}
 	})
 </script>
-<style>
-	page {
-		background-color: white;
-	}
-</style>
+
 <style lang="scss" scoped>
 	.head {
 		position: sticky;
@@ -195,7 +191,7 @@
 	/* 单词信息区 */
 	.word-info {
 		padding: 16px;
-		border-bottom: 1px solid #f0f0f0;
+		background-color: white;
 	}
 
 	.word-header {
@@ -221,7 +217,8 @@
 	/* 笔记编辑区 */
 	.note-editor {
 		padding: 16px;
-		border-bottom: 1px solid #f0f0f0;
+		margin-top: 16px;
+		background-color: white;
 	}
 
 	.note-textarea {
@@ -323,8 +320,9 @@
 
 	/* 社区笔记区 */
 	.community-notes {
-		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-		margin: 16px;
+		margin-top: 16px;
+		background-color: white;
+		padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
 	}
 
 	.section-title {
@@ -339,7 +337,6 @@
 	/* 笔记项 */
 	.note-item {
 		background-color: white;
-		border-radius: 8px;
 		border-bottom: 1px solid #f0f0f0;
 		padding: 12px 0;
 	}

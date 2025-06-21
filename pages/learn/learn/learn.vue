@@ -129,6 +129,9 @@
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import {
+		localwordsStore
+	} from "@/stores"
+	import {
 		goPage,
 		extractBracketContents,
 	} from "@/utils/common.js"
@@ -176,22 +179,37 @@
 	const knowBtnShow = ref(true)
 	const answerShow = ref(false)
 	const init = async () => {
-		const res = await $http.word.learnWord()
-		wordList.value = res.data.map(item => {
-			return {
-				word: item,
-				id: item.id,
-				pattern: 0,
-				interval: 1,
-				error: 0
-			}
-		})
-		total.value = res.total
-		pendingNew.value = [...wordList.value];
-		reviewQueue.value = [];
-		learned.value = [];
-		nextIsReview.value = false;
-		initialQueue.value = pendingNew.value.splice(0, 4);
+		const timestamp = new Date().setHours(0, 0, 0, 0);
+		if (localwordsStore().learnTime >= timestamp) {
+			console.log("读取本地");
+			total.value = localwordsStore().learnCache.total
+			pendingNew.value = localwordsStore().learnCache.pendingNew;
+			reviewQueue.value = localwordsStore().learnCache.reviewQueue;
+			learned.value = localwordsStore().learnCache.learned;
+			nextIsReview.value = localwordsStore().learnCache.learned;
+			initialQueue.value = localwordsStore().learnCache.initialQueue;
+		} else {
+			console.log("读取网络");
+			localwordsStore().clearLearnCache()
+			localwordsStore().setLearnTime(new Date().getTime())
+			const res = await $http.word.learnWord()
+			wordList.value = res.data.map(item => {
+				return {
+					word: item,
+					id: item.id,
+					pattern: 0,
+					interval: 1,
+					error: 0
+				}
+			})
+			total.value = res.total
+			pendingNew.value = [...wordList.value];
+			reviewQueue.value = [];
+			learned.value = [];
+			nextIsReview.value = false;
+			initialQueue.value = pendingNew.value.splice(0, 4);
+			writeCache()
+		}
 		getNext()
 	}
 	const misrememberShow = ref(false)
@@ -215,6 +233,16 @@
 		reviewQueue.value.splice(3, 0, current.value)
 		console.log(reviewQueue.value);
 	}
+	const writeCache = () => {
+		localwordsStore().setLearnCache({
+			total: total.value,
+			pendingNew: pendingNew.value,
+			reviewQueue: reviewQueue.value,
+			learned: learned.value,
+			nextIsReview: nextIsReview.value,
+			initialQueue: initialQueue.value
+		})
+	}
 	const knowBtn = () => {
 		misrememberShow.value = true
 		knowBtnShow.value = false
@@ -222,6 +250,8 @@
 		current.value.pattern++;
 		if (current.value.pattern >= 3) {
 			learned.value.push(current.value);
+			console.log("写入本地");
+			writeCache()
 			return;
 		}
 		current.value.interval *= 2;

@@ -7,6 +7,7 @@ if (!Math) {
   "./pages/login/login.js";
   "./pages/word/thesaurus/thesaurus.js";
   "./pages/word/search/search.js";
+  "./pages/learn/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
   "./pages/word/writefrommemory/writefrommemory.js";
   "./pages/tools/verbtransfiguration/verbtransfiguration.js";

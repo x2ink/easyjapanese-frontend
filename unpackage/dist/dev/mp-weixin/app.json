@@ -4,7 +4,7 @@
     "pages/login/login",
     "pages/word/thesaurus/thesaurus",
     "pages/word/search/search",
-    "pages/word/learn/learn",
+    "pages/learn/learn/learn",
     "pages/word/worddetail/worddetail",
     "pages/word/writefrommemory/writefrommemory",
     "pages/tools/verbtransfiguration/verbtransfiguration",

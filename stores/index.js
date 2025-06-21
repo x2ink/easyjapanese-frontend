@@ -35,11 +35,11 @@ import {
 	test_reviewModule
 } from '@/stores/test/review.js';
 import {
-	writefrommemoryModule
-} from '@/stores/release/writefrommemory.js';
+	localwordsModule
+} from '@/stores/release/localwords.js';
 import {
-	test_writefrommemoryModule
-} from '@/stores/test/writefrommemory.js';
+	test_localwordsModule
+} from '@/stores/test/localwords.js';
 export const userStore = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return test_userModule()
@@ -82,10 +82,10 @@ export const reviewStore = () => {
 		return reviewModule()
 	}
 }
-export const writefrommemoryStore = () => {
+export const localwordsStore = () => {
 	if (process.env.NODE_ENV === 'development') {
-		return test_writefrommemoryModule()
+		return test_localwordsModule()
 	} else {
-		return writefrommemoryModule()
+		return localwordsModule()
 	}
 }

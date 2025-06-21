@@ -1,6 +1,12 @@
 "use strict";
 const common_vendor = require("../../../../common/vendor.js");
 const uni_modules_wotDesignUni_components_common_AbortablePromise = require("./AbortablePromise.js");
+function uuid() {
+  return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+}
+function s4() {
+  return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
+}
 function addUnit(num) {
   return Number.isNaN(Number(num)) ? `${num}` : `${num}px`;
 }
@@ -40,9 +46,6 @@ const gradient = (startColor, endColor, step = 2) => {
   }
   return gradientColorArr;
 };
-const range = (num, min, max) => {
-  return Math.min(Math.max(num, min), max);
-};
 const isEqual = (value1, value2) => {
   if (value1 === value2) {
     return true;
@@ -59,13 +62,6 @@ const isEqual = (value1, value2) => {
     }
   }
   return true;
-};
-const padZero = (number, length = 2) => {
-  let numStr = number.toString();
-  while (numStr.length < length) {
-    numStr = "0" + numStr;
-  }
-  return numStr;
 };
 const context = {
   id: 1e3
@@ -207,49 +203,6 @@ function deepAssign(target, source) {
   });
   return target;
 }
-function debounce(func, wait, options = {}) {
-  let timeoutId = null;
-  let lastArgs;
-  let lastThis;
-  let result;
-  const leading = isDef(options.leading) ? options.leading : false;
-  const trailing = isDef(options.trailing) ? options.trailing : true;
-  function invokeFunc() {
-    if (lastArgs !== void 0) {
-      result = func.apply(lastThis, lastArgs);
-      lastArgs = void 0;
-    }
-  }
-  function startTimer() {
-    timeoutId = setTimeout(() => {
-      timeoutId = null;
-      if (trailing) {
-        invokeFunc();
-      }
-    }, wait);
-  }
-  function cancelTimer() {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-    }
-  }
-  function debounced(...args) {
-    lastArgs = args;
-    lastThis = this;
-    if (timeoutId === null) {
-      if (leading) {
-        invokeFunc();
-      }
-      startTimer();
-    } else if (trailing) {
-      cancelTimer();
-      startTimer();
-    }
-    return result;
-  }
-  return debounced;
-}
 const getPropByPath = (obj, path) => {
   const keys = path.split(".");
   try {
@@ -271,13 +224,10 @@ function omitBy(obj, predicate) {
 exports.addUnit = addUnit;
 exports.camelCase = camelCase;
 exports.context = context;
-exports.debounce = debounce;
 exports.deepAssign = deepAssign;
-exports.deepClone = deepClone;
 exports.deepMerge = deepMerge;
 exports.getPropByPath = getPropByPath;
 exports.getRect = getRect;
-exports.getType = getType;
 exports.gradient = gradient;
 exports.isArray = isArray;
 exports.isDate = isDate;
@@ -291,7 +241,6 @@ exports.isPromise = isPromise;
 exports.isUndefined = isUndefined;
 exports.objToStyle = objToStyle;
 exports.omitBy = omitBy;
-exports.padZero = padZero;
 exports.pause = pause;
-exports.range = range;
+exports.uuid = uuid;
 //# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/wot-design-uni/components/common/util.js.map

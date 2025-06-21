@@ -3,30 +3,50 @@
 		<NavbarDefault border title="单词默写"></NavbarDefault>
 	</view>
 	<wd-progress custom-class="wdprogress" :percentage="progress" hide-text />
-	<!-- 单词展示区 -->
-	<div class="word-display">
-		<div class="japanese-word">{{wordinfo.meaning.map(item=>item.meaning).join('；')}}</div>
-	</div>
-	<!-- 输入区 -->
-	<div class="input-container">
-		<label class="input-label">请输入日语单词或假名</label>
-		<input v-model="value" type="text" placeholder="请输入答案">
-		<!-- 按钮区 -->
-		<button class="primary-button" @click="submit()">确认</button>
-	</div>
-
-
-	<div class="word-card" v-if="showAnwser">
-		<div class="card-header">
-			<div>
-				<div class="card-japanese">{{formatWordName(wordinfo.word,wordinfo.kana)}}</div>
-				<div class="card-pronunciation">{{wordinfo.rome}}</div>
-			</div>
-			<view @click="playUserRecord(wordinfo.voice)" class="icon">
-				<text class="fas fa-volume-up"></text>
-			</view>
+	<div v-if="wordList.length==0" class="container">
+		<!-- 完成图标 -->
+		<div class="completion-icon">
+			<i class="fa-solid fa-circle-check"></i>
+		</div>
+		<!-- 完成标题 -->
+		<h1 class="completion-title">默写完成！</h1>
+		<!-- 完成描述 -->
+		<p class="completion-desc">
+			你已经完成了本组的{{doneList.length}}个单词默写<br>
+			坚持就是胜利，继续加油！
+		</p>
+		<!-- 按钮组 -->
+		<div class="button-container">
+			<button class="primary-button" @click="getAllWords()">继续默写</button>
+			<button class="secondary-button" @click="goLearn()">再学一组</button>
 		</div>
 	</div>
+	<view v-else>
+		<!-- 单词展示区 -->
+		<div class="word-display">
+			<div class="japanese-word">{{wordinfo.meaning.map(item=>item.meaning).join('；')}}</div>
+		</div>
+		<!-- 输入区 -->
+		<div class="input-container">
+			<label class="input-label">请输入日语单词或假名</label>
+			<input v-model="value" type="text" placeholder="请输入答案">
+			<!-- 按钮区 -->
+			<button class="primary-button" @click="submit()">确认</button>
+		</div>
+
+
+		<div class="word-card" v-if="showAnwser">
+			<div class="card-header">
+				<div>
+					<div class="card-japanese">{{formatWordName(wordinfo.word,wordinfo.kana)}}</div>
+					<div class="card-pronunciation">{{wordinfo.rome}}</div>
+				</div>
+				<view @click="playUserRecord(wordinfo.voice)" class="icon">
+					<text class="fas fa-volume-up"></text>
+				</view>
+			</div>
+		</div>
+	</view>
 	<wd-toast />
 	<wd-message-box />
 </template>
@@ -48,7 +68,7 @@
 		formatWordName
 	} from "@/utils/common.js"
 	import {
-		writefrommemoryStore
+		localwordsStore
 	} from "@/stores"
 	import {
 		useToast,
@@ -63,6 +83,14 @@
 		innerAudioContext.src = url;
 		innerAudioContext.play();
 	}
+	const goLearn = async () => {
+		const res = await $http.word.getHomeInfo()
+		if (res.data.learnnum == res.data.wordnum) {
+			toast.warning("没有需要学习的单词了")
+		} else {
+			goPage('/pages/learn/learn/learn')
+		}
+	}
 	const wordinfo = ref({
 		meaning: []
 	})
@@ -72,13 +100,16 @@
 	const progress = computed(() => {
 		return (doneList.value.length / total.value) * 100
 	})
-	const segmentation = (text) => {
-		return text.match(/[\u3040-\u309F\u30A0-\u30FF][\u3099\u309A\uFF9E\uFF9F]?|./g) || [];
-	}
+
 	const getAllWords = async () => {
-		const res = await $http.word.writeFromMemory({
-			remove: writefrommemoryStore().wordList.map(item => item.id)
+		const res = await $http.word.getTodaywords({
+			filter: localwordsStore().writeList.map(item => item.id),
+			type: "write"
 		})
+		if (res.data.length == 0) {
+			toast.warning("今日没有单词需要默写了")
+			return
+		}
 		wordList.value = res.data
 		total.value = wordList.value.length
 		getNext()
@@ -102,10 +133,10 @@
 				wordList.value.push(wordinfo.value)
 			} else {
 				const timestamp = new Date().setHours(0, 0, 0, 0);
-				if (writefrommemoryStore().time > timestamp) {
-					writefrommemoryStore().clear()
+				if (localwordsStore().time > timestamp) {
+					localwordsStore().clear()
 				}
-				writefrommemoryStore().push(wordinfo.value)
+				localwordsStore().pushWrite(wordinfo.value)
 				toast.success("答案正确")
 				doneList.value.push(wordinfo.value)
 				wordList.value.shift()
@@ -225,6 +256,4 @@
 		height: 24px;
 		color: #757575;
 	}
-
-
 </style>

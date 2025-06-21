@@ -29,15 +29,15 @@
 				<!-- 学习数据 -->
 				<div class="stats-grid">
 					<div class="stat-item">
-						<div class="stat-value">7</div>
+						<div class="stat-value">{{learnInfo.day}}</div>
 						<div class="stat-label">连续打卡</div>
 					</div>
 					<div class="stat-item">
-						<div class="stat-value">328</div>
+						<div class="stat-value">{{learnInfo.learnt}}</div>
 						<div class="stat-label">已学词汇</div>
 					</div>
 					<div class="stat-item">
-						<div class="stat-value">86%</div>
+						<div class="stat-value">{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(2)}}%</div>
 						<div class="stat-label">记忆保持率</div>
 					</div>
 				</div>
@@ -109,6 +109,9 @@
 		onMounted,
 		ref
 	} from 'vue'
+	import {
+		onShow
+	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import {
 		userStore
@@ -157,6 +160,33 @@
 			}
 		});
 	}
+	const learnInfo = ref({
+		"book_info": {
+			"name": "",
+			"id": 0,
+			"describe": "",
+			"icon": {
+				"bg": "",
+				"data": "",
+				"type": ""
+			}
+		},
+		"dates": [],
+		"day": 0,
+		"learn": 0,
+		"learnnum": 0,
+		"review": 0,
+		"wordnum": 0
+	})
+	const getInfo = async () => {
+		const res = await $http.word.getHomeInfo()
+		learnInfo.value = res.data
+		console.log(res.data);
+	}
+
+	onShow(() => {
+		getInfo()
+	})
 </script>
 
 <style lang="scss" scoped>

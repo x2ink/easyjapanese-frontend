@@ -3,6 +3,62 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/learn/learn/learn",
+          "pathName": "pages/learn/learn/learn",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/learn/review/review",
+          "pathName": "pages/learn/review/review",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/other/setplan/setplan",
+          "pathName": "pages/other/setplan/setplan",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notedetail/notedetail",
+          "pathName": "pages/tools/notedetail/notedetail",
+          "query": "wordId=152807",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/tools/notes/notes",
+          "pathName": "pages/tools/notes/notes",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/mybooks/mybooks",
+          "pathName": "pages/word/mybooks/mybooks",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/review/review",
+          "pathName": "pages/word/review/review",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/dictation/dictation",
+          "pathName": "pages/word/dictation/dictation",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/dictation/dictation",
           "pathName": "pages/word/dictation/dictation",
           "query": "",

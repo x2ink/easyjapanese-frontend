@@ -5,7 +5,7 @@ const stores_index = require("../stores/index.js");
 var baseUrl;
 {
   common_vendor.index.__f__("log", "at utils/request.js:3", "开发环境");
-  baseUrl = "http://192.168.0.106:8080/";
+  baseUrl = "http://192.168.0.105:8080/";
 }
 const http = {
   baseUrl,

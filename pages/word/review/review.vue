@@ -12,8 +12,8 @@
 					<view class="heads jpfont">
 						<text>{{formatWordName(item.word,item.kana)}}</text>
 						<view class="tags">
-							<view class="tag sound">已默写</view>
-							<view class="tag write">已听写</view>
+							<view class="tag sound" v-if="item.write">已默写</view>
+							<view class="tag write" v-if="item.sound">已听写</view>
 						</view>
 					</view>
 					<wd-text size="14px" :lines="2" custom-class="body" color="#999"
@@ -37,11 +37,29 @@
 		tagColor,
 		formatWordName
 	} from "@/utils/common.js"
+	import {
+		localwordsStore
+	} from "@/stores"
 	import $http from "@/api/index.js"
 	const wordList = ref([])
 	const getAllWords = async () => {
-		const res = await $http.word.writeFromMemory({
-			remove: []
+		console.log("会故意");
+		const res = await $http.word.getTodaywords({
+			filter: []
+		})
+		let localWords = [localwordsStore().writeList, localwordsStore().soundList]
+		res.data.map(item => {
+			if (localwordsStore().writeList.some(it => it.id == item.id)) {
+				item.write = true
+			} else {
+				item.write = false
+			}
+			if (localwordsStore().soundList.some(it => it.id == item.id)) {
+				item.sound = true
+			} else {
+				item.sound = false
+			}
+			return item
 		})
 		wordList.value = res.data
 	}

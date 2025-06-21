@@ -3,31 +3,51 @@
 		<NavbarDefault border title="单词听写"></NavbarDefault>
 	</view>
 	<wd-progress custom-class="wdprogress" :percentage="progress" hide-text />
-	<!-- 单词展示区 -->
-	<div class="word-display _GCENTER">
-		<button @click="playUserRecord(wordinfo.voice)" class="pronounce-btn pronounce-header" title="发音">
-			<i class="fas fa-volume-up"></i>
-		</button>
+	<div v-if="wordList.length==0" class="container">
+		<!-- 完成图标 -->
+		<div class="completion-icon">
+			<i class="fa-solid fa-circle-check"></i>
+		</div>
+		<!-- 完成标题 -->
+		<h1 class="completion-title">听写完成！</h1>
+		<!-- 完成描述 -->
+		<p class="completion-desc">
+			你已经完成了本组的{{doneList.length}}个单词听写<br>
+			坚持就是胜利，继续加油！
+		</p>
+		<!-- 按钮组 -->
+		<div class="button-container">
+			<button class="primary-button" @click="getAllWords()">继续听写</button>
+			<button class="secondary-button" @click="goLearn()">再学一组</button>
+		</div>
 	</div>
-	<wd-divider>请选择正确答案</wd-divider>
-	<!-- 选项区 -->
-	<view class="options">
-		<view :class="item.class" @click="select(index,item)" class="option" v-for="(item,index) in options"
-			:key="item.id">
-			<view>
-				{{item.meaning.map(it=>it.meaning).join('；')}}
-			</view>
-			<div class="word-card" v-if="item.anwser">
-				<div>
-					<div class="card-japanese">{{formatWordName(item.word,item.kana)}}</div>
-					<div class="card-pronunciation">{{item.rome}}</div>
+	<view v-else>
+		<!-- 单词展示区 -->
+		<div class="word-display _GCENTER">
+			<button @click="playUserRecord(wordinfo.voice)" class="pronounce-btn pronounce-header" title="发音">
+				<i class="fas fa-volume-up"></i>
+			</button>
+		</div>
+		<wd-divider>请选择正确答案</wd-divider>
+		<!-- 选项区 -->
+		<view class="options">
+			<view :class="item.class" @click="select(index,item)" class="option" v-for="(item,index) in options"
+				:key="item.id">
+				<view>
+					{{item.meaning.map(it=>it.meaning).join('；')}}
+				</view>
+				<div class="word-card" v-if="item.anwser">
+					<div>
+						<div class="card-japanese">{{formatWordName(item.word,item.kana)}}</div>
+						<div class="card-pronunciation">{{item.rome}}</div>
+					</div>
 				</div>
-			</div>
+			</view>
 		</view>
-	</view>
-	<view class="_GCENTER" v-if="showContinue">
-		<view class="continue" @click="getNext()"><text>继续</text><i style="font-size: 22px;"
-				class="fa-solid fa-arrow-right"></i></view>
+		<view class="_GCENTER" v-if="showContinue">
+			<view class="continue" @click="getNext()"><text>继续</text><i style="font-size: 22px;"
+					class="fa-solid fa-arrow-right"></i></view>
+		</view>
 	</view>
 	<wd-toast />
 	<wd-message-box />
@@ -50,7 +70,7 @@
 		formatWordName
 	} from "@/utils/common.js"
 	import {
-		writefrommemoryStore
+		localwordsStore
 	} from "@/stores"
 	import {
 		useToast,
@@ -64,6 +84,14 @@
 		innerAudioContext.stop();
 		innerAudioContext.src = url;
 		innerAudioContext.play();
+	}
+	const goLearn = async () => {
+		const res = await $http.word.getHomeInfo()
+		if (res.data.learnnum == res.data.wordnum) {
+			toast.warning("没有需要学习的单词了")
+		} else {
+			goPage('/pages/learn/learn/learn')
+		}
 	}
 	const wordinfo = ref({
 		meaning: []
@@ -84,6 +112,7 @@
 			toast.success("选择正确")
 			// 回答正确
 			doneList.value.push(wordinfo.value)
+			localwordsStore().pushSound(wordinfo.value)
 			wordList.value.shift()
 			options.value[index].class = "success"
 			options.value[index].anwser = true
@@ -100,9 +129,12 @@
 		}
 		showContinue.value = true
 	}
-	const getOptions = (id) => {
-		const allWords = [...wordList.value, ...doneList.value];
-		let filter = allWords.filter(item => item.id != id).sort(() => Math.random() - 0.5).slice(0, 3);
+	const getOptions = async (id) => {
+		const res = await $http.word.getOptions({
+			limit: 3,
+			filter: [id]
+		})
+		let filter = [...res.data]
 		filter.push(wordinfo.value)
 		options.value = filter.sort(() => Math.random() - 0.5).map(item => {
 			item = {
@@ -115,9 +147,14 @@
 		console.log(options.value);
 	}
 	const getAllWords = async () => {
-		const res = await $http.word.writeFromMemory({
-			remove: writefrommemoryStore().wordList.map(item => item.id)
+		const res = await $http.word.getTodaywords({
+			filter: localwordsStore().soundList.map(item => item.id),
+			type: "sound"
 		})
+		if (res.data.length == 0) {
+			toast.warning("今日没有单词需要听写了")
+			return
+		}
 		wordList.value = res.data
 		total.value = wordList.value.length
 		getNext()
@@ -149,6 +186,113 @@
 		position: sticky;
 		top: 0;
 		z-index: 9;
+	}
+
+	/* 内容容器 */
+	.container {
+		padding: 32px 16px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	/* 完成图标 */
+	.completion-icon {
+		margin-top: 40px;
+		font-size: 70px;
+		margin-bottom: 20px;
+		color: #07C160;
+	}
+
+	/* 完成标题 */
+	.completion-title {
+		font-size: 24px;
+		font-weight: 600;
+		color: #212121;
+		margin-bottom: 12px;
+		text-align: center;
+	}
+
+	/* 完成描述 */
+	.completion-desc {
+		font-size: 16px;
+		color: #757575;
+		text-align: center;
+		margin-bottom: 48px;
+		line-height: 1.5;
+	}
+
+	/* 统计信息 */
+	.stats-container {
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+		margin-bottom: 72px;
+	}
+
+	.stat-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.stat-value {
+		font-size: 20px;
+		font-weight: 600;
+		color: #07C160;
+		margin-bottom: 4px;
+	}
+
+	.stat-label {
+		font-size: 14px;
+		color: #757575;
+	}
+
+	/* 按钮容器 */
+	.button-container {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 16px;
+		margin-top: auto;
+		margin-bottom: 40px;
+	}
+
+	/* 主按钮 */
+	.primary-button {
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 12px 0;
+		font-size: 16px;
+		font-weight: 500;
+		width: 100%;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+
+	.primary-button:hover {
+		background-color: #06AD56;
+	}
+
+	/* 次按钮 */
+	.secondary-button {
+		background-color: white;
+		color: #07C160;
+		border: 1px solid #07C160;
+		border-radius: 8px;
+		padding: 12px 0;
+		font-size: 16px;
+		font-weight: 500;
+		width: 100%;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+
+	.secondary-button:hover {
+		background-color: #F5F5F5;
 	}
 
 	.continue {

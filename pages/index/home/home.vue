@@ -13,7 +13,8 @@
 		<view style="padding: 16px;">
 			<!-- 单词书统计卡片 -->
 			<view class="book-card">
-				<view v-if="learnInfo.book_info.icon.type=='image'" class="book-cover _BACKGROUND" :style="{backgroundImage:`url('${learnInfo.book_info.icon.data}')`}">
+				<view v-if="learnInfo.book_info.icon.type=='image'" class="book-cover _BACKGROUND"
+					:style="{backgroundImage:`url('${learnInfo.book_info.icon.data}')`}">
 				</view>
 				<view v-else class="book-cover" :style="{background:learnInfo.book_info.icon.bg}">
 					<text v-if="learnInfo.book_info.icon.type=='text'">{{learnInfo.book_info.icon.data}}</text>
@@ -150,7 +151,6 @@
 		onMounted
 	} from 'vue'
 	import {
-		onLoad,
 		onShow
 	} from "@dcloudio/uni-app"
 	import {
@@ -235,6 +235,7 @@
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
+		console.log(res.data);
 	}
 	const getCalendarMatrix = (year, month) => {
 		// 1. 获取当月 1 号的星期几（0=日，1=一，...，6=六）
@@ -300,15 +301,12 @@
 		const res = await $http.word.learnWord()
 		wordTask.value = res.data
 	}
-	onLoad(() => {
-		getConfig()
-		getInfo()
-		getWordTask()
-		calendar.value = getCalendarMatrix(currentYear, currentMonth);
-	})
 
 	onShow(() => {
-		// 页面显示时执行
+		getConfig()
+		getWordTask()
+		getInfo()
+		calendar.value = getCalendarMatrix(currentYear, currentMonth);
 	})
 </script>
 
@@ -327,6 +325,7 @@
 		padding: 0 16px 16px;
 		background-color: #fff;
 		top: 0;
+
 		.search-input-container {
 			position: relative;
 
@@ -698,5 +697,4 @@
 			}
 		}
 	}
-
 </style>

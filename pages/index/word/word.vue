@@ -9,17 +9,17 @@
 		</view>
 		<!-- 功能入口 -->
 		<div class="action-buttons">
-			<div class="button-item" @click="goPage('/pages/word/review/review')">
+			<div class="button-item" @click="goToolPage('/pages/word/review/review')">
 				<button class="action-button blue">
 					<i class="fas fa-history mr-1"></i> 回顾
 				</button>
 			</div>
-			<div class="button-item" @click="goPage('/pages/word/dictation/dictation')">
+			<div class="button-item" @click="goToolPage('/pages/word/dictation/dictation')">
 				<button class="action-button green">
 					<i class="fa-solid fa-headphones mr-1"></i> 听写
 				</button>
 			</div>
-			<div class="button-item" @click="goPage('/pages/word/writefrommemory/writefrommemory')">
+			<div class="button-item" @click="goToolPage('/pages/word/writefrommemory/writefrommemory')">
 				<button class="action-button purple">
 					<i class="fas fa-pen-fancy mr-1"></i> 默写
 				</button>
@@ -43,9 +43,15 @@
 			<div class="feature-grid">
 				<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
 					<div class="feature-icon blue">
+						<i class="fas fa-book-open"></i>
+					</div>
+					<div class="feature-name">生词本</div>
+				</div>
+				<div class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus')">
+					<div class="feature-icon purple">
 						<i class="fas fa-book"></i>
 					</div>
-					<div class="feature-name">单词本</div>
+					<div class="feature-name">词库</div>
 				</div>
 				<div class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
 					<div class="feature-icon orange">
@@ -59,12 +65,7 @@
 					</div>
 					<div class="feature-name">日常会话</div>
 				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/other/setplan/setplan')">
-					<div class="feature-icon purple">
-						<i class="fas fa-sliders-h"></i>
-					</div>
-					<div class="feature-name">设置</div>
-				</div>
+
 			</div>
 
 			<!-- 排行榜 -->
@@ -85,6 +86,7 @@
 				</div>
 			</div>
 		</div>
+		<wd-toast />
 	</view>
 </template>
 
@@ -97,17 +99,43 @@
 	import {
 		goPage
 	} from "@/utils/common.js"
+	import {
+		useToast,
+		useMessage
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	import $http from "@/api/index.js"
+	import {
+		onLoad,
+		onShow
+	} from '@dcloudio/uni-app'
 	const sentence = ref({})
 	const getSentence = async () => {
 		const res = await $http.common.getSentence()
 		sentence.value = res.data
 	}
 	const ranks = ref([])
+	const goToolPage = (path) => {
+		if (todayWordCount.value == 0) {
+			toast.warning("今天还没学单词哦~")
+		} else {
+			goPage(path)
+		}
+	}
 	const getRanking = async () => {
 		const res = await $http.user.ranking()
 		ranks.value = res.data.slice(0, 10)
 	}
+	const todayWordCount = ref(0)
+	const getTodayWords = async () => {
+		const res = await $http.word.getTodaywords({
+			filter: []
+		})
+		todayWordCount.value = res.data.length
+	}
+	onShow(() => {
+		getTodayWords()
+	})
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;

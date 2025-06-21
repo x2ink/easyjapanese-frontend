@@ -66,11 +66,7 @@
 	})
 </script>
 
-<style>
-	page {
-		background-color: white;
-	}
-</style>
+
 <style lang="scss" scoped>
 	.head {
 		position: sticky;
@@ -80,15 +76,16 @@
 
 	.community-notes {
 		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-		margin: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 16px 0 16px 0;
 	}
 
 	/* 笔记项 */
 	.note-item {
 		background-color: white;
-		border-radius: 8px;
-		border-bottom: 1px solid #f0f0f0;
-		padding: 12px 0;
+		padding: 16px;
 	}
 
 	.note-header {
