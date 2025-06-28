@@ -7,7 +7,7 @@
 		<div class="main-content">
 			<!-- 应用信息卡片 -->
 			<div class="app-card">
-				<image src="/static/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="http://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
 				<div class="app-name">轻松日语</div>
 				<div class="app-version">版本 {{version}}</div>
 				<div class="app-desc">
@@ -33,12 +33,12 @@
 				<div class="info-content">
 					获取最新学习资源和活动信息
 				</div>
-				<div class="social-icons">
+			<!-- 	<div class="social-icons">
 					<a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
 					<a href="#" class="social-icon"><i class="fab fa-qq"></i></a>
 					<a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
 					<a href="#" class="social-icon"><i class="fab fa-bilibili"></i></a>
-				</div>
+				</div> -->
 			</div>
 
 			<!-- 法律条款 -->

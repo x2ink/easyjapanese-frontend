@@ -35,11 +35,6 @@
 		onMounted
 	} from 'vue';
 	import {
-		onLoad,
-		onShow
-	} from '@dcloudio/uni-app'
-	import $http from "@/api/index.js"
-	import {
 		userStore
 	} from "@/stores"
 	import Home from '../home/home.vue';

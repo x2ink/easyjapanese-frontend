@@ -16,27 +16,19 @@
 	@import url("./static/css/all.css");
 
 	button::after {
-
 		border: none;
+	}
 
+	button:active {
+		transform: scale(0.98);
 	}
 
 	button {
-
 		background-color: transparent;
-
 		padding-left: 0;
-
 		padding-right: 0;
-
 		line-height: inherit;
-
-	}
-
-	button {
-
 		border-radius: 0;
-
 	}
 
 

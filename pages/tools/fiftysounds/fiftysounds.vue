@@ -12,7 +12,7 @@
 			</div>
 		</view>
 		<!-- 五十音图表格 -->
-		<div class="table">
+		<div class="table" v-if="loading">
 			<div class="space-y-2">
 				<div class="kana-row-header">清音</div>
 				<div class="grid">
@@ -34,7 +34,7 @@
 			<div class="space-y-2">
 				<div class="kana-row-header">拗音</div>
 				<div class="grid">
-					<div  @click="playAudio(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
+					<div @click="playAudio(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
 						<div class="kana-character">{{get(item)}}</div>
 						<div class="kana-romaji">{{item}}</div>
 					</div>
@@ -52,8 +52,7 @@
 		onLoad,
 	} from "@dcloudio/uni-app"
 	import {
-		goPage,
-		kanaData
+		goPage
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
@@ -63,8 +62,9 @@
 	const toast = useToast()
 	const data = ref([])
 	const current = ref('平假名')
+	const kanaData = ref([])
 	const get = (key) => {
-		const res = kanaData.find(item => key == item.rome)
+		const res = kanaData.value.find(item => key == item.rome)
 		if (res) {
 			if (current.value == "平假名") {
 				return res.hiragana
@@ -98,6 +98,20 @@
 			console.log('停止播放');
 		});
 	}
+	const loading = ref(false)
+	const getKanaData = async () => {
+		uni.request({
+			url: "http://jp.x2.ink/backend/static/kana.json",
+			method: "GET",
+			success(res) {
+				kanaData.value = res.data
+				loading.value = true
+			}
+		})
+	}
+	onLoad(() => {
+		getKanaData()
+	})
 </script>
 
 <style lang="scss" scoped>

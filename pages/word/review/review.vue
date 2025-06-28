@@ -34,7 +34,6 @@
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
-		tagColor,
 		formatWordName
 	} from "@/utils/common.js"
 	import {

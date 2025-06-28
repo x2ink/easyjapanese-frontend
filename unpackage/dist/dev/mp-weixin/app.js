@@ -20,8 +20,6 @@ if (!Math) {
   "./pages/tools/translate/translate.js";
   "./pages/word/followread/followread.js";
   "./pages/word/edit/edit.js";
-  "./pages/test/test.js";
-  "./pages/word/lookwords/lookwords.js";
   "./pages/other/feedback/feedback.js";
   "./pages/other/about/about.js";
   "./pages/tools/notedetail/notedetail.js";
@@ -31,12 +29,6 @@ if (!Math) {
   "./pages/other/setplan/setplan.js";
   "./pages/word/review/review.js";
   "./pages/word/dictation/dictation.js";
-  "./userpages/userinfo/userinfo.js";
-  "./userpages/repwd/repwd.js";
-  "./userpages/reemail/reemail.js";
-  "./otherpages/ranking/ranking.js";
-  "./otherpages/share/share.js";
-  "./otherpages/setting/setting.js";
 }
 const _sfc_main = {
   onLaunch: function() {

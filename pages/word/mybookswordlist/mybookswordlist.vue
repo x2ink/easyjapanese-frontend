@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view style="position: sticky;top: 0;">
+		<view style="position: sticky;top: 0;background-color: white;">
 			<NavbarDefault border title="单词列表"></NavbarDefault>
 			<!-- 搜索栏 -->
 			<div class="search-bg">
@@ -14,18 +14,14 @@
 			</div>
 			<!-- 分类标签 -->
 			<div class="tabs-container">
-				<div class="tab-active tab-item">全部</div>
-				<div class="tab-item">未学习</div>
-				<div class="tab-item">已掌握</div>
-				<div class="tab-item">需复习</div>
-				<div class="tab-item">标记</div>
+				<div class="tab-item" @click="currentTab=index" :class="{tabActive:currentTab==index}"
+					v-for="(item,index) in tabs" :key="item.value">{{item.name}}</div>
 			</div>
 			<!-- 批量操作栏 -->
 			<div class="batch-selector" v-if="allSelect">
 				<div class="flex items-center">
-					<div @click="allSelectWord()" class="checkbox-custom"
-						:class="{checkboxactive:selectCount==total&&selectCount!=0}">
-						<i class="fas fa-check text-xs" v-if="selectCount==total&&selectCount!=0"></i>
+					<div @click="allSelectWord()" class="checkbox-custom" :class="{checkboxactive:isAllSelect}">
+						<i class="fas fa-check text-xs" v-if="isAllSelect"></i>
 					</div>
 					<span class="text-sm text-gray-600">全选</span>
 				</div>
@@ -70,7 +66,8 @@
 	import {
 		ref,
 		onMounted,
-		computed
+		computed,
+		watch
 	} from 'vue'
 	import {
 		onLoad,
@@ -89,6 +86,24 @@
 	const toast = useToast()
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	const currentTab = ref(0)
+	const isAllSelect = computed(() => {
+		console.log(selectCount.value, List.value.length);
+		return selectCount.value == List.value.length && selectCount.value != 0
+	})
+	const tabs = ref([{
+		name: "全部",
+		value: 0
+	}, {
+		name: "未学习",
+		value: 1
+	}, {
+		name: "已掌握",
+		value: 2
+	}, {
+		name: "待复习",
+		value: 3
+	}])
 	const scrollTop = ref(0)
 	onPageScroll((e) => {
 		scrollTop.value = e.scrollTop
@@ -146,8 +161,18 @@
 	const selectCount = computed(() => {
 		return List.value.filter(item => item.select == true).length
 	})
+	const reList = () => {
+		total.value = 0
+		List.value = []
+		page.value = 1
+		value.value = ''
+		getList()
+	}
+	watch(currentTab, (newVal, oldVal) => {
+		reList()
+	})
 	const getList = async () => {
-		const res = await $http.word.getBookWord(id.value, page.value, size.value, value.value)
+		const res = await $http.word.getBookWord(id.value, page.value, size.value, value.value, currentTab.value)
 		total.value = res.total
 		if (total.value === 0) {
 			return
@@ -312,13 +337,13 @@
 	}
 
 	.search-bg {
-		background-color: white;
+
 		padding: 12px 16px;
 	}
 
 	.tabs-container {
 		padding: 6px 16px 16px;
-		background-color: white;
+
 		display: flex;
 		gap: 12px;
 	}
@@ -328,7 +353,7 @@
 		white-space: nowrap;
 	}
 
-	.tab-active {
+	.tabActive {
 		color: #07C160;
 	}
 </style>

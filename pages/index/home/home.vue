@@ -41,7 +41,6 @@
 					</view>
 				</view>
 			</view>
-
 			<!-- 学习/复习按钮 -->
 			<view class="action-buttons">
 				<!-- 智能复习按钮 -->
@@ -54,7 +53,6 @@
 						<text class="action-subtitle">{{learnInfo.review}}个单词待复习</text>
 					</view>
 				</view>
-
 				<!-- 开始学习按钮 -->
 				<view class="action-button learn-button" @click="goLearn()">
 					<view class="action-icon">
@@ -66,7 +64,6 @@
 					</view>
 				</view>
 			</view>
-
 			<!-- 工具入口 -->
 			<view class="tool-buttons">
 				<view class="tool-btn" @click="goPage('/pages/tools/translate/translate')">
@@ -103,7 +100,6 @@
 						<text class="iconfont icon-arrow-right more-icon"></text>
 					</view>
 				</view>
-
 				<view class="weekdays">
 					<text class="weekday">日</text>
 					<text class="weekday">月</text>
@@ -113,7 +109,6 @@
 					<text class="weekday">金</text>
 					<text class="weekday">土</text>
 				</view>
-
 				<view class="calendar-days">
 					<text :class="{highlight:learnInfo.dates.includes(item.key),inactive:currentMonth!=item.month}"
 						v-for="item in calendar" :key="item.key" class="calendar-day">{{item.day}}</text>
@@ -127,7 +122,6 @@
 					<text class="iconfont icon-arrow-right more-icon"></text>
 				</view>
 			</view>
-
 			<view class="task-list">
 				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
 					v-for="item in wordTask" :key="item.id">
@@ -138,8 +132,6 @@
 					<text class="iconfont icon-volume task-icon"></text>
 				</view>
 			</view>
-
-
 		</view>
 		<wd-toast />
 	</view>
@@ -182,18 +174,6 @@
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 	})
-	const handleReview = () => {
-		uni.navigateTo({
-			url: '/pages/review/index'
-		})
-	}
-
-	const handleLearn = () => {
-		uni.navigateTo({
-			url: '/pages/learn/index'
-		})
-	}
-
 	const navigateTo = (type) => {
 		let url = ''
 		switch (type) {
@@ -235,54 +215,36 @@
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
-		console.log(res.data);
 	}
 	const getCalendarMatrix = (year, month) => {
-		// 1. 获取当月 1 号的星期几（0=日，1=一，...，6=六）
 		const firstDay = new Date(year, month - 1, 1).getDay();
-
-		// 2. 获取当月的总天数
 		const daysInMonth = new Date(year, month, 0).getDate();
-
-		// 3. 获取上个月的总天数（用于补全开头）
 		const prevMonthDays = new Date(year, month - 1, 0).getDate();
-
-		// 4. 计算日历总天数（固定 6 周 × 7 天 = 42 天）
 		const totalDays = 6 * 7;
 		const daysArray = [];
-
-		// 5. 生成日期数组
 		for (let i = 0; i < totalDays; i++) {
-			// 5.1 判断当前格子是上个月、当月还是下个月
 			let currentDay, currentYear, currentMonth;
-
 			if (i < firstDay) {
-				// 上个月的最后几天
 				currentDay = prevMonthDays - (firstDay - i - 1);
 				currentYear = month === 1 ? year - 1 : year;
 				currentMonth = month === 1 ? 12 : month - 1;
 			} else if (i < firstDay + daysInMonth) {
-				// 当月
 				currentDay = i - firstDay + 1;
 				currentYear = year;
 				currentMonth = month;
 			} else {
-				// 下个月的前几天
 				currentDay = i - (firstDay + daysInMonth) + 1;
 				currentYear = month === 12 ? year + 1 : year;
 				currentMonth = month === 12 ? 1 : month + 1;
 			}
-
-			// 5.2 生成对象并存入数组
 			daysArray.push({
 				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`, // "04-15"
 				day: currentDay,
 				year: currentYear,
 				month: currentMonth,
-				isCurrentMonth: currentMonth === month, // 是否属于当前月（可选）
+				isCurrentMonth: currentMonth === month,
 			});
 		}
-
 		return daysArray;
 	}
 	const currentDate = new Date();
@@ -349,11 +311,6 @@
 		}
 	}
 
-	.main-content {
-		flex: 1;
-		padding: 0 16px;
-		overflow: hidden;
-	}
 
 	.book-card {
 		display: flex;
@@ -443,7 +400,6 @@
 	.action-buttons {
 		display: flex;
 		margin-bottom: 16px;
-
 		.action-button {
 			flex: 1;
 			padding: 14px;
@@ -452,11 +408,6 @@
 			align-items: center;
 			position: relative;
 			overflow: hidden;
-
-			&:active {
-				transform: scale(0.98);
-			}
-
 			.action-icon {
 				width: 40px;
 				height: 40px;
@@ -469,12 +420,10 @@
 				font-size: 18px;
 				color: white;
 			}
-
 			.action-content {
 				flex: 1;
 				min-width: 0;
 			}
-
 			.action-title {
 				display: block;
 				font-weight: 600;
