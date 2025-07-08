@@ -6238,9 +6238,9 @@ function populateParameters(fromRes, toRes) {
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
-    uniCompileVersion: "4.66",
-    uniCompilerVersion: "4.66",
-    uniRuntimeVersion: "4.66",
+    uniCompileVersion: "4.65",
+    uniCompilerVersion: "4.65",
+    uniRuntimeVersion: "4.65",
     uniPlatform: "mp-weixin",
     deviceBrand,
     deviceModel: model,
@@ -6389,9 +6389,9 @@ const getAppBaseInfo = {
       appLanguage: getAppLanguage(hostLanguage),
       isUniAppX: false,
       uniPlatform: "mp-weixin",
-      uniCompileVersion: "4.66",
-      uniCompilerVersion: "4.66",
-      uniRuntimeVersion: "4.66"
+      uniCompileVersion: "4.65",
+      uniCompilerVersion: "4.65",
+      uniRuntimeVersion: "4.65"
     };
     extend(toRes, parameters);
   }
@@ -7131,9 +7131,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.220.1,192.168.199.1,192.168.0.105,127.0.0.1";
+  const hosts = "127.0.0.1,192.168.165.83,192.168.10.14";
   const port = "8090";
-  const id = "mp-weixin_hC9F1O";
+  const id = "mp-weixin_TQJA1f";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();

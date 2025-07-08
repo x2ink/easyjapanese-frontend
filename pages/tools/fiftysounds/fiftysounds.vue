@@ -101,7 +101,7 @@
 	const loading = ref(false)
 	const getKanaData = async () => {
 		uni.request({
-			url: "http://jp.x2.ink/backend/static/kana.json",
+			url: "https://jp.x2.ink/backend/static/kana.json",
 			method: "GET",
 			success(res) {
 				kanaData.value = res.data

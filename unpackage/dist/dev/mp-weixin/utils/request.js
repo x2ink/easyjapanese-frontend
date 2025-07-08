@@ -5,7 +5,7 @@ const stores_index = require("../stores/index.js");
 var baseUrl;
 {
   common_vendor.index.__f__("log", "at utils/request.js:3", "开发环境");
-  baseUrl = "https://jp.x2.ink/api/";
+  baseUrl = "http://127.0.0.1:8080/";
 }
 const http = {
   baseUrl,
