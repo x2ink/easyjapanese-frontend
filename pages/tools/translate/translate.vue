@@ -57,7 +57,7 @@
 		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
 			@onFinish="finishCore" />
 		<wd-toast />
-		<view style="height:env(safe-area-inset-bottom);"></view>
+		<view :style="{height:getOs()=='ios'?'calc(env(safe-area-inset-bottom)':'16px'}"></view>
 	</view>
 </template>
 
@@ -65,7 +65,8 @@
 	import {
 		ref,
 		onMounted,
-		computed
+		computed,
+		watch
 	} from 'vue'
 	import {
 		onLoad,
@@ -76,7 +77,8 @@
 	import {
 		goPage,
 		formatWordName,
-		copy
+		copy,
+		getOs
 	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
@@ -89,6 +91,10 @@
 		toast.warning(`服务暂未开放`)
 	}
 	const current = ref('标准翻译')
+	watch(current, (newVal, oldVal) => {
+		console.log("切换翻译");
+		result.value = ""
+	})
 	const pattern = ref('cj')
 	const fromTo = computed(() => {
 		if (pattern.value == "cj") {

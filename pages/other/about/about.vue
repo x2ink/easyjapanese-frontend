@@ -28,7 +28,7 @@
 			<!-- 社交账号 -->
 			<div class="info-item">
 				<div class="info-title">
-					<span>关注我们</span>
+					<span>关注公众号</span>
 				</div>
 				<div class="info-content">
 					获取最新学习资源和活动信息
@@ -43,7 +43,7 @@
 
 			<!-- 法律条款 -->
 			<div class="info-item"
-				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
+				@click="goPage('/pages/other/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
 				<div class="info-title">
 					<span>服务条款</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
@@ -51,7 +51,7 @@
 			</div>
 			<!-- 更新日志 -->
 			<div class="info-item"
-				@click="goPage('/otherpages/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})">
+				@click="goPage('/pages/other/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})">
 				<div class="info-title">
 					<span>更新日志</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>

@@ -4,16 +4,12 @@
 		<view class="main-content">
 			<!-- APP Logo -->
 			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 40px;">
-				<view
-					class="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mb-4">
-					<text class="fas fa-language text-white text-3xl"></text>
-				</view>
-				<view class="text-2xl font-medium text-gray-800">日语背单词</view>
-				<view class="text-gray-500 text-sm mt-1">高效记忆日语词汇</view>
+				<image src="http://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<view class="text-2xl font-medium text-gray-800">轻松日语</view>
+				<view class="text-gray-500 text-sm mt-1">单词学习小助手</view>
 			</view>
 			<!-- 登录按钮 -->
 			<button class="login-btn w-full mb-6 wave-effect" @click="wxLogin()">
-				<text class="fab fa-weixin"></text>
 				<text>微信一键登录</text>
 			</button>
 
@@ -39,6 +35,9 @@
 		ref,
 		onMounted
 	} from 'vue'
+	import {
+		onLoad
+	} from "@dcloudio/uni-app"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
@@ -90,9 +89,15 @@
 						toast.close()
 						userStore().setToken(loginResult.data)
 						userStore().setUserInfo()
-						uni.navigateTo({
-							url: "/pages/index/index/index"
-						})
+						if (backLastPage.value) {
+							uni.navigateBack({
+								delta: 1
+							})
+						} else {
+							uni.navigateTo({
+								url: "/pages/index/index/index"
+							})
+						}
 					}
 				});
 			},
@@ -105,9 +110,23 @@
 		os: '',
 		device: ''
 	})
+	const backLastPage = ref(false)
+	onLoad((e) => {
+		if (e.toast) {
+			backLastPage.value = true
+			toast.warning(e.toast)
+		}
+	})
 </script>
 
 <style scoped lang="scss">
+	.app-logo {
+		width: 80px;
+		height: 80px;
+		border-radius: 16px;
+		margin-bottom: 16px;
+	}
+
 	.login-container {
 		height: 100vh;
 		padding: 0 32px;
@@ -122,22 +141,6 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-		}
-
-		.w-20 {
-			width: 80px;
-		}
-
-		.h-20 {
-			height: 80px;
-		}
-
-		.rounded-2xl {
-			border-radius: 16px;
-		}
-
-		.mb-4 {
-			margin-bottom: 16px;
 		}
 
 		.text-2xl {
@@ -172,46 +175,14 @@
 			margin-bottom: 24px;
 		}
 
-		.mr-2 {
-			margin-right: 8px;
-		}
-
-		.text-lg {
-			font-size: 18px;
-		}
-
-		.text-white {
-			color: #fff;
-		}
-
-		.text-3xl {
-			font-size: 30px;
-		}
-
 		.text-green-500 {
 			color: #07c160;
-		}
-
-		.bg-gradient-to-br {
-			background: linear-gradient(135deg, #4ade80, #16a34a);
 		}
 
 		.flex {
 			display: flex;
 			align-items: center;
 			font-size: 12px;
-		}
-
-		.items-center {
-			align-items: center;
-		}
-
-		.justify-center {
-			justify-content: center;
-		}
-
-		.flex-col {
-			flex-direction: column;
 		}
 
 		.login-btn {

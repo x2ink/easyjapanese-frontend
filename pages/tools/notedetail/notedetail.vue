@@ -67,12 +67,16 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onReachBottom
+		onReachBottom,
+		onShow
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
 		formatWordName
 	} from "@/utils/common.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
@@ -171,12 +175,15 @@
 		}
 
 	}
+	onShow(() => {
+		getInfo(wordId.value)
+		getList()
+	})
 	onLoad((e) => {
-		if (e.wordId) {
-			wordId.value = e.wordId
-			formData.value.word_id = Number(e.wordId)
-			getInfo(e.wordId)
-			getList()
+		wordId.value = e.wordId
+		formData.value.word_id = Number(e.wordId)
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
 		}
 	})
 </script>

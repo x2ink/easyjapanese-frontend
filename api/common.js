@@ -10,6 +10,9 @@ export default {
 		return http.get(`grammar/list/${level}/${page}/${size}`)
 	},
 	searchGrammar(val, page, size) {
+		if(val.length==0)
+		return http.get(`grammar/search/${page}/${size}`)
+		else
 		return http.get(`grammar/search/${page}/${size}/${val}`)
 	},
 	getGrammarInfo(id) {

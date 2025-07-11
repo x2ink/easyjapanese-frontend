@@ -138,7 +138,7 @@
 
 	.tabs-container {
 		background-color: white;
-		padding: 8px 16px 16px 16px;
+		padding: 6px 0 12px 0;
 	}
 
 	.N1 {
@@ -198,12 +198,6 @@
 		}
 	}
 
-	.tabs-container {
-		padding: 6px 16px 12px 16px;
-		background-color: white;
-		display: flex;
-		gap: 12px;
-	}
 
 	.head {
 		position: sticky;

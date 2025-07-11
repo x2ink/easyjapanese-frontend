@@ -1,7 +1,7 @@
 <template>
 	<div class="page-container">
 		<!-- 顶部导航栏 -->
-		<div :style="{paddingTop:navBarHeight}" class="search-header">
+		<div :style="{paddingTop:`calc(${navBarHeight} + 5px)`}" class="search-header">
 			<div class="search-bar-container">
 				<!-- 黑色单调返回按钮 -->
 				<text @click="back()" class="fas fa-chevron-left back-btn"></text>
@@ -21,7 +21,10 @@
 					中文词典</view>
 			</div>
 		</div>
+		<!-- 占位 -->
+		<view :style="{height:`calc(102px + ${navBarHeight})`}">
 
+		</view>
 		<!-- 主要内容 -->
 		<div class="main-content">
 			<!-- 搜索历史 -->
@@ -139,11 +142,15 @@
 		if (current.value == 'jc') {
 			res = await $http.word.jcSearch(page.value, size.value, value.value)
 		} else {
-			res = await $http.word.cjSearch(page.value, size.value, value.value)
+			toast.close()
+			toast.warning("中日词典暂未开放")
+			return
+			// res = await $http.word.cjSearch(page.value, size.value, value.value)
 		}
 		toast.close()
 		total.value = res.total
 		if (total.value === 0) {
+			toast.warning("没有搜到结果")
 			return
 		}
 		List.value = List.value.concat(res.data)
@@ -203,10 +210,14 @@
 
 	/* 顶部导航栏 */
 	.search-header {
-		padding: 14px 16px 12px;
+		padding-left: 16px;
+		padding-right: 16px;
+		padding-bottom: 12px;
 		background-color: white;
 		border-bottom: 1px solid #f0f0f0;
-		position: sticky;
+		position: fixed;
+		left: 0;
+		right: 0;
 		top: 0;
 	}
 
@@ -232,8 +243,9 @@
 	}
 
 	.search-input {
-		padding: 8px 12px 8px 36px;
-		border-radius: 20px;
+		padding: 0 12px 0 36px;
+		height: 40px;
+		border-radius: 40px;
 		border: none;
 		background-color: #f5f5f5;
 		font-size: 14px;
@@ -334,9 +346,10 @@
 
 	.hot-word {
 		display: inline-block;
-		padding: 8px 16px;
+		padding: 0 16px;
+		line-height: 30px;
 		background-color: #E8F5E9;
-		border-radius: 20px;
+		border-radius: 30px;
 		font-size: 14px;
 		color: #2E7D32;
 		font-weight: 500;

@@ -123,17 +123,12 @@
 		watch
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
-	import {
-		onLoad,
-		onShow
-	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import {
 		localwordsStore
 	} from "@/stores"
 	import {
-		goPage,
-		extractBracketContents,
+		goPage
 	} from "@/utils/common.js"
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;
@@ -164,6 +159,12 @@
 		meaning: [],
 		example: []
 	})
+	watch(wordinfo, (newValue, oldValue) => {
+		console.log('wordinfo 发生变化:', newValue);
+		writeCache()
+	}, {
+		deep: true
+	});
 	const current = ref({})
 	const wordList = ref([])
 	// 未学习的新词
@@ -178,8 +179,10 @@
 	const initialQueue = ref([])
 	const knowBtnShow = ref(true)
 	const answerShow = ref(false)
+	const misrememberShow = ref(false)
 	const init = async () => {
 		const timestamp = new Date().setHours(0, 0, 0, 0);
+		console.log('时间戳', localwordsStore().learnTime, timestamp);
 		if (localwordsStore().learnTime >= timestamp) {
 			console.log("读取本地");
 			total.value = localwordsStore().learnCache.total
@@ -188,10 +191,15 @@
 			learned.value = localwordsStore().learnCache.learned;
 			nextIsReview.value = localwordsStore().learnCache.learned;
 			initialQueue.value = localwordsStore().learnCache.initialQueue;
+			answerShow.value = localwordsStore().learnCache.answerShow;
+			misrememberShow.value = localwordsStore().learnCache.misrememberShow;
+			knowBtnShow.value = localwordsStore().learnCache.knowBtnShow;
+			wordList.value = localwordsStore().learnCache.wordList;
+			current.value = localwordsStore().learnCache.current;
+			wordinfo.value = localwordsStore().learnCache.wordinfo;
+			pattern.value = localwordsStore().learnCache.pattern;
 		} else {
 			console.log("读取网络");
-			localwordsStore().clearLearnCache()
-			localwordsStore().setLearnTime(new Date().getTime())
 			const res = await $http.word.learnWord()
 			wordList.value = res.data.map(item => {
 				return {
@@ -208,11 +216,9 @@
 			learned.value = [];
 			nextIsReview.value = false;
 			initialQueue.value = pendingNew.value.splice(0, 4);
-			writeCache()
-		}
 		getNext()
+		}
 	}
-	const misrememberShow = ref(false)
 	const misremember = () => {
 		learned.value = learned.value.filter(item => item.word.id != current.value.word.id)
 		unknowBtn()
@@ -234,13 +240,22 @@
 		console.log(reviewQueue.value);
 	}
 	const writeCache = () => {
+		localwordsStore().clearLearnCache()
+		localwordsStore().setLearnTime(new Date().getTime())
 		localwordsStore().setLearnCache({
 			total: total.value,
 			pendingNew: pendingNew.value,
 			reviewQueue: reviewQueue.value,
 			learned: learned.value,
 			nextIsReview: nextIsReview.value,
-			initialQueue: initialQueue.value
+			initialQueue: initialQueue.value,
+			answerShow:answerShow.value,
+			misrememberShow:misrememberShow.value,
+			knowBtnShow:knowBtnShow.value,
+			wordList:wordList.value,
+			current:current.value,
+			wordinfo:wordinfo.value,
+			pattern:pattern.value
 		})
 	}
 	const knowBtn = () => {
@@ -251,7 +266,6 @@
 		if (current.value.pattern >= 3) {
 			learned.value.push(current.value);
 			console.log("写入本地");
-			writeCache()
 			return;
 		}
 		current.value.interval *= 2;

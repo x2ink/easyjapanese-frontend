@@ -4,9 +4,10 @@
 		<div class="profile-bg">
 			<!-- 头像 -->
 			<div @click="selectImg" class="avatar-container">
-				<image :src="userStore().userInfo.avatar" class="avatar-image" mode="aspectFill" />
+				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image" mode="aspectFill" />
+					<image v-else src="http://jp.x2.ink/images/logo.png" class="avatar-image" mode="aspectFill" />
 				<!-- 相机图标 -->
-				<div class="camera-icon">
+				<div v-if="userStore().loginStatus" class="camera-icon">
 					<div class="camera-bg">
 						<i class="fas fa-camera"></i>
 					</div>
@@ -19,8 +20,8 @@
 			<div class="content-container">
 				<!-- 用户信息 -->
 				<div class="user-info">
-					<div @click="nicknameShow=true" class="user-name-container">
-						<h2 class="user-name">{{userStore().userInfo.nickname}}</h2><text
+					<div @click="login()" class="user-name-container">
+						<h2 class="user-name">{{userStore().userInfo.nickname}}</h2><text v-if="userStore().loginStatus"
 							class="fa-solid fa-pen-to-square"></text>
 					</div>
 					<p class="user-id">{{userStore().userInfo.email}}</p>
@@ -37,18 +38,18 @@
 						<div class="stat-label">已学词汇</div>
 					</div>
 					<div class="stat-item">
-						<div class="stat-value">{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(2)}}%</div>
+						<div class="stat-value">{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(0)}}%</div>
 						<div class="stat-label">记忆保持率</div>
 					</div>
 				</div>
 
 				<!-- 功能入口 -->
 				<div class="function-list">
-					<div class="function-item">
+					<div @click="goPage('/pages/other/setplan/setplan')" class="function-item">
 						<div class="function-icon orange">
 							<i class="fas fa-cog"></i>
 						</div>
-						<span class="function-name">系统设置</span>
+						<span class="function-name">背词设置</span>
 						<i class="fas fa-chevron-right arrow-icon"></i>
 					</div>
 					<div @click="goPage('/pages/other/feedback/feedback')" class="function-item">
@@ -174,16 +175,22 @@
 		"dates": [],
 		"day": 0,
 		"learn": 0,
+		"learnt": 0,
 		"learnnum": 0,
 		"review": 0,
-		"wordnum": 0
+		"wordnum": 100
 	})
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
 		console.log(res.data);
 	}
-
+	const login = () => {
+		if (userStore().loginStatus)
+			nicknameShow.value = true
+		else
+			goPage("/pages/login/login")
+	}
 	onShow(() => {
 		getInfo()
 	})

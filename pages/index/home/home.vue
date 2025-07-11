@@ -9,10 +9,20 @@
 				</view>
 			</view>
 		</view>
+		<!-- 占位 -->
+		<view :style="{height:`calc(${navBarHeight} + 68px)`}">
+		</view>
 		<!-- 主要内容 -->
 		<view style="padding: 16px;">
 			<!-- 单词书统计卡片 -->
-			<view class="book-card">
+			<view v-if="infoLoading" style="display: flex;" class="book-card">
+				<wd-skeleton :row-col="[{ type: 'rect',width:'60px',height:'80px' }]" />
+				<wd-skeleton :custom-style="{ width: '100%', marginLeft: '16px'}" :row-col="[
+			   { width: '30%' ,height:'18px'},
+			   { width: '100%' ,height:'14px'},
+			   { width: '100%' ,height:'14px'}]" />
+			</view>
+			<view v-else class="book-card">
 				<view v-if="learnInfo.book_info.icon.type=='image'" class="book-cover _BACKGROUND"
 					:style="{backgroundImage:`url('${learnInfo.book_info.icon.data}')`}">
 				</view>
@@ -122,7 +132,8 @@
 					<text class="iconfont icon-arrow-right more-icon"></text>
 				</view>
 			</view>
-			<view class="task-list">
+			<view class="task-list" :style="{marginTop:userStore().loginStatus?'12px':'0'}">
+				<wd-status-tip image="https://jp.x2.ink/images/status/login.png" tip="登录之后才会显示哦" />
 				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
 					v-for="item in wordTask" :key="item.id">
 					<view class="task-info">
@@ -153,9 +164,16 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import $http from "@/api/index.js"
 	const navBarHeight = ref(0)
 	const goLearn = () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (learnInfo.value.learnnum == learnInfo.value.wordnum) {
 			toast.warning("没有需要学习的单词了")
 		} else {
@@ -163,6 +181,10 @@
 		}
 	}
 	const goReview = () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (learnInfo.value.review == 0) {
 			toast.warning("没有需要复习的单词了")
 		} else {
@@ -212,9 +234,11 @@
 		"review": 0,
 		"wordnum": 0
 	})
+	const infoLoading = ref(true)
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
+		infoLoading.value = false
 	}
 	const getCalendarMatrix = (year, month) => {
 		const firstDay = new Date(year, month - 1, 1).getDay();
@@ -282,7 +306,9 @@
 	}
 
 	.search-bar {
-		position: sticky;
+		position: fixed;
+		left: 0;
+		right: 0;
 		z-index: 9;
 		padding: 0 16px 16px;
 		background-color: #fff;
@@ -400,6 +426,7 @@
 	.action-buttons {
 		display: flex;
 		margin-bottom: 16px;
+
 		.action-button {
 			flex: 1;
 			padding: 14px;
@@ -408,6 +435,7 @@
 			align-items: center;
 			position: relative;
 			overflow: hidden;
+
 			.action-icon {
 				width: 40px;
 				height: 40px;
@@ -420,10 +448,12 @@
 				font-size: 18px;
 				color: white;
 			}
+
 			.action-content {
 				flex: 1;
 				min-width: 0;
 			}
+
 			.action-title {
 				display: block;
 				font-weight: 600;
@@ -527,7 +557,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 12px;
 
 		.section-title {
 			font-size: 14px;

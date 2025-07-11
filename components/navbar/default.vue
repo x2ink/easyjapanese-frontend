@@ -1,11 +1,16 @@
 <template>
 	<!-- 顶部导航栏 -->
-	<div class="navbar" :style="{paddingTop:navBarHeight}">
-		<view @click="back()" class="nav-btn">
-			<text class="fas fa-arrow-left"></text>
+	<view>
+		<view class="navbar" :style="{paddingTop:navBarHeight}">
+			<view @click="back()" class="nav-btn">
+				<text class="fas fa-arrow-left"></text>
+			</view>
+			<view class="navbar-title">{{title}}</view>
 		</view>
-		<div class="navbar-title">{{title}}</div>
-	</div>
+		<!-- 占位 -->
+		<view :style="{height:`calc(${navBarHeight} + 45px)`}">
+		</view>
+	</view>
 </template>
 
 <script setup>
@@ -34,15 +39,17 @@
 </script>
 
 <style scoped lang="scss">
-
 	.navbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
 		background-color: white;
 		height: 45px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 12px;
-
 		.navbar-title {
 			font-weight: 600;
 			font-size: 18px;

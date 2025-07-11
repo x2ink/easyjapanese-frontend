@@ -92,6 +92,9 @@
 	import dayjs from 'dayjs'
 	import $http from "@/api/index.js"
 	import NavbarDefault from "@/components/navbar/default"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	const navBarHeight = ref(0)
 	import {
 		useToast
@@ -276,12 +279,17 @@
 	}
 	const wordId = ref(0)
 	const selectBook = ref(false)
+	onShow(() => {
+		getList()
+	})
 	onLoad((op) => {
 		if (op.wordId) {
 			wordId.value = op.wordId
 			selectBook.value = true
 		}
-		getList()
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+		}
 	})
 	onMounted(() => {
 		const systemInfo = wx.getSystemInfoSync();

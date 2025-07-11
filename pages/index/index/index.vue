@@ -12,7 +12,7 @@
 			</scroll-view>
 		</view>
 		<!-- 底部导航 -->
-		<view class="tab-bar">
+		<view :class="`${getOs()=='ios'?'ios-bar':'and-bar'}`" class="tab-bar">
 			<view @click="tabbar=0" :class="{active:tabbar==0}" class="tab-item">
 				<text class="icon-home tab-icon fas fa-home"></text>
 				<text class="tab-text">首页</text>
@@ -37,6 +37,9 @@
 	import {
 		userStore
 	} from "@/stores"
+	import {
+		getOs
+	} from "@/utils/common.js"
 	import Home from '../home/home.vue';
 	import Word from '../word/word.vue';
 	import Self from '../self/self.vue';
@@ -47,15 +50,20 @@
 </script>
 
 <style lang="scss" scoped>
+	.and-bar{
+		padding: 12px 0;
+	}
+	.ios-bar{
+		padding: 12px 0 env(safe-area-inset-bottom);
+	}
 	.tab-bar {
 		position: fixed;
 		bottom: 0;
-		height: calc(env(safe-area-inset-bottom) + 36px);
+		height: 40px;
 		left: 0;
 		right: 0;
 		display: flex;
 		justify-content: space-around;
-		padding-top: 12px;
 		background-color: #fff;
 		border-top: 1px solid #f0f0f0;
 		.tab-item {

@@ -31,14 +31,43 @@ if (!Math) {
   "./pages/word/dictation/dictation.js";
 }
 const _sfc_main = {
+  onShareAppMessage() {
+    return {
+      title: "邀新打榜赢全年护肤大礼包",
+      path: "/pages/index/index/index"
+    };
+  },
+  methods: {
+    globalShare() {
+      common_vendor.index.onAppRoute((res) => {
+        const pages = getCurrentPages();
+        const view = pages[pages.length - 1];
+        if (view) {
+          common_vendor.index.showShareMenu({
+            withShareTicket: true,
+            menus: ["shareAppMessage", "shareTimeline"]
+          });
+          let data = {
+            title: "邀新打榜赢全年护肤大礼包",
+            path: "pages/index/index/index"
+          };
+          view.onShareTimeline = () => {
+            return data;
+          };
+          view.onShareAppMessage = () => {
+            return data;
+          };
+        }
+      });
+    }
+  },
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:40", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:43", "App Hide");
   }
 };
 function createApp() {

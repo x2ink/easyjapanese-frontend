@@ -156,8 +156,10 @@
 				toast.warning(`单词不可为空`)
 				return
 			}
+			toast.loading("正在获取中")
 			const res = await $http.common.getVerbTrans(value.value.trim())
 			data.value = res.data
+			toast.close()
 		} catch (err) {
 			toast.warning(`这个单词不是动词`)
 		}

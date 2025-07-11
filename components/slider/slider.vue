@@ -1,10 +1,11 @@
 <template>
-	<div class="language-tabs">
+	<scroll-view :scroll-left="120" scroll-x="true" class="language-tabs">
+		<view class="placeholder"></view>
 		<view @click="emits('changeTab', index)" :key="item" v-for="(item,index) in tabList"
 			:class="{active:current==index,inactive:current!=index}" class="search-tab">
 			{{item}}
 		</view>
-	</div>
+	</scroll-view>
 </template>
 
 <script setup>
@@ -28,11 +29,19 @@
 
 <style lang="scss">
 	.language-tabs {
-		display: flex;
-		align-items: center;
+		white-space: nowrap;
+		width: 100%;
+	}
+
+	.placeholder {
+		width: 16px;
+		display: inline-block;
+		height: 2px;
 	}
 
 	.search-tab {
+		display: inline-block;
+		width: auto;
 		padding: 6px 12px;
 		border-radius: 16px;
 		font-size: 14px;

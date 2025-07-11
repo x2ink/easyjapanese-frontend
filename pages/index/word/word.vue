@@ -109,6 +109,9 @@
 		onLoad,
 		onShow
 	} from '@dcloudio/uni-app'
+	import {
+		userStore
+	} from "@/stores/index.js"
 	const sentence = ref({})
 	const getSentence = async () => {
 		const res = await $http.common.getSentence()
@@ -116,6 +119,10 @@
 	}
 	const ranks = ref([])
 	const goToolPage = (path) => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (todayWordCount.value == 0) {
 			toast.warning("今天还没学单词哦~")
 		} else {

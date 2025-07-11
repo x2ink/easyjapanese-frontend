@@ -28,15 +28,16 @@
 
 <script setup>
 	import {
-		ref,
-		onMounted
+		ref
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import {
-		onLoad,
 		onShow,
 		onReachBottom
 	} from "@dcloudio/uni-app"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import {
 		goPage,
 		formatWordName
@@ -61,8 +62,12 @@
 			getList()
 		}
 	})
-	onMounted(() => {
-		getList()
+	onShow(() => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+		} else {
+			getList()
+		}
 	})
 </script>
 

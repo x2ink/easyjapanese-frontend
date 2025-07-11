@@ -14,7 +14,14 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				reviewQueue: [],
 				learned: [],
 				nextIsReview: false,
-				initialQueue: []
+				initialQueue: [],
+				answerShow:false,
+				misrememberShow:false,
+				knowBtnShow:false,
+				wordList:[],
+				current:{},
+				wordinfo:{},
+				pattern:0
 			},
 			reviewTime: 0,
 			learnCache: {
@@ -23,7 +30,14 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				reviewQueue: [],
 				learned: [],
 				nextIsReview: false,
-				initialQueue: []
+				initialQueue: [],
+				answerShow:false,
+				misrememberShow:false,
+				knowBtnShow:false,
+				wordList:[],
+				current:{},
+				wordinfo:{},
+				pattern:0
 			},
 			learnTime: 0
 		}

@@ -3,9 +3,14 @@ const common_vendor = require("../common/vendor.js");
 const api_index = require("../api/index.js");
 const stores_index = require("../stores/index.js");
 var baseUrl;
-{
-  common_vendor.index.__f__("log", "at utils/request.js:3", "开发环境");
-  baseUrl = "http://127.0.0.1:8080/";
+const accountInfo = common_vendor.wx$1.getAccountInfoSync();
+const nowEnv = accountInfo.miniProgram.envVersion;
+if (nowEnv === "develop") {
+  common_vendor.index.__f__("log", "at utils/request.js:5", "开发环境");
+  baseUrl = "http://192.168.3.77:8080/";
+} else {
+  common_vendor.index.__f__("log", "at utils/request.js:8", "生产环境");
+  baseUrl = "https://jp.x2.ink/api/";
 }
 const http = {
   baseUrl,
@@ -68,7 +73,7 @@ const beforeResponse = async (config, response) => {
       if (data.code === 4001) {
         try {
           const tokenRes = await api_index.$http.common.retoken(stores_index.userStore().userInfo.id);
-          common_vendor.index.__f__("log", "at utils/request.js:76", tokenRes);
+          common_vendor.index.__f__("log", "at utils/request.js:78", tokenRes);
           stores_index.userStore().setToken(tokenRes.data);
           config.header = {
             "Authorization": tokenRes.data
@@ -79,17 +84,11 @@ const beforeResponse = async (config, response) => {
             resolve(res);
           });
         } catch (err) {
-          common_vendor.index.navigateTo({
-            url: "/pages/login/login"
-          });
           return new Promise((resolve, reject) => {
             reject(response.data);
           });
         }
       } else {
-        common_vendor.index.navigateTo({
-          url: "/pages/login/login"
-        });
         return new Promise((resolve, reject) => {
           reject(response.data);
         });
@@ -110,7 +109,7 @@ const beforeResponse = async (config, response) => {
   }
 };
 const errorHandle = (err) => {
-  common_vendor.index.__f__("log", "at utils/request.js:119", "网络异常,", err);
+  common_vendor.index.__f__("log", "at utils/request.js:121", "网络异常,", err);
 };
 exports.http = http;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

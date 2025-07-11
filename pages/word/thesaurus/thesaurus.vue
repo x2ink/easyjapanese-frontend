@@ -10,7 +10,8 @@
 		<view class="list">
 			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" class="item" :key="item.id"
 				v-for="item in bookList.get(tabList[current])">
-				<view v-if="item.icon.type=='image'" class="book-cover _BACKGROUND" :style="{backgroundImage:`url('${item.icon.data}')`}">
+				<view v-if="item.icon.type=='image'" class="book-cover _BACKGROUND"
+					:style="{backgroundImage:`url('${item.icon.data}')`}">
 				</view>
 				<view v-else class="book-cover _GCENTER" :style="{background:item.icon.bg}">
 					<text v-if="item.icon.type=='text'">{{item.icon.data}}</text>
@@ -33,12 +34,17 @@
 <script setup>
 	import {
 		ref,
-		onMounted,
 		computed
 	} from 'vue'
 	import {
+		onShow
+	} from "@dcloudio/uni-app"
+	import {
 		goPage,
 	} from "@/utils/common.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import TabSlider from "@/components/slider/slider.vue"
 	import $http from "@/api/index.js"
@@ -85,13 +91,44 @@
 		}, new Map());
 		bookList.value = map
 	}
-	onMounted(() => {
-		getWordBook()
-		getConfig()
+	onShow(() => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+		} else {
+			getWordBook()
+			getConfig()
+		}
 	})
 </script>
 
 <style lang="scss" scoped>
+	.language-tabs {
+		white-space: nowrap;
+		width: 100%;
+	}
+
+	.search-tab {
+		display: inline-block;
+		width: auto;
+		padding: 6px 12px;
+		border-radius: 16px;
+		font-size: 14px;
+		margin-right: 8px;
+		border: none;
+		cursor: pointer;
+	}
+
+	.search-tab.active {
+		background-color: #07C160;
+		color: white;
+	}
+
+	.search-tab.inactive {
+		background-color: #f0f0f0;
+		color: #757575;
+	}
+
+
 	.list {
 		display: flex;
 		flex-direction: column;
@@ -168,7 +205,7 @@
 
 	.tabs-container {
 		background-color: white;
-		padding: 8px 16px 16px 16px;
+		padding: 8px 0 16px 0;
 	}
 
 	.tab-item {

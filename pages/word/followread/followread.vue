@@ -58,7 +58,7 @@
 					</div>
 				</div>
 			</div>
-			<wd-status-tip v-if="total==0" image="content" tip="还没有用户录音~" />
+			<wd-status-tip v-if="total==0" image="https://jp.x2.ink/images/status/blank.png" tip="还没有用户录音~" />
 		</div>
 		<!-- 发布弹窗 -->
 		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
@@ -105,11 +105,15 @@
 	import {
 		onLoad,
 		onReachBottom,
-		onUnload
+		onUnload,
+		onShow
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
 	} from "@/utils/common.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import http from '@/utils/request.js'
@@ -156,6 +160,10 @@
 		}
 	}
 	const startRecord = () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		recorderManager.start();
 		recording.value = true
 	}
@@ -232,6 +240,10 @@
 		recorderManager.stop();
 	})
 	const like = async (index, id) => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (List.value[index].has) {
 			await $http.word.unlikeFollowRead({
 					id

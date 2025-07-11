@@ -1,7 +1,40 @@
 <script>
 	export default {
+		onShareAppMessage() {
+			return {
+				title: "邀新打榜赢全年护肤大礼包",
+				path: '/pages/index/index/index'
+			}
+		},
+		methods: {
+			globalShare() {
+				uni.onAppRoute((res) => {
+					//获取加载的页面
+					const pages = getCurrentPages();
+					//获取当前页面的对象
+					const view = pages[pages.length - 1];
+					if (view) {
+						//全局触发 显示出分享具栏
+						uni.showShareMenu({
+							withShareTicket: true,
+							menus: ["shareAppMessage", "shareTimeline"]
+						});
+						let data = {
+							title: "邀新打榜赢全年护肤大礼包",
+							path: "pages/index/index/index",
+						};
+						view.onShareTimeline = () => {
+							return data;
+						}
+						view.onShareAppMessage = () => {
+							return data;
+						};
+					}
+				});
+			}
+		},
 		onLaunch: function() {
-			console.log('App Launch')
+			// this.globalShare()
 		},
 		onShow: function() {
 			console.log('App Show')

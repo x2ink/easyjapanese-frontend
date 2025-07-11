@@ -37,6 +37,9 @@ export const formatWordName = (word, kana) => {
 		return `${kana}【${word}】`
 	}
 }
+export const getOs=()=>{
+	return uni.getSystemInfoSync().osName
+}
 export const extractBracketContents = (text) => {
 		const regex = /【([^】]*)】|([a-zA-Z]+)/g;
 		const matches = [...text.matchAll(regex)];

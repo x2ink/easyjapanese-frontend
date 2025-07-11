@@ -137,7 +137,12 @@
 		}
 	})
 	onShow(() => {
-		getConfig()
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+		} else {
+			getConfig()
+		}
+
 	})
 </script>
 

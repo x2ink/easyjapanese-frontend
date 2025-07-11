@@ -1,7 +1,7 @@
 <template>
 	<div class="content-container">
 		<!-- 单词标题区 -->
-		<div class="word-header" :style="{paddingTop:navBarHeight}">
+		<div class="word-header" :style="{paddingTop:`calc(${navBarHeight} + 4px)`}">
 			<!-- 返回按钮 -->
 			<view class="back-btn" @click="back()">
 				<text class="fas fa-arrow-left"></text>
@@ -16,8 +16,7 @@
 						</div>
 					</div>
 					<div class="flex" style="gap: 8px;">
-						<view @click="playUserRecord(jcinfo.voice)"
-							class="action-btn">
+						<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
 							<text class="fas fa-volume-up"></text>
 						</view>
 						<view @click="goPage('/pages/word/followread/followread',{
@@ -109,13 +108,13 @@
 
 			</view>
 			<!-- 底部操作栏 -->
-			<div class="bottom-actions">
+			<div class="bottom-actions" :class="`${getOs()=='ios'?'ios-bottom-actions':'and-bottom-actions'}`">
 				<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
 					<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 生词本
 				</view>
 				<view class="bottom-btn btn-blue"
 					@click="goPage('/pages/other/browse/browse',{type:'dict',word:jcinfo.word})">
-					<text class="fas fa-search" style="margin-right: 4.5px;"></text> 全网搜索
+					<text class="fas fa-search" style="margin-right: 4.5px;"></text> 搜索
 				</view>
 				<view class="bottom-btn btn-green" @click="goPage('/pages/tools/notedetail/notedetail',{
 								wordId:id,word:JSON.stringify({word:jcinfo.word,kana:jcinfo.kana,meaning:jcinfo.meaning})})">
@@ -162,15 +161,18 @@
 	import $http from "@/api/index.js"
 	const navBarHeight = ref(0)
 	import {
-		onLoad,
-		onShow
+		onLoad
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
 		formatWordName,
 		extractBracketContents,
-		back
+		back,
+		getOs
 	} from "@/utils/common.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
@@ -182,6 +184,10 @@
 		ja: ""
 	})
 	const exampleSubmit = async () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (formData.value.ch.trim().length === 0) {
 			toast.warning("中文为空")
 			return
@@ -318,16 +324,8 @@
 	}
 
 	.back-btn {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(255, 255, 255, 0.2);
 		color: white;
-		border: none;
-		font-size: 18px;
+		font-size: 22px;
 	}
 
 	.word-header {
@@ -508,11 +506,18 @@
 		border-top: 1px solid #e5e7eb;
 		background: white;
 		padding: 12px 16px 0 16px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
 		position: fixed;
 		bottom: 0;
 		left: 0;
 		right: 0;
+	}
+
+	.and-bottom-actions {
+		padding-bottom: 12px;
+	}
+
+	.ios-bottom-actions {
+		padding-bottom: calc(env(safe-area-inset-bottom));
 	}
 
 	.bottom-btn {

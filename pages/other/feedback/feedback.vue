@@ -42,6 +42,9 @@
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
+		userStore
+	} from "@/stores/index.js"
+	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
@@ -52,6 +55,10 @@
 	})
 	const source = ref('')
 	const submit = async () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		} 
 		if (formData.value.content.trim().length == 0) {
 			toast.warning(`内容不可为空`)
 			return
@@ -60,6 +67,7 @@
 		formData.value.content += formData.value.content + "\n" + source.value
 		const res = await $http.common.feedback(formData.value)
 		toast.success(`提交成功`)
+		formData.value.content = ''
 	}
 	onLoad(e => {
 		if (e.type) {

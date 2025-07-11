@@ -1,10 +1,12 @@
 var baseUrl;
-if (process.env.NODE_ENV === 'development') {
+const accountInfo = wx.getAccountInfoSync();
+const nowEnv = accountInfo.miniProgram.envVersion;
+if (nowEnv === 'develop') {
 	console.log('开发环境');
-	baseUrl = "http://127.0.0.1:8080/"
+	baseUrl = "http://192.168.3.77:8080/"
 } else {
 	console.log('生产环境');
-	baseUrl = "http://127.0.0.1/"
+	baseUrl = "https://jp.x2.ink/api/"
 }
 import $http from "@/api/index.js"
 import {
@@ -84,17 +86,17 @@ const beforeResponse = async (config, response) => {
 						resolve(res)
 					});
 				} catch (err) {
-					uni.navigateTo({
-						url: "/pages/login/login"
-					});
+					// uni.navigateTo({
+					// 	url: "/pages/login/login"
+					// });
 					return new Promise((resolve, reject) => {
 						reject(response.data)
 					});
 				}
 			} else {
-				uni.navigateTo({
-					url: "/pages/login/login"
-				})
+				// uni.navigateTo({
+				// 	url: "/pages/login/login"
+				// })
 				return new Promise((resolve, reject) => {
 					reject(response.data)
 				});

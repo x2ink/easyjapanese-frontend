@@ -41,6 +41,7 @@
 				</div>
 			</div>
 		</div>
+		<wd-toast />
 	</view>
 </template>
 
@@ -106,10 +107,12 @@
 			success(res) {
 				kanaData.value = res.data
 				loading.value = true
+				toast.close()
 			}
 		})
 	}
 	onLoad(() => {
+		toast.loading("数据加载中")
 		getKanaData()
 	})
 </script>
@@ -153,7 +156,6 @@
 	}
 
 	.kana-card {
-		width: 100%;
 		aspect-ratio: 1;
 		border-radius: 12px;
 		display: flex;
@@ -171,7 +173,7 @@
 	}
 
 	.kana-character {
-		font-size: 32px;
+		font-size: 24px;
 		margin-bottom: 4px;
 	}
 

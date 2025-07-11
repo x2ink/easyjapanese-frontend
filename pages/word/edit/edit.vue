@@ -64,8 +64,13 @@
 	const toast = useToast()
 	import {
 		onLoad,
-		onShow
 	} from "@dcloudio/uni-app"
+	import {
+		goPage,
+	} from "@/utils/common.js"
+	import {
+		userStore
+	} from "@/stores/index.js"
 	const id = ref(null)
 	const formData = ref({
 		meaning: "",
@@ -95,6 +100,10 @@
 		formData.value.meaning = jcinfo.value.meaning
 	}
 	const submit = async () => {
+		if (!userStore().loginStatus) {
+			goPage("/pages/login/login?toast=请登录之后使用")
+			return
+		}
 		if (formData.value.detail.trim().length === 0) {
 			toast.warning("详细解释为空")
 			return

@@ -182,16 +182,21 @@
 		const timestamp = new Date().setHours(0, 0, 0, 0);
 		if (localwordsStore().reviewTime >= timestamp) {
 			console.log("读取本地");
-			total.value = localwordsStore().reviewCache.total
-			pendingNew.value = localwordsStore().reviewCache.pendingNew;
-			reviewQueue.value = localwordsStore().reviewCache.reviewQueue;
-			learned.value = localwordsStore().reviewCache.learned;
-			nextIsReview.value = localwordsStore().reviewCache.learned;
-			initialQueue.value = localwordsStore().reviewCache.initialQueue;
+			total.value = localwordsStore().learnCache.total
+			pendingNew.value = localwordsStore().learnCache.pendingNew;
+			reviewQueue.value = localwordsStore().learnCache.reviewQueue;
+			learned.value = localwordsStore().learnCache.learned;
+			nextIsReview.value = localwordsStore().learnCache.learned;
+			initialQueue.value = localwordsStore().learnCache.initialQueue;
+			answerShow.value = localwordsStore().learnCache.answerShow;
+			misrememberShow.value = localwordsStore().learnCache.misrememberShow;
+			knowBtnShow.value = localwordsStore().learnCache.knowBtnShow;
+			wordList.value = localwordsStore().learnCache.wordList;
+			current.value = localwordsStore().learnCache.current;
+			wordinfo.value = localwordsStore().learnCache.wordinfo;
+			pattern.value = localwordsStore().learnCache.pattern;
 		} else {
 			console.log("读取网络");
-			localwordsStore().clearReviewCache()
-			localwordsStore().setReviewTime(new Date().getTime())
 			const res = await $http.word.getReview()
 			wordList.value = res.data.map(item => {
 				return {
@@ -209,9 +214,8 @@
 			learned.value = [];
 			nextIsReview.value = false;
 			initialQueue.value = pendingNew.value.splice(0, 4);
-			writeCache()
+			getNext()
 		}
-		getNext()
 	}
 	const misrememberShow = ref(false)
 	const misremember = () => {
@@ -235,13 +239,22 @@
 		reviewQueue.value.splice(3, 0, current.value)
 	}
 	const writeCache = () => {
+		localwordsStore().clearReviewCache()
+		localwordsStore().setReviewTime(new Date().getTime())
 		localwordsStore().setReviewCache({
 			total: total.value,
 			pendingNew: pendingNew.value,
 			reviewQueue: reviewQueue.value,
 			learned: learned.value,
 			nextIsReview: nextIsReview.value,
-			initialQueue: initialQueue.value
+			initialQueue: initialQueue.value,
+			answerShow: answerShow.value,
+			misrememberShow: misrememberShow.value,
+			knowBtnShow: knowBtnShow.value,
+			wordList: wordList.value,
+			current: current.value,
+			wordinfo: wordinfo.value,
+			pattern: pattern.value
 		})
 	}
 	const knowBtn = () => {
@@ -251,7 +264,6 @@
 		if (current.value.pattern >= 3 || current.value.first) {
 			learned.value.push(current.value);
 			console.log("记录到本地");
-			writeCache()
 			return;
 		}
 		current.value.pattern++;
