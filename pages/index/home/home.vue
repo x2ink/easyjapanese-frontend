@@ -133,7 +133,7 @@
 				</view>
 			</view>
 			<view class="task-list" :style="{marginTop:userStore().loginStatus?'12px':'0'}">
-				<wd-status-tip image="https://jp.x2.ink/images/status/login.png" tip="登录之后才会显示哦" />
+				<wd-status-tip v-if="!userStore().loginStatus" image="https://jp.x2.ink/images/status/login.png" tip="登录之后才会显示哦" />
 				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
 					v-for="item in wordTask" :key="item.id">
 					<view class="task-info">
