@@ -27,6 +27,9 @@ export default {
 	delNote(id) {
 		return http.delete(`notes/${id}`)
 	},
+	delQuote(id) {
+		return http.delete(`notes/quote/${id}`)
+	},
 	likeNote(type, id) {
 		return http.get(`notes/like/${type}/${id}`)
 	},

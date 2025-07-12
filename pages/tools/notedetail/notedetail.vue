@@ -21,10 +21,17 @@
 			</div>
 			<textarea v-model="formData.content" class="note-textarea" placeholder="记录你的学习笔记..."></textarea>
 			<div class="note-actions" style="justify-content: space-between;margin-top: 16px;">
-				<div class="publish-switch">
-					<span class="switch-label">公开笔记</span>
-					<wd-switch @change="change" active-color="#07C160" size="24px" v-model="formData.public" />
-				</div>
+				<view style="display: flex;align-items:  center;gap: 12px;">
+
+					<div class="publish-switch">
+						<span class="switch-label">公开笔记</span>
+						<wd-switch @change="change" active-color="#07C160" size="24px" v-model="formData.public" />
+					</div>
+					<div v-if="quote.id!=null" @click="delQuote()" class="publish-switch">
+						<span style="margin-right: 4px;" class="switch-label">删除引用</span>
+						<text style="color: #757575;font-size: 14px;" class="fa-solid fa-trash-can"></text>
+					</div>
+				</view>
 				<button @click="submit()" class="submit-btn">{{type=='create'?'创建':'更新'}}</button>
 			</div>
 		</div>
@@ -40,7 +47,7 @@
 						<div class="note-time">{{dayjs(item.created_at).format('YYYY-MM-DD')}}</div>
 					</div>
 				</div>
-				<div class="quoted-note" v-if="item.cite.id!=0">
+				<div class="quoted-note" v-if="item.cite.id!==null">
 					<span class="quoted-user">@{{item.cite.nickname}}</span> {{item.cite.content}}
 				</div>
 				<div class="note-content">
@@ -89,6 +96,14 @@
 			getList()
 		}
 	})
+	const delQuote=async ()=>{
+		await $http.common.delQuote(noteId.value)
+		getInfo(wordId.value)
+		List.value = []
+		page.value = 1
+		total.value = 0
+		getList()
+	}
 	const like = async (index, id) => {
 		if (List.value[index].has) {
 			await $http.common.likeNote("unlike", id)
@@ -150,14 +165,20 @@
 			toast.success("创建成功")
 		}
 		getInfo(wordId.value)
+		List.value = []
+		page.value = 1
+		total.value = 0
+		getList()
 	}
 	const quote = ref({})
+	const noteId=ref(null)
 	const getInfo = async (id) => {
 		try {
 			const res = await $http.common.getNoteInfo(id)
 			formData.value.content = res.data.content
 			formData.value.public = res.data.public
 			formData.value.cite_id = res.data.cite.id
+			noteId.value=res.data.id
 			quote.value = res.data.cite
 			type.value = "update"
 			word.value = {
@@ -426,6 +447,7 @@
 		margin-bottom: 12px;
 		font-size: 13px;
 		color: #616161;
+		position: relative;
 	}
 
 	.quoted-user {

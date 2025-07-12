@@ -89,7 +89,8 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		watch
 	} from 'vue'
 	import {
 		onLoad,
@@ -133,6 +134,12 @@
 	const size = ref(20)
 	const List = ref([])
 	const value = ref('')
+	watch(current, (newVal, oldVal) => {
+		if (newVal == "cj") {
+			toast.close()
+			toast.warning("中日词典暂未开放")
+		}
+	})
 	const fastlook = (val) => {
 		value.value = val
 		search()

@@ -7,7 +7,7 @@ const accountInfo = common_vendor.wx$1.getAccountInfoSync();
 const nowEnv = accountInfo.miniProgram.envVersion;
 if (nowEnv === "develop") {
   common_vendor.index.__f__("log", "at utils/request.js:5", "开发环境");
-  baseUrl = "http://192.168.3.77:8080/";
+  baseUrl = "http://127.0.0.1:8080/";
 } else {
   common_vendor.index.__f__("log", "at utils/request.js:8", "生产环境");
   baseUrl = "https://jp.x2.ink/api/";

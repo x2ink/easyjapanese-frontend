@@ -164,11 +164,34 @@
 			goPage("/pages/login/login?toast=请登录之后使用")
 			return
 		}
-		recorderManager.start();
-		recording.value = true
+		uni.authorize({
+			scope: 'scope.record',
+			success() {
+				recorderManager.start();
+				recording.value = true
+			},
+			fail() {
+				console.log("录音没权限");
+				uni.showModal({
+					title: "提示",
+					content: `录音开启失败，请前往设置页面打开麦克风权限`,
+					confirmColor: "#10B981",
+					success: function(res) {
+						if (res.confirm) {
+							uni.openSetting({
+								success(res) {}
+							});
+						} else if (res.cancel) {
+							toast.warning("你取消了操作")
+						}
+					}
+				});
+			}
+		})
 	}
 	const recorded = ref(false)
 	const endRecord = () => {
+		console.log('录音结束');
 		recorderManager.stop();
 		recording.value = false
 	}
@@ -274,6 +297,9 @@
 			recordDuration.value = res.duration
 			recorded.value = true
 		});
+		recorderManager.onInterruptionBegin(() => {
+			endRecord()
+		})
 	})
 </script>
 <style>

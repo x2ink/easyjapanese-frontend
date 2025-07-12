@@ -3,9 +3,9 @@
 		<!-- 集成背景和标题 -->
 		<div class="profile-bg">
 			<!-- 头像 -->
-			<div @click="selectImg" class="avatar-container">
+			<div @click="selectImg()" class="avatar-container">
 				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image" mode="aspectFill" />
-					<image v-else src="http://jp.x2.ink/images/logo.png" class="avatar-image" mode="aspectFill" />
+					<image v-else src="https://jp.x2.ink/images/logo.png" class="avatar-image" mode="aspectFill" />
 				<!-- 相机图标 -->
 				<div v-if="userStore().loginStatus" class="camera-icon">
 					<div class="camera-bg">
@@ -141,6 +141,7 @@
 		nicknameShow.value = false
 	}
 	const selectImg = () => {
+		if (!userStore().loginStatus) return;
 		uni.chooseImage({
 			count: 1,
 			sizeType: ['compressed'],

@@ -7,7 +7,7 @@
 		<div class="main-content">
 			<!-- 应用信息卡片 -->
 			<div class="app-card">
-				<image src="http://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="https://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
 				<div class="app-name">轻松日语</div>
 				<div class="app-version">版本 {{version}}</div>
 				<div class="app-desc">
@@ -21,7 +21,7 @@
 					<span>官方网站</span>
 				</div>
 				<div class="info-content">
-					<a href="https://www.x2.ink" class="info-link">www.x2.ink</a>
+					<a href="https://www.x2.ink" class="info-link">https://www.x2.ink</a>
 				</div>
 			</div>
 
