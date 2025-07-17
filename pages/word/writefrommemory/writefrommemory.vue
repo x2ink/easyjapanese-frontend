@@ -31,7 +31,12 @@
 			<label class="input-label">请输入日语单词或假名</label>
 			<input v-model="value" type="text" placeholder="请输入答案">
 			<!-- 按钮区 -->
-			<button class="primary-button" @click="submit()">确认</button>
+			<button class="primary-button" @click="submit()">提交答案</button>
+			<view @click="showEye()" class="look-answer">
+				<text>查看答案</text>
+				<i style="margin-left: 4px;" :class="`${answerShow?'fa-eye-slash':'fa-eye'}`"
+					class="fa-solid"></i>
+			</view>
 		</div>
 
 
@@ -144,18 +149,23 @@
 			getNext()
 		} else {
 			// 答案错误
-			value.value = ""
 			showAnwser.value = true
 			playUserRecord(wordinfo.value.voice)
 			toast.error("答案错误，请重新拼写")
 		}
+		value.value = ""
 	}
-	onMounted(() => {
-
-	})
+	const answerShow = ref(false)
+	const showEye = () => {
+		answerShow.value = !answerShow.value
+		showAnwser.value = !showAnwser.value
+		playUserRecord(wordinfo.value.voice)
+	}
 	onLoad(op => {
 		if (op.type == "local") {
-
+			wordList.value = localwordsStore().localWritefrommemory
+			total.value = wordList.value.length
+			getNext()
 		} else {
 			getAllWords()
 		}
@@ -169,8 +179,95 @@
 		z-index: 9;
 	}
 
+	.look-answer {
+		text-align: center;
+		color: #07C160;
+		margin-top: 16px;
+	}
+
+	/* 内容容器 */
+	.container {
+		padding: 32px 16px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	/* 按钮容器 */
+	.button-container {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 16px;
+		margin-top: auto;
+		margin-bottom: 40px;
+	}
+
+	/* 主按钮 */
+	.primary-button {
+		background-color: #07C160;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 12px 0;
+		font-size: 16px;
+		font-weight: 500;
+		width: 100%;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+
+	.primary-button:hover {
+		background-color: #06AD56;
+	}
+
+	/* 次按钮 */
+	.secondary-button {
+		background-color: white;
+		color: #07C160;
+		border: 1px solid #07C160;
+		border-radius: 8px;
+		padding: 12px 0;
+		font-size: 16px;
+		font-weight: 500;
+		width: 100%;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+
+	.secondary-button:hover {
+		background-color: #F5F5F5;
+	}
+
 	.wdprogress {
 		padding: 0 !important;
+	}
+
+	/* 完成图标 */
+	.completion-icon {
+		margin-top: 40px;
+		font-size: 70px;
+		margin-bottom: 20px;
+		color: #07C160;
+	}
+
+	/* 完成标题 */
+	.completion-title {
+		font-size: 24px;
+		font-weight: 600;
+		color: #212121;
+		margin-bottom: 12px;
+		text-align: center;
+	}
+
+	/* 完成描述 */
+	.completion-desc {
+		font-size: 16px;
+		color: #757575;
+		text-align: center;
+		margin-bottom: 48px;
+		line-height: 1.5;
 	}
 
 	.word-display {

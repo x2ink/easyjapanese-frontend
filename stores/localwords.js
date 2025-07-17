@@ -1,7 +1,7 @@
 import {
 	defineStore
 } from 'pinia'
-export const test_localwordsModule = defineStore('test_localwords', {
+export const localwordsModule = defineStore('localwords', {
 	unistorage: true,
 	state: () => {
 		return {
@@ -15,13 +15,13 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				learned: [],
 				nextIsReview: false,
 				initialQueue: [],
-				answerShow:false,
-				misrememberShow:false,
-				knowBtnShow:false,
-				wordList:[],
-				current:{},
-				wordinfo:{},
-				pattern:0
+				answerShow: false,
+				misrememberShow: false,
+				knowBtnShow: false,
+				wordList: [],
+				current: {},
+				wordinfo: {},
+				pattern: 0
 			},
 			reviewTime: 0,
 			learnCache: {
@@ -31,18 +31,26 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				learned: [],
 				nextIsReview: false,
 				initialQueue: [],
-				answerShow:false,
-				misrememberShow:false,
-				knowBtnShow:false,
-				wordList:[],
-				current:{},
-				wordinfo:{},
-				pattern:0
+				answerShow: false,
+				misrememberShow: false,
+				knowBtnShow: false,
+				wordList: [],
+				current: {},
+				wordinfo: {},
+				pattern: 0
 			},
-			learnTime: 0
+			learnTime: 0,
+			localWritefrommemory: [],
+			localDictation: []
 		}
 	},
 	actions: {
+		setWritefrommemory(list) {
+			this.localWritefrommemory = list
+		},
+		setDictation(list) {
+			this.localDictation = list
+		},
 		setTime(time) {
 			this.time = time
 		},
@@ -53,6 +61,7 @@ export const test_localwordsModule = defineStore('test_localwords', {
 			this.soundList.push(word)
 		},
 		setReviewCache(cache) {
+			console.log("写入",cache);
 			this.reviewCache = cache
 		},
 		setReviewTime(time) {
@@ -72,7 +81,14 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				reviewQueue: [],
 				learned: [],
 				nextIsReview: false,
-				initialQueue: []
+				initialQueue: [],
+				answerShow: false,
+				misrememberShow: false,
+				knowBtnShow: false,
+				wordList: [],
+				current: {},
+				wordinfo: {},
+				pattern: 0
 			};
 		},
 		clearLearnCache() {
@@ -83,7 +99,14 @@ export const test_localwordsModule = defineStore('test_localwords', {
 				reviewQueue: [],
 				learned: [],
 				nextIsReview: false,
-				initialQueue: []
+				initialQueue: [],
+				answerShow: false,
+				misrememberShow: false,
+				knowBtnShow: false,
+				wordList: [],
+				current: {},
+				wordinfo: {},
+				pattern: 0
 			};
 		},
 		clear() {

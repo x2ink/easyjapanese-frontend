@@ -10,7 +10,7 @@
 				<div class="note-header">
 					{{formatWordName(item.word,item.kana)}}
 				</div>
-				<div class="quoted-note" v-if="item.cite.id!=0">
+				<div class="quoted-note" v-if="item.cite.id!=null">
 					<span class="quoted-user">@{{item.cite.nickname}}</span> {{item.cite.content}}
 				</div>
 				<div class="note-content">
@@ -62,10 +62,16 @@
 			getList()
 		}
 	})
+	const clearList=()=>{
+		List.value=[]
+		page.value=1
+		total.value=0
+	}
 	onShow(() => {
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
 		} else {
+			clearList()
 			getList()
 		}
 	})

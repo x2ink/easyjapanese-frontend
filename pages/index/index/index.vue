@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view style="height: calc(100vh - env(safe-area-inset-bottom) - 48px);">
+		<view :style="{height: `${getOs()=='ios'?'calc(100vh - env(safe-area-inset-bottom) - 53px)':'calc(100vh - 65px)'}`}">
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
@@ -50,6 +50,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.scroll{
+		height: 100%;
+	}
 	.and-bar{
 		padding: 12px 0;
 	}

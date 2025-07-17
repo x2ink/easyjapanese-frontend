@@ -10,7 +10,7 @@ export const historyrecordModule = defineStore('historyrecord', {
 		}
 	},
 	actions: {
-		push(val,type) {
+		push(val, type) {
 			if (type == 'word') {
 				this.wordlist.unshift(val)
 			} else {
@@ -22,6 +22,13 @@ export const historyrecordModule = defineStore('historyrecord', {
 				this.wordlist = []
 			} else {
 				this.trendlist = []
+			}
+		},
+		del(type, val) {
+			if (type == 'word') {
+				this.wordlist = this.wordlist.filter(item => item != val)
+			} else {
+				this.trendlist = this.trendlist.filter(item => item != val)
 			}
 		}
 	}

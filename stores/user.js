@@ -2,7 +2,7 @@ import {
 	defineStore
 } from 'pinia'
 import $http from "@/api/index.js"
-export const test_userModule = defineStore('test_user', {
+export const userModule = defineStore('user', {
 	unistorage: true,
 	state: () => {
 		return {

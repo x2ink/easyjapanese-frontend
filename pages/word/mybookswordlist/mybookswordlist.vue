@@ -47,6 +47,7 @@
 					</div>
 				</view>
 			</div>
+			<wd-status-tip v-if="total==0" image="https://jp.x2.ink/images/status/blank.png" tip="单词本还没有单词~" />
 		</view>
 		<!-- 批量操作按钮 (默认隐藏) -->
 		<div class="batch-actions _GCENTER" v-if="selectCount>0">
@@ -153,7 +154,7 @@
 		getList()
 	}
 	const allSelect = ref(false)
-	const total = ref(0)
+	const total = ref(null)
 	const page = ref(1)
 	const size = ref(20)
 	const List = ref([])

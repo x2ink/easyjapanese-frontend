@@ -40,6 +40,7 @@
 				</div>
 
 			</div>
+			<wd-status-tip v-if="List.value==0&&!loading" image="https://jp.x2.ink/images/status/blank.png" tip="还没有创建生词本~" />
 		</div>
 		<!-- 创建按钮 -->
 		<button @click="openPopup('create')" class="create-btn" id="createNotebookBtn">
@@ -273,9 +274,11 @@
 		getList()
 	}
 	const List = ref([])
+	const loading=ref(true)
 	const getList = async () => {
 		const res = await $http.word.getSelfBooks(wordId.value)
 		List.value = res.data
+		loading.value=false
 	}
 	const wordId = ref(0)
 	const selectBook = ref(false)

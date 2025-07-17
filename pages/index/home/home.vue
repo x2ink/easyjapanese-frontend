@@ -1,5 +1,5 @@
 <template>
-	<view style="height: calc(100vh - env(safe-area-inset-bottom) - 48px);">
+	<view>
 		<!-- 顶部搜索栏 -->
 		<view :style="{paddingTop:`calc(${navBarHeight} + 16px)`}" class="search-bar">
 			<view @click="goPage('/pages/word/search/search')" class="search-input-container">
@@ -47,7 +47,7 @@
 					<view class="book-stats">
 						<text class="stat-item">今日复习: {{learnInfo.day_review}}个</text>
 						<text class="stat-item">今日新学: {{learnInfo.day_learn}}个</text>
-						<text class="stat-item">连续学习{{learnInfo.day}}天</text>
+						<text class="stat-item">连续{{learnInfo.day}}天</text>
 					</view>
 				</view>
 			</view>
@@ -415,7 +415,6 @@
 		.book-stats {
 			display: flex;
 			justify-content: space-between;
-
 			.stat-item {
 				font-size: 12px;
 				color: #999;
@@ -633,7 +632,7 @@
 			display: flex;
 			justify-content: space-between;
 			margin-bottom: 8px;
-
+			margin-top: 16px;
 			.weekday {
 				flex: 1;
 				text-align: center;

@@ -1,5 +1,6 @@
 <template>
-	<view>
+	<Loading v-if="loading"></Loading>
+	<view v-else>
 		<view class="head">
 			<NavbarDefault title="单词学习"></NavbarDefault>
 		</view>
@@ -32,8 +33,8 @@
 
 			<!-- 按钮组 -->
 			<div class="button-container">
-				<button class="primary-button">立即默写</button>
-				<button class="secondary-button">再学一组</button>
+				<button @click="writefrommemory()" class="primary-button">立即默写</button>
+				<button @click="againLearn()" class="secondary-button">再学一组</button>
 			</div>
 		</div>
 		<view v-else>
@@ -93,7 +94,7 @@
 			</view>
 			<!-- 操作按钮 -->
 			<div class="action-buttons" v-if="knowBtnShow">
-				<button @click="unknowBtn();misrememberShow = false" class="action-btn dont-know-btn">
+				<button @click="unknowBtn()" class="action-btn dont-know-btn">
 					<text class="fa-solid fa-face-sad-cry"></text>
 					<text>不认识</text>
 				</button>
@@ -113,6 +114,7 @@
 				</button>
 			</div>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -124,9 +126,14 @@
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	import Loading from "@/components/loading/loading.vue"
 	import {
 		localwordsStore
 	} from "@/stores"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	import {
 		goPage
 	} from "@/utils/common.js"
@@ -149,7 +156,7 @@
 		const res = await $http.word.recordlearn({
 			words: temp
 		})
-
+		localwordsStore().clearLearnCache()
 	}
 	const total = ref(0)
 	const pattern = ref(0)
@@ -180,6 +187,7 @@
 	const knowBtnShow = ref(true)
 	const answerShow = ref(false)
 	const misrememberShow = ref(false)
+	const loading = ref(true)
 	const init = async () => {
 		const timestamp = new Date().setHours(0, 0, 0, 0);
 		console.log('时间戳', localwordsStore().learnTime, timestamp);
@@ -198,6 +206,7 @@
 			current.value = localwordsStore().learnCache.current;
 			wordinfo.value = localwordsStore().learnCache.wordinfo;
 			pattern.value = localwordsStore().learnCache.pattern;
+			playUserRecord(wordinfo.value.voice)
 		} else {
 			console.log("读取网络");
 			const res = await $http.word.learnWord()
@@ -216,8 +225,15 @@
 			learned.value = [];
 			nextIsReview.value = false;
 			initialQueue.value = pendingNew.value.splice(0, 4);
-		getNext()
+			getNext()
 		}
+		loading.value = false
+	}
+	const writefrommemory = () => {
+		localwordsStore().setWritefrommemory(wordList.value.map(item => item.word))
+		uni.redirectTo({
+			url:"/pages/word/writefrommemory/writefrommemory?type=local"
+		})
 	}
 	const misremember = () => {
 		learned.value = learned.value.filter(item => item.word.id != current.value.word.id)
@@ -225,6 +241,7 @@
 		getNext()
 	}
 	const unknowBtn = () => {
+		misrememberShow.value = false
 		knowBtnShow.value = false
 		answerShow.value = true
 		current.value.pattern = 0;
@@ -237,7 +254,7 @@
 			current.value.interval = reviewQueue.value[0].interval
 		}
 		reviewQueue.value.splice(3, 0, current.value)
-		console.log(reviewQueue.value);
+		writeCache()
 	}
 	const writeCache = () => {
 		localwordsStore().clearLearnCache()
@@ -249,13 +266,13 @@
 			learned: learned.value,
 			nextIsReview: nextIsReview.value,
 			initialQueue: initialQueue.value,
-			answerShow:answerShow.value,
-			misrememberShow:misrememberShow.value,
-			knowBtnShow:knowBtnShow.value,
-			wordList:wordList.value,
-			current:current.value,
-			wordinfo:wordinfo.value,
-			pattern:pattern.value
+			answerShow: answerShow.value,
+			misrememberShow: misrememberShow.value,
+			knowBtnShow: knowBtnShow.value,
+			wordList: wordList.value,
+			current: current.value,
+			wordinfo: wordinfo.value,
+			pattern: pattern.value
 		})
 	}
 	const knowBtn = () => {
@@ -265,14 +282,14 @@
 		current.value.pattern++;
 		if (current.value.pattern >= 3) {
 			learned.value.push(current.value);
-			console.log("写入本地");
+			writeCache()
 			return;
 		}
 		current.value.interval *= 2;
 		reviewQueue.value = reviewQueue.value.filter(item => item.word.id != current.value.word.id)
 		reviewQueue.value.push(current.value);
 		reviewQueue.value.sort((a, b) => a.interval - b.interval);
-		console.log(reviewQueue.value);
+		writeCache()
 	}
 	// 私有方法：获取复习词
 	const getReviewWord = () => {
@@ -332,7 +349,16 @@
 			return
 		}
 	}
-
+	const againLearn = async () => {
+		const res = await $http.word.learnWord()
+		if (res.data.length <= 0) {
+			toast.warning("没有需要学习的单词了")
+			return
+		}
+		doneTask.value = false
+		localwordsStore().clearLearnCache()
+		init()
+	}
 	onMounted(() => {
 		init()
 	})

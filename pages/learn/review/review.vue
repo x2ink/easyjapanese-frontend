@@ -1,5 +1,6 @@
 <template>
-	<view>
+	<Loading v-if="loading"></Loading>
+	<view v-else>
 		<view class="head">
 			<NavbarDefault title="单词学习"></NavbarDefault>
 		</view>
@@ -32,8 +33,8 @@
 
 			<!-- 按钮组 -->
 			<div class="button-container">
-				<button class="primary-button">立即默写</button>
-				<button class="secondary-button">继续复习</button>
+				<button @click="writefrommemory()" class="primary-button">立即默写</button>
+				<button @click="againReview()" class="secondary-button">继续复习</button>
 			</div>
 		</div>
 		<view v-else>
@@ -93,7 +94,7 @@
 			</view>
 			<!-- 操作按钮 -->
 			<div class="action-buttons" v-if="knowBtnShow">
-				<button @click="unknowBtn();misrememberShow = false" class="action-btn dont-know-btn">
+				<button @click="unknowBtn()" class="action-btn dont-know-btn">
 					<text class="fa-solid fa-face-sad-cry"></text>
 					<text>不认识</text>
 				</button>
@@ -113,6 +114,7 @@
 				</button>
 			</div>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -128,9 +130,14 @@
 		onShow
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
+	import Loading from "@/components/loading/loading.vue"
 	import {
 		localwordsStore
 	} from "@/stores"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	import {
 		goPage,
 		extractBracketContents,
@@ -141,6 +148,22 @@
 		innerAudioContext.stop();
 		innerAudioContext.src = url;
 		innerAudioContext.play();
+	}
+	const writefrommemory = () => {
+		localwordsStore().setWritefrommemory(wordList.value.map(item => item.word))
+		uni.redirectTo({
+			url: "/pages/word/writefrommemory/writefrommemory?type=local"
+		})
+	}
+	const againReview = async () => {
+		const res = await $http.word.getReview()
+		if (res.data.length <= 0) {
+			toast.warning("没有需要复习的单词了")
+			return
+		}
+		doneTask.value = false
+		localwordsStore().clearReviewCache()
+		init()
 	}
 	const doneTask = ref(false)
 	const recordWord = async (data) => {
@@ -154,7 +177,7 @@
 		const res = await $http.word.updaterecord({
 			words: temp
 		})
-
+		localwordsStore().clearReviewCache()
 	}
 	const total = ref(0)
 	const pattern = ref(0)
@@ -164,6 +187,12 @@
 		meaning: [],
 		example: []
 	})
+	watch(wordinfo, (newValue, oldValue) => {
+		console.log('wordinfo 发生变化:', newValue);
+		writeCache()
+	}, {
+		deep: true
+	});
 	const current = ref({})
 	const wordList = ref([])
 	// 未学习的新词
@@ -178,23 +207,25 @@
 	const initialQueue = ref([])
 	const knowBtnShow = ref(true)
 	const answerShow = ref(false)
+	const loading = ref(true)
 	const init = async () => {
 		const timestamp = new Date().setHours(0, 0, 0, 0);
 		if (localwordsStore().reviewTime >= timestamp) {
 			console.log("读取本地");
-			total.value = localwordsStore().learnCache.total
-			pendingNew.value = localwordsStore().learnCache.pendingNew;
-			reviewQueue.value = localwordsStore().learnCache.reviewQueue;
-			learned.value = localwordsStore().learnCache.learned;
-			nextIsReview.value = localwordsStore().learnCache.learned;
-			initialQueue.value = localwordsStore().learnCache.initialQueue;
-			answerShow.value = localwordsStore().learnCache.answerShow;
-			misrememberShow.value = localwordsStore().learnCache.misrememberShow;
-			knowBtnShow.value = localwordsStore().learnCache.knowBtnShow;
-			wordList.value = localwordsStore().learnCache.wordList;
-			current.value = localwordsStore().learnCache.current;
-			wordinfo.value = localwordsStore().learnCache.wordinfo;
-			pattern.value = localwordsStore().learnCache.pattern;
+			total.value = localwordsStore().reviewCache.total
+			pendingNew.value = localwordsStore().reviewCache.pendingNew;
+			reviewQueue.value = localwordsStore().reviewCache.reviewQueue;
+			learned.value = localwordsStore().reviewCache.learned;
+			nextIsReview.value = localwordsStore().reviewCache.learned;
+			initialQueue.value = localwordsStore().reviewCache.initialQueue;
+			answerShow.value = localwordsStore().reviewCache.answerShow;
+			misrememberShow.value = localwordsStore().reviewCache.misrememberShow;
+			knowBtnShow.value = localwordsStore().reviewCache.knowBtnShow;
+			wordList.value = localwordsStore().reviewCache.wordList;
+			current.value = localwordsStore().reviewCache.current;
+			wordinfo.value = localwordsStore().reviewCache.wordinfo;
+			pattern.value = localwordsStore().reviewCache.pattern;
+			playUserRecord(wordinfo.value.voice)
 		} else {
 			console.log("读取网络");
 			const res = await $http.word.getReview()
@@ -216,6 +247,7 @@
 			initialQueue.value = pendingNew.value.splice(0, 4);
 			getNext()
 		}
+		loading.value = false
 	}
 	const misrememberShow = ref(false)
 	const misremember = () => {
@@ -224,6 +256,7 @@
 		getNext()
 	}
 	const unknowBtn = () => {
+		misrememberShow.value = false
 		knowBtnShow.value = false
 		answerShow.value = true
 		current.value.pattern = 0;
@@ -237,6 +270,7 @@
 			current.value.interval = reviewQueue.value[0].interval
 		}
 		reviewQueue.value.splice(3, 0, current.value)
+		writeCache()
 	}
 	const writeCache = () => {
 		localwordsStore().clearReviewCache()
@@ -263,7 +297,7 @@
 		answerShow.value = true
 		if (current.value.pattern >= 3 || current.value.first) {
 			learned.value.push(current.value);
-			console.log("记录到本地");
+			writeCache()
 			return;
 		}
 		current.value.pattern++;
@@ -271,6 +305,7 @@
 		reviewQueue.value = reviewQueue.value.filter(item => item.word.id != current.value.word.id)
 		reviewQueue.value.push(current.value);
 		reviewQueue.value.sort((a, b) => a.interval - b.interval);
+		writeCache()
 	}
 	// 私有方法：获取复习词
 	const getReviewWord = () => {
