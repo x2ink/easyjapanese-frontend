@@ -78,7 +78,10 @@ export default {
 	},
 	// 获取单词书的单词列表
 	getBookWord(id, page, size, val, tab) {
-		return http.get(`book/word/${id}/${tab}/${page}/${size}/${val}`)
+		if (val.length == 0)
+			return http.get(`book/word/${id}/${tab}/${page}/${size}`)
+		else
+			return http.get(`book/word/${id}/${tab}/${page}/${size}/${val}`)
 	},
 	getRecommend() {
 		return http.get(`recommend`)

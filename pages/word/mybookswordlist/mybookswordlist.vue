@@ -207,7 +207,6 @@
 
 	.word-wrap {
 		border-top: 1px solid #eee;
-		padding-bottom: env(safe-area-inset-bottom);
 	}
 
 	.word-item {

@@ -43,7 +43,8 @@
 		goPage,
 	} from "@/utils/common.js"
 	import {
-		userStore
+		userStore,
+		localwordsStore
 	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import TabSlider from "@/components/slider/slider.vue"
@@ -74,6 +75,7 @@
 		config.value.book_id = item.id
 		const res = await $http.user.updateConfig(config.value)
 		toast.success(`更新成功`)
+		localwordsStore().clearLearnCache()
 		getWordBook()
 	}
 	const getWordBook = async () => {
