@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<page-meta :page-style="`overflow:${showDetail? 'hidden' : 'visible'};`">
 		<view class="head">
 			<NavbarDefault border title="五十音图"></NavbarDefault>
 			<div class="bg-white">
@@ -16,7 +16,7 @@
 			<div class="space-y-2">
 				<div class="kana-row-header">清音</div>
 				<div class="grid">
-					<div @click="playAudio(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
+					<div @click="openDetail(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
 						<div class="kana-character">{{get(item)}}</div>
 						<div class="kana-romaji">{{item}}</div>
 					</div>
@@ -25,7 +25,7 @@
 			<div class="space-y-2">
 				<div class="kana-row-header">浊音</div>
 				<div class="grid">
-					<div @click="playAudio(item)" class="kana-card" v-for="item in dakutenHiragana" :key="item">
+					<div @click="openDetail(item)" class="kana-card" v-for="item in dakutenHiragana" :key="item">
 						<div class="kana-character">{{get(item)}}</div>
 						<div class="kana-romaji">{{item}}</div>
 					</div>
@@ -34,7 +34,7 @@
 			<div class="space-y-2">
 				<div class="kana-row-header">拗音</div>
 				<div class="grid">
-					<div @click="playAudio(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
+					<div @click="openDetail(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
 						<div class="kana-character">{{get(item)}}</div>
 						<div class="kana-romaji">{{item}}</div>
 					</div>
@@ -42,7 +42,36 @@
 			</div>
 		</div>
 		<wd-toast />
-	</view>
+	</page-meta>
+	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="detail-popup"
+		@close="handleClose">
+		<view class="_GCENTER" style="flex-direction: column;padding: 16px;">
+			<view class="detail-title">
+				假名手写板
+			</view>
+			<view class="detail-img">
+				<image v-if="boardShow" class="kana-write" :src="`http://jp.x2.ink/images/katakana/detail/${row}.png`"
+					mode="aspectFill"></image>
+				<view v-if="boardShow" class="drawingboard">
+					<l-signature disableScroll ref="signatureRef" penColor="black" :penSize="15"
+						:openSmooth="true"></l-signature>
+				</view>
+				<view v-else class="loadingtext">
+					<wd-loading size="40px" />
+					<text>手写板加载中</text>
+				</view>
+			</view>
+			<view class="tools-btns">
+				<view>
+					<button @click="onClick('undo')" class="btn-info"> <text class="fas fa-reply"></text>
+						撤销</button>
+					<button @click="onClick('clear')" class="btn-info"> <text class="fas fa-trash"></text>
+						清空</button>
+				</view>
+				<button @click="onClick('save')" class="btn-primary">保存图片</button>
+			</view>
+		</view>
+	</wd-popup>
 </template>
 
 <script setup>
@@ -64,6 +93,74 @@
 	const data = ref([])
 	const current = ref('平假名')
 	const kanaData = ref([])
+	const showDetail = ref(false)
+	const row = ref('')
+	const boardShow = ref(false)
+	const signatureRef = ref(null)
+	const handleClose = () => {
+		boardShow.value = false
+	}
+	const onClick = (type) => {
+		if (type === 'save') {
+			signatureRef.value.canvasToTempFilePath({
+				success: (res) => {
+					saveImg(res)
+				}
+			});
+			return;
+		} else {
+			signatureRef.value[type]();
+		}
+	};
+	const saveImg = (res) => {
+		if (res.isEmpty) {
+			console.log(toast);
+			toast.warning(`画板为空`)
+			return
+		}
+		url.value = res.tempFilePath;
+		uni.saveImageToPhotosAlbum({
+			filePath: res.tempFilePath,
+			success: () => {
+				toast.success(`保存成功`)
+			},
+			fail: () => {
+				wx.getSetting({
+					success(res) {
+						if (res.authSetting["scope.writePhotosAlbum"]) {
+							toast.warning(`取消授权`)
+						}
+						if (res.authSetting["scope.writePhotosAlbum"] ==
+							false) {
+							uni.showModal({
+								title: "提示",
+								content: `图片保存失败，请前往设置页面允许保存相册`,
+								confirmColor: "#8C5CDD",
+								success: function(res) {
+									if (res.confirm) {
+										uni.openSetting({
+											success(
+												res) {}
+										});
+									} else if (res.cancel) {
+										toast.warning(`取消授权`)
+									}
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	}
+	const openDetail = (item) => {
+		row.value = item
+		playAudio(item)
+		showDetail.value = true
+		setTimeout(() => {
+			boardShow.value = true
+		}, 500)
+	}
 	const get = (key) => {
 		const res = kanaData.value.find(item => key == item.rome)
 		if (res) {
@@ -117,7 +214,77 @@
 	})
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+	.loadingtext {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+
+		text {
+			font-size: 12px;
+			color: #999;
+		}
+	}
+
+	.detail-popup {
+		border-radius: 16px 16px 0 0;
+
+		.detail-title {
+			font-size: 22px;
+		}
+
+		.tools-btns {
+			margin-top: 16px;
+			width: calc(100% - 32px);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			view {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+		}
+
+		.detail-img {
+			border-radius: 8px;
+			width: calc(100% - 32px);
+			margin-top: 16px;
+			aspect-ratio: 880/739;
+			position: relative;
+			border: 2px dashed #ccc;
+
+			.kana-write {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				opacity: 0.5;
+			}
+		}
+	}
+
+	.drawingboard {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 9;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
 	.head {
 		position: sticky;
 		top: 0;

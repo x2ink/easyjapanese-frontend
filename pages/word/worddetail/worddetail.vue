@@ -208,7 +208,7 @@
 		}
 	}
 	onMounted(() => {
-		const systemInfo = wx.getSystemInfoSync();
+		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 	})

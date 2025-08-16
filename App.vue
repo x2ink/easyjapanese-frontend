@@ -45,7 +45,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	@import url("./static/css/all.css");
 
 	button::after {
@@ -62,8 +62,33 @@
 		padding-right: 0;
 		line-height: inherit;
 		border-radius: 0;
+		margin: 0;
 	}
 
+	.btn-primary {
+		gap: 4px;
+		background: #07C160;
+		color: white;
+		border-radius: 8px;
+		padding: 0 16px;
+		font-size: 14px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.btn-info {
+		gap: 4px;
+		background: #f0f0f0;
+		border-radius: 8px;
+		padding: 0 16px;
+		font-size: 14px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
 	page {
 		background: #f8f9fa;

@@ -42,7 +42,7 @@
 			<div class="progress-container">
 				<div class="progress-text">
 					<span>今日进度: {{learned.length}}/{{total}}</span>
-					<span>{{(learned.length/total)*100}}%</span>
+					<span>{{(learned.length/total).toFixed(0)*100}}%</span>
 				</div>
 				<div class="progress-bar">
 					<div class="progress-fill" :style="{width:`${(learned.length/total)*100}%`}"></div>

@@ -25,11 +25,7 @@
 				</button>
 			</div>
 		</div>
-
-		<!-- 主要内容 -->
 		<div class="main-content">
-
-			<!-- 每日谚语 -->
 			<div class="daily-proverb">
 				<div class="quote-mark">「</div>
 				<div class="proverb-content">
@@ -38,8 +34,6 @@
 					<div class="proverb-source">— {{sentence.source}}</div>
 				</div>
 			</div>
-
-			<!-- 功能入口 -->
 			<div class="feature-grid">
 				<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
 					<div class="feature-icon blue">
@@ -65,14 +59,16 @@
 					</div>
 					<div class="feature-name">日常会话</div>
 				</div>
-
+				<div class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
+					<div class="feature-icon green">
+						<i class="fas fa-comment-dots"></i>
+					</div>
+					<div class="feature-name">单词校验</div>
+				</div>
 			</div>
-
-			<!-- 排行榜 -->
 			<div class="ranking-header">
 				<div class="ranking-title">单词达人榜</div>
 			</div>
-
 			<div class="ranking-list">
 				<div v-for="(item,index) in ranks" :key="item.user.id" class="ranking-item">
 					<div :class="{blue:index==0,purple:index==1,green:index==2,gray:index>2}" class="rank-number">
@@ -145,7 +141,7 @@
 		getTodayWords()
 	})
 	onMounted(() => {
-		const systemInfo = wx.getSystemInfoSync();
+		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 		getSentence()
