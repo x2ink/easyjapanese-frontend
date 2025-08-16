@@ -40,6 +40,9 @@
 					</div>
 				</div>
 			</div>
+			{{`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`}}
+			<image :src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
+				mode="aspectFill"></image>
 		</div>
 		<wd-toast />
 	</page-meta>
@@ -50,7 +53,8 @@
 				假名手写板
 			</view>
 			<view class="detail-img">
-				<image v-if="boardShow" class="kana-write" :src="`http://jp.x2.ink/images/katakana/detail/${row}.png`"
+				<image v-if="boardShow" class="kana-write"
+					:src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
 					mode="aspectFill"></image>
 				<view v-if="boardShow" class="drawingboard">
 					<l-signature disableScroll ref="signatureRef" penColor="black" :penSize="15"
@@ -187,14 +191,8 @@
 	]);
 	const innerAudioContext = uni.createInnerAudioContext();
 	const playAudio = (rome) => {
-		innerAudioContext.src = `http://jp.x2.ink/audio/${rome}.mp3`;
+		innerAudioContext.src = `https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/${rome}.mp3`;
 		innerAudioContext.play()
-		innerAudioContext.onPlay(() => {
-			console.log('开始播放');
-		});
-		innerAudioContext.onStop(() => {
-			console.log('停止播放');
-		});
 	}
 	const loading = ref(false)
 	const getKanaData = async () => {
