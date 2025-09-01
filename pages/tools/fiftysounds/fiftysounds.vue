@@ -40,14 +40,10 @@
 					</div>
 				</div>
 			</div>
-			{{`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`}}
-			<image :src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
-				mode="aspectFill"></image>
 		</div>
 		<wd-toast />
 	</page-meta>
-	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="detail-popup"
-		@close="handleClose">
+	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="detail-popup">
 		<view class="_GCENTER" style="flex-direction: column;padding: 16px;">
 			<view class="detail-title">
 				假名手写板
@@ -101,9 +97,6 @@
 	const row = ref('')
 	const boardShow = ref(false)
 	const signatureRef = ref(null)
-	const handleClose = () => {
-		boardShow.value = false
-	}
 	const onClick = (type) => {
 		if (type === 'save') {
 			signatureRef.value.canvasToTempFilePath({
@@ -118,17 +111,15 @@
 	};
 	const saveImg = (res) => {
 		if (res.isEmpty) {
-			console.log(toast);
 			toast.warning(`画板为空`)
 			return
 		}
-		url.value = res.tempFilePath;
 		uni.saveImageToPhotosAlbum({
 			filePath: res.tempFilePath,
-			success: () => {
+			success: (res) => {
 				toast.success(`保存成功`)
 			},
-			fail: () => {
+			fail: (err) => {
 				wx.getSetting({
 					success(res) {
 						if (res.authSetting["scope.writePhotosAlbum"]) {
@@ -158,6 +149,7 @@
 		});
 	}
 	const openDetail = (item) => {
+		boardShow.value = false
 		row.value = item
 		playAudio(item)
 		showDetail.value = true

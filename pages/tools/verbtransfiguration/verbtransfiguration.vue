@@ -5,9 +5,9 @@
 			<!-- 搜索栏 -->
 			<div style="padding:16px; background:#FFFFFF;">
 				<div style="display:flex; gap:8px;">
-					<input v-model="value" type="text" placeholder="输入动词原形 (ます形/基本形)"
+					<input confirm-type="search" @blur="confirm" v-model="value" type="text"
+						placeholder="输入动词原形 (ます形/基本形)"
 						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
-					<button @click="confirm" class="btn _GCENTER">查询</button>
 				</div>
 			</div>
 		</view>
@@ -16,8 +16,7 @@
 			<!-- 基本变形组 -->
 			<div class="transform-group">
 				<div class="group-header">
-					<h2>基本变形</h2>
-					<span class="expand-icon">▼</span>
+					<h2>形态</h2>
 				</div>
 				<div class="group-content">
 					<!-- 基本型 -->
@@ -40,16 +39,6 @@
 						<div class="transform-label">た形</div>
 						<div class="transform-value">{{get('た形')}}</div>
 					</div>
-				</div>
-			</div>
-
-			<!-- 否定与命令组 -->
-			<div class="transform-group">
-				<div class="group-header">
-					<h2>否定与命令</h2>
-					<span class="expand-icon">▼</span>
-				</div>
-				<div class="group-content">
 					<!-- ない形 -->
 					<div class="transform-item">
 						<div class="transform-label">ない形</div>
@@ -65,16 +54,6 @@
 						<div class="transform-label">禁止形</div>
 						<div class="transform-value">{{get('禁止形')}}</div>
 					</div>
-				</div>
-			</div>
-
-			<!-- 可能被动使役组 -->
-			<div class="transform-group">
-				<div class="group-header">
-					<h2>可能/被动/使役</h2>
-					<span class="expand-icon">▼</span>
-				</div>
-				<div class="group-content">
 					<!-- 可能形 -->
 					<div class="transform-item">
 						<div class="transform-label">可能形</div>
@@ -95,16 +74,6 @@
 						<div class="transform-label">使役被动形</div>
 						<div class="transform-value">{{get('使役被动形')}}</div>
 					</div>
-				</div>
-			</div>
-
-			<!-- 其他变形组 -->
-			<div class="transform-group">
-				<div class="group-header">
-					<h2>其他变形</h2>
-					<span class="expand-icon">▼</span>
-				</div>
-				<div class="group-content">
 					<!-- 假定形 -->
 					<div class="transform-item">
 						<div class="transform-label">假定形</div>
@@ -167,14 +136,11 @@
 </script>
 
 <style lang="scss" scoped>
-	/* General Styles */
 	.content-container {
 		padding: 16px 0;
 		overflow-y: auto;
 		padding-bottom: env(safe-area-inset-bottom);
 	}
-
-	/* Transform Group Styles */
 	.transform-group {
 		margin-bottom: 16px;
 		background: #FFFFFF;
@@ -194,16 +160,10 @@
 		margin: 0;
 	}
 
-	.expand-icon {
-		color: #757575;
-		font-size: 14px;
-	}
-
 	.group-content {
 		padding: 8px 0;
 	}
 
-	/* Transform Item Styles */
 	.transform-item {
 		display: flex;
 		padding: 12px 16px;
@@ -237,29 +197,5 @@
 		border-radius: 8px;
 		padding: 0 16px;
 		font-size: 16px;
-	}
-
-	.search-bar {
-		background-color: #FAFAFA;
-		border-radius: 8px;
-		padding: 8px 12px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-
-		input {
-			flex: 1;
-		}
-
-		text {
-			font-size: 18px;
-			color: #9DA3AF;
-		}
-	}
-
-	.search-bg {
-		background-color: white;
-		padding: 12px 16px;
 	}
 </style>

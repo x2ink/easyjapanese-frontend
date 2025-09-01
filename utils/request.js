@@ -3,7 +3,7 @@ const accountInfo = wx.getAccountInfoSync();
 const nowEnv = accountInfo.miniProgram.envVersion;
 if (nowEnv === 'develop') {
 	console.log('开发环境');
-	baseUrl = "http://127.0.0.1:8080/"
+	baseUrl = "https://jp.x2.ink/api/"
 } else {
 	console.log('生产环境');
 	baseUrl = "https://jp.x2.ink/api/"

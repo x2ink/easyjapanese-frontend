@@ -59,12 +59,6 @@
 					</div>
 					<div class="feature-name">日常会话</div>
 				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
-					<div class="feature-icon green">
-						<i class="fas fa-comment-dots"></i>
-					</div>
-					<div class="feature-name">单词校验</div>
-				</div>
 			</div>
 			<div class="ranking-header">
 				<div class="ranking-title">单词达人榜</div>
