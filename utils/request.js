@@ -3,7 +3,7 @@ const accountInfo = wx.getAccountInfoSync();
 const nowEnv = accountInfo.miniProgram.envVersion;
 if (nowEnv === 'develop') {
 	console.log('开发环境');
-	baseUrl = "https://jp.x2.ink/api/"
+	baseUrl = "http://127.0.0.1:8080/"
 } else {
 	console.log('生产环境');
 	baseUrl = "https://jp.x2.ink/api/"
@@ -30,7 +30,7 @@ const http = {
 	get(url, params) {
 		return this.request({
 			url: url,
-			params: params,
+			data: params,
 			method: 'GET'
 		})
 	},
@@ -39,20 +39,6 @@ const http = {
 			url: url,
 			data: data,
 			method: 'POST'
-		})
-	},
-	put(url, data) {
-		return this.request({
-			url: url,
-			data: data,
-			method: 'PUT'
-		})
-	},
-	delete(url, data) {
-		return this.request({
-			url: url,
-			data: data,
-			method: 'DELETE'
 		})
 	}
 }

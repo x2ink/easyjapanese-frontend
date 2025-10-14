@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="logotext" :style="{paddingTop:`calc(${navBarHeight} + 16px)!important`}">
-			<image src="https://jp.x2.ink/images/logo.png" mode="aspectFit"></image>
+			<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"></image>
 			<view>
 				<view class="title">轻松日语</view>
 				<view class="description">单词学习小助手</view>

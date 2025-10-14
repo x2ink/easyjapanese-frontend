@@ -7,7 +7,7 @@ const accountInfo = common_vendor.wx$1.getAccountInfoSync();
 const nowEnv = accountInfo.miniProgram.envVersion;
 if (nowEnv === "develop") {
   common_vendor.index.__f__("log", "at utils/request.js:5", "开发环境");
-  baseUrl = "https://jp.x2.ink/api/";
+  baseUrl = "http://127.0.0.1:8080/";
 } else {
   common_vendor.index.__f__("log", "at utils/request.js:8", "生产环境");
   baseUrl = "https://jp.x2.ink/api/";
@@ -30,7 +30,7 @@ const http = {
   get(url, params) {
     return this.request({
       url,
-      params,
+      data: params,
       method: "GET"
     });
   },
@@ -39,20 +39,6 @@ const http = {
       url,
       data,
       method: "POST"
-    });
-  },
-  put(url, data) {
-    return this.request({
-      url,
-      data,
-      method: "PUT"
-    });
-  },
-  delete(url, data) {
-    return this.request({
-      url,
-      data,
-      method: "DELETE"
     });
   }
 };
@@ -73,7 +59,7 @@ const beforeResponse = async (config, response) => {
       if (data.code === 4001) {
         try {
           const tokenRes = await api_index.$http.common.retoken(stores_index.userStore().userInfo.id);
-          common_vendor.index.__f__("log", "at utils/request.js:78", tokenRes);
+          common_vendor.index.__f__("log", "at utils/request.js:64", tokenRes);
           stores_index.userStore().setToken(tokenRes.data);
           config.header = {
             "Authorization": tokenRes.data
@@ -109,7 +95,7 @@ const beforeResponse = async (config, response) => {
   }
 };
 const errorHandle = (err) => {
-  common_vendor.index.__f__("log", "at utils/request.js:121", "网络异常,", err);
+  common_vendor.index.__f__("log", "at utils/request.js:107", "网络异常,", err);
 };
 exports.http = http;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

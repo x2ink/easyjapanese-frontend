@@ -1,24 +1,19 @@
 <template>
 	<div class="screen">
-		<!-- 集成背景和标题 -->
 		<div class="profile-bg">
-			<!-- 头像 -->
-			<div @click="selectImg()" class="avatar-container">
-				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image" mode="aspectFill" />
-					<image v-else src="https://jp.x2.ink/images/logo.png" class="avatar-image" mode="aspectFill" />
-				<!-- 相机图标 -->
+			<button class="avatar-container" open-type="chooseAvatar" @chooseavatar="chooseavatar">
+				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image"
+					mode="aspectFill" />
+				<image v-else src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" class="avatar-image" mode="aspectFill" />
 				<div v-if="userStore().loginStatus" class="camera-icon">
 					<div class="camera-bg">
 						<i class="fas fa-camera"></i>
 					</div>
 				</div>
-			</div>
+			</button>
 		</div>
-
 		<view class="content-area">
-			<!-- 用户信息容器 -->
 			<div class="content-container">
-				<!-- 用户信息 -->
 				<div class="user-info">
 					<div @click="login()" class="user-name-container">
 						<h2 class="user-name">{{userStore().userInfo.nickname}}</h2><text v-if="userStore().loginStatus"
@@ -26,8 +21,6 @@
 					</div>
 					<p class="user-id">{{userStore().userInfo.email}}</p>
 				</div>
-
-				<!-- 学习数据 -->
 				<div class="stats-grid">
 					<div class="stat-item">
 						<div class="stat-value">{{learnInfo.day}}</div>
@@ -42,8 +35,6 @@
 						<div class="stat-label">记忆保持率</div>
 					</div>
 				</div>
-
-				<!-- 功能入口 -->
 				<div class="function-list">
 					<div @click="goPage('/pages/other/setplan/setplan')" class="function-item">
 						<div class="function-icon orange">
@@ -140,28 +131,6 @@
 		userStore().setUserInfo()
 		nicknameShow.value = false
 	}
-	const selectImg = () => {
-		if (!userStore().loginStatus) return;
-		uni.chooseImage({
-			count: 1,
-			sizeType: ['compressed'],
-			sourceType: ['album'],
-			success: function(res) {
-				uni.uploadFile({
-					url: `${http.baseUrl}upload`,
-					filePath: res.tempFilePaths[0],
-					name: 'file',
-					success: async (fileRes) => {
-						const res = await $http.user.setUserInfo({
-							avatar: JSON.parse(fileRes.data).data,
-							nickname: userStore().userInfo.nickname,
-						})
-						userStore().setUserInfo()
-					}
-				});
-			}
-		});
-	}
 	const learnInfo = ref({
 		"book_info": {
 			"name": "",
@@ -181,6 +150,26 @@
 		"review": 0,
 		"wordnum": 100
 	})
+	const chooseavatar = (resAvatarUrl) => {
+		uni.getFileSystemManager().readFile({
+			filePath: resAvatarUrl.detail.avatarUrl,
+			encoding: "base64",
+			success: async (successRes) => {
+				const res = await $http.common.uploadbase64({
+					data: successRes.data,
+					file_name: `files/avatar-${userStore().userInfo.id}.png`
+				});
+				await $http.user.setUserInfo({
+					avatar: res.url,
+					nickname: userStore().userInfo.nickname,
+				})
+				userStore().setUserInfo()
+			},
+			fail: (res) => {
+				console.log(res);
+			}
+		});
+	}
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
@@ -290,6 +279,7 @@
 	}
 
 	.avatar-container {
+		overflow: inherit !important;
 		position: absolute;
 		bottom: -40px;
 		left: 16px;
@@ -300,6 +290,11 @@
 		background-color: white;
 		z-index: 10;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+		&:active {
+			transform: scale(1) !important;
+			opacity: 1 !important;
+		}
 
 		.avatar-image {
 			width: 100%;

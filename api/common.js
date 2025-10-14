@@ -1,5 +1,12 @@
 import http from '@/utils/request.js'
 export default {
+	uploadbase64(data) {
+		return http.post(`base64`, data)
+	},
+
+
+
+
 	retoken(userId) {
 		return http.get(`token/reset/${userId}`)
 	},
@@ -10,10 +17,10 @@ export default {
 		return http.get(`grammar/list/${level}/${page}/${size}`)
 	},
 	searchGrammar(val, page, size) {
-		if(val.length==0)
-		return http.get(`grammar/search/${page}/${size}`)
+		if (val.length == 0)
+			return http.get(`grammar/search/${page}/${size}`)
 		else
-		return http.get(`grammar/search/${page}/${size}/${val}`)
+			return http.get(`grammar/search/${page}/${size}/${val}`)
 	},
 	getGrammarInfo(id) {
 		return http.get(`grammar/${id}`)

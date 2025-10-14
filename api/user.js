@@ -1,5 +1,19 @@
 import http from '@/utils/request.js'
 export default {
+	setUserInfo(data) {
+		return http.post(`user/info`, data)
+	},
+	wxLogin(data) {
+		return http.post(`wxlogin`, data)
+	},
+	getUserInfoSimple() {
+		return http.get(`user/info`)
+	},
+
+
+
+
+
 	getChartList() {
 		return http.get('note/info')
 	},
@@ -12,21 +26,15 @@ export default {
 	login(type, data) {
 		return http.post(`login/${type}`, data)
 	},
-	wxLogin(data) {
-		return http.post(`wxlogin`, data)
-	},
-	getUserInfoSimple() {
-		return http.get(`user/info/simple`)
-	},
+
+
 	getConfig() {
 		return http.get(`config`)
 	},
 	updateConfig(data) {
 		return http.post(`config`, data)
 	},
-	setUserInfo(data) {
-		return http.put(`user/info`, data)
-	},
+
 	ranking() {
 		return http.get(`ranking`)
 	},

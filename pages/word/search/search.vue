@@ -60,16 +60,12 @@
 						v-for="item in List" :key="item.id">
 						<div class="word-header">
 							<div>
-								<span class="word-kanji">{{formatWordName(item.word,item.kana)}}</span>
+								<span class="word-kanji">{{formatWordName(item.words,item.kana)}}{{item.tone}}</span>
 							</div>
-							<!-- <span class="word-level level-n5">N5</span> -->
 						</div>
 						<div class="word-meaning">
-							<wd-text color="#424242" size="14px" :text="item.meaning.join('')"></wd-text>
+							<wd-text color="#424242" size="14px" :text="item.meanings"></wd-text>
 						</div>
-						<!-- 	<div class="word-stats">
-							<text class="fas fa-search"></text>查询{{item.browse}}次
-						</div> -->
 					</div>
 				</view>
 				<!-- 日中词典项 -->
@@ -147,7 +143,11 @@
 	const getList = async () => {
 		let res;
 		if (current.value == 'jc') {
-			res = await $http.word.jcSearch(page.value, size.value, value.value)
+			res = await $http.word.jcSearch({
+				page: page.value,
+				page_size: size.value,
+				val: value.value
+			})
 		} else {
 			toast.close()
 			toast.warning("中日词典暂未开放")

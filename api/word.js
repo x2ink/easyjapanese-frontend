@@ -1,11 +1,15 @@
 import http from '@/utils/request.js'
 export default {
-	jcSearch(page, size, val) {
-		return http.get(`jc/search/${page}/${size}/${val}`)
+	jcSearch(data) {
+		return http.get(`jc/list`, data)
 	},
-	jcInfo(id) {
-		return http.get(`jc/info/${id}`)
+	jcInfo(data) {
+		return http.get(`jc/info`, data)
 	},
+
+
+
+
 	cjSearch(page, size, val) {
 		return http.get(`cj/search/${page}/${size}/${val}`)
 	},

@@ -7,7 +7,7 @@
 		<div class="main-content">
 			<!-- 应用信息卡片 -->
 			<div class="app-card">
-				<image src="https://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit" class="app-logo"></image>
 				<div class="app-name">轻松日语</div>
 				<div class="app-version">版本 {{version}}</div>
 				<div class="app-desc">

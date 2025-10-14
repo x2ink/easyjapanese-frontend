@@ -4,7 +4,7 @@
 		<view class="main-content">
 			<!-- APP Logo -->
 			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 40px;">
-				<image src="https://jp.x2.ink/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit" class="app-logo"></image>
 				<view class="text-2xl font-medium text-gray-800">轻松日语</view>
 				<view class="text-gray-500 text-sm mt-1">单词学习小助手</view>
 			</view>
@@ -71,40 +71,29 @@
 			return
 		}
 		toast.loading('正在登录中...')
-		uni.getUserInfo({
-			provider: "weixin",
-			lang: "zh_CN",
-			success: (InfoRes) => {
-				uni.login({
-					provider: 'weixin',
-					success: async function(loginRes) {
-						let data = {
-							avatar: InfoRes.userInfo.avatarUrl,
-							nickname: InfoRes.userInfo.nickName,
-							code: loginRes.code,
-							os: from.value.os,
-							device: from.value.device
-						}
-						const loginResult = await $http.user.wxLogin(data)
-						toast.close()
-						userStore().setToken(loginResult.data)
-						userStore().setUserInfo()
-						if (backLastPage.value) {
-							uni.navigateBack({
-								delta: 1
-							})
-						} else {
-							uni.navigateTo({
-								url: "/pages/index/index/index"
-							})
-						}
-					}
-				});
-			},
-			fail: () => {
-				toast.warning(`请授权获取用户昵称与头像`)
+		uni.login({
+			provider: 'weixin',
+			success: async function(loginRes) {
+				let data = {
+					code: loginRes.code,
+					os: from.value.os,
+					device: from.value.device
+				}
+				const loginResult = await $http.user.wxLogin(data)
+				toast.close()
+				userStore().setToken(loginResult.data)
+				userStore().setUserInfo()
+				if (backLastPage.value) {
+					uni.navigateBack({
+						delta: 1
+					})
+				} else {
+					uni.navigateTo({
+						url: "/pages/index/index/index"
+					})
+				}
 			}
-		})
+		});
 	}
 	const from = ref({
 		os: '',
