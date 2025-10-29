@@ -6,7 +6,7 @@
 			<div class="feedback-type">
 				<div class="type-title">反馈类型</div>
 				<div class="type-options">
-					<view :class="{active:current=='Bug反馈'}" @click="current='Bug反馈'" class="type-option _GCENTER">Bug反馈
+					<view :class="{active:current=='问题反馈'}" @click="current='问题反馈'" class="type-option _GCENTER">问题反馈
 					</view>
 					<view :class="{active:current=='意见建议'}" @click="current='意见建议'" class="type-option _GCENTER">意见建议
 					</view>
@@ -48,7 +48,7 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	const current = ref("Bug反馈")
+	const current = ref("问题反馈")
 	const formData = ref({
 		content: "",
 		type: ""
@@ -58,7 +58,7 @@
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
 			return
-		} 
+		}
 		if (formData.value.content.trim().length == 0) {
 			toast.warning(`内容不可为空`)
 			return
@@ -71,9 +71,9 @@
 	}
 	onLoad(e => {
 		if (e.type) {
-			current.value = "Bug反馈"
+			current.value = "问题反馈"
 			if (e.type == "单词纠错") {
-				source.value = `来自单词纠错 · ${e.wordtype=='jc'?'日中':'中日'}单词ID：${e.wordid}`
+				source.value = `来自单词纠错 · ${e.wordType=='jc'?'日中':'中日'}单词ID：${e.wordId}`
 			}
 		} else {
 			current.value = "意见建议"

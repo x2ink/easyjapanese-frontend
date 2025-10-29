@@ -7,13 +7,7 @@
 			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" :key="item.id"
 				v-for="item in List" class="notebook-item">
 				<div class="notebook-header">
-					<view v-if="item.icon.type=='image'" class="notebook-icon _BACKGROUND"
-						:style="{backgroundImage:`url('${item.icon.data}')`}">
-					</view>
-					<div v-else class="notebook-icon" :style="{backgroundColor: item.icon.bg}">
-						<text v-if="item.icon.type=='icon'" class="fas" :class="item.icon.data"></text>
-						<text class="text" v-else>{{item.icon.data}}</text>
-					</div>
+					<image :src="item.icon" class="notebook-icon"></image>
 					<div class="notebook-info">
 						<div class="notebook-name">
 							<text>{{item.name}}</text>
@@ -40,7 +34,8 @@
 				</div>
 
 			</div>
-			<wd-status-tip v-if="List.value==0&&!loading" image="https://jp.x2.ink/images/status/blank.png" tip="还没有创建生词本~" />
+			<wd-status-tip v-if="List.value==0&&!loading" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+				tip="还没有创建生词本~" />
 		</div>
 		<!-- 创建按钮 -->
 		<button @click="openPopup('create')" class="create-btn" id="createNotebookBtn">
@@ -274,11 +269,11 @@
 		getList()
 	}
 	const List = ref([])
-	const loading=ref(true)
+	const loading = ref(true)
 	const getList = async () => {
 		const res = await $http.word.getSelfBooks(wordId.value)
 		List.value = res.data
-		loading.value=false
+		loading.value = false
 	}
 	const wordId = ref(0)
 	const selectBook = ref(false)

@@ -23,13 +23,7 @@
 			   { width: '100%' ,height:'14px'}]" />
 			</view>
 			<view v-else class="book-card">
-				<view v-if="learnInfo.book_info.icon.type=='image'" class="book-cover _BACKGROUND"
-					:style="{backgroundImage:`url('${learnInfo.book_info.icon.data}')`}">
-				</view>
-				<view v-else class="book-cover" :style="{background:learnInfo.book_info.icon.bg}">
-					<text v-if="learnInfo.book_info.icon.type=='text'">{{learnInfo.book_info.icon.data}}</text>
-					<text v-else style="font-size: 22px;" class="fas" :class="learnInfo.book_info.icon.data"></text>
-				</view>
+				<image :src="learnInfo.book_info.icon" mode="aspectFill" class="book-cover"></image>
 				<view class="book-info">
 					<view class="book-header">
 						<text class="book-title">{{learnInfo.book_info.name}}</text>
@@ -133,7 +127,8 @@
 				</view>
 			</view>
 			<view class="task-list" :style="{marginTop:userStore().loginStatus?'12px':'0'}">
-				<wd-status-tip v-if="!userStore().loginStatus" image="https://jp.x2.ink/images/status/login.png" tip="登录之后才会显示哦" />
+				<wd-status-tip v-if="!userStore().loginStatus" image="https://jp.x2.ink/images/status/login.png"
+					tip="登录之后才会显示哦" />
 				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
 					v-for="item in wordTask" :key="item.id">
 					<view class="task-info">
@@ -221,11 +216,7 @@
 			"name": "",
 			"id": 0,
 			"describe": "",
-			"icon": {
-				"bg": "",
-				"data": "",
-				"type": ""
-			}
+			"icon": ""
 		},
 		"dates": [],
 		"day": 0,
@@ -284,8 +275,8 @@
 	}
 	const wordTask = ref([])
 	const getWordTask = async () => {
-		const res = await $http.word.learnWord()
-		wordTask.value = res.data
+		// const res = await $http.word.learnWord()
+		// wordTask.value = res.data
 	}
 
 	onShow(() => {
@@ -415,6 +406,7 @@
 		.book-stats {
 			display: flex;
 			justify-content: space-between;
+
 			.stat-item {
 				font-size: 12px;
 				color: #999;
@@ -633,6 +625,7 @@
 			justify-content: space-between;
 			margin-bottom: 8px;
 			margin-top: 16px;
+
 			.weekday {
 				flex: 1;
 				text-align: center;

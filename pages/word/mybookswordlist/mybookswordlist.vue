@@ -39,15 +39,15 @@
 				<view>
 					<div class="word-header">
 						<div>
-							<span class="word-kanji">{{formatWordName(item.word,item.kana)}}</span>
+							<span class="word-kanji">{{formatWordName(item.words,item.kana)}}{{item.tone}}</span>
 						</div>
 					</div>
 					<div class="word-meaning">
-						<wd-text color="#424242" size="14px" :text="item.meaning.join('')"></wd-text>
+						<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
 					</div>
 				</view>
 			</div>
-			<wd-status-tip v-if="total==0" image="https://jp.x2.ink/images/status/blank.png" tip="单词本还没有单词~" />
+			<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" tip="单词本还没有单词~" />
 		</view>
 		<!-- 批量操作按钮 (默认隐藏) -->
 		<div class="batch-actions _GCENTER" v-if="selectCount>0">
@@ -89,7 +89,6 @@
 	import $http from "@/api/index.js"
 	const currentTab = ref(0)
 	const isAllSelect = computed(() => {
-		console.log(selectCount.value, List.value.length);
 		return selectCount.value == List.value.length && selectCount.value != 0
 	})
 	const tabs = ref([{
@@ -173,7 +172,13 @@
 		reList()
 	})
 	const getList = async () => {
-		const res = await $http.word.getBookWord(id.value, page.value, size.value, value.value, currentTab.value)
+		const res = await $http.word.getBookWord({
+			id: id.value,
+			page: page.value,
+			page_size: size.value,
+			val: value.value,
+			tab: currentTab.value
+		})
 		total.value = res.total
 		if (total.value === 0) {
 			return

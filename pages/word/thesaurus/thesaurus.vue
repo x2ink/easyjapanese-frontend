@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<scroll-view scroll-y="true" style="height: 100vh;">
 		<view class="head">
-			<NavbarDefault border title="选择单词书"></NavbarDefault>
+			<NavbarDefault border :title="title"></NavbarDefault>
 		</view>
 		<!-- 分类标签 -->
 		<div class="tabs-container">
@@ -10,13 +10,7 @@
 		<view class="list">
 			<div @click="goPage('/pages/word/mybookswordlist/mybookswordlist',{id:item.id})" class="item" :key="item.id"
 				v-for="item in bookList.get(tabList[current])">
-				<view v-if="item.icon.type=='image'" class="book-cover _BACKGROUND"
-					:style="{backgroundImage:`url('${item.icon.data}')`}">
-				</view>
-				<view v-else class="book-cover _GCENTER" :style="{background:item.icon.bg}">
-					<text v-if="item.icon.type=='text'">{{item.icon.data}}</text>
-					<text v-else style="font-size: 22px;" class="fas" :class="item.icon.data"></text>
-				</view>
+				<image class="book-cover" :src="item.icon"></image>
 				<div class="info">
 					<div class="title">{{item.name}}</div>
 					<div class="describe">{{item.describe}}</div>
@@ -28,7 +22,7 @@
 			</div>
 		</view>
 		<wd-toast />
-	</view>
+	</scroll-view>
 </template>
 
 <script setup>
@@ -37,7 +31,8 @@
 		computed
 	} from 'vue'
 	import {
-		onShow
+		onShow,
+		onLoad
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -80,6 +75,10 @@
 	}
 	const getWordBook = async () => {
 		const res = await $http.word.getWordBookList()
+		if (self.value) {
+			res.data = res.data.filter(item => item.user_id == userStore().userInfo.id)
+		}
+		console.log(res.data,  userStore().userInfo.id);
 		const map = res.data.reduce((acc, book) => {
 			if (!acc.has("全部")) {
 				acc.set("全部", []);
@@ -93,13 +92,19 @@
 		}, new Map());
 		bookList.value = map
 	}
-	onShow(() => {
-		if (!userStore().loginStatus) {
-			goPage("/pages/login/login?toast=请登录之后使用")
-		} else {
-			getWordBook()
-			getConfig()
+	const title = ref("选择单词书")
+	const self = ref(false)
+	onLoad((e) => {
+		if (e.title) {
+			title.value = e.title
 		}
+		if (e.self) {
+			self.value = e.self == "true"
+		}
+	})
+	onShow(() => {
+		getWordBook()
+		getConfig()
 	})
 </script>
 

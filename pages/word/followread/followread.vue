@@ -5,9 +5,12 @@
 		</view>
 		<!-- 单词展示区 -->
 		<div class="word-display">
-			<div class="word-kanji">{{word.word}}</div>
+			<button hover-class="none" title="发音">
+				<i class="fas fa-volume-up"></i>
+			</button>
+			<div class="word-kanji">{{ word.words.join('·') }}</div>
 			<div class="word-furigana">{{word.kana}}</div>
-			<div class="word-meaning">{{word.meaning.map(item=>item.meaning).join('；')}}</div>
+			<div class="word-meaning">{{word.description}}</div>
 		</div>
 
 		<!-- 录音控制区 -->
@@ -58,7 +61,11 @@
 					</div>
 				</div>
 			</div>
-			<wd-status-tip v-if="total==0" image="https://jp.x2.ink/images/status/blank.png" tip="还没有用户录音~" />
+			<wd-status-tip custom-style="margin-top: 40px;" :image-size="{
+          height: 128,
+          width: 128
+  }" v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+				tip="还没有用户录音~" />
 		</div>
 		<!-- 发布弹窗 -->
 		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
@@ -198,9 +205,10 @@
 	// 加载用户发音
 	const id = ref(null)
 	const word = ref({
-		word: null,
+		id: null,
+		words: [],
 		kana: null,
-		meaning: []
+		description: null
 	})
 	const total = ref(0)
 	const page = ref(1)
@@ -208,7 +216,11 @@
 	const List = ref([])
 	const noResult = ref(false)
 	const getList = async () => {
-		const res = await $http.word.getFollowRead(id.value, page.value, size.value)
+		const res = await $http.word.getFollowRead({
+			id: id.value,
+			page: page.value,
+			pageSize: size.value
+		})
 		total.value = res.total
 		List.value = List.value.concat(res.data.map(item => ({
 			...item,
@@ -235,9 +247,15 @@
 			url: `${http.baseUrl}upload`,
 			filePath: voicePath.value,
 			name: 'file',
+			header: {
+				"Authorization": userStore().token
+			},
+			formData: {
+				"file_name": `files/read/${new Date().getTime()}_${word.value.id}_${userStore().userInfo.id}.aac`
+			},
 			success: async (fileRes) => {
 				const res = await $http.word.followRead({
-					voice: JSON.parse(fileRes.data).data,
+					voice: JSON.parse(fileRes.data).url,
 					word_id: Number(id.value),
 				})
 				toast.close()
@@ -260,7 +278,10 @@
 		getList()
 	})
 	onUnload(() => {
-		recorderManager.stop();
+		endRecord()
+	})
+	onShow(() => {
+		endRecord()
 	})
 	const like = async (index, id) => {
 		if (!userStore().loginStatus) {
@@ -268,13 +289,17 @@
 			return
 		}
 		if (List.value[index].has) {
-			await $http.word.unlikeFollowRead({
-					id
+			await $http.common.like({
+					id,
+					type: "read",
+					like: false
 				})
 				--List.value[index].like
 		} else {
-			await $http.word.likeFollowRead({
-					id
+			await $http.common.like({
+					id,
+					type: "read",
+					like: true
 				})
 				++List.value[index].like
 		}
@@ -496,11 +521,18 @@
 
 	/* 单词展示区 */
 	.word-display {
+		position: relative;
 		padding: 24px 16px;
 		margin: 16px 16px 0 16px;
 		border-radius: 8px;
 		text-align: center;
 		background-color: #f8f9fa;
+
+		button {
+			position: absolute;
+			top: 16px;
+			right: 16px;
+		}
 	}
 
 	.word-kanji {
@@ -524,7 +556,11 @@
 	/* 录音控制区 */
 	.recording-control {
 		padding: 24px 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		text-align: center;
+		flex-direction: column;
 	}
 
 	.record-btn {

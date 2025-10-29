@@ -6,7 +6,25 @@ export default {
 	jcInfo(data) {
 		return http.get(`jc/info`, data)
 	},
-
+	// 获取单词书的单词列表
+	getBookWord(data) {
+		return http.get(`word/list`, data)
+	},
+	getRecommend() {
+		return http.get(`recommend`)
+	},
+	getWordBookList() {
+		return http.get(`book/list`)
+	},
+	getHomeInfo() {
+		return http.get("homeinfo")
+	},
+	getFollowRead(data) {
+		return http.get(`read`, data)
+	},
+	followRead(data) {
+		return http.post(`read`, data)
+	},
 
 
 
@@ -16,14 +34,9 @@ export default {
 	cjInfo(id) {
 		return http.get(`cj/info/${id}`)
 	},
-	getWordBook() {
-		return http.get(`book/list`)
-	},
-	getWordBookList() {
-		return http.get(`book/list`)
-	},
+
 	learnWord() {
-		return http.get("learn/newword")
+		return http.get("learn")
 	},
 	getTodaywords(data) {
 		return http.post("learn/gettodaywords", data)
@@ -40,9 +53,7 @@ export default {
 	getReview() {
 		return http.get("learn/review")
 	},
-	getHomeInfo() {
-		return http.get("learn/info")
-	},
+
 	// 新增单词本
 	addBook(data) {
 		return http.post("book", data)
@@ -80,22 +91,10 @@ export default {
 	addBookWord(data) {
 		return http.post(`book/word`, data)
 	},
-	// 获取单词书的单词列表
-	getBookWord(id, page, size, val, tab) {
-		if (val.length == 0)
-			return http.get(`book/word/${id}/${tab}/${page}/${size}`)
-		else
-			return http.get(`book/word/${id}/${tab}/${page}/${size}/${val}`)
-	},
-	getRecommend() {
-		return http.get(`recommend`)
-	},
-	followRead(data) {
-		return http.post(`followread`, data)
-	},
-	getFollowRead(id, page, size) {
-		return http.get(`followread/${id}/${page}/${size}`)
-	},
+
+
+
+
 	likeFollowRead(id) {
 		return http.post(`followread/like`, id)
 	},

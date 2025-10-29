@@ -21,6 +21,7 @@
 		{
 			"path": "pages/word/thesaurus/thesaurus",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -39,6 +40,7 @@
 		{
 			"path": "pages/word/worddetail/worddetail",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -162,10 +164,9 @@
 			}
 		},
 		{
-			"path" : "pages/test/test",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
+			"path": "pages/test/test",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 	],

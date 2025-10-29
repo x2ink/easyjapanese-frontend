@@ -1,82 +1,81 @@
 <template>
-	<view class="content-container">
-		<!-- 顶部区 -->
-		<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 4px)` }">
-			<view class="back-btn" @click="back">
-				<text class="fas fa-arrow-left"></text>
-			</view>
-
-			<view class="word-header-content">
-				<view class="row-bt-top">
-					<view>
-						<view class="word-title">{{ jcinfo.words.map(item => `【${item}】`).join('') }}</view>
-						<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
-						<view class="pitch-accent">
-							<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
+	<scroll-view scroll-y="true" style="height: 100vh;">
+		<view class="content-container">
+			<!-- 顶部区 -->
+			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 4px)` }">
+				<view class="back-btn" @click="back">
+					<text class="fas fa-arrow-left"></text>
+				</view>
+				<view class="word-header-content">
+					<view class="row-bt-top">
+						<view>
+							<view class="word-title">{{ jcinfo.words.join('·') }}</view>
+							<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
+							<view class="pitch-accent">
+								<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
+							</view>
 						</view>
-					</view>
 
-					<view class="row-mid" style="gap: 8px;">
-						<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
-							<text class="fas fa-volume-up"></text>
-						</view>
-						<view @click="goPage('/pages/word/followread/followread', {
+						<view class="row-mid" style="gap: 8px;">
+							<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
+								<text class="fas fa-volume-up"></text>
+							</view>
+							<view @click="goPage('/pages/word/followread/followread', {
 								id: id,
-								word: JSON.stringify({ word: jcinfo.word, kana: jcinfo.kana, meaning: jcinfo.meaning })
+								word: JSON.stringify({id:jcinfo.id, words: jcinfo.words, kana: jcinfo.kana, description: jcinfo.description })
 							})" class="action-btn">
-							<text class="fas fa-microphone"></text>
-						</view>
-					</view>
-				</view>
-			</view>
-		</view>
-
-		<!-- 主体内容 -->
-		<view class="main-content">
-			<!-- 词性与释义 -->
-			<view v-for="item in jcinfo.detail" :key="item.type" class="card">
-				<view class="text-bold mb-9">词性</view>
-				<view class="row-bt-mid mb-12">
-					<view><text class="tag tag-blue">{{ item.type }}</text></view>
-				</view>
-
-				<view class="text-bold mb-9">释义</view>
-				<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
-					<view>（{{ index + 1 }}）{{ meaning.zh }}</view>
-					<view class="examples">
-						<view class="example" v-for="(e, i) in meaning.example" :key="`example-${i}`">
-							<view>
-								<view class="ja">{{ e.jp }}</view>
-								<view class="ch">{{ e.zh }}</view>
+								<text class="fas fa-microphone"></text>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-
-			<!-- 相关单词 -->
-			<view class="card">
-				<view class="text-bold mb-12">相关单词</view>
-				<view class="grid-2">
-					<view v-for="(item, index) in relatedWords" :key="index" class="related-item">
-						<view class="text-bold">{{ item.word }}</view>
-						<view class="text-xs text-gray">{{ item.kana }}</view>
+			<view class="main-content">
+				<!-- 词性与释义 -->
+				<view v-for="item in jcinfo.detail" :key="item.type" class="card">
+					<!-- <view class="text-bold mb-9">词性</view> -->
+					<view class="row-bt-mid mb-12">
+						<view><text class="tag tag-blue">{{ item.type }}</text></view>
+					</view>
+					<!-- <view class="text-bold mb-9">释义</view> -->
+					<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
+						<view style="font-weight: bold;">{{ meaning.zh }}</view>
+						<view class="examples">
+							<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
+								<view>
+									<view class="ja">{{ e.jp }}</view>
+									<view class="ch">{{ e.zh }}<i style="font-size: 12px;" class="fas fa-volume-up"></i>
+									</view>
+								</view>
+							</view>
+						</view>
 					</view>
 				</view>
-			</view>
 
-			<!-- 占位 -->
-			<view style="height: calc(env(safe-area-inset-bottom) + 40px)"></view>
-		</view>
-		<!-- 操作 -->
-		<view @click="openSheet()" class="sheet _GCENTER">
-			<text class="fa-regular fa-pen-to-square"></text>
-			<view>
-				操作
+				<!-- 相关单词 -->
+				<view class="card">
+					<view class="text-bold mb-12">相关单词</view>
+					<view class="grid-2">
+						<view v-for="(item, index) in relatedWords" :key="index" class="related-item">
+							<view class="text-bold">{{ item.word }}</view>
+							<view class="text-xs text-gray">{{ item.kana }}</view>
+						</view>
+					</view>
+				</view>
+
+				<!-- 占位 -->
+				<view style="height: calc(env(safe-area-inset-bottom) + 40px)"></view>
 			</view>
+			<!-- 操作 -->
+			<view @click="openSheet()" class="sheet _GCENTER">
+				<text class="fa-regular fa-pen-to-square"></text>
+				<view>
+					操作
+				</view>
+			</view>
+			<wd-toast />
 		</view>
-		<wd-toast />
-	</view>
+	</scroll-view>
 </template>
 
 <script setup>
@@ -98,7 +97,7 @@
 	import {
 		userStore
 	} from '@/stores/index.js'
-
+	import word from '../../../api/word'
 	const toast = useToast()
 	const navBarHeight = ref(0)
 	const jcinfo = ref({
@@ -135,10 +134,18 @@
 	})
 	const openSheet = () => {
 		wx.showActionSheet({
-			itemList: ["加入单词本", "讨论区", "编辑单词", "问题反馈"],
+			itemList: ["加入单词本", "问题反馈"],
 			success(e) {
 				if (e.tapIndex == 0) {
-
+					goPage("/pages/word/thesaurus/thesaurus", {
+						self: true
+					})
+				} else if (e.tapIndex == 1) {
+					goPage("/pages/other/feedback/feedback", {
+						type: "单词纠错",
+						wordId: jcinfo.value.id,
+						wordType: 'jc'
+					})
 				}
 			}
 		})
@@ -324,6 +331,10 @@
 		.example {
 			border-left: 3px solid #07c160;
 			padding-left: 12px;
+
+			.ja {
+				font-size: 14px;
+			}
 
 			.ch {
 				padding-top: 4px;

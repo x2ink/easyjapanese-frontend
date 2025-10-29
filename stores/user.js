@@ -8,6 +8,7 @@ export const userModule = defineStore('user', {
 		return {
 			token: '',
 			userInfo: {
+				id:null,
 				address: "",
 				avatar: '',
 				nickname: '登录/注册',

@@ -3,13 +3,16 @@ export default {
 	uploadbase64(data) {
 		return http.post(`base64`, data)
 	},
-
-
-
-
 	retoken(userId) {
-		return http.get(`token/reset/${userId}`)
+		return http.get(`token?userId=${userId}`)
 	},
+	like(data) {
+		return http.post(`like`, data)
+	},
+
+
+
+
 	getVerbTrans(word) {
 		return http.get(`verbtrans/${word}`)
 	},

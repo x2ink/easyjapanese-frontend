@@ -4,7 +4,8 @@
 			<button class="avatar-container" open-type="chooseAvatar" @chooseavatar="chooseavatar">
 				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image"
 					mode="aspectFill" />
-				<image v-else src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" class="avatar-image" mode="aspectFill" />
+				<image v-else src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" class="avatar-image"
+					mode="aspectFill" />
 				<div v-if="userStore().loginStatus" class="camera-icon">
 					<div class="camera-bg">
 						<i class="fas fa-camera"></i>
@@ -157,7 +158,7 @@
 			success: async (successRes) => {
 				const res = await $http.common.uploadbase64({
 					data: successRes.data,
-					file_name: `files/avatar-${userStore().userInfo.id}.png`
+					file_name: `files/avatar/avatar-${userStore().userInfo.id}.png`
 				});
 				await $http.user.setUserInfo({
 					avatar: res.url,

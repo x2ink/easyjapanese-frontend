@@ -189,50 +189,50 @@
 	const misrememberShow = ref(false)
 	const loading = ref(true)
 	const init = async () => {
-		const timestamp = new Date().setHours(0, 0, 0, 0);
-		console.log('时间戳', localwordsStore().learnTime, timestamp);
-		if (localwordsStore().learnTime >= timestamp) {
-			console.log("读取本地");
-			total.value = localwordsStore().learnCache.total
-			pendingNew.value = localwordsStore().learnCache.pendingNew;
-			reviewQueue.value = localwordsStore().learnCache.reviewQueue;
-			learned.value = localwordsStore().learnCache.learned;
-			nextIsReview.value = localwordsStore().learnCache.learned;
-			initialQueue.value = localwordsStore().learnCache.initialQueue;
-			answerShow.value = localwordsStore().learnCache.answerShow;
-			misrememberShow.value = localwordsStore().learnCache.misrememberShow;
-			knowBtnShow.value = localwordsStore().learnCache.knowBtnShow;
-			wordList.value = localwordsStore().learnCache.wordList;
-			current.value = localwordsStore().learnCache.current;
-			wordinfo.value = localwordsStore().learnCache.wordinfo;
-			pattern.value = localwordsStore().learnCache.pattern;
-			playUserRecord(wordinfo.value.voice)
-		} else {
-			console.log("读取网络");
-			const res = await $http.word.learnWord()
-			wordList.value = res.data.map(item => {
-				return {
-					word: item,
-					id: item.id,
-					pattern: 0,
-					interval: 1,
-					error: 0
-				}
-			})
-			total.value = res.total
-			pendingNew.value = [...wordList.value];
-			reviewQueue.value = [];
-			learned.value = [];
-			nextIsReview.value = false;
-			initialQueue.value = pendingNew.value.splice(0, 4);
-			getNext()
-		}
+		// if (localwordsStore().learnTime >= timestamp) {
+		// 	console.log("读取本地");
+		// 	total.value = localwordsStore().learnCache.total
+		// 	pendingNew.value = localwordsStore().learnCache.pendingNew;
+		// 	reviewQueue.value = localwordsStore().learnCache.reviewQueue;
+		// 	learned.value = localwordsStore().learnCache.learned;
+		// 	nextIsReview.value = localwordsStore().learnCache.learned;
+		// 	initialQueue.value = localwordsStore().learnCache.initialQueue;
+		// 	answerShow.value = localwordsStore().learnCache.answerShow;
+		// 	misrememberShow.value = localwordsStore().learnCache.misrememberShow;
+		// 	knowBtnShow.value = localwordsStore().learnCache.knowBtnShow;
+		// 	wordList.value = localwordsStore().learnCache.wordList;
+		// 	current.value = localwordsStore().learnCache.current;
+		// 	wordinfo.value = localwordsStore().learnCache.wordinfo;
+		// 	pattern.value = localwordsStore().learnCache.pattern;
+		// 	playUserRecord(wordinfo.value.voice)
+		// } else {
+		// 	console.log("读取网络");
+		// 	const res = await $http.word.learnWord()
+		// 	wordList.value = res.data.map(item => {
+		// 		return {
+		// 			word: item,
+		// 			id: item.id,
+		// 			pattern: 0,
+		// 			interval: 1,
+		// 			error: 0
+		// 		}
+		// 	})
+		// 	total.value = res.total
+		// 	pendingNew.value = [...wordList.value];
+		// 	reviewQueue.value = [];
+		// 	learned.value = [];
+		// 	nextIsReview.value = false;
+		// 	initialQueue.value = pendingNew.value.splice(0, 4);
+		// 	getNext()
+		// }
+		const res = await $http.word.learnWord()
+		total.value = res.total
 		loading.value = false
 	}
 	const writefrommemory = () => {
 		localwordsStore().setWritefrommemory(wordList.value.map(item => item.word))
 		uni.redirectTo({
-			url:"/pages/word/writefrommemory/writefrommemory?type=local"
+			url: "/pages/word/writefrommemory/writefrommemory?type=local"
 		})
 	}
 	const misremember = () => {
@@ -302,13 +302,11 @@
 
 	// 私有方法：获取新词
 	const getNewWord = () => {
-		console.log("获取新词", pendingNew.value);
 		if (pendingNew.value.length > 0) {
 			const word = pendingNew.value.shift();
 			nextIsReview.value = true;
 			return word;
 		}
-		console.log("获取复习的词", reviewQueue.value);
 		return reviewQueue.value.shift(); // 新词取完后只取复习词
 	}
 	// 获取下一个要学习的单词
