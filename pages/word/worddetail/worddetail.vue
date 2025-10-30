@@ -138,7 +138,8 @@
 			success(e) {
 				if (e.tapIndex == 0) {
 					goPage("/pages/word/thesaurus/thesaurus", {
-						self: true
+						self: true,
+						wordId: jcinfo.value.id
 					})
 				} else if (e.tapIndex == 1) {
 					goPage("/pages/other/feedback/feedback", {

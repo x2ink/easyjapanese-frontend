@@ -81,12 +81,6 @@
 			}
 		},
 		{
-			"path": "pages/word/mybooks/mybooks",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/word/mybookswordlist/mybookswordlist",
 			"style": {
 				"navigationStyle": "custom"

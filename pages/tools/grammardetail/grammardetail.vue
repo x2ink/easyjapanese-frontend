@@ -52,18 +52,6 @@
 		<view style="height: calc(env(safe-area-inset-bottom) + 60px);">
 		
 		</view>
-		<!-- 操作栏 -->
-	<!-- 	<div class="bottom-actions">
-			<view @click="goPage('/pages/word/mybooks/mybooks',{wordId:id})" class="bottom-btn btn-gray">
-				<text class="fas fa-bookmark" style="margin-right: 4.5px;"></text> 收藏
-			</view>
-			<view class="bottom-btn btn-gray">
-				<text class="fas fa-search" style="margin-right: 4.5px;"></text> 全网搜索
-			</view>
-			<view class="bottom-btn btn-gray">
-				<text class="fas fa-pen-to-square" style="margin-right: 4.5px;"></text> 笔记
-			</view>
-		</div> -->
 	</view>
 </template>
 

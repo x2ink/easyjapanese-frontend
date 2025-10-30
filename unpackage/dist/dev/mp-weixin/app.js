@@ -15,7 +15,6 @@ if (!Math) {
   "./pages/tools/grammar/grammar.js";
   "./pages/tools/grammardetail/grammardetail.js";
   "./pages/tools/commonwords/commonwords.js";
-  "./pages/word/mybooks/mybooks.js";
   "./pages/word/mybookswordlist/mybookswordlist.js";
   "./pages/tools/translate/translate.js";
   "./pages/word/followread/followread.js";

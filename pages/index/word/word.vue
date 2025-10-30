@@ -35,23 +35,23 @@
 				</div>
 			</div>
 			<div class="feature-grid">
-				<div class="feature-card word-card" @click="goPage('/pages/word/mybooks/mybooks')">
+				<div class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus',{title:'词库'})">
 					<div class="feature-icon blue">
-						<i class="fas fa-book-open"></i>
+						<i class="fas fa-book"></i>
 					</div>
-					<div class="feature-name">生词本</div>
+					<div class="feature-name">我的词库</div>
 				</div>
 				<div class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus',{title:'词库'})">
 					<div class="feature-icon purple">
-						<i class="fas fa-book"></i>
+						<i class="fas fa-book-open"></i>
 					</div>
-					<div class="feature-name">词库</div>
+					<div class="feature-name">语法学习</div>
 				</div>
 				<div class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
 					<div class="feature-icon orange">
 						<i class="fas fa-sticky-note"></i>
 					</div>
-					<div class="feature-name">笔记</div>
+					<div class="feature-name">学习笔记</div>
 				</div>
 				<div class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
 					<div class="feature-icon green">
