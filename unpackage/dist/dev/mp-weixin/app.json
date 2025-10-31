@@ -12,10 +12,9 @@
     "pages/tools/grammar/grammar",
     "pages/tools/grammardetail/grammardetail",
     "pages/tools/commonwords/commonwords",
-    "pages/word/mybookswordlist/mybookswordlist",
+    "pages/word/wordlist/wordlist",
     "pages/tools/translate/translate",
     "pages/word/followread/followread",
-    "pages/word/edit/edit",
     "pages/other/feedback/feedback",
     "pages/other/about/about",
     "pages/tools/notedetail/notedetail",
@@ -24,8 +23,7 @@
     "pages/other/browse/browse",
     "pages/other/setplan/setplan",
     "pages/word/review/review",
-    "pages/word/dictation/dictation",
-    "pages/test/test"
+    "pages/word/dictation/dictation"
   ],
   "window": {
     "navigationBarTextStyle": "black",

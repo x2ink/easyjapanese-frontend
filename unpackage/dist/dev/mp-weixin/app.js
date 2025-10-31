@@ -15,10 +15,9 @@ if (!Math) {
   "./pages/tools/grammar/grammar.js";
   "./pages/tools/grammardetail/grammardetail.js";
   "./pages/tools/commonwords/commonwords.js";
-  "./pages/word/mybookswordlist/mybookswordlist.js";
+  "./pages/word/wordlist/wordlist.js";
   "./pages/tools/translate/translate.js";
   "./pages/word/followread/followread.js";
-  "./pages/word/edit/edit.js";
   "./pages/other/feedback/feedback.js";
   "./pages/other/about/about.js";
   "./pages/tools/notedetail/notedetail.js";
@@ -28,7 +27,6 @@ if (!Math) {
   "./pages/other/setplan/setplan.js";
   "./pages/word/review/review.js";
   "./pages/word/dictation/dictation.js";
-  "./pages/test/test.js";
 }
 const _sfc_main = {
   onShareAppMessage() {

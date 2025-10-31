@@ -114,7 +114,7 @@
 	}
 	const goDetail = (item) => {
 		if (!self.value) {
-			goPage('/pages/word/mybookswordlist/mybookswordlist', {
+			goPage('/pages/word/wordlist/wordlist', {
 				id: item.id
 			})
 		}

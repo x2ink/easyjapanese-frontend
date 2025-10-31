@@ -65,6 +65,7 @@
 		{
 			"path": "pages/tools/grammar/grammar",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -81,7 +82,7 @@
 			}
 		},
 		{
-			"path": "pages/word/mybookswordlist/mybookswordlist",
+			"path": "pages/word/wordlist/wordlist",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -94,12 +95,6 @@
 		},
 		{
 			"path": "pages/word/followread/followread",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/edit/edit",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -155,12 +150,6 @@
 			"path": "pages/word/dictation/dictation",
 			"style": {
 				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/test/test",
-			"style": {
-				"navigationBarTitleText": ""
 			}
 		}
 	],

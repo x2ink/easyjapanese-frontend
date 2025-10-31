@@ -1,55 +1,47 @@
 <template>
-	<view>
+	<scroll-view :scroll-top="wrapScrollTop" @scroll="reachBottom" scroll-y="true" style="height: 100vh;">
 		<view class="head">
 			<NavbarDefault border title="语法学习"></NavbarDefault>
-			<!-- 搜索栏 -->
-			<div class="search-bg">
-				<div class="search-bar">
-					<text class="fas fa-search"></text>
-					<input @confirm="search" confirm-type="search" type="text" placeholder="搜索语法">
-				</div>
-			</div>
-			<!-- 标签 -->
-			<div class="tabs-container">
-				<TabSlider @changeTab="changeTab" :current="current" :tabList="menu"></TabSlider>
-			</div>
 		</view>
+		<div class="search-bg">
+			<div class="search-bar">
+				<text class="fas fa-search"></text>
+				<input @confirm="search" confirm-type="search" type="text" placeholder="搜索语法">
+			</div>
+		</div>
+		<div class="tabs-container">
+			<TabSlider @changeTab="changeTab" :current="current" :tabList="menu"></TabSlider>
+		</div>
 		<view class="list">
 			<div class="item" @click="goPage('/pages/tools/grammardetail/grammardetail',{id:item.id})" :key="item.id"
 				v-for="item in grammars">
 				<div>
 					<div class="title">
 						<text>{{item.grammar}}</text>
-						<span class="level-tag" :class="item.level">{{item.level}}</span>
+						<span class="level-tag" :class="item.level">N{{item.level}}</span>
 					</div>
 					<div class="content">
-						<wd-text size="14px" :lines="2" color="#4b5563"
-							:text="item.explain.replace(/<br>/g,'')"></wd-text>
+						<view style="font-size: 14px;color: #4b5563;">{{item.meanings.join(';')}}</view>
 					</div>
-
-				</div>
-				<div class="example">
-					<text class="fas fa-bookmark"></text> <wd-text size="14px" :lines="1" color="#9ca3af"
-						:text="`例:${item.example[0].ch}(${item.example[0].ja})`"></wd-text>
 				</div>
 			</div>
 		</view>
-		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
-	</view>
+		<wd-backtop @onClick="backTop" :scrollTop="scrollTop"></wd-backtop>
+	</scroll-view>
+
 </template>
 
 <script setup>
 	import {
 		ref,
+		nextTick,
 		onMounted,
 		computed,
 		watch
 	} from 'vue'
 	import {
 		onLoad,
-		onShow,
-		onPageScroll,
-		onReachBottom
+		onShow
 	} from "@dcloudio/uni-app"
 	import {
 		goPage
@@ -63,12 +55,9 @@
 	const changeTab = (e) => {
 		current.value = e
 	}
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
 	watch(current, (newVal, oldVal) => {
 		value.value = ''
-		page.value = 0
+		page.value = 1
 		List.value = []
 		getList()
 	})
@@ -87,7 +76,7 @@
 			if (current.value == 0) {
 				return List.value
 			} else {
-				return List.value.filter(item => item.level == menu.value[current.value])
+				return List.value.filter(item => item.level == menu.value[current.value].replace("N", ''))
 			}
 		} else {
 			current.value = 0
@@ -101,26 +90,41 @@
 	const getList = async () => {
 		let res;
 		if (current.value == 0) {
-			res = await $http.common.searchGrammar(value.value, page.value, size.value)
+			res = await $http.common.getGrammarList({
+				page: page.value,
+				pageSize: size.value
+			})
 		} else {
-			res = await $http.common.getGrammarList(menu.value[current.value], page.value, size.value)
+			res = await $http.common.getGrammarList({
+				page: page.value,
+				pageSize: size.value,
+				level: menu.value[current.value].replace("N", '')
+			})
 		}
-
 		total.value = res.total
 		if (total.value === 0) {
 			return
 		}
 		List.value = List.value.concat(res.data)
 	}
-	onReachBottom(() => {
+	const wrapScrollTop = ref(0)
+	const reachBottom = (e) => {
+		scrollTop.value = e.detail.scrollTop;
 		if (total.value > List.value.length) {
 			++page.value
 			getList()
 		}
-	})
+	}
 	onMounted(() => {
 		getList()
 	})
+	const backTop = () => {
+		wrapScrollTop.value = scrollTop.value
+		nextTick(() => {
+			wrapScrollTop.value = 0
+		})
+		console.log("返回顶部");
+	}
 </script>
 <style>
 	page {
@@ -184,24 +188,13 @@
 			.content {
 				margin: 4px 0;
 			}
-
-			.example {
-				display: flex;
-				align-items: center;
-				gap: 6px;
-				font-size: 14px;
-
-				text {
-					color: #4AC45A;
-				}
-			}
 		}
 	}
-
 
 	.head {
 		position: sticky;
 		top: 0;
+		z-index: 999;
 		background-color: white;
 	}
 

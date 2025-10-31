@@ -64,7 +64,7 @@
 							</div>
 						</div>
 						<div class="word-meaning">
-							<wd-text color="#424242" size="14px" :text="item.meanings"></wd-text>
+							<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
 						</div>
 					</div>
 				</view>

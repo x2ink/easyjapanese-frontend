@@ -1,12 +1,10 @@
 "use strict";
 const api_user = require("./user.js");
 const api_word = require("./word.js");
-const api_trend = require("./trend.js");
 const api_common = require("./common.js");
 const $http = {
   user: api_user.user,
   word: api_word.word,
-  trend: api_trend.trend,
   common: api_common.common
 };
 exports.$http = $http;

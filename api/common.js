@@ -9,6 +9,13 @@ export default {
 	like(data) {
 		return http.post(`like`, data)
 	},
+	getGrammarList(data) {
+		return http.get(`grammar/list`, data)
+	},
+	getGrammarInfo(data) {
+		return http.get(`grammar/info`, data)
+	},
+
 
 
 
@@ -16,18 +23,7 @@ export default {
 	getVerbTrans(word) {
 		return http.get(`verbtrans/${word}`)
 	},
-	getGrammarList(level, page, size) {
-		return http.get(`grammar/list/${level}/${page}/${size}`)
-	},
-	searchGrammar(val, page, size) {
-		if (val.length == 0)
-			return http.get(`grammar/search/${page}/${size}`)
-		else
-			return http.get(`grammar/search/${page}/${size}/${val}`)
-	},
-	getGrammarInfo(id) {
-		return http.get(`grammar/${id}`)
-	},
+
 	feedback(data) {
 		return http.post(`feedback`, data)
 	},

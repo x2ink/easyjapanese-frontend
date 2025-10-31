@@ -61,7 +61,7 @@
 
 	.navwrap {
 		position: sticky;
-		z-index: 99;
+		z-index: 999;
 		top: 0;
 		background-color: #F3F3F5;
 

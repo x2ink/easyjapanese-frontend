@@ -41,7 +41,7 @@
 					</div>
 					<div class="feature-name">我的词库</div>
 				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus',{title:'词库'})">
+				<div class="feature-card word-card" @click="goPage('/pages/tools/grammar/grammar')">
 					<div class="feature-icon purple">
 						<i class="fas fa-book-open"></i>
 					</div>
