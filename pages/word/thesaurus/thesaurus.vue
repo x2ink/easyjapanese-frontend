@@ -123,7 +123,7 @@
 	const pattern = ref('create')
 	const formData = ref({
 		id: null,
-		icon: "",
+		icon: "https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/cover/zizhi.png",
 		name: "",
 		describe: ""
 	})
