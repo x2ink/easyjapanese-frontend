@@ -1,58 +1,45 @@
 <template>
-	<view>
+	<scroll-view style="height: 100vh;" scroll-y="true">
 		<view class="head">
 			<NavbarDefault border title="语法详情"></NavbarDefault>
 		</view>
 		<div class="info bg-white">
 			<div style="display: flex;flex-direction: column;gap: 8px;align-items: flex-start;">
 				<view class="grammar">{{data.grammar}}</view>
-				<text class="level-tag N3">{{data.level}}语法</text>
+				<text class="level-tag N3">N{{data.level}}语法</text>
 			</div>
-			<div class="explain" v-html="data.explain.replace('<br>','')">
-			</div>
-		</div>
-		<div class="bg-white">
-			<div class="section-title">基本结构</div>
-			<div v-html="data.struct.replace('<br>','')" style="font-size: 14px;">
+			<div class="explain">
+				{{data.meanings.join("\n")}}
 			</div>
 		</div>
 		<div class="bg-white">
-			<div class="section-title">使用场景</div>
-			<div v-html="data.scene.replace('<br>','')" style="font-size: 14px;">
+			<div class="section-title">接续</div>
+			<view v-html="data.connect" class="connect">
+			</view>
+		</div>
+		<div class="bg-white">
+			<div class="section-title">详细解释</div>
+			<div style="font-size: 14px;white-space: pre-line">
+				{{data.explanation.join("\n")}}
 			</div>
 		</div>
 		<div class="bg-white">
 			<div class="section-title">例句</div>
 			<view class="examples">
-				<view class="example" :key="item.id" v-for="item in data.example">
+				<view class="example" :key="item.id" v-for="item in data.examples">
 					<view>
-						<view class="ja jpfont">
-							<view class="worditem" v-for="item1 in item.read">
-								<view class="top">{{item1.top}}</view>
-								<view :class="{underline:item1.top}" class="body">{{item1.body}}</view>
-							</view>
-						</view>
+						<view class="ja" v-html="renderRubyHTMLWeb(item.ruby)"></view>
 						<view class="ch">
-							{{item.ch}}
+							{{item.zh}}
 						</view>
 					</view>
 				</view>
 			</view>
 		</div>
-		<div class="bg-white">
-			<div class="section-title">注意事项</div>
-			<div v-html="data.warning.replace('<br>','')" style="font-size: 14px;">
-			</div>
-		</div>
-		<div class="bg-white">
-			<div class="section-title">总结</div>
-			<div v-html="data.summary.replace('<br>','')" style="font-size: 14px;">
-			</div>
-		</div>
-		<view style="height: calc(env(safe-area-inset-bottom) + 60px);">
-		
+		<view style="height: calc(env(safe-area-inset-bottom));">
+
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script setup>
@@ -68,22 +55,32 @@
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	const data = ref({
-		explain: '',
-		struct: '',
-		scene: '',
-		warning: '',
-		summary: ''
+		examples: [],
+		id: null,
+		explanation: [],
+		connect: '',
+		grammar: '',
+		level: '',
+		meanings: []
 	})
 	const getInfo = async (id) => {
-		const res = await $http.common.getGrammarInfo(id)
+		const res = await $http.common.getGrammarInfo({
+			id
+		})
 		data.value = res.data
 	}
-
+	const renderRubyHTMLWeb = (rubyList) => {
+		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
+	}
 	onLoad((e) => {
 		getInfo(e.id)
 	})
 </script>
-
+<style>
+	.connect table th {
+		white-space: nowrap !important;
+	}
+</style>
 <style lang="scss" scoped>
 	/* 底部操作栏 */
 	.bottom-actions {
@@ -121,8 +118,6 @@
 		gap: 12px;
 
 		.example {
-			border-left: 3px solid #07C160;
-			padding-left: 12px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -138,26 +133,7 @@
 			}
 
 			.ja {
-				display: flex;
-				flex-wrap: wrap;
-
-				.worditem {
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: flex-end;
-
-					.top {
-						// color: #57D09B;
-						font-size: 12px;
-						// height: 12px;
-						margin: 2px;
-					}
-
-					.body {
-						font-size: 16px;
-					}
-				}
+				font-size: 16px;
 			}
 		}
 	}
@@ -173,6 +149,14 @@
 		padding: 2px 6px;
 		border-radius: 4px;
 		font-weight: bold;
+	}
+
+	.connect {
+		font-size: 14px;
+
+		th {
+			white-space: nowrap;
+		}
 	}
 
 	.section-title {
@@ -209,6 +193,7 @@
 		}
 
 		.explain {
+			white-space: pre-line;
 			color: #4b5563;
 			font-size: 14px;
 			margin-top: 8px;

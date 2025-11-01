@@ -1,5 +1,6 @@
 <template>
-	<scroll-view :scroll-top="wrapScrollTop" @scroll="reachBottom" scroll-y="true" style="height: 100vh;">
+	<scroll-view :scroll-top="wrapScrollTop" @scrolltolower="reachBottom" @scroll="scroll" scroll-y="true"
+		style="height: 100vh;">
 		<view class="head">
 			<NavbarDefault border title="语法学习"></NavbarDefault>
 		</view>
@@ -14,7 +15,7 @@
 		</div>
 		<view class="list">
 			<div class="item" @click="goPage('/pages/tools/grammardetail/grammardetail',{id:item.id})" :key="item.id"
-				v-for="item in grammars">
+				v-for="item in List">
 				<div>
 					<div class="title">
 						<text>{{item.grammar}}</text>
@@ -71,18 +72,6 @@
 		getList()
 	}
 	const value = ref('')
-	const grammars = computed(() => {
-		if (value.value.trim().length == 0) {
-			if (current.value == 0) {
-				return List.value
-			} else {
-				return List.value.filter(item => item.level == menu.value[current.value].replace("N", ''))
-			}
-		} else {
-			current.value = 0
-			return List.value.filter(item => item.grammar.indexOf(value.value) >= 0)
-		}
-	})
 	const total = ref(0)
 	const page = ref(1)
 	const size = ref(20)
@@ -90,10 +79,18 @@
 	const getList = async () => {
 		let res;
 		if (current.value == 0) {
-			res = await $http.common.getGrammarList({
-				page: page.value,
-				pageSize: size.value
-			})
+			if (value.value) {
+				res = await $http.common.getGrammarList({
+					page: page.value,
+					pageSize: size.value,
+					val: value.value
+				})
+			} else {
+				res = await $http.common.getGrammarList({
+					page: page.value,
+					pageSize: size.value
+				})
+			}
 		} else {
 			res = await $http.common.getGrammarList({
 				page: page.value,
@@ -108,12 +105,14 @@
 		List.value = List.value.concat(res.data)
 	}
 	const wrapScrollTop = ref(0)
-	const reachBottom = (e) => {
-		scrollTop.value = e.detail.scrollTop;
+	const reachBottom = () => {
 		if (total.value > List.value.length) {
 			++page.value
 			getList()
 		}
+	}
+	const scroll = (e) => {
+		scrollTop.value = e.detail.scrollTop;
 	}
 	onMounted(() => {
 		getList()
