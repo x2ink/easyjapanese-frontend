@@ -9,22 +9,22 @@
 			<i class="fa-solid fa-circle-check"></i>
 		</div>
 		<!-- 完成标题 -->
-		<h1 class="completion-title">默写完成！</h1>
+		<h1 class="completion-title">{{total>0?'默写完成！':'暂无单词默写'}}</h1>
 		<!-- 完成描述 -->
-		<p class="completion-desc">
+		<view v-if="total>0" class="completion-desc">
 			你已经完成了本组的{{doneList.length}}个单词默写<br>
 			坚持就是胜利，继续加油！
-		</p>
+		</view>
 		<!-- 按钮组 -->
-		<div class="button-container">
+		<view v-if="total>0" class="button-container">
 			<button class="primary-button" @click="getAllWords()">继续默写</button>
 			<button class="secondary-button" @click="goLearn()">再学一组</button>
-		</div>
+		</view>
 	</div>
 	<view v-else>
 		<!-- 单词展示区 -->
 		<div class="word-display">
-			<div class="japanese-word">{{wordinfo.meaning.map(item=>item.meaning).join('；')}}</div>
+			<div class="japanese-word">{{wordinfo.description}}</div>
 		</div>
 		<!-- 输入区 -->
 		<div class="input-container">
@@ -34,8 +34,7 @@
 			<button class="primary-button" @click="submit()">提交答案</button>
 			<view @click="showEye()" class="look-answer">
 				<text>查看答案</text>
-				<i style="margin-left: 4px;" :class="`${answerShow?'fa-eye-slash':'fa-eye'}`"
-					class="fa-solid"></i>
+				<i style="margin-left: 4px;" :class="`${answerShow?'fa-eye-slash':'fa-eye'}`" class="fa-solid"></i>
 			</view>
 		</div>
 
@@ -43,7 +42,7 @@
 		<div class="word-card" v-if="showAnwser">
 			<div class="card-header">
 				<div>
-					<div class="card-japanese">{{formatWordName(wordinfo.word,wordinfo.kana)}}</div>
+					<div class="card-japanese">{{formatWordName(wordinfo.words,wordinfo.kana)}}</div>
 					<div class="card-pronunciation">{{wordinfo.rome}}</div>
 				</div>
 				<view @click="playUserRecord(wordinfo.voice)" class="icon">
@@ -105,14 +104,11 @@
 	const progress = computed(() => {
 		return (doneList.value.length / total.value) * 100
 	})
-
 	const getAllWords = async () => {
-		const res = await $http.word.getTodaywords({
-			filter: localwordsStore().writeList.map(item => item.id),
-			type: "write"
+		const res = await $http.word.getLearnt({
+			filter: "write"
 		})
 		if (res.data.length == 0) {
-			toast.warning("今日没有单词需要默写了")
 			return
 		}
 		wordList.value = res.data
@@ -126,22 +122,22 @@
 	}
 	const showAnwser = ref(false)
 	const total = ref(0)
-	const submit = () => {
+	const submit = async () => {
 		if (value.value.trim().length == 0) {
 			toast.warning(`答案不可为空`)
 			return
 		}
-		if (value.value == wordinfo.value.word || value.value == wordinfo.value.kana) {
+		if (wordinfo.value.words.includes(value.value) || value.value == wordinfo.value.kana) {
 			// 答案正确
 			if (showAnwser.value) {
 				wordList.value.shift()
 				wordList.value.push(wordinfo.value)
 			} else {
 				const timestamp = new Date().setHours(0, 0, 0, 0);
-				if (localwordsStore().time > timestamp) {
-					localwordsStore().clear()
-				}
-				localwordsStore().pushWrite(wordinfo.value)
+				await $http.word.setLearnt({
+					type: "write",
+					word_id: wordinfo.value.id
+				})
 				toast.success("答案正确")
 				doneList.value.push(wordinfo.value)
 				wordList.value.shift()
@@ -163,7 +159,7 @@
 	}
 	onLoad(op => {
 		if (op.type == "local") {
-			wordList.value = localwordsStore().localWritefrommemory
+			wordList.value = localwordsStore().writeWordList
 			total.value = wordList.value.length
 			getNext()
 		} else {

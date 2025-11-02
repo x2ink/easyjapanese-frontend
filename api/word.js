@@ -52,6 +52,12 @@ export default {
 	getReview() {
 		return http.get("review")
 	},
+	getLearnt(data) {
+		return http.get("learnt", data)
+	},
+	setLearnt(data) {
+		return http.post("learnt", data)
+	},
 
 
 

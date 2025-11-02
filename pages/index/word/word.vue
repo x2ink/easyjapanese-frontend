@@ -125,10 +125,7 @@
 	}
 	const todayWordCount = ref(0)
 	const getTodayWords = async () => {
-		console.log("获取今日单词");
-		const res = await $http.word.getTodaywords({
-			filter: []
-		})
+		const res = await $http.word.getLearnt()
 		todayWordCount.value = res.data.length
 	}
 	onShow(() => {

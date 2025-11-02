@@ -137,7 +137,12 @@
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext()
 	innerAudioContext.autoplay = false
-
+	const writefrommemory = () => {
+		localwordsStore().setWriteWordList(learnedQueue.value.map(item => item.word))
+		goPage('/pages/word/writefrommemory/writefrommemory', {
+			type: 'local'
+		})
+	}
 	// 当前单词信息
 	const wordinfo = ref({
 		words: [],

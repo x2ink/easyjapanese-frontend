@@ -5,6 +5,7 @@ export const localwordsModule = defineStore('localwords', {
 	unistorage: true,
 	state: () => {
 		return {
+			writeWordList: [],
 			reviewCache: {
 				wordinfo: {},
 				doneTask: false,
@@ -44,6 +45,9 @@ export const localwordsModule = defineStore('localwords', {
 		}
 	},
 	actions: {
+		setWriteWordList(data) {
+			this.writeWordList = data
+		},
 		setReviewCache(cache) {
 			this.learnCache = cache
 		},
