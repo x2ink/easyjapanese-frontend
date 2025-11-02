@@ -53,7 +53,7 @@
 				</view>
 
 				<!-- 相关单词 -->
-				<view class="card">
+			<!-- 	<view class="card">
 					<view class="text-bold mb-12">相关单词</view>
 					<view class="grid-2">
 						<view v-for="(item, index) in relatedWords" :key="index" class="related-item">
@@ -61,7 +61,7 @@
 							<view class="text-xs text-gray">{{ item.kana }}</view>
 						</view>
 					</view>
-				</view>
+				</view> -->
 
 				<!-- 占位 -->
 				<view style="height: calc(env(safe-area-inset-bottom) + 40px)"></view>

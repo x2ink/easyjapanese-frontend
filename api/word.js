@@ -43,9 +43,15 @@ export default {
 	setBook(data) {
 		return http.post(`book/info`, data)
 	},
-
-
-
+	submitWord(data) {
+		return http.post(`review`, data)
+	},
+	learnWord() {
+		return http.get("learn")
+	},
+	getReview() {
+		return http.get("review")
+	},
 
 
 
@@ -57,9 +63,7 @@ export default {
 		return http.get(`cj/info/${id}`)
 	},
 
-	learnWord() {
-		return http.get("learn")
-	},
+
 	getTodaywords(data) {
 		return http.post("learn/gettodaywords", data)
 	},
@@ -72,9 +76,7 @@ export default {
 	updaterecord(data) {
 		return http.post("learn/record/update", data)
 	},
-	getReview() {
-		return http.get("learn/review")
-	},
+
 
 
 	// 获取我的单词本

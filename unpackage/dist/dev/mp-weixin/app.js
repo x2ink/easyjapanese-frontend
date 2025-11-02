@@ -7,7 +7,7 @@ if (!Math) {
   "./pages/login/login.js";
   "./pages/word/thesaurus/thesaurus.js";
   "./pages/word/search/search.js";
-  "./pages/learn/learn/learn.js";
+  "./pages/learn/learn.js";
   "./pages/word/worddetail/worddetail.js";
   "./pages/word/writefrommemory/writefrommemory.js";
   "./pages/tools/verbtransfiguration/verbtransfiguration.js";
@@ -22,7 +22,6 @@ if (!Math) {
   "./pages/other/about/about.js";
   "./pages/tools/notedetail/notedetail.js";
   "./pages/tools/notes/notes.js";
-  "./pages/learn/review/review.js";
   "./pages/other/browse/browse.js";
   "./pages/other/setplan/setplan.js";
   "./pages/word/review/review.js";

@@ -48,7 +48,7 @@
 			<!-- 学习/复习按钮 -->
 			<view class="action-buttons">
 				<!-- 智能复习按钮 -->
-				<view class="action-button review-button" @click="goReview()">
+				<view class="action-button review-button" @click="goLearn('review')">
 					<view class="action-icon">
 						<text class="fas fa-sync-alt"></text>
 					</view>
@@ -58,7 +58,7 @@
 					</view>
 				</view>
 				<!-- 开始学习按钮 -->
-				<view class="action-button learn-button" @click="goLearn()">
+				<view class="action-button learn-button" @click="goLearn('learn')">
 					<view class="action-icon">
 						<text class="fas fa-play"></text>
 					</view>
@@ -164,27 +164,25 @@
 	} from "@/stores/index.js"
 	import $http from "@/api/index.js"
 	const navBarHeight = ref(0)
-	const goLearn = () => {
+	const goLearn = (type) => {
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
 			return
 		}
-		if (learnInfo.value.learnnum == learnInfo.value.wordnum) {
-			toast.warning("没有需要学习的单词了")
+		if (type == "learn") {
+			if (learnInfo.value.learnnum == learnInfo.value.wordnum) {
+				toast.warning("没有需要学习的单词了")
+				return
+			}
 		} else {
-			goPage('/pages/learn/learn/learn')
+			if (learnInfo.value.review == 0) {
+				toast.warning("没有需要复习的单词了")
+				return
+			}
 		}
-	}
-	const goReview = () => {
-		if (!userStore().loginStatus) {
-			goPage("/pages/login/login?toast=请登录之后使用")
-			return
-		}
-		if (learnInfo.value.review == 0) {
-			toast.warning("没有需要复习的单词了")
-		} else {
-			goPage('/pages/learn/review/review')
-		}
+		goPage('/pages/learn/learn', {
+			type
+		})
 	}
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync();

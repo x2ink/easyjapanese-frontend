@@ -32,8 +32,9 @@
 			}
 		},
 		{
-			"path": "pages/learn/learn/learn",
+			"path": "pages/learn/learn",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -119,12 +120,6 @@
 		},
 		{
 			"path": "pages/tools/notes/notes",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/learn/review/review",
 			"style": {
 				"navigationStyle": "custom"
 			}

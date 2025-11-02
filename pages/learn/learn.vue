@@ -1,122 +1,125 @@
 <template>
-	<Loading v-if="loading"></Loading>
-	<view v-else>
-		<view class="head">
-			<NavbarDefault title="单词学习"></NavbarDefault>
-		</view>
-		<div v-if="doneTask" class="container">
-			<div class="completion-icon">
-				<i class="fa-solid fa-circle-check"></i>
-			</div>
-
-			<h1 class="completion-title">学习完成！</h1>
-
-			<p class="completion-desc">
-				你已经完成了本组的{{total}}个单词学习<br>
-				坚持就是胜利，继续加油！
-			</p>
-
-			<div class="stats-container">
-				<div class="stat-item">
-					<div class="stat-value">{{total}}</div>
-					<div class="stat-label">本组学习</div>
-				</div>
-				<div class="stat-item">
-					<div class="stat-value">85%</div>
-					<div class="stat-label">正确率</div>
-				</div>
-			</div>
-
-			<div class="button-container">
-				<button @click="writefrommemory()" class="primary-button">立即默写</button>
-				<button @click="againLearn()" class="secondary-button">再学一组</button>
-			</div>
-		</div>
+	<scroll-view scroll-y="true" style="height: 100vh;">
+		<Loading v-if="loading"></Loading>
 		<view v-else>
-			<div class="progress-container">
-				<div class="progress-text">
-					<span>今日进度: {{learned}}/{{total}}</span>
-					<span>{{progressPercent}}%</span>
+			<view class="head">
+				<NavbarDefault :title="`单词${typeTitle}`"></NavbarDefault>
+			</view>
+			<div v-if="doneTask" class="container">
+				<div class="completion-icon">
+					<i class="fa-solid fa-circle-check"></i>
 				</div>
-				<div class="progress-bar">
-					<div class="progress-fill" :style="{width:`${progressPercent}%`}"></div>
+				<h1 class="completion-title">{{typeTitle}}完成！</h1>
+				<p class="completion-desc">
+					你已经完成了本组的{{total}}个单词{{typeTitle}}<br>
+					坚持就是胜利，继续加油！
+				</p>
+				<div class="stats-container">
+					<div class="stat-item">
+						<div class="stat-value">{{total}}</div>
+						<div class="stat-label">本组{{typeTitle}}</div>
+					</div>
+					<div class="stat-item">
+						<div class="stat-value">{{rightPercentage}}%</div>
+						<div class="stat-label">正确率</div>
+					</div>
+				</div>
+
+				<div class="button-container">
+					<button @click="writefrommemory()" class="primary-button">立即默写</button>
+					<button @click="init()" class="secondary-button">再来一组</button>
 				</div>
 			</div>
-			<div class="word-card">
-				<button class="pronounce-btn" title="发音">
-					<i class="fas fa-volume-up"></i>
-				</button>
-				<div class="word-header _GCENTER">
-					<button v-if="wordinfo.step==2&&!showAnswer" class="pronounce-btn pronounce-header" title="发音">
+			<view v-else>
+				<div class="progress-container">
+					<div class="progress-text">
+						<span>今日进度: {{learned}}/{{total}}</span>
+						<span>{{progressPercent}}%</span>
+					</div>
+					<div class="progress-bar">
+						<div class="progress-fill" :style="{width:`${progressPercent}%`}"></div>
+					</div>
+				</div>
+				<div class="word-card">
+					<button class="pronounce-btn" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
-					<view v-else class="_GCENTER" style="flex-direction: column;">
-						<div class="word-kanji">{{wordinfo.words.join('·')}}</div>
-						<div class="word-furigana">{{wordinfo.kana}}</div>
-						<div class="word-romaji">{{wordinfo.rome}}</div>
-					</view>
-				</div>
-
-				<view class="word-details">
-					<view v-if="showAnswer" style="display: flex;flex-direction: column;gap: 12px;">
-						<view class="detail-row">
-							<view class="detail-label">词性</view>
-							<view class="detail-content">{{wordinfo.types}}</view>
+					<div class="word-header _GCENTER">
+						<button v-if="wordinfo.step==2&&!showAnswer" class="pronounce-btn pronounce-header" title="发音">
+							<i class="fas fa-volume-up"></i>
+						</button>
+						<view v-else class="_GCENTER" style="flex-direction: column;">
+							<div class="word-kanji">{{wordinfo.words.join('·')}}</div>
+							<div class="word-furigana">{{wordinfo.kana}}</div>
+							<div class="word-romaji">{{wordinfo.rome}}</div>
 						</view>
-						<view class="detail-row">
-							<view class="detail-label">释义</view>
-							<view class="detail-content">
-								{{wordinfo.description}}
+					</div>
+
+					<view class="word-details">
+						<view v-if="showAnswer" style="display: flex;flex-direction: column;gap: 12px;">
+							<view class="detail-row">
+								<view class="detail-label">词性</view>
+								<view class="detail-content">{{wordinfo.types}}</view>
+							</view>
+							<view class="detail-row">
+								<view class="detail-label">释义</view>
+								<view class="detail-content">
+									{{wordinfo.description}}
+								</view>
 							</view>
 						</view>
+						<wd-skeleton v-else theme="paragraph"
+							:row-col="[
+						[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
 					</view>
-					<wd-skeleton v-else theme="paragraph"
-						:row-col="[
-					[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
+				</div>
+				<view class="example" v-if="showAnswer||wordinfo.step==0">
+					<view v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
+						<view class="example-sentence">{{item.jp}}</view>
+						<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
+					</view>
 				</view>
-			</div>
-			<view class="example" v-if="showAnswer||wordinfo.step==0">
-				<view v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
-					<view class="example-sentence">{{item.jp}}</view>
-					<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
+				<view v-if="showAnswer" @click="goPage('/pages/word/worddetail/worddetail',{
+					id:wordinfo.id
+				})" class="search">
+					<text>查看词典</text>
 				</view>
-			</view>
-			<view style="height: calc(env(safe-area-inset-bottom) + 77px);">
+				<view style="height: calc(env(safe-area-inset-bottom) + 77px);">
 
+				</view>
+				<view v-if="showAnswer" class="action-buttons">
+					<button v-if="know" @click="misremember()" class="action-btn dont-know-btn">
+						<text class="fa-solid fa-face-sad-cry"></text>
+						<text>记错了</text>
+					</button>
+					<button @click="getNext()" class="action-btn next-btn">
+						<text class="fa-solid fa-hand-point-right"></text>
+						<text>下一个</text>
+					</button>
+				</view>
+				<view v-else class="action-buttons">
+					<button @click="unknowBtn()" class="action-btn dont-know-btn">
+						<text class="fa-solid fa-face-sad-cry"></text>
+						<text>不认识</text>
+					</button>
+					<button @click="knowBtn()" class="action-btn know-btn">
+						<text class="fa-solid fa-face-smile"></text>
+						<text>认识</text>
+					</button>
+				</view>
 			</view>
-			<view v-if="showAnswer" class="action-buttons">
-				<button v-if="know" @click="misremember()" class="action-btn dont-know-btn">
-					<text class="fa-solid fa-face-sad-cry"></text>
-					<text>记错了</text>
-				</button>
-				<button @click="getNext()" class="action-btn next-btn">
-					<text class="fa-solid fa-hand-point-right"></text>
-					<text>下一个</text>
-				</button>
-			</view>
-			<view v-else class="action-buttons">
-				<button @click="unknowBtn()" class="action-btn dont-know-btn">
-					<text class="fa-solid fa-face-sad-cry"></text>
-					<text>不认识</text>
-				</button>
-				<button @click="knowBtn()" class="action-btn know-btn">
-					<text class="fa-solid fa-face-smile"></text>
-					<text>认识</text>
-				</button>
-			</view>
+			<wd-toast />
 		</view>
-		<wd-toast />
-	</view>
+	</scroll-view>
 </template>
 
 <script setup>
 	import {
 		ref,
-		onMounted,
 		computed
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
-	import $http from "@/api/index.js" // 你的 $http 仍然保留
+	import $http from "@/api/index.js"
 	import Loading from "@/components/loading/loading.vue"
 	import {
 		useToast
@@ -125,9 +128,12 @@
 		goPage
 	} from "@/utils/common.js"
 	import {
-		userStore
-	} from '../../../stores'
-
+		userStore,
+		localwordsStore
+	} from '@/stores'
+	import {
+		onLoad
+	} from "@dcloudio/uni-app"
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext()
 	innerAudioContext.autoplay = false
@@ -145,15 +151,12 @@
 		step: 0,
 		isLearned: false
 	})
-
 	const loading = ref(true)
 	const doneTask = ref(false)
 	const showAnswer = ref(false)
 	const know = ref(false)
-	const total = ref(0) // 本组目标
+	const total = ref(0)
 	const sessionStep = ref(0)
-	const wordHistory = ref([])
-
 	// 算法状态机
 	const learningPhase = ref('initial') // 'initial', 'interleave_1_1', 'main_2_1'
 	const interleaveCounter = ref(0) // 阶段2 (1:1) 的新词计数器 (0-4)
@@ -169,53 +172,146 @@
 	const reviewQueue = ref([]) // 待复习词
 	const learnedQueue = ref([]) // 已掌握词
 	const wordList = ref([]) // 全部词记录
-
-	onMounted(() => {
-		init()
+	// 单词掌握评分映射表
+	const qualityMap = ref(new Map([
+		[0, 5],
+		[1, 4],
+		[2, 3],
+		[3, 2],
+		[4, 1],
+	]))
+	onLoad((e) => {
+		init(e.type)
 	})
 
 	/**
-	 * 初始化 (你的 uni.request 版本)
+	 * 初始化
 	 */
-	const init = async () => {
-		const {
-			data
-		} = await uni.request({
-			url: "http://192.168.1.7:8000/test",
-			method: "GET",
-			header: {
-				"Authorization": userStore().token
+	const writeCache = () => {
+		localwordsStore().setLearnTime(new Date().getTime())
+		let cache = {
+			wordinfo: wordinfo.value,
+			doneTask: doneTask.value,
+			showAnswer: showAnswer.value,
+			know: know.value,
+			sessionStep: sessionStep.value,
+			learningPhase: learningPhase.value,
+			interleaveCounter: interleaveCounter.value,
+			isReviewTurn: isReviewTurn.value,
+			reviewTurnsLeft: reviewTurnsLeft.value,
+			heldReviewWord: heldReviewWord.value,
+			initialQueue: initialQueue.value,
+			pendingNew: pendingNew.value,
+			reviewQueue: reviewQueue.value,
+			learnedQueue: learnedQueue.value,
+			wordList: wordList.value
+		}
+		if (learnType.value == "learn") {
+			localwordsStore().setLearnCache(cache)
+		} else {
+			localwordsStore().setReviewCache(cache)
+		}
+	}
+	const typeTitle = computed(() => {
+		if (learnType.value == "learn") {
+			return "学习"
+		} else {
+			return "复习"
+		}
+	})
+	const learnType = ref('learn')
+	const init = async (type) => {
+		learnType.value = type
+		total.value = 10
+		let learnCache = localwordsStore().learnCache
+		let reviewCache = localwordsStore().reviewCache
+		const timestamp = new Date().setHours(0, 0, 0, 0);
+		if (type == "learn") {
+			if (localwordsStore().learnTime >= timestamp) {
+				wordList.value = learnCache.wordList
+				initialQueue.value = learnCache.initialQueue
+				pendingNew.value = learnCache.pendingNew
+				wordinfo.value = learnCache.wordinfo
+			} else {
+				localwordsStore().clearLearnCache()
+				const res = await $http.word.learnWord()
+				wordList.value = res.data.map(item => {
+					const examples = item.detail
+						.flatMap(d => d.meanings)
+						.flatMap(m => m.examples)
+					const types = item.detail
+						.flatMap(d => d.type)
+						.join(';')
+					return {
+						word: {
+							...item,
+							step: 0,
+							isLearned: false,
+							examples: examples,
+							types: types
+						},
+						error: 0
+					}
+				})
+				initialQueue.value = wordList.value.slice(0, 4)
+				pendingNew.value = wordList.value.slice(4)
+				getWord()
 			}
-		})
-		const res = data
-		console.log(res);
-
-		total.value = 10 // 本组目标 10 个
-
-		wordList.value = res.data.map(item => {
-			const examples = item.detail
-				.flatMap(d => d.meanings)
-				.flatMap(m => m.examples)
-			const types = item.detail
-				.flatMap(d => d.type)
-				.join(';')
-
-			return {
-				word: {
-					...item,
-					step: 0,
-					isLearned: false,
-					examples: examples,
-					types: types
-				},
-				error: 0
+			doneTask.value = learnCache.doneTask
+			showAnswer.value = learnCache.showAnswer
+			know.value = learnCache.know
+			sessionStep.value = learnCache.sessionStep
+			learningPhase.value = learnCache.learningPhase
+			interleaveCounter.value = learnCache.interleaveCounter
+			isReviewTurn.value = learnCache.isReviewTurn
+			reviewTurnsLeft.value = learnCache.reviewTurnsLeft
+			heldReviewWord.value = learnCache.heldReviewWord
+			reviewQueue.value = learnCache.reviewQueue
+			learnedQueue.value = learnCache.learnedQueue
+		} else {
+			if (localwordsStore().reviewTime >= timestamp) {
+				wordList.value = reviewCache.wordList
+				initialQueue.value = reviewCache.initialQueue
+				pendingNew.value = reviewCache.pendingNew
+				wordinfo.value = reviewCache.wordinfo
+			} else {
+				localwordsStore().clearLearnCache()
+				const res = await $http.word.getReview()
+				wordList.value = res.data.map(item => {
+					const examples = item.detail
+						.flatMap(d => d.meanings)
+						.flatMap(m => m.examples)
+					const types = item.detail
+						.flatMap(d => d.type)
+						.join(';')
+					return {
+						word: {
+							...item,
+							step: 0,
+							isLearned: false,
+							examples: examples,
+							types: types
+						},
+						error: 0
+					}
+				})
+				initialQueue.value = wordList.value.slice(0, 4)
+				pendingNew.value = wordList.value.slice(4)
+				getWord()
 			}
-		})
-
-		initialQueue.value = wordList.value.slice(0, 4)
-		pendingNew.value = wordList.value.slice(4)
+			doneTask.value = reviewCache.doneTask
+			showAnswer.value = reviewCache.showAnswer
+			know.value = reviewCache.know
+			sessionStep.value = reviewCache.sessionStep
+			learningPhase.value = reviewCache.learningPhase
+			interleaveCounter.value = reviewCache.interleaveCounter
+			isReviewTurn.value = reviewCache.isReviewTurn
+			reviewTurnsLeft.value = reviewCache.reviewTurnsLeft
+			heldReviewWord.value = reviewCache.heldReviewWord
+			reviewQueue.value = reviewCache.reviewQueue
+			learnedQueue.value = reviewCache.learnedQueue
+		}
 		loading.value = false
-		getWord()
 	}
 
 	/**
@@ -241,8 +337,15 @@
 	/**
 	 * 获取下一个单词的主逻辑 (三阶段 + 反转)
 	 */
-	const getWord = () => {
+	const learnCount = ref(0)
+	const rightPercentage = computed(() => {
+		const totalError = learnedQueue.value.reduce((sum, item) => sum + (item.error || 0), 0)
+		const temp = learnCount.value - totalError
+		return (temp / learnCount.value).toFixed(4) * 100
 
+	})
+	const getWord = () => {
+		learnCount.value += 1
 		if (learned.value >= total.value) {
 			doneTask.value = true
 			return
@@ -270,7 +373,7 @@
 					interleaveCounter.value++;
 				}
 			}
-			
+
 			if (!temp) {
 				isReviewTurn.value = !isReviewTurn.value;
 				temp = isReviewTurn.value ? getReviewWord() : getNewWord();
@@ -286,7 +389,7 @@
 				reviewTurnsLeft.value = 2;
 			}
 		}
-		
+
 		// --- 阶段3: 'main_2_1' (R, R, N... 循环) ---
 		else if (learningPhase.value === 'main_2_1') {
 
@@ -294,13 +397,12 @@
 				temp = heldReviewWord.value;
 				heldReviewWord.value = null;
 				reviewTurnsLeft.value = 0;
-			}
-			else if (reviewTurnsLeft.value > 0) {
-				const tempR1 = getReviewWord(); 
-				const tempR2 = getReviewWord(); 
+			} else if (reviewTurnsLeft.value > 0) {
+				const tempR1 = getReviewWord();
+				const tempR2 = getReviewWord();
 
 				if (tempR1 && tempR2) {
-					temp = tempR2; 
+					temp = tempR2;
 					heldReviewWord.value = tempR1;
 					reviewTurnsLeft.value = 1;
 				} else if (tempR1 || tempR2) {
@@ -312,8 +414,7 @@
 						reviewTurnsLeft.value = 2;
 					}
 				}
-			}
-			else {
+			} else {
 				temp = getNewWord();
 				if (temp) {
 					reviewTurnsLeft.value = 2;
@@ -331,16 +432,6 @@
 
 		wordinfo.value = temp.word
 		showAnswer.value = false
-
-		wordHistory.value.push({
-			step: sessionStep.value,
-			word: temp.word.kana, 
-			id: temp.word.id,
-			wordStep: temp.word.step,
-			phase: learningPhase.value
-		})
-		console.log(`--- 单词历史记录 (当前轮次: ${sessionStep.value}) ---`);
-		console.log(wordHistory.value);
 	}
 
 	/**
@@ -352,7 +443,10 @@
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
-		if (!wordObj) return
+		if (!wordObj) {
+			writeCache()
+			return
+		}
 
 		wordObj.word.step++
 
@@ -362,6 +456,7 @@
 		} else {
 			reviewQueue.value.push(wordObj) // 放入队尾 (FIFO)
 		}
+		writeCache()
 	}
 
 	/**
@@ -373,14 +468,18 @@
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
-		if (!wordObj) return
+		if (!wordObj) {
+			writeCache()
+			return
+		}
 
 		wordObj.word.step = 0
 		wordObj.error++
 
 		// 🌟【修改】不再使用 unshift()，而是使用 push()
 		// reviewQueue.value.unshift(wordObj) // (旧代码: 导致立即重复)
-		reviewQueue.value.push(wordObj)     // (新代码: 放到队尾，提供间隔)
+		reviewQueue.value.push(wordObj) // (新代码: 放到队尾，提供间隔)
+		writeCache()
 	}
 
 	/**
@@ -388,11 +487,11 @@
 	 */
 	const misremember = () => {
 		know.value = false
-
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
 			getNext()
+			writeCache()
 			return
 		}
 
@@ -404,17 +503,30 @@
 
 		// 🌟【修改】不再使用 unshift()，而是使用 push()
 		// reviewQueue.value.unshift(wordObj) // (旧代码: 导致立即重复)
-		reviewQueue.value.push(wordObj)     // (新代码: 放到队尾，提供间隔)
+		reviewQueue.value.push(wordObj) // (新代码: 放到队尾，提供间隔)
 
 		getNext()
+		writeCache()
 	}
 
 	/**
 	 * 获取下一个单词
 	 */
-	const getNext = () => {
+	const getNext = async () => {
+		await Promise.all(
+			learnedQueue.value
+			.filter(item => !item.submitted)
+			.map(async item => {
+				await $http.word.submitWord({
+					word_id: item.word.id,
+					quality: qualityMap.value.get(item.error)
+				})
+				item.submitted = true
+			})
+		)
 		sessionStep.value++
 		getWord()
+		writeCache()
 	}
 
 	/**
@@ -479,6 +591,18 @@
 		text-align: center;
 		margin-bottom: 48px;
 		line-height: 1.5;
+	}
+
+	.search {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		text {
+			text-decoration: underline;
+			font-size: 24rpx;
+			color: #212121;
+		}
 	}
 
 	/* 统计信息 */
