@@ -49,10 +49,10 @@ export const localwordsModule = defineStore('localwords', {
 			this.writeWordList = data
 		},
 		setReviewCache(cache) {
-			this.learnCache = cache
+			this.reviewCache = cache
 		},
 		setReviewTime(time) {
-			this.learnTime = time
+			this.reviewTime = time
 		},
 		clearReviewCache() {
 			this.reviewTime = 0;

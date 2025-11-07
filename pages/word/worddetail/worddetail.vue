@@ -42,7 +42,8 @@
 						<view style="font-weight: bold;">{{ meaning.zh }}</view>
 						<view class="examples">
 							<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
-								<view>
+								<view
+									@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${jcinfo.id}/${e.voice}`)">
 									<view class="ja">{{ e.jp }}</view>
 									<view class="ch">{{ e.zh }}<i style="font-size: 12px;" class="fas fa-volume-up"></i>
 									</view>
@@ -53,7 +54,7 @@
 				</view>
 
 				<!-- 相关单词 -->
-			<!-- 	<view class="card">
+				<!-- 	<view class="card">
 					<view class="text-bold mb-12">相关单词</view>
 					<view class="grid-2">
 						<view v-for="(item, index) in relatedWords" :key="index" class="related-item">
@@ -97,7 +98,7 @@
 	import {
 		userStore
 	} from '@/stores/index.js'
-	import word from '../../../api/word'
+	import word from '@/api/word'
 	const toast = useToast()
 	const navBarHeight = ref(0)
 	const jcinfo = ref({

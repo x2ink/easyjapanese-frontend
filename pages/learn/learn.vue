@@ -41,11 +41,13 @@
 					</div>
 				</div>
 				<div class="word-card">
-					<button class="pronounce-btn" title="发音">
+					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn"
+						title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
 					<div class="word-header _GCENTER">
-						<button v-if="wordinfo.step==2&&!showAnswer" class="pronounce-btn pronounce-header" title="发音">
+						<button @click="playUserRecord(wordinfo.voice)" v-if="wordinfo.step==2&&!showAnswer"
+							class="pronounce-btn pronounce-header" title="发音">
 							<i class="fas fa-volume-up"></i>
 						</button>
 						<view v-else class="_GCENTER" style="flex-direction: column;">
@@ -74,7 +76,9 @@
 					</view>
 				</div>
 				<view class="example" v-if="showAnswer||wordinfo.step==0">
-					<view v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
+					<view
+						@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${wordinfo.id}/${item.voice}`)"
+						v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
 						<view class="example-sentence">{{item.jp}}</view>
 						<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
 					</view>
@@ -116,7 +120,8 @@
 <script setup>
 	import {
 		ref,
-		computed
+		computed,
+		watch
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
@@ -150,11 +155,17 @@
 		types: '',
 		rome: '',
 		kana: '',
+		voice: '',
 		id: null,
 		examples: [],
 		description: "",
 		step: 0,
 		isLearned: false
+	})
+	watch(() => wordinfo.value.id, (newVal, oldVal) => {
+		if (newVal) {
+			playUserRecord(wordinfo.value.voice)
+		}
 	})
 	const loading = ref(true)
 	const doneTask = ref(false)
@@ -162,22 +173,23 @@
 	const know = ref(false)
 	const total = ref(0)
 	const sessionStep = ref(0)
-	// 算法状态机
-	const learningPhase = ref('initial') // 'initial', 'interleave_1_1', 'main_2_1'
-	const interleaveCounter = ref(0) // 阶段2 (1:1) 的新词计数器 (0-4)
-	const isReviewTurn = ref(true) // 阶段2 (1:1) 的开关
-	const reviewTurnsLeft = ref(2) // 阶段3 (2:1) 的计数器
 
-	// 暂存被“反转”的复习词
+	const lastWordId = ref(null) // 用于防重
+
+	// 算法状态机
+	const learningPhase = ref('initial')
+	const interleaveCounter = ref(0)
+	const isReviewTurn = ref(true)
+	const reviewTurnsLeft = ref(2)
 	const heldReviewWord = ref(null)
 
 	// 四大队列
-	const initialQueue = ref([]) // 初始 4 个新词
-	const pendingNew = ref([]) // 还没学的新词
-	const reviewQueue = ref([]) // 待复习词
-	const learnedQueue = ref([]) // 已掌握词
-	const wordList = ref([]) // 全部词记录
-	// 单词掌握评分映射表
+	const initialQueue = ref([])
+	const pendingNew = ref([])
+	const reviewQueue = ref([])
+	const learnedQueue = ref([])
+	const wordList = ref([])
+
 	const qualityMap = ref(new Map([
 		[0, 5],
 		[1, 4],
@@ -190,30 +202,51 @@
 	})
 
 	/**
-	 * 初始化
+	 * 初始化 (你的缓存逻辑)
 	 */
 	const writeCache = () => {
-		localwordsStore().setLearnTime(new Date().getTime())
-		let cache = {
-			wordinfo: wordinfo.value,
-			doneTask: doneTask.value,
-			showAnswer: showAnswer.value,
-			know: know.value,
-			sessionStep: sessionStep.value,
-			learningPhase: learningPhase.value,
-			interleaveCounter: interleaveCounter.value,
-			isReviewTurn: isReviewTurn.value,
-			reviewTurnsLeft: reviewTurnsLeft.value,
-			heldReviewWord: heldReviewWord.value,
-			initialQueue: initialQueue.value,
-			pendingNew: pendingNew.value,
-			reviewQueue: reviewQueue.value,
-			learnedQueue: learnedQueue.value,
-			wordList: wordList.value
-		}
+		// 缓存时机：仅在 getNext() 的末尾
 		if (learnType.value == "learn") {
+			localwordsStore().setLearnTime(new Date().getTime())
+			let cache = {
+				wordinfo: wordinfo.value,
+				doneTask: doneTask.value,
+				showAnswer: showAnswer.value,
+				know: know.value,
+				sessionStep: sessionStep.value,
+				learningPhase: learningPhase.value,
+				interleaveCounter: interleaveCounter.value,
+				isReviewTurn: isReviewTurn.value,
+				reviewTurnsLeft: reviewTurnsLeft.value,
+				heldReviewWord: heldReviewWord.value,
+				initialQueue: initialQueue.value,
+				pendingNew: pendingNew.value,
+				reviewQueue: reviewQueue.value,
+				learnedQueue: learnedQueue.value,
+				wordList: wordList.value,
+				lastWordId: lastWordId.value
+			}
 			localwordsStore().setLearnCache(cache)
 		} else {
+			localwordsStore().setReviewTime(new Date().getTime())
+			let cache = {
+				wordinfo: wordinfo.value,
+				doneTask: doneTask.value,
+				showAnswer: showAnswer.value,
+				know: know.value,
+				sessionStep: sessionStep.value,
+				learningPhase: learningPhase.value,
+				interleaveCounter: interleaveCounter.value,
+				isReviewTurn: isReviewTurn.value,
+				reviewTurnsLeft: reviewTurnsLeft.value,
+				heldReviewWord: heldReviewWord.value,
+				initialQueue: initialQueue.value,
+				pendingNew: pendingNew.value,
+				reviewQueue: reviewQueue.value,
+				learnedQueue: learnedQueue.value,
+				wordList: wordList.value,
+				lastWordId: lastWordId.value
+			}
 			localwordsStore().setReviewCache(cache)
 		}
 	}
@@ -231,93 +264,71 @@
 		let learnCache = localwordsStore().learnCache
 		let reviewCache = localwordsStore().reviewCache
 		const timestamp = new Date().setHours(0, 0, 0, 0);
+
+		const loadData = (cache) => {
+			wordList.value = cache.wordList || []
+			initialQueue.value = cache.initialQueue || []
+			pendingNew.value = cache.pendingNew || []
+			wordinfo.value = cache.wordinfo || wordinfo.value
+			doneTask.value = cache.doneTask || false
+			showAnswer.value = cache.showAnswer || false
+			know.value = cache.know || false
+			sessionStep.value = cache.sessionStep || 0
+			learningPhase.value = cache.learningPhase || 'initial'
+			interleaveCounter.value = cache.interleaveCounter || 0
+			isReviewTurn.value = cache.isReviewTurn !== undefined ? cache.isReviewTurn : true
+			reviewTurnsLeft.value = cache.reviewTurnsLeft !== undefined ? cache.reviewTurnsLeft : 2
+			heldReviewWord.value = cache.heldReviewWord || null
+			reviewQueue.value = cache.reviewQueue || []
+			learnedQueue.value = cache.learnedQueue || []
+			lastWordId.value = cache.lastWordId || null
+		}
+
+		const fetchData = async (apiCall, clearCacheFunc) => {
+			clearCacheFunc()
+			const res = await apiCall()
+			wordList.value = res.data.map(item => {
+				const examples = item.detail
+					.flatMap(d => d.meanings)
+					.flatMap(m => m.examples)
+				const types = item.detail
+					.flatMap(d => d.type)
+					.join(';')
+				return {
+					word: {
+						...item,
+						step: 0,
+						isLearned: false,
+						examples: examples,
+						types: types
+					},
+					error: 0
+				}
+			})
+			initialQueue.value = wordList.value.slice(0, 4)
+			pendingNew.value = wordList.value.slice(4)
+			getWord()
+		}
+
 		if (type == "learn") {
-			if (localwordsStore().learnTime >= timestamp) {
-				wordList.value = learnCache.wordList
-				initialQueue.value = learnCache.initialQueue
-				pendingNew.value = learnCache.pendingNew
-				wordinfo.value = learnCache.wordinfo
+			// 增加一个检查，确保缓存不是“空”的
+			if (learnCache && learnCache.wordList && learnCache.wordList.length > 0 && localwordsStore()
+				.learnTime >= timestamp) {
+				loadData(learnCache)
 			} else {
-				localwordsStore().clearLearnCache()
-				const res = await $http.word.learnWord()
-				wordList.value = res.data.map(item => {
-					const examples = item.detail
-						.flatMap(d => d.meanings)
-						.flatMap(m => m.examples)
-					const types = item.detail
-						.flatMap(d => d.type)
-						.join(';')
-					return {
-						word: {
-							...item,
-							step: 0,
-							isLearned: false,
-							examples: examples,
-							types: types
-						},
-						error: 0
-					}
-				})
-				initialQueue.value = wordList.value.slice(0, 4)
-				pendingNew.value = wordList.value.slice(4)
-				getWord()
+				await fetchData($http.word.learnWord, localwordsStore().clearLearnCache)
 			}
-			doneTask.value = learnCache.doneTask
-			showAnswer.value = learnCache.showAnswer
-			know.value = learnCache.know
-			sessionStep.value = learnCache.sessionStep
-			learningPhase.value = learnCache.learningPhase
-			interleaveCounter.value = learnCache.interleaveCounter
-			isReviewTurn.value = learnCache.isReviewTurn
-			reviewTurnsLeft.value = learnCache.reviewTurnsLeft
-			heldReviewWord.value = learnCache.heldReviewWord
-			reviewQueue.value = learnCache.reviewQueue
-			learnedQueue.value = learnCache.learnedQueue
-		} else {
-			if (localwordsStore().reviewTime >= timestamp) {
-				wordList.value = reviewCache.wordList
-				initialQueue.value = reviewCache.initialQueue
-				pendingNew.value = reviewCache.pendingNew
-				wordinfo.value = reviewCache.wordinfo
+		} else { // type == "review"
+			if (reviewCache && reviewCache.wordList && reviewCache.wordList.length > 0 && localwordsStore()
+				.reviewTime >= timestamp) {
+				loadData(reviewCache)
 			} else {
-				localwordsStore().clearLearnCache()
-				const res = await $http.word.getReview()
-				wordList.value = res.data.map(item => {
-					const examples = item.detail
-						.flatMap(d => d.meanings)
-						.flatMap(m => m.examples)
-					const types = item.detail
-						.flatMap(d => d.type)
-						.join(';')
-					return {
-						word: {
-							...item,
-							step: 0,
-							isLearned: false,
-							examples: examples,
-							types: types
-						},
-						error: 0
-					}
-				})
-				initialQueue.value = wordList.value.slice(0, 4)
-				pendingNew.value = wordList.value.slice(4)
-				getWord()
+				await fetchData($http.word.getReview, localwordsStore().clearReviewCache)
 			}
-			doneTask.value = reviewCache.doneTask
-			showAnswer.value = reviewCache.showAnswer
-			know.value = reviewCache.know
-			sessionStep.value = reviewCache.sessionStep
-			learningPhase.value = reviewCache.learningPhase
-			interleaveCounter.value = reviewCache.interleaveCounter
-			isReviewTurn.value = reviewCache.isReviewTurn
-			reviewTurnsLeft.value = reviewCache.reviewTurnsLeft
-			heldReviewWord.value = reviewCache.heldReviewWord
-			reviewQueue.value = reviewCache.reviewQueue
-			learnedQueue.value = reviewCache.learnedQueue
 		}
 		loading.value = false
 	}
+
 
 	/**
 	 * 获取一个新单词
@@ -340,19 +351,25 @@
 	}
 
 	/**
-	 * 获取下一个单词的主逻辑 (三阶段 + 反转)
+	 * 获取下一个单词的主逻辑 (三阶段 + 反转 + 防重)
 	 */
 	const learnCount = ref(0)
 	const rightPercentage = computed(() => {
-		const totalError = learnedQueue.value.reduce((sum, item) => sum + (item.error || 0), 0)
-		const temp = learnCount.value - totalError
-		return (temp / learnCount.value).toFixed(4) * 100
-
+		if (learnCount.value === 0) return 100;
+		const totalError = wordList.value.reduce((sum, item) => sum + (item.error || 0), 0)
+		const correctCount = learnCount.value - totalError
+		return Math.max(0, Math.round((correctCount / learnCount.value) * 100))
 	})
+	const wordHistory = ref([])
 	const getWord = () => {
-		learnCount.value += 1
+
 		if (learned.value >= total.value) {
 			doneTask.value = true
+			if (learnType.value == "learn") {
+				localwordsStore().clearLearnCache()
+			} else {
+				localwordsStore().clearReviewCache()
+			}
 			return
 		}
 
@@ -402,24 +419,36 @@
 				temp = heldReviewWord.value;
 				heldReviewWord.value = null;
 				reviewTurnsLeft.value = 0;
-			} else if (reviewTurnsLeft.value > 0) {
-				const tempR1 = getReviewWord();
-				const tempR2 = getReviewWord();
+			} else if (reviewTurnsLeft.value > 0) { // 该复习了
 
-				if (tempR1 && tempR2) {
-					temp = tempR2;
-					heldReviewWord.value = tempR1;
-					reviewTurnsLeft.value = 1;
-				} else if (tempR1 || tempR2) {
-					temp = tempR1 || tempR2;
-					reviewTurnsLeft.value = 0;
-				} else {
-					temp = getNewWord();
-					if (temp) {
+				const nextReviewWord = reviewQueue.value.length > 0 ? reviewQueue.value[0] : null;
+				if (nextReviewWord && nextReviewWord.word.id === lastWordId.value) {
+					if (pendingNew.value.length > 0) {
+						temp = getNewWord();
 						reviewTurnsLeft.value = 2;
+					} else {
+						temp = getReviewWord();
+						reviewTurnsLeft.value--;
+					}
+				} else {
+					const tempR1 = getReviewWord();
+					const tempR2 = getReviewWord();
+
+					if (tempR1 && tempR2) {
+						temp = tempR2;
+						heldReviewWord.value = tempR1;
+						reviewTurnsLeft.value = 1;
+					} else if (tempR1 || tempR2) {
+						temp = tempR1 || tempR2;
+						reviewTurnsLeft.value--; // (这是上次修复的Bug)
+					} else {
+						temp = getNewWord();
+						if (temp) {
+							reviewTurnsLeft.value = 2;
+						}
 					}
 				}
-			} else {
+			} else { // 该学新词了
 				temp = getNewWord();
 				if (temp) {
 					reviewTurnsLeft.value = 2;
@@ -432,25 +461,38 @@
 
 		if (!temp) {
 			doneTask.value = true
+			if (learnType.value == "learn") {
+				localwordsStore().clearLearnCache()
+			} else {
+				localwordsStore().clearReviewCache()
+			}
 			return
 		}
 
 		wordinfo.value = temp.word
+		lastWordId.value = temp.word.id // 记录最后出现的ID
 		showAnswer.value = false
+		wordHistory.value.push({
+			step: sessionStep.value,
+			word: temp.word.kana,
+			id: temp.word.id,
+			wordStep: temp.word.step,
+			phase: learningPhase.value
+		})
+		console.log(wordHistory.value);
 	}
 
 	/**
-	 * 答对 (逻辑不变)
+	 * 🌟【BUG修复】答对
 	 */
 	const knowBtn = () => {
 		know.value = true
-		showAnswer.value = true
+		showAnswer.value = true // 🌟 只显示答案
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
-			writeCache()
-			return
+			return // 找不到对象，什么也不做
 		}
 
 		wordObj.word.step++
@@ -459,44 +501,40 @@
 			wordObj.word.isLearned = true
 			learnedQueue.value.push(wordObj)
 		} else {
-			reviewQueue.value.push(wordObj) // 放入队尾 (FIFO)
+			reviewQueue.value.push(wordObj)
 		}
-		writeCache()
+		// 移除 writeCache() 和 getNext()
 	}
 
 	/**
-	 * 🌟【修改】答错
+	 * 🌟【BUG修复】答错
 	 */
 	const unknowBtn = () => {
 		know.value = false
-		showAnswer.value = true
+		showAnswer.value = true // 🌟 只显示答案
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
-			writeCache()
 			return
 		}
 
 		wordObj.word.step = 0
 		wordObj.error++
 
-		// 🌟【修改】不再使用 unshift()，而是使用 push()
-		// reviewQueue.value.unshift(wordObj) // (旧代码: 导致立即重复)
-		reviewQueue.value.push(wordObj) // (新代码: 放到队尾，提供间隔)
-		writeCache()
+		reviewQueue.value.push(wordObj)
+		// 移除 writeCache() 和 getNext()
 	}
 
 	/**
-	 * 🌟【修改】记错
+	 * 记错
 	 */
 	const misremember = () => {
 		know.value = false
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
-			getNext()
-			writeCache()
+			getNext() // 找不到词，直接跳下一个
 			return
 		}
 
@@ -506,32 +544,42 @@
 		wordObj.word.isLearned = false
 		learnedQueue.value = learnedQueue.value.filter(i => i.word.id !== temp.id)
 
-		// 🌟【修改】不再使用 unshift()，而是使用 push()
-		// reviewQueue.value.unshift(wordObj) // (旧代码: 导致立即重复)
-		reviewQueue.value.push(wordObj) // (新代码: 放到队尾，提供间隔)
+		reviewQueue.value.push(wordObj)
 
-		getNext()
-		writeCache()
+		getNext() // 记错了 = 立即跳到下一个
+		// 移除 writeCache()，因为它在 getNext() 里
 	}
 
 	/**
-	 * 获取下一个单词
+	 * 🌟【BUG修复】获取下一个单词
 	 */
 	const getNext = async () => {
-		await Promise.all(
-			learnedQueue.value
-			.filter(item => !item.submitted)
-			.map(async item => {
-				await $http.word.submitWord({
-					word_id: item.word.id,
-					quality: qualityMap.value.get(item.error)
-				})
-				item.submitted = true
-			})
-		)
+		learnCount.value += 1
+
+		const wordsToSubmit = learnedQueue.value.filter(item => !item.submitted);
+		if (wordsToSubmit.length > 0) {
+			try {
+				await Promise.all(
+					wordsToSubmit.map(async item => {
+						await $http.word.submitWord({
+							word_id: item.word.id,
+							quality: qualityMap.value.get(item.error) || 1
+						})
+						item.submitted = true
+					})
+				)
+			} catch (error) {
+				console.error("提交单词失败:", error)
+			}
+		}
+
 		sessionStep.value++
 		getWord()
-		writeCache()
+
+		// 🌟 缓存必须在 getWord() 之后调用
+		if (!doneTask.value) {
+			writeCache()
+		}
 	}
 
 	/**
@@ -550,11 +598,8 @@
 		}
 		return Math.round((learned.value / total.value) * 100)
 	})
-
-	/**
-	 * 播放音频 (不变)
-	 */
 	const playUserRecord = (url) => {
+		if (!url) return;
 		innerAudioContext.stop()
 		innerAudioContext.src = url
 		innerAudioContext.play()
