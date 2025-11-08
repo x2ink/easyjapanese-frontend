@@ -27,7 +27,7 @@
 
 				<div class="button-container">
 					<button @click="writefrommemory()" class="primary-button">立即默写</button>
-					<button @click="init()" class="secondary-button">再来一组</button>
+					<button @click="init(learnType)" class="secondary-button">再来一组</button>
 				</div>
 			</div>
 			<view v-else>
@@ -190,6 +190,9 @@
 	const learnedQueue = ref([])
 	const wordList = ref([])
 
+	const learnCount = ref(0) // 🌟 移到这里，以便 reset
+	const wordHistory = ref([]) // 🌟 移到这里，以便 reset
+
 	const qualityMap = ref(new Map([
 		[0, 5],
 		[1, 4],
@@ -201,11 +204,35 @@
 		init(e.type)
 	})
 
+	// 🌟 【新增】重置算法状态的辅助函数
+	const resetAlgorithmState = () => {
+		sessionStep.value = 0
+		lastWordId.value = null
+		learningPhase.value = 'initial'
+		interleaveCounter.value = 0
+		isReviewTurn.value = true
+		reviewTurnsLeft.value = 2
+		heldReviewWord.value = null
+
+		initialQueue.value = []
+		pendingNew.value = []
+		reviewQueue.value = []
+		learnedQueue.value = []
+		wordList.value = []
+
+		learnCount.value = 0
+		wordHistory.value = []
+
+		// 重置UI状态
+		showAnswer.value = false
+		know.value = false
+	}
+
+
 	/**
 	 * 初始化 (你的缓存逻辑)
 	 */
 	const writeCache = () => {
-		// 缓存时机：仅在 getNext() 的末尾
 		if (learnType.value == "learn") {
 			localwordsStore().setLearnTime(new Date().getTime())
 			let cache = {
@@ -261,6 +288,8 @@
 	const init = async (type) => {
 		learnType.value = type
 		total.value = 10
+		loading.value = true
+
 		let learnCache = localwordsStore().learnCache
 		let reviewCache = localwordsStore().reviewCache
 		const timestamp = new Date().setHours(0, 0, 0, 0);
@@ -282,9 +311,14 @@
 			reviewQueue.value = cache.reviewQueue || []
 			learnedQueue.value = cache.learnedQueue || []
 			lastWordId.value = cache.lastWordId || null
+
+			// 🌟 修复：加载缓存时，也必须重置 learnCount
+			learnCount.value = sessionStep.value // 用 sessionStep 近似
+			wordHistory.value = [] // 历史记录不恢复
 		}
 
 		const fetchData = async (apiCall, clearCacheFunc) => {
+			resetAlgorithmState() // 🌟 【BUG修复】在获取数据前，重置一切状态
 			clearCacheFunc()
 			const res = await apiCall()
 			wordList.value = res.data.map(item => {
@@ -311,7 +345,6 @@
 		}
 
 		if (type == "learn") {
-			// 增加一个检查，确保缓存不是“空”的
 			if (learnCache && learnCache.wordList && learnCache.wordList.length > 0 && localwordsStore()
 				.learnTime >= timestamp) {
 				loadData(learnCache)
@@ -327,6 +360,7 @@
 			}
 		}
 		loading.value = false
+		doneTask.value = false // 🌟 确保“再来一组”时 doneTask 总是 false
 	}
 
 
@@ -353,14 +387,13 @@
 	/**
 	 * 获取下一个单词的主逻辑 (三阶段 + 反转 + 防重)
 	 */
-	const learnCount = ref(0)
 	const rightPercentage = computed(() => {
 		if (learnCount.value === 0) return 100;
 		const totalError = wordList.value.reduce((sum, item) => sum + (item.error || 0), 0)
 		const correctCount = learnCount.value - totalError
 		return Math.max(0, Math.round((correctCount / learnCount.value) * 100))
 	})
-	const wordHistory = ref([])
+
 	const getWord = () => {
 
 		if (learned.value >= total.value) {
@@ -440,7 +473,7 @@
 						reviewTurnsLeft.value = 1;
 					} else if (tempR1 || tempR2) {
 						temp = tempR1 || tempR2;
-						reviewTurnsLeft.value--; // (这是上次修复的Bug)
+						reviewTurnsLeft.value--;
 					} else {
 						temp = getNewWord();
 						if (temp) {
@@ -483,16 +516,16 @@
 	}
 
 	/**
-	 * 🌟【BUG修复】答对
+	 * 答对
 	 */
 	const knowBtn = () => {
 		know.value = true
-		showAnswer.value = true // 🌟 只显示答案
+		showAnswer.value = true // 只显示答案
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
-			return // 找不到对象，什么也不做
+			return
 		}
 
 		wordObj.word.step++
@@ -503,15 +536,14 @@
 		} else {
 			reviewQueue.value.push(wordObj)
 		}
-		// 移除 writeCache() 和 getNext()
 	}
 
 	/**
-	 * 🌟【BUG修复】答错
+	 * 答错
 	 */
 	const unknowBtn = () => {
 		know.value = false
-		showAnswer.value = true // 🌟 只显示答案
+		showAnswer.value = true // 只显示答案
 
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
@@ -523,7 +555,6 @@
 		wordObj.error++
 
 		reviewQueue.value.push(wordObj)
-		// 移除 writeCache() 和 getNext()
 	}
 
 	/**
@@ -534,7 +565,7 @@
 		const temp = wordinfo.value
 		const wordObj = wordList.value.find(w => w.word.id === temp.id)
 		if (!wordObj) {
-			getNext() // 找不到词，直接跳下一个
+			getNext()
 			return
 		}
 
@@ -546,12 +577,11 @@
 
 		reviewQueue.value.push(wordObj)
 
-		getNext() // 记错了 = 立即跳到下一个
-		// 移除 writeCache()，因为它在 getNext() 里
+		getNext()
 	}
 
 	/**
-	 * 🌟【BUG修复】获取下一个单词
+	 * 获取下一个单词
 	 */
 	const getNext = async () => {
 		learnCount.value += 1
@@ -576,7 +606,6 @@
 		sessionStep.value++
 		getWord()
 
-		// 🌟 缓存必须在 getWord() 之后调用
 		if (!doneTask.value) {
 			writeCache()
 		}

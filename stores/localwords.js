@@ -21,7 +21,8 @@ export const localwordsModule = defineStore('localwords', {
 				pendingNew: [],
 				reviewQueue: [],
 				learnedQueue: [],
-				wordList: []
+				wordList: [],
+				lastWordId: null,
 			},
 			reviewTime: 0,
 			learnCache: {
@@ -39,7 +40,8 @@ export const localwordsModule = defineStore('localwords', {
 				pendingNew: [],
 				reviewQueue: [],
 				learnedQueue: [],
-				wordList: []
+				wordList: [],
+				lastWordId: null,
 			},
 			learnTime: 0,
 		}
@@ -71,7 +73,8 @@ export const localwordsModule = defineStore('localwords', {
 				pendingNew: [],
 				reviewQueue: [],
 				learnedQueue: [],
-				wordList: []
+				wordList: [],
+				lastWordId: null,
 			};
 		},
 		setLearnCache(cache) {
@@ -97,7 +100,8 @@ export const localwordsModule = defineStore('localwords', {
 				pendingNew: [],
 				reviewQueue: [],
 				learnedQueue: [],
-				wordList: []
+				wordList: [],
+				lastWordId: null,
 			};
 		}
 	}

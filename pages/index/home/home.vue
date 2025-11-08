@@ -64,7 +64,7 @@
 					</view>
 					<view class="action-content">
 						<text class="action-title">开始学习</text>
-						<text class="action-subtitle">继续学习{{config.learn_group}}个单词</text>
+						<text class="action-subtitle">{{learnInfo.wordnum-learnInfo.learnnum}}个单词待学习</text>
 					</view>
 				</view>
 			</view>
@@ -124,18 +124,6 @@
 				<view class="section-more" @click="goPage('/pages/other/setplan/setplan')">
 					<text class="more-text">修改</text>
 					<text class="iconfont icon-arrow-right more-icon"></text>
-				</view>
-			</view>
-			<view class="task-list" :style="{marginTop:userStore().loginStatus?'12px':'0'}">
-				<wd-status-tip v-if="!userStore().loginStatus" image="https://jp.x2.ink/images/status/login.png"
-					tip="登录之后才会显示哦" />
-				<view class="task-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
-					v-for="item in wordTask" :key="item.id">
-					<view class="task-info">
-						<text class="task-word">{{formatWordName(item.word,item.kana)}}</text>
-						<text class="task-detail">{{item.meaning.map(item=>item.meaning).join("；")}}</text>
-					</view>
-					<text class="iconfont icon-volume task-icon"></text>
 				</view>
 			</view>
 		</view>
@@ -271,15 +259,8 @@
 		const res = await $http.user.getConfig()
 		config.value = res.data
 	}
-	const wordTask = ref([])
-	const getWordTask = async () => {
-		// const res = await $http.word.learnWord()
-		// wordTask.value = res.data
-	}
-
 	onShow(() => {
 		getConfig()
-		getWordTask()
 		getInfo()
 		calendar.value = getCalendarMatrix(currentYear, currentMonth);
 	})

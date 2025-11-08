@@ -174,7 +174,6 @@
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
-		console.log(res.data);
 	}
 	const login = () => {
 		if (userStore().loginStatus)
