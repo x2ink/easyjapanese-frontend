@@ -2,7 +2,9 @@
 	<view class="head">
 		<NavbarDefault border title="单词默写"></NavbarDefault>
 	</view>
-	<wd-progress custom-class="wdprogress" :percentage="progress" hide-text />
+	<view class="progress-bar">
+		<view class="progress-fill" :style="{width:`${progress}%`}"></view>
+	</view>
 	<div v-if="wordList.length==0" class="container">
 		<!-- 完成图标 -->
 		<div class="completion-icon">
@@ -37,9 +39,9 @@
 				<i style="margin-left: 4px;" :class="`${answerShow?'fa-eye-slash':'fa-eye'}`" class="fa-solid"></i>
 			</view>
 		</div>
-
-
-		<div class="word-card" v-if="showAnwser">
+		<div @click="goPage('/pages/word/worddetail/worddetail',{
+					id:wordinfo.id
+				})" class="word-card" v-if="showAnwser">
 			<div class="card-header">
 				<div>
 					<div class="card-japanese">{{formatWordName(wordinfo.words,wordinfo.kana)}}</div>
@@ -102,7 +104,11 @@
 	const doneList = ref([])
 	const value = ref('')
 	const progress = computed(() => {
-		return (doneList.value.length / total.value) * 100
+		if (total.value == 0) {
+			return 0
+		} else {
+			return (doneList.value.length / total.value) * 100
+		}
 	})
 	const getAllWords = async () => {
 		const res = await $http.word.getLearnt({
@@ -167,7 +173,11 @@
 		}
 	})
 </script>
-
+<style>
+	page {
+		background-color: white;
+	}
+</style>
 <style lang="scss">
 	.head {
 		position: sticky;
@@ -236,8 +246,17 @@
 		background-color: #F5F5F5;
 	}
 
-	.wdprogress {
-		padding: 0 !important;
+
+	.progress-bar {
+		height: 4px;
+		background-color: #E0E0E0;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background-color: #07C160;
+		transition: width 0.3s ease;
 	}
 
 	/* 完成图标 */
@@ -267,8 +286,11 @@
 	}
 
 	.word-display {
+		border-radius: 16px;
+		border: 1px solid #E5E7EB;
 		background-color: #FFFFFF;
 		padding: 24px;
+		margin: 16px;
 		text-align: center;
 		flex-grow: 1;
 		display: flex;
@@ -292,7 +314,7 @@
 		input {
 			flex: 1;
 			padding: 12px 16px;
-			border: 1px solid #E0E0E0;
+			border: 1px solid #E5E7EB;
 			border-radius: 8px;
 			font-size: 16px;
 			margin-top: 16px;
@@ -328,6 +350,9 @@
 	}
 
 	.card-header {
+		padding: 16px;
+		border-radius: 16px;
+		border: 1px solid #E5E7EB;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

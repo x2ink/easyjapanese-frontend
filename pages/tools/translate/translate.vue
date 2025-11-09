@@ -1,63 +1,61 @@
 <template>
 	<view>
-		<view class="head">
+		<view style="height: 100vh;display: flex;flex-direction: column;">
 			<NavbarDefault title="翻译"></NavbarDefault>
-		</view>
-		<div class="translation-mode">
-			<div @click="current='标准翻译'" :class="{active:current=='标准翻译'}" class="mode-btn">标准翻译</div>
-			<div @click="current='AI翻译'" :class="{active:current=='AI翻译'}" class="mode-btn">AI翻译</div>
-		</div>
-		<div v-if="current=='标准翻译'" class="language-selector">
-			<div :class="{active:pattern=='cj'}" class="language-item">
-				<span>中文</span>
-			</div>
-			<button @click="patternChange()" class="swap-btn">
-				<i class="fas fa-exchange-alt" style="color: #757575;"></i>
-			</button>
-			<div :class="{active:pattern=='jc'}" class="language-item">
-				<span>日语</span>
-			</div>
-		</div>
-		<div class="form-group">
-			<textarea v-model="value" class="form-textarea" placeholder="请输入需要翻译的内容"></textarea>
-		</div>
-		<button @click="submit()" class="translate-btn">
-			<text class="fas fa-language"></text>翻译
-		</button>
-		<view v-if="current=='标准翻译'" style="padding-top: 16px;">
-			<div class="output-area">
-				<textarea v-model="result" class="textarea" placeholder="翻译结果将显示在这里..."></textarea>
-				<div class="action-bar">
-					<button class="action-btn" @click="playVoice()">
-						<i class="fas fa-volume-up"></i> 朗读
-					</button>
-					<button @click="copy(result)" class="action-btn">
-						<i class="fas fa-copy"></i> 复制
-					</button>
-				</div>
-			</div>
-		</view>
-		<view v-else class="result">
-			<view v-if="loading" class="loading _GCENTER">
-				<view class="loadership_KUDLC">
-					<view></view>
-					<view></view>
-					<view></view>
-					<view></view>
-					<view></view>
+			<view class="translation-mode">
+				<view @click="current='标准翻译'" :class="{active:current=='标准翻译'}" class="mode-btn">标准翻译</view>
+				<view @click="current='AI翻译'" :class="{active:current=='AI翻译'}" class="mode-btn">AI翻译</view>
+			</view>
+			<view v-if="current=='标准翻译'" class="language-selector">
+				<view :class="{active:pattern=='cj'}" class="language-item">
+					<span>中文</span>
 				</view>
-				<text class="tip">
-					AI正在思考,大概需要10s
-				</text>
+				<button @click="patternChange()" class="swap-btn">
+					<i class="fas fa-exchange-alt" style="color: #757575;"></i>
+				</button>
+				<view :class="{active:pattern=='jc'}" class="language-item">
+					<span>日语</span>
+				</view>
 			</view>
-			<view v-if="result.length>0&&!loading" class="translate">
-				<view @click="copy(result)" v-html="result"></view>
+			<view class="form-group">
+				<textarea v-model="value" class="form-textarea" placeholder="请输入需要翻译的内容"></textarea>
 			</view>
+			<button @click="submit()" class="translate-btn">
+				<text class="fas fa-language"></text>翻译
+			</button>
+			<view v-if="current=='标准翻译'" style="padding-top: 16px;">
+				<view class="output-area">
+					<textarea v-model="result" class="textarea" placeholder="翻译结果将显示在这里..."></textarea>
+					<view class="action-bar">
+						<button class="action-btn" @click="playVoice()">
+							<i class="fas fa-volume-up"></i> 朗读
+						</button>
+						<button @click="copy(result)" class="action-btn">
+							<i class="fas fa-copy"></i> 复制
+						</button>
+					</view>
+				</view>
+			</view>
+			<view v-else class="result">
+				<view v-if="loading" class="loading _GCENTER">
+					<view class="loadership_KUDLC">
+						<view></view>
+						<view></view>
+						<view></view>
+						<view></view>
+						<view></view>
+					</view>
+					<text class="tip">
+						AI正在思考,大概需要10s
+					</text>
+				</view>
+				<view v-if="result.length>0&&!loading" @click="copy(result)" v-html="result"></view>
+			</view>
+			<view :style="{height:getOs()=='ios'?'env(safe-area-inset-bottom)':'16px'}"></view>
 		</view>
 		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
 			@onFinish="finishCore" />
 		<wd-toast />
-		<view :style="{height:getOs()=='ios'?'calc(env(safe-area-inset-bottom)':'16px'}"></view>
 	</view>
 </template>
 
@@ -92,7 +90,6 @@
 	}
 	const current = ref('标准翻译')
 	watch(current, (newVal, oldVal) => {
-		console.log("切换翻译");
 		result.value = ""
 	})
 	const pattern = ref('cj')
@@ -118,7 +115,31 @@
 	}
 	const toast = useToast()
 	const value = ref("")
-	const result = ref(``);
+	const result = ref(`
+	<div><h3>翻译：</h3><p>あなたは誰ですか。</p></div>
+	
+	<div><h3>翻译讲解：</h3>
+	<h4>句子结构分析：</h4>
+	<p>原句"你是谁啊"是典型的主谓疑问结构（主语"你"+谓语"是"+疑问代词"谁"+语气词"啊"）。日语句子「あなたは誰ですか」采用「主题は+疑问词+助动词です+终助词か」的疑问句框架。</p>
+	
+	<h4>关键词翻译：</h4>
+	<ul>
+	<li><strong>你</strong>：译为「あなた」，是日语中最通用的第二人称代词</li>
+	<li><strong>谁</strong>：译为「誰（だれ）」，日语疑问代词需与助动词「です」连用</li>
+	<li><strong>啊</strong>：语气词在日语中体现为句尾的「か」带来的疑问语调</li>
+	</ul>
+	
+	<h4>语法点解析：</h4>
+	<ul>
+	<li><strong>疑问句式</strong>：日语疑问句通过终助词「か」构成，无需语序倒装</li>
+	<li><strong>礼貌体表达</strong>：使用「です」构成敬体，比简体「だれだ」更符合日常交流礼仪</li>
+	<li><strong>主题提示</strong>：「は」作为主题标记助词，明确句子讨论对象</li>
+	</ul>
+	
+	<h4>翻译思路：</h4>
+	<p>将口语化的中文疑问句转化为标准的日语礼貌疑问句式。保留原句的询问意图，同时遵循日语中疑问词必须与礼貌助动词搭配的语法规则，省略中文语气词「啊」的口语特征，通过日语句尾的自然语调体现疑问语气。</p>
+	</div>
+	`);
 	const loading = ref(false)
 	const truncate = (q) => {
 		var len = q.length;
@@ -179,13 +200,10 @@
 		})
 	}
 	const finishCore = () => {
-		console.log("finish sse")
-		console.log(result.value);
 		loading.value = false;
 	}
 	const stop = () => {
 		chatSSEClientRef.value.stopChat()
-		console.log("stop");
 	}
 	const content = ref(
 		`你是一个中日翻译，我会给你中文或者日文，然后你翻译为日文或者中文，并且我还要你对翻译进行讲解，为什么这么翻译，这句话用了哪些语法点，返回html格式如下<div><h3>翻译：</h3><p>这里是翻译内容。</p></div><div><h3>翻译讲解：</h3><h4>句子结构分析：</h4><p>这里是句子结构分析。</p><h4>关键词翻译：</h4><ul><li><strong>关键词1</strong>：解释1</li><li><strong>关键词2</strong>：解释2</li></ul><h4>语法点解析：</h4><ul><li><strong>语法点1</strong>：解释1</li><li><strong>语法点2</strong>：解释2</li></ul><h4>翻译思路：</h4><p>这里是翻译思路。</p></div>`
@@ -246,6 +264,8 @@
 
 	.result {
 		padding: 0 16px;
+		flex: 1;
+		overflow: auto;
 
 		.smalltitle {
 			font-size: 14px;

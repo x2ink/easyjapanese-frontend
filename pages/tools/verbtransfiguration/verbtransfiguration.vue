@@ -126,7 +126,9 @@
 				return
 			}
 			toast.loading("正在获取中")
-			const res = await $http.common.getVerbTrans(value.value.trim())
+			const res = await $http.common.getVerbTrans({
+				word: value.value.trim()
+			})
 			data.value = res.data
 			toast.close()
 		} catch (err) {
@@ -141,6 +143,7 @@
 		overflow-y: auto;
 		padding-bottom: env(safe-area-inset-bottom);
 	}
+
 	.transform-group {
 		margin-bottom: 16px;
 		background: #FFFFFF;

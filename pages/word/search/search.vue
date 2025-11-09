@@ -56,17 +56,17 @@
 			<div style="padding-bottom: env(safe-area-inset-bottom);">
 				<!-- 日语单词项 -->
 				<view v-if="total>0&&current=='jc'">
-					<div @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
+					<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
 						v-for="item in List" :key="item.id">
-						<div class="word-header">
-							<div>
+						<view class="word-header">
+							<view>
 								<span class="word-kanji">{{formatWordName(item.words,item.kana)}}{{item.tone}}</span>
-							</div>
-						</div>
-						<div class="word-meaning">
+							</view>
+						</view>
+						<view class="word-meaning">
 							<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
-						</div>
-					</div>
+						</view>
+					</view>
 				</view>
 				<!-- 日中词典项 -->
 				<!-- 	<view>

@@ -5,57 +5,57 @@
 			<view class="head">
 				<NavbarDefault :title="`单词${typeTitle}`"></NavbarDefault>
 			</view>
-			<div v-if="doneTask" class="container">
-				<div class="completion-icon">
+			<view v-if="doneTask" class="container">
+				<view class="completion-icon">
 					<i class="fa-solid fa-circle-check"></i>
-				</div>
+				</view>
 				<h1 class="completion-title">{{typeTitle}}完成！</h1>
 				<p class="completion-desc">
 					你已经完成了本组的{{total}}个单词{{typeTitle}}<br>
 					坚持就是胜利，继续加油！
 				</p>
-				<div class="stats-container">
-					<div class="stat-item">
-						<div class="stat-value">{{total}}</div>
-						<div class="stat-label">本组{{typeTitle}}</div>
-					</div>
-					<div class="stat-item">
-						<div class="stat-value">{{rightPercentage}}%</div>
-						<div class="stat-label">正确率</div>
-					</div>
-				</div>
+				<view class="stats-container">
+					<view class="stat-item">
+						<view class="stat-value">{{total}}</view>
+						<view class="stat-label">本组{{typeTitle}}</view>
+					</view>
+					<view class="stat-item">
+						<view class="stat-value">{{rightPercentage}}%</view>
+						<view class="stat-label">正确率</view>
+					</view>
+				</view>
 
-				<div class="button-container">
+				<view class="button-container">
 					<button @click="writefrommemory()" class="primary-button">立即默写</button>
 					<button @click="init(learnType)" class="secondary-button">再来一组</button>
-				</div>
-			</div>
+				</view>
+			</view>
 			<view v-else>
-				<div class="progress-container">
-					<div class="progress-text">
+				<view class="progress-container">
+					<view class="progress-text">
 						<span>今日进度: {{learned}}/{{total}}</span>
 						<span>{{progressPercent}}%</span>
-					</div>
-					<div class="progress-bar">
-						<div class="progress-fill" :style="{width:`${progressPercent}%`}"></div>
-					</div>
-				</div>
-				<div class="word-card">
+					</view>
+					<view class="progress-bar">
+						<view class="progress-fill" :style="{width:`${progressPercent}%`}"></view>
+					</view>
+				</view>
+				<view class="word-card">
 					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn"
 						title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
-					<div class="word-header _GCENTER">
+					<view class="word-header _GCENTER">
 						<button @click="playUserRecord(wordinfo.voice)" v-if="wordinfo.step==2&&!showAnswer"
 							class="pronounce-btn pronounce-header" title="发音">
 							<i class="fas fa-volume-up"></i>
 						</button>
 						<view v-else class="_GCENTER" style="flex-direction: column;">
-							<div class="word-kanji">{{wordinfo.words.join('·')}}</div>
-							<div class="word-furigana">{{wordinfo.kana}}</div>
-							<div class="word-romaji">{{wordinfo.rome}}</div>
+							<view class="word-kanji">{{wordinfo.words.join('·')}}</view>
+							<view class="word-furigana">{{wordinfo.kana}}</view>
+							<view class="word-romaji">{{wordinfo.rome}}</view>
 						</view>
-					</div>
+					</view>
 
 					<view class="word-details">
 						<view v-if="showAnswer" style="display: flex;flex-direction: column;gap: 12px;">
@@ -74,7 +74,7 @@
 							:row-col="[
 						[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
 					</view>
-				</div>
+				</view>
 				<view class="example" v-if="showAnswer||wordinfo.step==0">
 					<view
 						@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${wordinfo.id}/${item.voice}`)"
@@ -93,21 +93,17 @@
 				</view>
 				<view v-if="showAnswer" class="action-buttons">
 					<button v-if="know" @click="misremember()" class="action-btn dont-know-btn">
-						<text class="fa-solid fa-face-sad-cry"></text>
 						<text>记错了</text>
 					</button>
 					<button @click="getNext()" class="action-btn next-btn">
-						<text class="fa-solid fa-hand-point-right"></text>
 						<text>下一个</text>
 					</button>
 				</view>
 				<view v-else class="action-buttons">
 					<button @click="unknowBtn()" class="action-btn dont-know-btn">
-						<text class="fa-solid fa-face-sad-cry"></text>
 						<text>不认识</text>
 					</button>
 					<button @click="knowBtn()" class="action-btn know-btn">
-						<text class="fa-solid fa-face-smile"></text>
 						<text>认识</text>
 					</button>
 				</view>
@@ -287,7 +283,6 @@
 	const learnType = ref('learn')
 	const init = async (type) => {
 		learnType.value = type
-		total.value = 10
 		loading.value = true
 
 		let learnCache = localwordsStore().learnCache
@@ -318,7 +313,7 @@
 		}
 
 		const fetchData = async (apiCall, clearCacheFunc) => {
-			resetAlgorithmState() // 🌟 【BUG修复】在获取数据前，重置一切状态
+			resetAlgorithmState()
 			clearCacheFunc()
 			const res = await apiCall()
 			wordList.value = res.data.map(item => {
@@ -339,6 +334,7 @@
 					error: 0
 				}
 			})
+			total.value = wordList.value.length > 10 ? 10 : wordList.value.length
 			initialQueue.value = wordList.value.slice(0, 4)
 			pendingNew.value = wordList.value.slice(4)
 			getWord()
@@ -635,7 +631,11 @@
 	}
 </script>
 
-
+<style>
+	page {
+		background-color: white;
+	}
+</style>
 <style scoped lang="scss">
 	/* 内容容器 */
 	.container {
@@ -725,7 +725,7 @@
 		background-color: #07C160;
 		color: white;
 		border: none;
-		border-radius: 8px;
+		border-radius: 12px;
 		padding: 12px 0;
 		font-size: 16px;
 		font-weight: 500;
@@ -743,7 +743,7 @@
 		background-color: white;
 		color: #07C160;
 		border: 1px solid #07C160;
-		border-radius: 8px;
+		border-radius: 12px;
 		padding: 12px 0;
 		font-size: 16px;
 		font-weight: 500;
@@ -775,7 +775,6 @@
 	/* 学习进度 */
 	.progress-container {
 		padding: 16px;
-		background-color: #FAFAFA;
 	}
 
 	.progress-text {
@@ -787,22 +786,21 @@
 	}
 
 	.progress-bar {
-		height: 6px;
+		height: 4px;
 		background-color: #E0E0E0;
-		border-radius: 3px;
+		border-radius: 4px;
 		overflow: hidden;
 	}
 
 	.progress-fill {
 		height: 100%;
 		background-color: #07C160;
-		border-radius: 3px;
 		transition: width 0.3s ease;
 	}
 
 	.word-card {
 		margin: 16px;
-		background-color: white;
+		border: 1px solid #E5E7EB;
 		border-radius: 12px;
 		padding: 16px;
 		position: relative;
@@ -870,7 +868,6 @@
 		margin-top: 8px;
 	}
 
-	/* 操作按钮 */
 	.action-buttons {
 		position: fixed;
 		display: flex;
@@ -885,7 +882,7 @@
 	.action-btn {
 		flex: 1;
 		padding: 12px;
-		border-radius: 8px;
+		border-radius: 12px;
 		font-size: 16px;
 		display: flex;
 		align-items: center;

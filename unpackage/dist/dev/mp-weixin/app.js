@@ -26,6 +26,7 @@ if (!Math) {
   "./pages/other/setplan/setplan.js";
   "./pages/word/review/review.js";
   "./pages/word/dictation/dictation.js";
+  "./pages/word/editword/editword.js";
 }
 const _sfc_main = {
   onShareAppMessage() {

@@ -4,17 +4,16 @@
 			<NavbarDefault title="单词跟读"></NavbarDefault>
 		</view>
 		<!-- 单词展示区 -->
-		<div class="word-display">
+		<view class="word-display">
 			<button hover-class="none" title="发音">
-				<i class="fas fa-volume-up"></i>
+				<i style="color: #07C160;" class="fas fa-volume-up"></i>
 			</button>
-			<div class="word-kanji">{{ word.words.join('·') }}</div>
-			<div class="word-furigana">{{word.kana}}</div>
-			<div class="word-meaning">{{word.description}}</div>
-		</div>
-
+			<view class="word-kanji">{{ word.words.join('·') }}</view>
+			<view class="word-furigana">{{word.kana}}</view>
+			<view class="word-meaning">{{word.description}}</view>
+		</view>
 		<!-- 录音控制区 -->
-		<div class="recording-control">
+		<view class="recording-control">
 			<button @longpress="startRecord" @touchend="endRecord" class="record-btn _GCENTER">
 				<view v-if="recording" class="loadership_XNYIJ">
 					<view></view>
@@ -23,27 +22,27 @@
 					<view></view>
 					<view></view>
 				</view>
-				<i v-else class="fas fa-microphone"></i>
+				<text v-else class="fas fa-microphone"></text>
 			</button>
-			<div class="recording-time">长按麦克风开始录音</div>
+			<view class="recording-time">长按麦克风开始录音</view>
 			<!-- 录音操作按钮组 (初始隐藏) -->
-			<div class="recording-actions" style="display: none;">
+			<view class="recording-actions" style="display: none;">
 				<button class="action-btn">取消</button>
 				<button class="action-btn primary">发布</button>
-			</div>
-		</div>
+			</view>
+		</view>
 		<!-- 其他用户录音列表 -->
-		<div class="recordings-list">
-			<div class="section-title">大家的发音</div>
+		<view class="recordings-list">
+			<view class="section-title">大家的发音</view>
 			<!-- 录音项1 -->
-			<div class="recording-item" v-for="(item,index) in List" :key="item.id">
-				<div class="user-info">
+			<view class="recording-item" v-for="(item,index) in List" :key="item.id">
+				<view class="user-info">
 					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
-					<div class="user-name">
+					<view class="user-name">
 						<view>{{item.user.nickname}}</view>
-						<div class="recording-meta">{{dayjs().to(dayjs(item.time))}}</div>
-					</div>
-					<div class="recording-actions">
+						<view class="recording-meta">{{dayjs().to(dayjs(item.time))}}</view>
+					</view>
+					<view class="recording-actions">
 						<button @click="like(index,item.id)" class="like-btn" :class="{liked:item.has}">
 							<i class="fas fa-heart"></i>
 							<span class="like-count">{{item.like}}</span>
@@ -58,22 +57,22 @@
 							</view>
 							<i v-else class="fas fa-play"></i>
 						</button>
-					</div>
-				</div>
-			</div>
+					</view>
+				</view>
+			</view>
 			<wd-status-tip custom-style="margin-top: 40px;" :image-size="{
           height: 128,
           width: 128
   }" v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
 				tip="还没有用户录音~" />
-		</div>
+		</view>
 		<!-- 发布弹窗 -->
 		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
 			@close="recorded=false">
 			<view class="release">
-				<div class="modal-header">录音完成</div>
+				<view class="modal-header">录音完成</view>
 
-				<div class="playback-controls">
+				<view class="playback-controls">
 					<button @click="playRecord()" class="playback-btn">
 						<view v-if="playing" class="loadership_XNYIJ" style="transform: scale(0.8);">
 							<view></view>
@@ -84,20 +83,20 @@
 						</view>
 						<i v-else class="fas fa-play"></i>
 					</button>
-				</div>
-				<div class="playback-time">{{Math.round(recordDuration/1000)}}"</div>
-				<div class="agreement-checkbox">
-					<div @click="agree=!agree" :class="{checked:agree}" class="checkbox">
+				</view>
+				<view class="playback-time">{{Math.round(recordDuration/1000)}}"</view>
+				<view class="agreement-checkbox">
+					<view @click="agree=!agree" :class="{checked:agree}" class="checkbox">
 						<i class="fas fa-check" style="font-size: 12px;"></i>
-					</div>
-					<div class="agreement-text">
+					</view>
+					<view class="agreement-text">
 						我已阅读并同意<text class="agreement-link">《轻松日语用户发音功能使用协议》</text>
-					</div>
-				</div>
-				<div class="modal-actions">
+					</view>
+				</view>
+				<view class="modal-actions">
 					<button @click="recorded=false" class="modal-btn cancel-btn">取消</button>
 					<button @click="submit()" class="modal-btn confirm-btn">发布</button>
-				</div>
+				</view>
 			</view>
 		</wd-popup>
 		<wd-toast />

@@ -4,7 +4,7 @@
 			<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"></image>
 			<view>
 				<view class="title">轻松日语</view>
-				<view class="description">单词学习小助手</view>
+				<view class="description">自由的日语单词学习助手</view>
 			</view>
 		</view>
 		<!-- 功能入口 -->

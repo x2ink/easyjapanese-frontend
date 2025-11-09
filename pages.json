@@ -60,6 +60,7 @@
 		{
 			"path": "pages/tools/fiftysounds/fiftysounds",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -92,6 +93,7 @@
 		{
 			"path": "pages/tools/translate/translate",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -139,12 +141,21 @@
 		{
 			"path": "pages/word/review/review",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/word/dictation/dictation",
 			"style": {
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/word/editword/editword",
+			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		}

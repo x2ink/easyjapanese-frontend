@@ -2,16 +2,18 @@
 	<view class="head">
 		<NavbarDefault border title="单词听写"></NavbarDefault>
 	</view>
-	<wd-progress custom-class="wdprogress" :percentage="progress" hide-text />
+	<view class="progress-bar">
+		<view class="progress-fill" :style="{width:`${progress}%`}"></view>
+	</view>
 	<div v-if="wordList.length==0" class="container">
 		<!-- 完成图标 -->
 		<div class="completion-icon">
 			<i class="fa-solid fa-circle-check"></i>
 		</div>
 		<!-- 完成标题 -->
-		<h1 class="completion-title">听写完成！</h1>
+		<h1 class="completion-title">{{total>0?'听写完成！':'暂无单词听写'}}</h1>
 		<!-- 完成描述 -->
-		<p class="completion-desc">
+		<p v-if="total>0" class="completion-desc">
 			你已经完成了本组的{{doneList.length}}个单词听写<br>
 			坚持就是胜利，继续加油！
 		</p>
@@ -23,30 +25,48 @@
 	</div>
 	<view v-else>
 		<!-- 单词展示区 -->
-		<div class="word-display _GCENTER">
+		<view class="word-display _GCENTER">
 			<button @click="playUserRecord(wordinfo.voice)" class="pronounce-btn pronounce-header" title="发音">
-				<i class="fas fa-volume-up"></i>
+				<text class="fas fa-volume-up"></text>
 			</button>
-		</div>
+		</view>
 		<wd-divider>请选择正确答案</wd-divider>
 		<!-- 选项区 -->
 		<view class="options">
 			<view :class="item.class" @click="select(index,item)" class="option" v-for="(item,index) in options"
-				:key="item.id">
-				<view>
-					{{item.meaning.map(it=>it.meaning).join('；')}}
+				:key="item.word.id">
+				<view class="index _GCENTER">
+					{{optionKey.get(index)}}
 				</view>
-				<div class="word-card" v-if="item.anwser">
-					<div>
-						<div class="card-japanese">{{formatWordName(item.word,item.kana)}}</div>
-						<div class="card-pronunciation">{{item.rome}}</div>
-					</div>
-				</div>
+				<view>
+					{{item.word.description}}
+				</view>
+				<view v-if="showContinue&&item.class=='fail'" class="anwser _GCENTER"
+					style="background-color: #EF4444;">
+					<text class="fa-solid fa-xmark"></text>
+				</view>
+				<view v-if="showContinue&&item.class=='success'" class="anwser _GCENTER"
+					style="background-color: #10B981;">
+					<text class="fa-solid fa-check"></text>
+				</view>
 			</view>
 		</view>
 		<view class="_GCENTER" v-if="showContinue">
 			<view class="continue" @click="getNext()"><text>继续</text><i style="font-size: 22px;"
 					class="fa-solid fa-arrow-right"></i></view>
+		</view>
+		<view @click="goPage('/pages/word/worddetail/worddetail',{
+					id:wordinfo.id
+				})" class="word-card" v-if="showContinue">
+			<view class="card-header">
+				<view>
+					<view class="card-japanese">{{formatWordName(wordinfo.words,wordinfo.kana)}}</view>
+					<view class="card-pronunciation">{{wordinfo.rome}}</view>
+				</view>
+				<view @click.stop="playUserRecord(wordinfo.voice)" class="icon">
+					<text class="fas fa-volume-up"></text>
+				</view>
+			</view>
 		</view>
 	</view>
 	<wd-toast />
@@ -78,6 +98,12 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const message = useMessage()
+	const optionKey = new Map([
+		[0, 'A'],
+		[1, 'B'],
+		[2, 'C'],
+		[3, 'D']
+	])
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;
 	const playUserRecord = (url) => {
@@ -93,66 +119,52 @@
 			goPage('/pages/learn/learn/learn')
 		}
 	}
-	const wordinfo = ref({
-		meaning: []
-	})
+	const wordinfo = ref({})
 	const wordList = ref([])
 	const doneList = ref([])
-	const value = ref('')
 	const progress = computed(() => {
-		return (doneList.value.length / total.value) * 100
+		if (total.value == 0) {
+			return 0
+		} else {
+			return (doneList.value.length / total.value) * 100
+		}
 	})
 	const options = ref([])
 	const showContinue = ref(false)
-	const select = (index, item) => {
-		if (options.value.some(it => it.anwser)) {
+	const select = async (index, item) => {
+		if (options.value.some(it => it.class)) {
 			return
 		}
-		if (item.id == wordinfo.value.id) {
+		if (item.anwser) {
 			toast.success("选择正确")
-			// 回答正确
 			doneList.value.push(wordinfo.value)
-			localwordsStore().pushSound(wordinfo.value)
 			wordList.value.shift()
 			options.value[index].class = "success"
-			options.value[index].anwser = true
+			await $http.word.setLearnt({
+				type: "listen",
+				word_id: wordinfo.value.id
+			})
 		} else {
-			// 回答错误
 			toast.error("选择错误")
 			options.value[index].class = "fail"
-			options.value[index].anwser = true
-			let correct = options.value.findIndex(it => it.id == wordinfo.value.id)
+			let correct = options.value.findIndex(it => it.anwser)
 			options.value[correct].class = "success"
-			options.value[correct].anwser = true
 			wordList.value.shift()
 			wordList.value.push(wordinfo.value)
 		}
 		showContinue.value = true
 	}
 	const getOptions = async (id) => {
-		const res = await $http.word.getOptions({
-			limit: 3,
-			filter: [id]
+		const res = await $http.word.getListenOptions({
+			wordId: id
 		})
-		let filter = [...res.data]
-		filter.push(wordinfo.value)
-		options.value = filter.sort(() => Math.random() - 0.5).map(item => {
-			item = {
-				...item,
-				class: '',
-				anwser: false,
-			}
-			return item
-		});
-		console.log(options.value);
+		options.value = res.data
 	}
 	const getAllWords = async () => {
-		const res = await $http.word.getTodaywords({
-			filter: localwordsStore().soundList.map(item => item.id),
-			type: "sound"
+		const res = await $http.word.getLearnt({
+			filter: "listen"
 		})
 		if (res.data.length == 0) {
-			toast.warning("今日没有单词需要听写了")
 			return
 		}
 		wordList.value = res.data
@@ -162,30 +174,49 @@
 	const getNext = () => {
 		options.value = []
 		showContinue.value = false
-		value.value = ""
 		wordinfo.value = wordList.value[0]
 		playUserRecord(wordinfo.value.voice)
 		getOptions(wordinfo.value.id)
 	}
 	const total = ref(0)
-
-	onMounted(() => {
-
-	})
 	onLoad(op => {
-		if (op.type == "local") {
-
-		} else {
-			getAllWords()
-		}
+		getAllWords()
 	})
 </script>
-
+<style>
+	page {
+		background-color: white;
+	}
+</style>
 <style lang="scss">
 	.head {
 		position: sticky;
 		top: 0;
 		z-index: 9;
+	}
+
+	.word-card {
+		border: 1px solid #E5E7EB;
+		padding: 16px;
+		border-radius: 16px;
+		margin: 16px;
+	}
+
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+	}
+
+	.card-japanese {
+		font-size: 24px;
+		font-weight: bold;
+	}
+
+	.card-pronunciation {
+		font-size: 16px;
+		color: #757575;
 	}
 
 	/* 内容容器 */
@@ -264,7 +295,7 @@
 		background-color: #07C160;
 		color: white;
 		border: none;
-		border-radius: 8px;
+		border-radius: 12px;
 		padding: 12px 0;
 		font-size: 16px;
 		font-weight: 500;
@@ -303,37 +334,39 @@
 		font-weight: bold;
 		margin-top: 16px;
 		color: #34D19D;
-	}
-
-	.pronounce-header {
-		width: 60px !important;
-		height: 60px !important;
-		position: relative !important;
-		right: 0 !important;
-		top: 0 !important;
-		font-size: 18px !important;
+		margin-bottom: 16px;
 	}
 
 	.pronounce-btn {
-		width: 40px;
-		height: 40px;
+		position: relative;
+		right: 0;
+		top: 0;
+		width: 80px;
+		height: 80px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #f0f0f0;
+		background-color: rgb(7, 193, 96);
 		border-radius: 50%;
 		border: none;
-		color: #555;
-		font-size: 16px;
-		position: absolute;
-		right: 16px;
-		top: 16px;
+		color: #ffffff;
+		font-size: 24px;
 		margin: 0;
 	}
 
-	.wdprogress {
-		padding: 0 !important;
+
+	.progress-bar {
+		height: 4px;
+		background-color: #E0E0E0;
+		overflow: hidden;
 	}
+
+	.progress-fill {
+		height: 100%;
+		background-color: #07C160;
+		transition: width 0.3s ease;
+	}
+
 
 	.word-display {
 		background-color: #FFFFFF;
@@ -348,47 +381,38 @@
 
 
 		.option {
-			background-color: white;
-			border-radius: 8px;
+			border-radius: 16px;
 			padding: 16px;
+			border: 1px solid #E5E7EB;
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			position: relative;
+
+			.anwser {
+				border-radius: 50%;
+				height: 20px;
+				width: 20px;
+				color: white;
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				right: 16px;
+				font-size: 14px;
+			}
+
+			.index {
+				border-radius: 50%;
+				width: 32px;
+				height: 32px;
+				background-color: rgb(243, 244, 246);
+			}
 		}
 	}
 
-	/* 单词卡片 (初始隐藏) */
-	.word-card {
-		background-color: white;
-		color: black;
-		border-radius: 8px;
-		margin-top: 8px;
-		padding: 8px;
-	}
-
-
-
-	.card-japanese {
-		font-size: 18px;
-		font-weight: bold;
-	}
-
-	.card-pronunciation {
-		font-size: 16px;
-		color: #757575;
-	}
-
-	/* 图标样式 */
 	.icon {
 		width: 24px;
 		height: 24px;
 		color: #757575;
-	}
-
-	.success {
-		background-color: #34D19D !important;
-		color: white;
-	}
-
-	.fail {
-		background-color: #FA4350 !important;
-		color: white;
 	}
 </style>

@@ -58,10 +58,14 @@ export default {
 	setLearnt(data) {
 		return http.post("learnt", data)
 	},
-
-
-
-
+	getListenOptions(data) {
+		return http.get("listen/options", data)
+	},
+	
+	
+	
+	
+	
 	cjSearch(page, size, val) {
 		return http.get(`cj/search/${page}/${size}/${val}`)
 	},

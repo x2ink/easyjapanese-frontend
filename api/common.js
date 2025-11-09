@@ -20,8 +20,8 @@ export default {
 
 
 
-	getVerbTrans(word) {
-		return http.get(`verbtrans/${word}`)
+	getVerbTrans(data) {
+		return http.get(`verbtrans`, data)
 	},
 
 	feedback(data) {

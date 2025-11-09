@@ -22,7 +22,8 @@
     "pages/other/browse/browse",
     "pages/other/setplan/setplan",
     "pages/word/review/review",
-    "pages/word/dictation/dictation"
+    "pages/word/dictation/dictation",
+    "pages/word/editword/editword"
   ],
   "window": {
     "navigationBarTextStyle": "black",

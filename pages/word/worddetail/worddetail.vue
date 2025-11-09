@@ -1,5 +1,5 @@
 <template>
-	<scroll-view scroll-y="true" style="height: 100vh;">
+	<scroll-view scroll-y="true" class="scroll-container">
 		<view class="content-container">
 			<!-- 顶部区 -->
 			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 4px)` }">
@@ -7,7 +7,7 @@
 					<text class="fas fa-arrow-left"></text>
 				</view>
 				<view class="word-header-content">
-					<view class="row-bt-top">
+					<view class="header-row">
 						<view>
 							<view class="word-title">{{ jcinfo.words.join('·') }}</view>
 							<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
@@ -15,8 +15,7 @@
 								<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
 							</view>
 						</view>
-
-						<view class="row-mid" style="gap: 8px;">
+						<view class="action-buttons">
 							<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
 								<text class="fas fa-volume-up"></text>
 							</view>
@@ -31,48 +30,31 @@
 				</view>
 			</view>
 			<view class="main-content">
-				<!-- 词性与释义 -->
 				<view v-for="item in jcinfo.detail" :key="item.type" class="card">
-					<!-- <view class="text-bold mb-9">词性</view> -->
-					<view class="row-bt-mid mb-12">
+					<view class="card-header">
 						<view><text class="tag tag-blue">{{ item.type }}</text></view>
 					</view>
-					<!-- <view class="text-bold mb-9">释义</view> -->
 					<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
-						<view style="font-weight: bold;">{{ meaning.zh }}</view>
+						<view class="meaning-text">{{ meaning.zh }}</view>
 						<view class="examples">
 							<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
 								<view
 									@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${jcinfo.id}/${e.voice}`)">
-									<view class="ja">{{ e.jp }}</view>
-									<view class="ch">{{ e.zh }}<i style="font-size: 12px;" class="fas fa-volume-up"></i>
+									<view class="ja" v-html="renderRubyHTMLWeb(e.read)"></view>
+									<view class="ch">{{ e.zh }}<i class="volume-icon fas fa-volume-up"></i>
 									</view>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-
-				<!-- 相关单词 -->
-				<!-- 	<view class="card">
-					<view class="text-bold mb-12">相关单词</view>
-					<view class="grid-2">
-						<view v-for="(item, index) in relatedWords" :key="index" class="related-item">
-							<view class="text-bold">{{ item.word }}</view>
-							<view class="text-xs text-gray">{{ item.kana }}</view>
-						</view>
-					</view>
-				</view> -->
-
 				<!-- 占位 -->
-				<view style="height: calc(env(safe-area-inset-bottom) + 40px)"></view>
+				<view class="bottom-space"></view>
 			</view>
 			<!-- 操作 -->
-			<view @click="openSheet()" class="sheet _GCENTER">
+			<view @click="openSheet()" class="sheet-btn _GCENTER">
 				<text class="fa-regular fa-pen-to-square"></text>
-				<view>
-					操作
-				</view>
+				<view>操作</view>
 			</view>
 			<wd-toast />
 		</view>
@@ -105,8 +87,10 @@
 		words: [],
 		detail: []
 	})
+	const renderRubyHTMLWeb = (rubyList) => {
+		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
+	}
 	const id = ref(null)
-
 	const getJcInfo = async () => {
 		const res = await $http.word.jcInfo({
 			id: id.value
@@ -152,88 +136,28 @@
 			}
 		})
 	}
-	const relatedWords = [{
-			word: '飲む',
-			kana: 'のむ'
-		},
-		{
-			word: '料理',
-			kana: 'りょうり'
-		},
-		{
-			word: '食堂',
-			kana: 'しょくどう'
-		},
-		{
-			word: 'お腹',
-			kana: 'おなか'
-		}
-	]
 </script>
-
-<style lang="scss" scoped>
-	.sheet {
-		font-size: 12px;
-		flex-direction: column;
-		position: fixed;
-		bottom: 40px;
-		right: 20px;
+<style>
+	page {
 		background-color: white;
-		width: 60px;
-		height: 60px;
-		border-radius: 50%;
-		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-		text {
-			font-size: 18px;
-			margin-bottom: 4px;
-		}
 	}
-
-	.row {
-		display: flex;
-	}
-
-	.row-mid {
-		display: flex;
-		align-items: center;
-	}
-
-	.row-top {
-		display: flex;
-		align-items: flex-start;
-	}
-
-	.row-bt-mid {
+</style>
+<style lang="scss" scoped>
+	/* 通用样式 */
+	.flex-between {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	.row-bt-top {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-	}
-
-	.text-bold {
-		font-weight: bold;
-	}
-
-	.text-gray {
-		color: #6b7280;
-	}
-
-	.text-xs {
-		font-size: 12px;
-	}
-
-	.mb-9 {
-		margin-bottom: 9px;
-	}
 
 	.mb-12 {
 		margin-bottom: 12px;
+	}
+
+	/* 布局容器 */
+	.scroll-container {
+		height: 100vh;
 	}
 
 	.content-container {
@@ -242,6 +166,7 @@
 		height: 100%;
 	}
 
+	/* 头部区域 */
 	.word-header {
 		position: sticky;
 		top: 0;
@@ -257,6 +182,18 @@
 
 	.word-header-content {
 		margin-top: 16px;
+	}
+
+	.header-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+
+	.action-buttons {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
 	.word-title {
@@ -298,6 +235,7 @@
 		border: none;
 	}
 
+	/* 主要内容区域 */
 	.main-content {
 		flex: 1;
 		overflow: auto;
@@ -305,10 +243,12 @@
 	}
 
 	.card {
-		background: #fff;
-		border-radius: 9px;
-		padding: 16px;
-		margin-bottom: 16px;
+		padding: 8px;
+	}
+
+	.card-header {
+		@extend .flex-between;
+		margin-bottom: 12px;
 	}
 
 	.tag {
@@ -316,12 +256,15 @@
 		padding: 4px 12px;
 		border-radius: 4px;
 		font-size: 14px;
-		margin-right: 8px;
 	}
 
 	.tag-blue {
-		background: #dbeafe;
-		color: #2563eb;
+		background: #E8F5E9;
+		color: #2E7D32;
+	}
+
+	.meaning-text {
+		font-weight: bold;
 	}
 
 	.examples {
@@ -329,32 +272,50 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+	}
 
-		.example {
-			border-left: 3px solid #07c160;
-			padding-left: 12px;
+	.example {
+		border-radius: 8px;
+		padding: 12px;
+		background-color: #f8f9fa;
 
-			.ja {
-				font-size: 14px;
-			}
+		.ja {
+			font-size: 14px;
+		}
 
-			.ch {
-				padding-top: 4px;
-				font-size: 14px;
-				color: #6b7280;
-			}
+		.ch {
+			padding-top: 4px;
+			font-size: 14px;
+			color: #6b7280;
 		}
 	}
 
-	.grid-2 {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 9px;
+	.volume-icon {
+		font-size: 12px;
+		color: #07C160;
+		margin-left: 4px;
 	}
 
-	.related-item {
-		padding: 9px;
-		border-radius: 4.5px;
-		background: #f9fafb;
+	.bottom-space {
+		height: calc(env(safe-area-inset-bottom) + 40px);
+	}
+
+	/* 操作按钮 */
+	.sheet-btn {
+		flex-direction: column;
+		font-size: 12px;
+		position: fixed;
+		bottom: 40px;
+		right: 20px;
+		background-color: white;
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+		text {
+			font-size: 18px;
+			margin-bottom: 4px;
+		}
 	}
 </style>

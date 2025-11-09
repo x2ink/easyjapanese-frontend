@@ -1,48 +1,52 @@
 <template>
 	<page-meta :page-style="`overflow:${showDetail? 'hidden' : 'visible'};`">
-		<view class="head">
-			<NavbarDefault border title="五十音图"></NavbarDefault>
-			<div class="bg-white">
-				<div @click="current='平假名'" :class="{active:current=='平假名'}" class="kana-tab _GCENTER">
-					平假名
+		<view style="height: 100vh;display: flex;flex-direction: column;">
+			<view>
+				<NavbarDefault border title="五十音图"></NavbarDefault>
+				<view class="bg-white">
+					<view @click="current='平假名'" :class="{active:current=='平假名'}" class="kana-tab _GCENTER">
+						平假名
+					</view>
+					<view @click="current='片假名'" :class="{active:current=='片假名'}" class="kana-tab  _GCENTER">
+						片假名
+					</view>
+				</view>
+			</view>
+			<view style="flex: 1;overflow: scroll;">
+				<div class="table">
+					<div class="space-y-2">
+						<div class="kana-row-header">清音</div>
+						<div class="grid">
+							<div @click="openDetail(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
+								<div class="kana-character">{{get(item)}}</div>
+								<div class="kana-romaji">{{item}}</div>
+							</div>
+						</div>
+					</div>
+					<div class="space-y-2">
+						<div class="kana-row-header">浊音</div>
+						<div class="grid">
+							<div @click="openDetail(item)" class="kana-card" v-for="item in dakutenHiragana"
+								:key="item">
+								<div class="kana-character">{{get(item)}}</div>
+								<div class="kana-romaji">{{item}}</div>
+							</div>
+						</div>
+					</div>
+					<div class="space-y-2">
+						<div class="kana-row-header">拗音</div>
+						<div class="grid">
+							<div @click="openDetail(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
+								<div class="kana-character">{{get(item)}}</div>
+								<div class="kana-romaji">{{item}}</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div @click="current='片假名'" :class="{active:current=='片假名'}" class="kana-tab  _GCENTER">
-					片假名
-				</div>
-			</div>
+			</view>
 		</view>
-		<!-- 五十音图表格 -->
-		<div class="table" v-if="loading">
-			<div class="space-y-2">
-				<div class="kana-row-header">清音</div>
-				<div class="grid">
-					<div @click="openDetail(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
-						<div class="kana-character">{{get(item)}}</div>
-						<div class="kana-romaji">{{item}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="space-y-2">
-				<div class="kana-row-header">浊音</div>
-				<div class="grid">
-					<div @click="openDetail(item)" class="kana-card" v-for="item in dakutenHiragana" :key="item">
-						<div class="kana-character">{{get(item)}}</div>
-						<div class="kana-romaji">{{item}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="space-y-2">
-				<div class="kana-row-header">拗音</div>
-				<div class="grid">
-					<div @click="openDetail(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
-						<div class="kana-character">{{get(item)}}</div>
-						<div class="kana-romaji">{{item}}</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<wd-toast />
 	</page-meta>
+	<wd-toast />
 	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="detail-popup">
 		<view class="_GCENTER" style="flex-direction: column;padding: 16px;">
 			<view class="detail-title">
@@ -92,7 +96,542 @@
 	const toast = useToast()
 	const data = ref([])
 	const current = ref('平假名')
-	const kanaData = ref([])
+	const kanaData = ref([{
+			"rome": "a",
+			"hiragana": "あ",
+			"katakana": "ア"
+		},
+		{
+			"rome": "i",
+			"hiragana": "い",
+			"katakana": "イ"
+		},
+		{
+			"rome": "u",
+			"hiragana": "う",
+			"katakana": "ウ"
+		},
+		{
+			"rome": "e",
+			"hiragana": "え",
+			"katakana": "エ"
+		},
+		{
+			"rome": "o",
+			"hiragana": "お",
+			"katakana": "オ"
+		},
+
+		{
+			"rome": "ka",
+			"hiragana": "か",
+			"katakana": "カ"
+		},
+		{
+			"rome": "ki",
+			"hiragana": "き",
+			"katakana": "キ"
+		},
+		{
+			"rome": "ku",
+			"hiragana": "く",
+			"katakana": "ク"
+		},
+		{
+			"rome": "ke",
+			"hiragana": "け",
+			"katakana": "ケ"
+		},
+		{
+			"rome": "ko",
+			"hiragana": "こ",
+			"katakana": "コ"
+		},
+
+		{
+			"rome": "sa",
+			"hiragana": "さ",
+			"katakana": "サ"
+		},
+		{
+			"rome": "shi",
+			"hiragana": "し",
+			"katakana": "シ"
+		},
+		{
+			"rome": "su",
+			"hiragana": "す",
+			"katakana": "ス"
+		},
+		{
+			"rome": "se",
+			"hiragana": "せ",
+			"katakana": "セ"
+		},
+		{
+			"rome": "so",
+			"hiragana": "そ",
+			"katakana": "ソ"
+		},
+
+		{
+			"rome": "ta",
+			"hiragana": "た",
+			"katakana": "タ"
+		},
+		{
+			"rome": "chi",
+			"hiragana": "ち",
+			"katakana": "チ"
+		},
+		{
+			"rome": "tsu",
+			"hiragana": "つ",
+			"katakana": "ツ"
+		},
+		{
+			"rome": "te",
+			"hiragana": "て",
+			"katakana": "テ"
+		},
+		{
+			"rome": "to",
+			"hiragana": "と",
+			"katakana": "ト"
+		},
+
+		{
+			"rome": "na",
+			"hiragana": "な",
+			"katakana": "ナ"
+		},
+		{
+			"rome": "ni",
+			"hiragana": "に",
+			"katakana": "ニ"
+		},
+		{
+			"rome": "nu",
+			"hiragana": "ぬ",
+			"katakana": "ヌ"
+		},
+		{
+			"rome": "ne",
+			"hiragana": "ね",
+			"katakana": "ネ"
+		},
+		{
+			"rome": "no",
+			"hiragana": "の",
+			"katakana": "ノ"
+		},
+
+		{
+			"rome": "ha",
+			"hiragana": "は",
+			"katakana": "ハ"
+		},
+		{
+			"rome": "hi",
+			"hiragana": "ひ",
+			"katakana": "ヒ"
+		},
+		{
+			"rome": "fu",
+			"hiragana": "ふ",
+			"katakana": "フ"
+		},
+		{
+			"rome": "he",
+			"hiragana": "へ",
+			"katakana": "ヘ"
+		},
+		{
+			"rome": "ho",
+			"hiragana": "ほ",
+			"katakana": "ホ"
+		},
+
+		{
+			"rome": "ma",
+			"hiragana": "ま",
+			"katakana": "マ"
+		},
+		{
+			"rome": "mi",
+			"hiragana": "み",
+			"katakana": "ミ"
+		},
+		{
+			"rome": "mu",
+			"hiragana": "む",
+			"katakana": "ム"
+		},
+		{
+			"rome": "me",
+			"hiragana": "め",
+			"katakana": "メ"
+		},
+		{
+			"rome": "mo",
+			"hiragana": "も",
+			"katakana": "モ"
+		},
+
+		{
+			"rome": "ya",
+			"hiragana": "や",
+			"katakana": "ヤ"
+		},
+		{
+			"rome": "yu",
+			"hiragana": "ゆ",
+			"katakana": "ユ"
+		},
+		{
+			"rome": "yo",
+			"hiragana": "よ",
+			"katakana": "ヨ"
+		},
+
+		{
+			"rome": "ra",
+			"hiragana": "ら",
+			"katakana": "ラ"
+		},
+		{
+			"rome": "ri",
+			"hiragana": "り",
+			"katakana": "リ"
+		},
+		{
+			"rome": "ru",
+			"hiragana": "る",
+			"katakana": "ル"
+		},
+		{
+			"rome": "re",
+			"hiragana": "れ",
+			"katakana": "レ"
+		},
+		{
+			"rome": "ro",
+			"hiragana": "ろ",
+			"katakana": "ロ"
+		},
+
+		{
+			"rome": "wa",
+			"hiragana": "わ",
+			"katakana": "ワ"
+		},
+		{
+			"rome": "wo",
+			"hiragana": "を",
+			"katakana": "ヲ"
+		},
+		{
+			"rome": "n",
+			"hiragana": "ん",
+			"katakana": "ン"
+		},
+
+		{
+			"rome": "ga",
+			"hiragana": "が",
+			"katakana": "ガ"
+		},
+		{
+			"rome": "gi",
+			"hiragana": "ぎ",
+			"katakana": "ギ"
+		},
+		{
+			"rome": "gu",
+			"hiragana": "ぐ",
+			"katakana": "グ"
+		},
+		{
+			"rome": "ge",
+			"hiragana": "げ",
+			"katakana": "ゲ"
+		},
+		{
+			"rome": "go",
+			"hiragana": "ご",
+			"katakana": "ゴ"
+		},
+
+		{
+			"rome": "za",
+			"hiragana": "ざ",
+			"katakana": "ザ"
+		},
+		{
+			"rome": "ji",
+			"hiragana": "じ",
+			"katakana": "ジ"
+		},
+		{
+			"rome": "zu",
+			"hiragana": "ず",
+			"katakana": "ズ"
+		},
+		{
+			"rome": "ze",
+			"hiragana": "ぜ",
+			"katakana": "ゼ"
+		},
+		{
+			"rome": "zo",
+			"hiragana": "ぞ",
+			"katakana": "ゾ"
+		},
+
+		{
+			"rome": "da",
+			"hiragana": "だ",
+			"katakana": "ダ"
+		},
+		{
+			"rome": "de",
+			"hiragana": "で",
+			"katakana": "デ"
+		},
+		{
+			"rome": "do",
+			"hiragana": "ど",
+			"katakana": "ド"
+		},
+
+		{
+			"rome": "ba",
+			"hiragana": "ば",
+			"katakana": "バ"
+		},
+		{
+			"rome": "bi",
+			"hiragana": "び",
+			"katakana": "ビ"
+		},
+		{
+			"rome": "bu",
+			"hiragana": "ぶ",
+			"katakana": "ブ"
+		},
+		{
+			"rome": "be",
+			"hiragana": "べ",
+			"katakana": "ベ"
+		},
+		{
+			"rome": "bo",
+			"hiragana": "ぼ",
+			"katakana": "ボ"
+		},
+
+		{
+			"rome": "pa",
+			"hiragana": "ぱ",
+			"katakana": "パ"
+		},
+		{
+			"rome": "pi",
+			"hiragana": "ぴ",
+			"katakana": "ピ"
+		},
+		{
+			"rome": "pu",
+			"hiragana": "ぷ",
+			"katakana": "プ"
+		},
+		{
+			"rome": "pe",
+			"hiragana": "ぺ",
+			"katakana": "ペ"
+		},
+		{
+			"rome": "po",
+			"hiragana": "ぽ",
+			"katakana": "ポ"
+		},
+
+		{
+			"rome": "kya",
+			"hiragana": "きゃ",
+			"katakana": "キャ"
+		},
+		{
+			"rome": "kyu",
+			"hiragana": "きゅ",
+			"katakana": "キュ"
+		},
+		{
+			"rome": "kyo",
+			"hiragana": "きょ",
+			"katakana": "キョ"
+		},
+
+		{
+			"rome": "sha",
+			"hiragana": "しゃ",
+			"katakana": "シャ"
+		},
+		{
+			"rome": "shu",
+			"hiragana": "しゅ",
+			"katakana": "シュ"
+		},
+		{
+			"rome": "sho",
+			"hiragana": "しょ",
+			"katakana": "ショ"
+		},
+
+		{
+			"rome": "cha",
+			"hiragana": "ちゃ",
+			"katakana": "チャ"
+		},
+		{
+			"rome": "chu",
+			"hiragana": "ちゅ",
+			"katakana": "チュ"
+		},
+		{
+			"rome": "cho",
+			"hiragana": "ちょ",
+			"katakana": "チョ"
+		},
+
+		{
+			"rome": "nya",
+			"hiragana": "にゃ",
+			"katakana": "ニャ"
+		},
+		{
+			"rome": "nyu",
+			"hiragana": "にゅ",
+			"katakana": "ニュ"
+		},
+		{
+			"rome": "nyo",
+			"hiragana": "にょ",
+			"katakana": "ニョ"
+		},
+
+		{
+			"rome": "hya",
+			"hiragana": "ひゃ",
+			"katakana": "ヒャ"
+		},
+		{
+			"rome": "hyu",
+			"hiragana": "ひゅ",
+			"katakana": "ヒュ"
+		},
+		{
+			"rome": "hyo",
+			"hiragana": "ひょ",
+			"katakana": "ヒョ"
+		},
+
+		{
+			"rome": "mya",
+			"hiragana": "みゃ",
+			"katakana": "ミャ"
+		},
+		{
+			"rome": "myu",
+			"hiragana": "みゅ",
+			"katakana": "ミュ"
+		},
+		{
+			"rome": "myo",
+			"hiragana": "みょ",
+			"katakana": "ミョ"
+		},
+
+		{
+			"rome": "rya",
+			"hiragana": "りゃ",
+			"katakana": "リャ"
+		},
+		{
+			"rome": "ryu",
+			"hiragana": "りゅ",
+			"katakana": "リュ"
+		},
+		{
+			"rome": "ryo",
+			"hiragana": "りょ",
+			"katakana": "リョ"
+		},
+
+		{
+			"rome": "gya",
+			"hiragana": "ぎゃ",
+			"katakana": "ギャ"
+		},
+		{
+			"rome": "gyu",
+			"hiragana": "ぎゅ",
+			"katakana": "ギュ"
+		},
+		{
+			"rome": "gyo",
+			"hiragana": "ぎょ",
+			"katakana": "ギョ"
+		},
+
+		{
+			"rome": "ja",
+			"hiragana": "じゃ",
+			"katakana": "ジャ"
+		},
+		{
+			"rome": "ju",
+			"hiragana": "じゅ",
+			"katakana": "ジュ"
+		},
+		{
+			"rome": "jo",
+			"hiragana": "じょ",
+			"katakana": "ジョ"
+		},
+
+		{
+			"rome": "bya",
+			"hiragana": "びゃ",
+			"katakana": "ビャ"
+		},
+		{
+			"rome": "byu",
+			"hiragana": "びゅ",
+			"katakana": "ビュ"
+		},
+		{
+			"rome": "byo",
+			"hiragana": "びょ",
+			"katakana": "ビョ"
+		},
+
+		{
+			"rome": "pya",
+			"hiragana": "ぴゃ",
+			"katakana": "ピャ"
+		},
+		{
+			"rome": "pyu",
+			"hiragana": "ぴゅ",
+			"katakana": "ピュ"
+		},
+		{
+			"rome": "pyo",
+			"hiragana": "ぴょ",
+			"katakana": "ピョ"
+		}
+	])
 	const showDetail = ref(false)
 	const row = ref('')
 	const boardShow = ref(false)
@@ -149,13 +688,15 @@
 		});
 	}
 	const openDetail = (item) => {
-		boardShow.value = false
-		row.value = item
-		playAudio(item)
-		showDetail.value = true
-		setTimeout(() => {
-			boardShow.value = true
-		}, 500)
+		if (item) {
+			boardShow.value = false
+			row.value = item
+			playAudio(item)
+			showDetail.value = true
+			setTimeout(() => {
+				boardShow.value = true
+			}, 500)
+		}
 	}
 	const get = (key) => {
 		const res = kanaData.value.find(item => key == item.rome)
@@ -186,22 +727,6 @@
 		innerAudioContext.src = `https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/${rome}.mp3`;
 		innerAudioContext.play()
 	}
-	const loading = ref(false)
-	const getKanaData = async () => {
-		uni.request({
-			url: "https://jp.x2.ink/backend/static/kana.json",
-			method: "GET",
-			success(res) {
-				kanaData.value = res.data
-				loading.value = true
-				toast.close()
-			}
-		})
-	}
-	onLoad(() => {
-		toast.loading("数据加载中")
-		getKanaData()
-	})
 </script>
 
 <style lang="scss">
