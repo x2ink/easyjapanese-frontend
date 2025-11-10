@@ -23,7 +23,8 @@
     "pages/other/setplan/setplan",
     "pages/word/review/review",
     "pages/word/dictation/dictation",
-    "pages/word/editword/editword"
+    "pages/word/editword/editword",
+    "pages/word/edithistory/edithistory"
   ],
   "window": {
     "navigationBarTextStyle": "black",

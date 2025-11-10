@@ -119,7 +119,7 @@
 	})
 	const openSheet = () => {
 		wx.showActionSheet({
-			itemList: ["加入单词本", "问题反馈"],
+			itemList: ["加入单词本", "编辑单词", "问题反馈"],
 			success(e) {
 				if (e.tapIndex == 0) {
 					goPage("/pages/word/thesaurus/thesaurus", {
@@ -127,6 +127,10 @@
 						wordId: jcinfo.value.id
 					})
 				} else if (e.tapIndex == 1) {
+					goPage("/pages/word/editword/editword", {
+						wordId: jcinfo.value.id
+					})
+				} else if (e.tapIndex == 2) {
 					goPage("/pages/other/feedback/feedback", {
 						type: "单词纠错",
 						wordId: jcinfo.value.id,

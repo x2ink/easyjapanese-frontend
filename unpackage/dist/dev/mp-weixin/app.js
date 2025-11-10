@@ -27,6 +27,7 @@ if (!Math) {
   "./pages/word/review/review.js";
   "./pages/word/dictation/dictation.js";
   "./pages/word/editword/editword.js";
+  "./pages/word/edithistory/edithistory.js";
 }
 const _sfc_main = {
   onShareAppMessage() {

@@ -158,6 +158,13 @@
 				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/word/edithistory/edithistory",
+			"style": {
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
