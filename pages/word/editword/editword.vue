@@ -110,9 +110,10 @@
 				</view>
 				<uv-avatar-group :urls="avatarUrls" size="35" gap="0.5"></uv-avatar-group>
 			</view>
-			<button class="submit-btn">提交修订</button>
+			<button @click="submit" class="submit-btn">提交修订</button>
 			<view :style="{height:getOs()=='ios'?'env(safe-area-inset-bottom)':'16px'}"></view>
 		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -128,6 +129,10 @@
 		onLoad,
 		onShow
 	} from "@dcloudio/uni-app"
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	import NavbarDefault from "@/components/navbar/default"
 	const avatarUrls = ref([
 		'https://pic1.imgdb.cn/item/68f6fc1c3203f7be0084d93a.png',
@@ -145,6 +150,34 @@
 		meanings: [],
 		examples: []
 	})
+	const submitted = ref(false)
+	const submit = () => {
+		if (submitted.value) {
+			uni.showModal({
+				title: '温馨提示',
+				content: '你之前已经提交了一次，再次提交会覆盖之前的内容',
+				success: function(res) {
+					if (res.confirm) {
+						task()
+					}
+				}
+			});
+		} else {
+			task()
+		}
+		async function task() {
+			try {
+				const res = await $http.word.submitEditWord({
+					...formData.value,
+					word_id: Number(wordId.value)
+				})
+				toast.success("提交成功")
+				submitted.value = true
+			} catch (error) {
+				toast.error("提交失败")
+			}
+		}
+	}
 	const getJcInfo = async () => {
 		const res = await $http.word.jcInfo({
 			id: wordId.value

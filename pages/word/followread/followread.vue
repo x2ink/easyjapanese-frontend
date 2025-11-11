@@ -123,14 +123,14 @@
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import http from '@/utils/request.js'
-	import {
-		useToast
-	} from '@/uni_modules/wot-design-uni'
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import 'dayjs/locale/zh'
 	dayjs.locale('zh')
 	dayjs.extend(relativeTime)
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;

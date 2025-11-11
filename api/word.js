@@ -61,11 +61,13 @@ export default {
 	getListenOptions(data) {
 		return http.get("listen/options", data)
 	},
-	
-	
-	
-	
-	
+	submitEditWord(data) {
+		return http.post("edit/submit", data)
+	},
+
+
+
+
 	cjSearch(page, size, val) {
 		return http.get(`cj/search/${page}/${size}/${val}`)
 	},
