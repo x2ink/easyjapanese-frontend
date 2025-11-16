@@ -64,6 +64,9 @@ export default {
 	submitEditWord(data) {
 		return http.post("edit/submit", data)
 	},
+	getEditHistory(data) {
+		return http.get("edit/history", data)
+	},
 
 
 

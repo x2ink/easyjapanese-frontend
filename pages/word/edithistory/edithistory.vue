@@ -1,25 +1,26 @@
 <template>
-	<view style="height: 100vh;overflow: auto;">
-		<NavbarDefault title="修订历史"></NavbarDefault>
-		<view class="content">
-			<view class="revision-item">
-				<view class="revision-header">
-					<uv-avatar size="40" src="null"></uv-avatar>
-					<view class="user-info">
-						<view class="user-name">日语初学者</view>
-						<view class="revision-time">2023-10-13 16:12</view>
+	<scroll-view @scroll="scroll" scroll-y="true" style="height: 100vh;">
+		<view>
+			<NavbarDefault title="修订历史"></NavbarDefault>
+			<view class="content">
+				<view :key="item.id" v-for="item in List" class="revision-item">
+					<view class="revision-header">
+						<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
+						<view class="user-info">
+							<view class="user-name">{{item.user.nickname}}</view>
+							<view class="revision-time">{{dayjs(item.created_at).format("YYYY-MM-DD HH:ss")}}</view>
+						</view>
 					</view>
-					<view class="status-badge status-rejected">已拒绝</view>
-				</view>
-				<view class="revision-content">
-					修订了呜呜呜我我我
+					<view class="revision-content" v-html="item.comment">
+					</view>
 				</view>
 			</view>
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script setup>
+	import dayjs from 'dayjs'
 	import {
 		ref,
 		onMounted
@@ -29,6 +30,36 @@
 		onShow
 	} from "@dcloudio/uni-app"
 	import NavbarDefault from "@/components/navbar/default"
+	import $http from "@/api/index.js"
+	const getList = async () => {
+		const res = await $http.word.getEditHistory({
+			word_id: wordId.value,
+			page: page.value,
+			page_size: size.value
+		})
+		total.value = res.total
+		if (total.value === 0) {
+			return
+		}
+		List.value = List.value.concat(res.data)
+	}
+	const total = ref(null)
+	const page = ref(1)
+	const size = ref(20)
+	const List = ref([])
+	const wordId = ref(null)
+	const scroll = () => {
+		if (total.value > List.value.length) {
+			++page.value
+			getList()
+		}
+	}
+	onLoad((e) => {
+		if (e.wordId) {
+			wordId.value = e.wordId
+			getList()
+		}
+	})
 </script>
 
 <style>
@@ -73,17 +104,6 @@
 		margin-top: 2px;
 	}
 
-	.status-badge {
-		padding: 4px 8px;
-		border-radius: 12px;
-		font-size: 12px;
-		font-weight: 500;
-	}
-
-	.status-rejected {
-		background-color: #FFEBEE;
-		color: #F44336;
-	}
 
 	.revision-content {
 		color: #393939;
