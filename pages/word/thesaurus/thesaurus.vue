@@ -1,66 +1,72 @@
 <template>
-	<scroll-view scroll-y="true" style="height: 100vh;">
-		<view class="head">
+	<view class="page-container">
+		<view class="header-section">
 			<NavbarDefault border :title="title"></NavbarDefault>
+			<view class="tabs-container">
+				<TabSlider @changeTab="changeTab" :current="current" :tabList="tabList"></TabSlider>
+			</view>
 		</view>
-		<!-- 分类标签 -->
-		<div class="tabs-container">
-			<TabSlider @changeTab="changeTab" :current="current" :tabList="tabList"></TabSlider>
-		</div>
-		<view class="list">
-			<wd-swipe-action custom-class="book-swipe-action" :key="item.id"
-				v-for="item in bookList.get(tabList[current])">
-				<view class="item" @click="goDetail(item)">
-					<image class="book-cover" :src="item.icon"></image>
-					<div class="info">
-						<div class="title">{{item.name}}</div>
-						<div class="describe">{{item.describe}}</div>
-						<div class="learnnum">{{item.word_num}}单词 · {{item.learn_num}}人正在学习</div>
-					</div>
-					<button v-if="self" @click.stop="changeWord(item)"
-						:class="{activebook:containBooks.includes(item.id),inactivebook:!containBooks.includes(item.id)}"
-						class="switch-btn _GCENTER">{{containBooks.includes(item.id)?'移除词库':'加入词库'}}</button>
-					<button v-else @click.stop="updateConfig(item)"
-						:class="{activebook:item.current,inactivebook:!item.current}" class="switch-btn _GCENTER"><text
-							v-if="item.current"
-							class="fas fa-check-circle"></text>{{item.current?'学习中':'立即切换'}}</button>
-				</view>
-				<template #right>
-					<view class="actions">
-						<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">修改</view>
-						<view class="_GCENTER" style="background: #E2231A;" @click="delComfirm(item.id)">删除
+
+		<scroll-view class="scroll-content" scroll-y="true">
+			<view class="list">
+				<wd-swipe-action custom-class="book-swipe-action" :key="item.id"
+					v-for="item in bookList.get(tabList[current])">
+					<view class="item" @click="goDetail(item)">
+						<image class="book-cover" :src="item.icon"></image>
+						<view class="info">
+							<view class="title">{{item.name}}</view>
+							<view class="describe">{{item.describe}}</view>
+							<view class="learnnum">{{item.word_num}}单词 · {{item.learn_num}}人正在学习</view>
 						</view>
+
+						<button v-if="self" @click.stop="changeWord(item)"
+							:class="{activebook:containBooks.includes(item.id),inactivebook:!containBooks.includes(item.id)}"
+							class="switch-btn _GCENTER">{{containBooks.includes(item.id)?'移除词库':'加入词库'}}</button>
+						<button v-else @click.stop="updateConfig(item)"
+							:class="{activebook:item.current,inactivebook:!item.current}" class="switch-btn _GCENTER">
+							<text v-if="item.current" class="fas fa-check-circle"></text>
+							{{item.current?'学习中':'立即切换'}}
+						</button>
 					</view>
-				</template>
-			</wd-swipe-action>
-		</view>
+					<template #right>
+						<view class="actions">
+							<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">修改
+							</view>
+							<view class="_GCENTER" style="background: #E2231A;" @click="delComfirm(item.id)">删除</view>
+						</view>
+					</template>
+				</wd-swipe-action>
+			</view>
+		</scroll-view>
+
 		<wd-toast />
-		<!-- 创建按钮 -->
+
 		<button v-if="self" @click="openPopup('create')" class="create-btn">
-			<i class="fas fa-plus"></i>
+			<text class="fas fa-plus"></text>
 		</button>
+
 		<wd-popup position="bottom" v-model="createdShow" custom-style="border-radius:32rpx;"
 			@close="createdShow=false">
-			<div class="popup-container">
-				<div class="popup-header">
-					<div class="popup-title">{{pattern=='create'?'创建':'编辑'}}生词本</div>
+			<view class="popup-container">
+				<view class="popup-header">
+					<view class="popup-title">{{pattern=='create'?'创建':'编辑'}}生词本</view>
 					<view class="close-btn" @click="createdShow=false">
 						<text class="fas fa-times"></text>
 					</view>
-				</div>
-				<div class="form-group">
+				</view>
+				<view class="form-group">
 					<label class="form-label">生词本名称</label>
 					<input v-model="formData.name" type="text" class="form-input" placeholder="例如：N5核心词汇">
-				</div>
-				<div class="form-group">
+				</view>
+				<view class="form-group">
 					<label class="form-label">生词本描述</label>
 					<textarea v-model="formData.describe" class="form-textarea"
 						placeholder="简单描述这个生词本的用途和内容"></textarea>
-				</div>
+				</view>
 				<button @click="submit()" class="submit-btn">{{pattern=='create'?'创建':'更新'}}生词本</button>
-			</div>
+			</view>
 		</wd-popup>
-	</scroll-view>
+	</view>
 </template>
 
 <script setup>
@@ -256,6 +262,35 @@
 </script>
 
 <style lang="scss" scoped>
+	// 1. 页面容器：Flex 列布局，高度占满屏幕
+	.page-container {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		background-color: #f8f8f8; // 给个背景色，防止滚动穿透时看到底部
+		overflow: hidden;
+	}
+
+	// 2. 头部区域：背景白色，防止被压缩
+	.header-section {
+		background-color: white;
+		z-index: 10;
+		flex-shrink: 0;
+		// 之前是 .head position: sticky，现在由 flex 布局自动固定在顶部，无需 sticky
+	}
+
+	// 3. 滚动区域：自动占据剩余空间
+	.scroll-content {
+		flex: 1;
+		height: 0; // 配合 flex: 1
+		overflow: hidden;
+	}
+
+	.tabs-container {
+		background-color: white;
+		padding: 8px 0 16px 0;
+	}
+
 	.language-tabs {
 		white-space: nowrap;
 		width: 100%;
@@ -335,12 +370,9 @@
 		margin-top: 8px;
 	}
 
-
-
-
 	.create-btn {
 		position: fixed;
-		bottom: 64px;
+		bottom: calc(env(safe-area-inset-bottom) + 64px); // 增加底部安全区适配
 		right: 32px;
 		width: 56px;
 		height: 56px;
@@ -445,17 +477,6 @@
 			}
 		}
 
-	}
-
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
-	}
-
-	.tabs-container {
-		background-color: white;
-		padding: 8px 0 16px 0;
 	}
 
 	.tab-item {

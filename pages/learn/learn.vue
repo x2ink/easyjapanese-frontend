@@ -79,7 +79,7 @@
 					<view
 						@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${wordinfo.id}/${item.voice}`)"
 						v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
-						<view class="example-sentence">{{item.jp}}</view>
+						<view class="example-sentence" v-html="renderRubyHTMLWeb(item.read)"></view>
 						<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
 					</view>
 				</view>
@@ -135,6 +135,9 @@
 	import {
 		onLoad
 	} from "@dcloudio/uni-app"
+	const renderRubyHTMLWeb = (rubyList) => {
+		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
+	}
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext()
 	innerAudioContext.autoplay = false
@@ -865,7 +868,6 @@
 	.example-translation {
 		font-size: 14px;
 		color: #757575;
-		margin-top: 8px;
 	}
 
 	.action-buttons {

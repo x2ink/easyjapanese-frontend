@@ -1,64 +1,68 @@
 <template>
-	<view>
-		<view style="position: sticky;top: 0;background-color: white;">
+	<view class="page-container">
+		<view class="header-section">
 			<NavbarDefault border title="单词列表"></NavbarDefault>
-			<!-- 搜索栏 -->
-			<div class="search-bg">
-				<div class="search-bar">
+			<view class="search-bg">
+				<view class="search-bar">
 					<text class="fas fa-search"></text>
 					<input confirm-type="search" @confirm="confirm" type="text" placeholder="搜索单词">
 					<view @click="allSelect=!allSelect">
 						<text class="fas fa-sliders-h"></text>
 					</view>
-				</div>
-			</div>
-			<!-- 分类标签 -->
-			<div class="tabs-container">
-				<div class="tab-item" @click="currentTab=index" :class="{tabActive:currentTab==index}"
-					v-for="(item,index) in tabs" :key="item.value">{{item.name}}</div>
-			</div>
-			<!-- 批量操作栏 -->
-			<div class="batch-selector" v-if="allSelect">
-				<div class="flex items-center">
-					<div @click="allSelectWord()" class="checkbox-custom" :class="{checkboxactive:isAllSelect}">
-						<i class="fas fa-check text-xs" v-if="isAllSelect"></i>
-					</div>
-					<span class="text-sm text-gray-600">全选</span>
-				</div>
-				<div class="text-sm text-gray-500">已选 <span class="text-green-500">{{selectCount}}</span> 个</div>
-			</div>
-		</view>
-		<!-- 列表组 -->
-		<view class="word-wrap">
-			<div class="word-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
-				v-for="(item,index) in List" :key="item.id">
-				<div @click.stop="selectWord(index)" :class="{checkboxactive:item.select}" class="checkbox-custom"
-					v-if="allSelect">
-					<i class="fas fa-check text-xs" v-if="item.select"></i>
-				</div>
-				<view>
-					<div class="word-header">
-						<div>
-							<span class="word-kanji">{{formatWordName(item.words,item.kana)}}{{item.tone}}</span>
-						</div>
-					</div>
-					<div class="word-meaning">
-						<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
-					</div>
 				</view>
-			</div>
-			<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" tip="单词本还没有单词~" />
+			</view>
+			<view class="tabs-container">
+				<view class="tab-item" @click="currentTab=index" :class="{tabActive:currentTab==index}"
+					v-for="(item,index) in tabs" :key="item.value">{{item.name}}</view>
+			</view>
+			<view class="batch-selector" v-if="allSelect">
+				<view class="flex items-center">
+					<view @click="allSelectWord()" class="checkbox-custom" :class="{checkboxactive:isAllSelect}">
+						<view class="fas fa-check text-xs" v-if="isAllSelect"></view>
+					</view>
+					<text class="text-sm text-gray-600">全选</text>
+				</view>
+				<view class="text-sm text-gray-500">已选 <text class="text-green-500">{{selectCount}}</text> 个</view>
+			</view>
 		</view>
-		<!-- 批量操作按钮 (默认隐藏) -->
-		<div class="batch-actions _GCENTER" v-if="selectCount>0">
+		
+		<scroll-view 
+			class="scroll-content" 
+			scroll-y="true" 
+			@scrolltolower="loadMore"
+			:scroll-with-animation="true"
+		>
+			<view class="word-wrap">
+				<view class="word-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
+					v-for="(item,index) in List" :key="item.id">
+					<view @click.stop="selectWord(index)" :class="{checkboxactive:item.select}" class="checkbox-custom"
+						v-if="allSelect">
+						<view class="fas fa-check text-xs" v-if="item.select"></view>
+					</view>
+					<view class="word-content">
+						<view class="word-header">
+							<view>
+								<text class="word-kanji">{{item.displayWord}}</text>
+							</view>
+						</view>
+						<view class="word-meaning">
+							<text class="meaning-text">{{item.description}}</text>
+						</view>
+					</view>
+				</view>
+				<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" tip="单词本还没有单词~" />
+			</view>
+		</scroll-view>
+
+		<view class="batch-actions _GCENTER" v-if="selectCount>0">
 			<view class="text-green-500">
 				<text class="fas fa-check-circle"></text>标记为已学
 			</view>
 			<view @click="delWords()" class="text-red-500">
 				<text class="fas fa-trash-alt"></text>删除
 			</view>
-		</div>
-		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+		</view>
+
 		<wd-toast />
 	</view>
 </template>
@@ -66,20 +70,16 @@
 <script setup>
 	import {
 		ref,
-		onMounted,
 		computed,
 		watch
+		// 移除了 nextTick
 	} from 'vue'
 	import {
-		onLoad,
-		onShow,
-		onReachBottom,
-		onPageScroll,
+		onLoad
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
-		formatWordName,
-		back
+		formatWordName
 	} from "@/utils/common.js"
 	import {
 		useToast
@@ -87,10 +87,13 @@
 	const toast = useToast()
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+
 	const currentTab = ref(0)
+	
 	const isAllSelect = computed(() => {
-		return selectCount.value == List.value.length && selectCount.value != 0
+		return List.value.length > 0 && selectCount.value === List.value.length
 	})
+	
 	const tabs = ref([{
 		name: "全部",
 		value: 0
@@ -104,10 +107,9 @@
 		name: "待复习",
 		value: 3
 	}])
-	const scrollTop = ref(0)
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
+
+	// 移除了 scrollTop, scrollTopValue, throttle, onScroll, handleBackTop
+
 	const delWords = async () => {
 		const res = await $http.word.removeBookWords(id.value, {
 			ids: List.value.filter(item => item.select).map(item => item.id)
@@ -117,23 +119,15 @@
 		page.value = 1
 		getList()
 	}
+
 	const allSelectWord = () => {
-		if (total.value == selectCount.value) {
-			List.value = List.value.map(item => {
-				return {
-					...item,
-					select: false
-				}
-			})
+		if (isAllSelect.value) {
+			List.value.forEach(item => item.select = false)
 		} else {
-			List.value = List.value.map(item => {
-				return {
-					...item,
-					select: true
-				}
-			})
+			List.value.forEach(item => item.select = true)
 		}
 	}
+
 	const selectWord = (index) => {
 		List.value[index].select = !List.value[index].select
 	}
@@ -171,6 +165,7 @@
 	watch(currentTab, (newVal, oldVal) => {
 		reList()
 	})
+	
 	const getList = async () => {
 		const res = await $http.word.getBookWord({
 			id: id.value,
@@ -183,20 +178,26 @@
 		if (total.value === 0) {
 			return
 		}
-		List.value = List.value.concat(res.data.map(item => {
+		
+		const newData = res.data.map(item => {
 			return {
 				...item,
-				select: false
+				select: false,
+				displayWord: `${formatWordName(item.words,item.kana)}${item.tone || ''}`
 			}
-		}))
+		})
+		
+		List.value = List.value.concat(newData)
 	}
 	const id = ref(null)
-	onReachBottom(() => {
+
+	const loadMore = () => {
 		if (total.value > List.value.length) {
 			++page.value
 			getList()
 		}
-	})
+	}
+
 	onLoad((e) => {
 		if (e.id) {
 			id.value = e.id
@@ -206,8 +207,24 @@
 </script>
 
 <style lang="scss" scoped>
-	page {
+	.page-container {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
 		background-color: white;
+		overflow: hidden;
+	}
+
+	.header-section {
+		background-color: white;
+		z-index: 10;
+		flex-shrink: 0;
+	}
+
+	.scroll-content {
+		flex: 1;
+		height: 0;
+		overflow: hidden;
 	}
 
 	.word-wrap {
@@ -220,6 +237,11 @@
 		background: white;
 		padding: 12px 16px;
 		border-bottom: 1px solid #eee;
+	}
+
+	.word-content {
+		flex: 1;
+		overflow: hidden;
 	}
 
 	.word-header {
@@ -235,16 +257,15 @@
 		color: #212121;
 	}
 
-	.word-furigana {
+	.meaning-text {
+		color: #424242;
 		font-size: 14px;
-		color: #757575;
-		margin-left: 8px;
-	}
-
-	.word-katakana {
-		font-size: 14px;
-		color: #757575;
-		font-style: italic;
+		line-height: 1.5;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.batch-actions {
@@ -258,6 +279,7 @@
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 		z-index: 20;
 		gap: 16px;
+		display: flex;
 
 		>view {
 			display: flex;
@@ -319,6 +341,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
 	}
 
 
@@ -342,13 +365,11 @@
 	}
 
 	.search-bg {
-
 		padding: 12px 16px;
 	}
 
 	.tabs-container {
 		padding: 6px 16px 16px;
-
 		display: flex;
 		gap: 12px;
 	}
