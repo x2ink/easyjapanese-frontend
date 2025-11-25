@@ -87,6 +87,7 @@
 		{
 			"path": "pages/word/wordlist/wordlist",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},

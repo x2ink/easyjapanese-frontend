@@ -104,7 +104,7 @@
 				<text class="fas fa-plus"></text>
 				添加例句
 			</button>
-			<view class="history">
+			<view @click="goPage('/pages/word/edithistory/edithistory',{wordId})" class="history">
 				<view>
 					修订历史
 				</view>
@@ -119,7 +119,8 @@
 
 <script setup>
 	import {
-		getOs
+		getOs,
+		goPage
 	} from "@/utils/common.js"
 	import {
 		ref,
@@ -134,12 +135,15 @@
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
 	import NavbarDefault from "@/components/navbar/default"
-	const avatarUrls = ref([
-		'https://pic1.imgdb.cn/item/68f6fc1c3203f7be0084d93a.png',
-		'https://pic1.imgdb.cn/item/68f6fc1c3203f7be0084d93a.png',
-		'https://pic1.imgdb.cn/item/68f6fc1c3203f7be0084d93a.png',
-		'https://pic1.imgdb.cn/item/68f6fc1c3203f7be0084d93a.png'
-	])
+	const avatarUrls = ref([])
+	const getUserAvatar = async () => {
+		const res = await $http.word.getEditHistory({
+			word_id: wordId.value,
+			page: 1,
+			page_size: 10
+		})
+		avatarUrls.value = res.data.map(item => item.user.avatar)
+	}
 	import $http from '@/api/index.js'
 	const wordInfo = ref({})
 	const formData = ref({
@@ -216,6 +220,7 @@
 	onLoad((e) => {
 		wordId.value = e.wordId
 		getJcInfo()
+		getUserAvatar()
 	})
 </script>
 <style>

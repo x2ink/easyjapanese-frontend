@@ -120,10 +120,32 @@
 			</view>
 			<!-- 单词任务 -->
 			<view class="section-header">
-				<text class="section-title">单词任务</text>
+				<text class="section-title">文章推荐</text>
 				<view class="section-more" @click="goPage('/pages/other/setplan/setplan')">
-					<text class="more-text">修改</text>
+					<text class="more-text">查看更多</text>
 					<text class="iconfont icon-arrow-right more-icon"></text>
+				</view>
+			</view>
+			<!-- 微信公众号文章 -->
+			<view class="article">
+				<view v-for="_ in 10" class="article-item">
+					<view class="article-time">
+						11月14日
+					</view>
+					<view class="article-body">
+						<view class="article-left">
+							<view class="article-content">
+								欢庆时刻｜Google Play Best of 2025 年度大中华地区最佳榜单揭晓
+							</view>
+							<view class="article-footer">
+								<text>100 reads</text>
+								<text>100 likes</text>
+							</view>
+						</view>
+						<image
+							src="https://mmbiz.qpic.cn/mmbiz_png/w3eNBHXFDrBTlQejF8vlCtInt3jtDKWuianpkv5ibt11g0oxlLZXyuZqxhgx6Ex3xJUGIR8BL22ZYr0f5gUReCrg/640?wx_fmt=png&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=2"
+							mode="aspectFill"></image>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -267,6 +289,54 @@
 </script>
 
 <style lang="scss">
+	.article {
+		margin-top: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+
+		.article-item {
+			background-color: white;
+			border-radius: 8px;
+			padding: 12px;
+
+			.article-body {
+				margin-top: 8px;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+
+				.article-left {
+					flex: 1;
+
+					.article-content {
+						font-size: 16px;
+					}
+
+					.article-footer {
+						color: #757575;
+						font-size: 14px;
+						display: flex;
+						align-items: center;
+						gap: 16px;
+						margin-top: 8px;
+					}
+				}
+
+				image {
+					height: 80px;
+					width: 80px;
+					border-radius: 8px;
+				}
+			}
+
+			.article-time {
+				color: #757575;
+				font-size: 14px;
+			}
+		}
+	}
+
 	.iconfont {
 		font-family: "iconfont" !important;
 		font-size: 16px;

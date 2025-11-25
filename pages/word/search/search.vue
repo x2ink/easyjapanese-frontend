@@ -158,6 +158,10 @@
 		total.value = res.total
 		if (total.value === 0) {
 			toast.warning("没有搜到结果")
+			$http.common.feedback({
+				type: "词库补充",
+				content: value.value
+			})
 			return
 		}
 		List.value = List.value.concat(res.data)
