@@ -1,6 +1,5 @@
 <template>
 	<view>
-		<!-- 顶部搜索栏 -->
 		<view :style="{paddingTop:`calc(${navBarHeight} + 16px)`}" class="search-bar">
 			<view @click="goPage('/pages/word/search/search')" class="search-input-container">
 				<text class="icon-search search-icon fas fa-search"></text>
@@ -9,12 +8,9 @@
 				</view>
 			</view>
 		</view>
-		<!-- 占位 -->
 		<view :style="{height:`calc(${navBarHeight} + 68px)`}">
 		</view>
-		<!-- 主要内容 -->
 		<view style="padding: 16px;">
-			<!-- 单词书统计卡片 -->
 			<view v-if="infoLoading" style="display: flex;" class="book-card">
 				<wd-skeleton :row-col="[{ type: 'rect',width:'60px',height:'80px' }]" />
 				<wd-skeleton :custom-style="{ width: '100%', marginLeft: '16px'}" :row-col="[
@@ -45,9 +41,7 @@
 					</view>
 				</view>
 			</view>
-			<!-- 学习/复习按钮 -->
 			<view class="action-buttons">
-				<!-- 智能复习按钮 -->
 				<view class="action-button review-button" @click="goLearn('review')">
 					<view class="action-icon">
 						<text class="fas fa-sync-alt"></text>
@@ -57,7 +51,6 @@
 						<text class="action-subtitle">{{learnInfo.review}}个单词待复习</text>
 					</view>
 				</view>
-				<!-- 开始学习按钮 -->
 				<view class="action-button learn-button" @click="goLearn('learn')">
 					<view class="action-icon">
 						<text class="fas fa-play"></text>
@@ -68,7 +61,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- 工具入口 -->
 			<view class="tool-buttons">
 				<view class="tool-btn" @click="goPage('/pages/tools/translate/translate')">
 					<view class="tool-icon">
@@ -95,13 +87,12 @@
 					<text class="tool-text">动词变形</text>
 				</view>
 			</view>
-			<!-- 学习日历 -->
+			
 			<view class="calendar-container">
 				<view class="section-header">
-					<text class="section-title">学习日历</text>
+					<text class="section-title">学习打卡</text>
 					<view class="section-more">
-						<text class="more-text">本月</text>
-						<text class="iconfont icon-arrow-right more-icon"></text>
+						<text class="more-text">{{currentMonth}}月</text>
 					</view>
 				</view>
 				<view class="weekdays">
@@ -118,36 +109,57 @@
 						v-for="item in calendar" :key="item.key" class="calendar-day">{{item.day}}</text>
 				</view>
 			</view>
-			<!-- 单词任务 -->
+			
 			<view class="section-header">
-				<text class="section-title">文章推荐</text>
-				<view class="section-more" @click="goPage('/pages/other/setplan/setplan')">
-					<text class="more-text">查看更多</text>
-					<text class="iconfont icon-arrow-right more-icon"></text>
+				<text class="section-title">常用功能</text>
+			</view>
+			
+			<view class="func-grid">
+				<view class="func-card" @click="goPage('/pages/tools/notes/notes')">
+					<view class="func-icon-bg bg-orange">
+						<text class="fas fa-star"></text>
+					</view>
+					<view class="func-info">
+						<text class="func-title">生词笔记</text>
+						<text class="func-desc">重点词汇 随时回顾</text>
+					</view>
+					<text class="fas fa-angle-right func-arrow"></text>
+				</view>
+				
+				<view class="func-card" @click="goPage('/pages/tools/commonwords/commonwords')">
+					<view class="func-icon-bg bg-purple">
+						<text class="fas fa-comments"></text>
+					</view>
+					<view class="func-info">
+						<text class="func-title">常用语手册</text>
+						<text class="func-desc">日常会话 场景分类</text>
+					</view>
+					<text class="fas fa-angle-right func-arrow"></text>
+				</view>
+				
+				<view class="func-card" @click="goPage('/pages/other/setplan/setplan')">
+					<view class="func-icon-bg bg-blue">
+						<text class="fas fa-calendar-check"></text>
+					</view>
+					<view class="func-info">
+						<text class="func-title">调整计划</text>
+						<text class="func-desc">循序渐进 量力而行</text>
+					</view>
+					<text class="fas fa-angle-right func-arrow"></text>
+				</view>
+				
+				<view class="func-card" @click="goPage('/pages/other/feedback/feedback')">
+					<view class="func-icon-bg bg-green">
+						<text class="fas fa-envelope-open-text"></text>
+					</view>
+					<view class="func-info">
+						<text class="func-title">意见反馈</text>
+						<text class="func-desc">帮助我们做得更好</text>
+					</view>
+					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 			</view>
-			<!-- 微信公众号文章 -->
-			<view class="article">
-				<view v-for="_ in 10" class="article-item">
-					<view class="article-time">
-						11月14日
-					</view>
-					<view class="article-body">
-						<view class="article-left">
-							<view class="article-content">
-								欢庆时刻｜Google Play Best of 2025 年度大中华地区最佳榜单揭晓
-							</view>
-							<view class="article-footer">
-								<text>100 reads</text>
-								<text>100 likes</text>
-							</view>
-						</view>
-						<image
-							src="https://mmbiz.qpic.cn/mmbiz_png/w3eNBHXFDrBTlQejF8vlCtInt3jtDKWuianpkv5ibt11g0oxlLZXyuZqxhgx6Ex3xJUGIR8BL22ZYr0f5gUReCrg/640?wx_fmt=png&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=2"
-							mode="aspectFill"></image>
-					</view>
-				</view>
-			</view>
+			
 		</view>
 		<wd-toast />
 	</view>
@@ -199,26 +211,8 @@
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 	})
-	const navigateTo = (type) => {
-		let url = ''
-		switch (type) {
-			case 'translate':
-				url = '/pages/translate/index'
-				break
-			case 'grammar':
-				url = '/pages/grammar/index'
-				break
-			case 'hiragana':
-				url = '/pages/hiragana/index'
-				break
-			case 'conjugation':
-				url = '/pages/conjugation/index'
-				break
-		}
-		uni.navigateTo({
-			url
-		})
-	}
+	// 移除多余的 navigateTo 函数，统一使用 goPage
+	
 	const learnInfo = ref({
 		"book_info": {
 			"name": "",
@@ -289,54 +283,7 @@
 </script>
 
 <style lang="scss">
-	.article {
-		margin-top: 16px;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-
-		.article-item {
-			background-color: white;
-			border-radius: 8px;
-			padding: 12px;
-
-			.article-body {
-				margin-top: 8px;
-				display: flex;
-				align-items: center;
-				gap: 16px;
-
-				.article-left {
-					flex: 1;
-
-					.article-content {
-						font-size: 16px;
-					}
-
-					.article-footer {
-						color: #757575;
-						font-size: 14px;
-						display: flex;
-						align-items: center;
-						gap: 16px;
-						margin-top: 8px;
-					}
-				}
-
-				image {
-					height: 80px;
-					width: 80px;
-					border-radius: 8px;
-				}
-			}
-
-			.article-time {
-				color: #757575;
-				font-size: 14px;
-			}
-		}
-	}
-
+	/* 保持原有的 iconfont, search-bar, book-card 等样式不变 */
 	.iconfont {
 		font-family: "iconfont" !important;
 		font-size: 16px;
@@ -597,10 +544,11 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		margin-bottom: 12px;
 
 		.section-title {
-			font-size: 14px;
-			font-weight: 500;
+			font-size: 16px;
+			font-weight: 600;
 			color: #333;
 		}
 
@@ -610,55 +558,7 @@
 
 			.more-text {
 				font-size: 12px;
-				color: #3B82F6;
-			}
-
-			.more-icon {
-				margin-left: 2px;
-				font-size: 10px;
-				color: #3B82F6;
-			}
-		}
-	}
-
-	.task-list {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-
-		.task-item {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 12px;
-			background-color: #fff;
-			border-radius: 8px;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-
-			.task-info {
-				flex: 1;
-
-				.task-word {
-					display: block;
-					font-size: 14px;
-					font-weight: 500;
-					color: #333;
-					margin-bottom: 4px;
-				}
-
-				.task-detail {
-					display: block;
-					font-size: 12px;
-					color: #999;
-				}
-			}
-
-			.task-icon {
-				font-size: 14px;
-				color: #22C55E;
+				color: #999;
 			}
 		}
 	}
@@ -713,6 +613,66 @@
 					font-weight: 500;
 					border-radius: 4px;
 				}
+			}
+		}
+	}
+	
+	/* 新增：更多功能网格样式 */
+	.func-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		
+		.func-card {
+			background-color: white;
+			border-radius: 12px;
+			padding: 16px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			position: relative;
+			
+			&:active {
+				background-color: #F9FAFB;
+			}
+			
+			.func-icon-bg {
+				width: 40px;
+				height: 40px;
+				border-radius: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 18px;
+				flex-shrink: 0;
+				
+				&.bg-orange { background-color: #FFF7ED; color: #F97316; }
+				&.bg-purple { background-color: #F3F0FF; color: #7C3AED; }
+				&.bg-blue { background-color: #EFF6FF; color: #3B82F6; }
+				&.bg-green { background-color: #ECFDF5; color: #10B981; }
+			}
+			
+			.func-info {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				
+				.func-title {
+					font-size: 14px;
+					font-weight: 600;
+					color: #1F2937;
+				}
+				
+				.func-desc {
+					font-size: 11px;
+					color: #9CA3AF;
+				}
+			}
+			
+			.func-arrow {
+				font-size: 12px;
+				color: #D1D5DB;
 			}
 		}
 	}

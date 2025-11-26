@@ -1,92 +1,103 @@
 <template>
-	<view>
+	<view class="page-container">
+		
 		<view class="head">
 			<NavbarDefault border title="动词变形"></NavbarDefault>
-			<!-- 搜索栏 -->
-			<div style="padding:16px; background:#FFFFFF;">
-				<div style="display:flex; gap:8px;">
-					<input confirm-type="search" @blur="confirm" v-model="value" type="text"
-						placeholder="输入动词原形 (ます形/基本形)"
-						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
-				</div>
-			</div>
+			<view class="search-wrapper">
+				<view class="search-box">
+					<text class="fas fa-search search-icon"></text>
+					<input 
+						class="search-input"
+						confirm-type="search" 
+						@confirm="confirm" 
+						v-model="value" 
+						type="text"
+						placeholder="请输入动词 (如: 食べる / 行きます)"
+						placeholder-class="placeholder-style"
+					>
+					<view class="search-btn" @click="confirm">查询</view>
+				</view>
+			</view>
 		</view>
-		<!-- 主体内容区 -->
-		<div class="content-container">
-			<!-- 基本变形组 -->
-			<div class="transform-group">
-				<div class="group-header">
-					<h2>形态</h2>
-				</div>
-				<div class="group-content">
-					<!-- 基本型 -->
-					<div class="transform-item">
-						<div class="transform-label">基本形</div>
-						<div class="transform-value">{{get('基本形')}}</div>
-					</div>
-					<!-- ます形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">ます形</div>
-						<div class="transform-value">{{get('ます形')}}</div>
-					</div>
-					<!-- て形 -->
-					<div class="transform-item">
-						<div class="transform-label">て形</div>
-						<div class="transform-value">{{get('て形')}}</div>
-					</div>
-					<!-- た形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">た形</div>
-						<div class="transform-value">{{get('た形')}}</div>
-					</div>
-					<!-- ない形 -->
-					<div class="transform-item">
-						<div class="transform-label">ない形</div>
-						<div class="transform-value">{{get('ない形')}}</div>
-					</div>
-					<!-- 命令形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">命令形</div>
-						<div class="transform-value">{{get('命令形')}}</div>
-					</div>
-					<!-- 禁止形 -->
-					<div class="transform-item">
-						<div class="transform-label">禁止形</div>
-						<div class="transform-value">{{get('禁止形')}}</div>
-					</div>
-					<!-- 可能形 -->
-					<div class="transform-item">
-						<div class="transform-label">可能形</div>
-						<div class="transform-value">{{get('可能形')}}</div>
-					</div>
-					<!-- 被动形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">被动形</div>
-						<div class="transform-value">{{get('被动形')}}</div>
-					</div>
-					<!-- 使役形 -->
-					<div class="transform-item">
-						<div class="transform-label">使役形</div>
-						<div class="transform-value">{{get('使役形')}}</div>
-					</div>
-					<!-- 使役被动形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">使役被动形</div>
-						<div class="transform-value">{{get('使役被动形')}}</div>
-					</div>
-					<!-- 假定形 -->
-					<div class="transform-item">
-						<div class="transform-label">假定形</div>
-						<div class="transform-value">{{get('假定形')}}</div>
-					</div>
-					<!-- 意向形 -->
-					<div class="transform-item striped">
-						<div class="transform-label">意向形</div>
-						<div class="transform-value">{{get('意向形')}}</div>
-					</div>
-				</div>
-			</div>
-		</div>
+
+		<scroll-view scroll-y class="content-container">
+			<view v-if="data && data.length > 0" class="result-wrapper">
+				
+				<view class="main-card">
+					<view class="main-label">基本形 (辞書形)</view>
+					<view class="main-word">{{ get('基本形') }}</view>
+				</view>
+
+				<view class="section-title">基础活用</view>
+				<view class="grid-container">
+					<view class="grid-item">
+						<text class="grid-label tag-blue">ます形</text>
+						<text class="grid-value">{{ get('ます形') }}</text>
+					</view>
+					<view class="grid-item">
+						<text class="grid-label tag-red">ない形</text>
+						<text class="grid-value">{{ get('ない形') }}</text>
+					</view>
+					<view class="grid-item">
+						<text class="grid-label tag-green">て形</text>
+						<text class="grid-value">{{ get('て形') }}</text>
+					</view>
+					<view class="grid-item">
+						<text class="grid-label tag-orange">た形</text>
+						<text class="grid-value">{{ get('た形') }}</text>
+					</view>
+				</view>
+
+				<view class="section-title">态与语气</view>
+				<view class="list-card">
+					<view class="list-row">
+						<view class="row-label">可能形</view>
+						<view class="row-value">{{ get('可能形') }}</view>
+					</view>
+					<view class="list-row">
+						<view class="row-label">被动形 (受身)</view>
+						<view class="row-value">{{ get('被动形') }}</view>
+					</view>
+					<view class="list-row">
+						<view class="row-label">使役形</view>
+						<view class="row-value">{{ get('使役形') }}</view>
+					</view>
+					<view class="list-row">
+						<view class="row-label">使役被动</view>
+						<view class="row-value">{{ get('使役被动形') }}</view>
+					</view>
+				</view>
+
+				<view class="section-title">其他变形</view>
+				<view class="list-card">
+					<view class="list-row">
+						<view class="row-label">假定形 (ば形)</view>
+						<view class="row-value">{{ get('假定形') }}</view>
+					</view>
+					<view class="list-row">
+						<view class="row-label">意向形 (よう形)</view>
+						<view class="row-value">{{ get('意向形') }}</view>
+					</view>
+					<view class="list-row">
+						<view class="row-label">命令形</view>
+						<view class="row-value text-danger">{{ get('命令形') }}</view>
+					</view>
+					<view class="list-row border-none">
+						<view class="row-label">禁止形</view>
+						<view class="row-value text-danger">{{ get('禁止形') }}</view>
+					</view>
+				</view>
+				
+				<view style="height: 40px;"></view>
+			</view>
+
+			<view v-else class="empty-state">
+				<image src="https://img.yzcdn.cn/vant/custom-empty-image.png" mode="aspectFit" class="empty-img"></image>
+				<text class="empty-text">输入动词开始查询变形</text>
+				<text class="empty-sub">支持输入：基本形、ます形</text>
+			</view>
+		</scroll-view>
+
 		<wd-toast />
 	</view>
 </template>
@@ -95,110 +106,261 @@
 	import {
 		ref,
 	} from 'vue'
-	import {
-		onLoad,
-	} from "@dcloudio/uni-app"
-	import {
-		goPage
-	} from "@/utils/common.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	
 	const toast = useToast()
 	const data = ref([])
 	const value = ref('')
+
 	const get = (key) => {
-		const res = data.value.find(({
-			category
-		}) => category == key)
-		if (res) {
-			return res.result
-		} else {
-			return res
-		}
+		if (!data.value) return '-'
+		const res = data.value.find(({ category }) => category == key)
+		return res ? res.result : '-'
 	}
+
 	const confirm = async () => {
 		try {
 			if (value.value.trim().length == 0) {
-				toast.warning(`单词不可为空`)
+				toast.warning(`请输入要查询的单词`)
 				return
 			}
-			toast.loading("正在获取中")
+			toast.loading("正在变形中...")
+			
 			const res = await $http.common.getVerbTrans({
 				word: value.value.trim()
 			})
-			data.value = res.data
-			toast.close()
+			
+			if (res.data && res.data.length > 0) {
+				data.value = res.data
+				toast.close()
+			} else {
+				toast.warning("未查询到该词的变形信息")
+				data.value = []
+			}
 		} catch (err) {
-			toast.warning(`这个单词不是动词`)
+			console.error(err)
+			toast.warning(`查询失败或该词不是动词`)
+			data.value = []
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.content-container {
-		padding: 16px 0;
-		overflow-y: auto;
-		padding-bottom: env(safe-area-inset-bottom);
-	}
-
-	.transform-group {
-		margin-bottom: 16px;
-		background: #FFFFFF;
-	}
-
-	.group-header {
-		padding: 12px 16px;
-		border-bottom: 1px solid #F0F0F0;
+	/* 核心布局优化：Flex 垂直布局 */
+	.page-container {
+		height: 100vh;
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
+		background-color: #F7F8FA;
+		overflow: hidden; /* 防止整体页面滚动 */
+	}
+
+	/* 头部区域：取消 fixed，让它自然堆叠 */
+	.head {
+		background: #fff;
+		z-index: 99;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+		flex-shrink: 0; /* 防止头部被压缩 */
+	}
+
+	.search-wrapper {
+		padding: 12px 16px 16px;
+		background: #fff;
+	}
+
+	.search-box {
+		display: flex;
 		align-items: center;
+		background: #F5F5F5;
+		border-radius: 50px;
+		padding: 8px 16px;
+		transition: all 0.3s;
+		
+		&:active {
+			background: #EFEFEF;
+		}
 	}
 
-	.group-header h2 {
+	.search-icon {
 		font-size: 16px;
-		color: #212121;
-		margin: 0;
+		color: #999;
+		margin-right: 8px;
 	}
 
-	.group-content {
-		padding: 8px 0;
-	}
-
-	.transform-item {
-		display: flex;
-		padding: 12px 16px;
-	}
-
-	.transform-item.striped {
-		background: #FAFAFA;
-	}
-
-	.transform-label {
+	.search-input {
 		flex: 1;
-		color: #757575;
-		font-size: 14px;
+		font-size: 16px;
+		height: 24px;
+		color: #333;
+	}
+	
+	.placeholder-style {
+		color: #BBB;
 	}
 
-	.transform-value {
-		font-size: 16px;
-		color: #212121;
+	.search-btn {
+		font-size: 14px;
+		color: #07C160;
+		font-weight: 600;
+		padding-left: 12px;
+		border-left: 1px solid #E0E0E0;
+		margin-left: 8px;
+	}
+
+	/* 滚动区域：自动占据剩余高度 */
+	.content-container {
+		flex: 1;
+		height: 0; /* 关键：配合 flex:1 实现内部滚动 */
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.result-wrapper {
+		animation: fadeIn 0.5s ease;
+	}
+
+	/* 核心词汇卡片 */
+	.main-card {
+		background: linear-gradient(135deg, #07C160 0%, #05A050 100%);
+		border-radius: 12px;
+		padding: 24px;
+		color: white;
+		text-align: center;
+		margin-bottom: 24px;
+		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+	}
+
+	.main-label {
+		font-size: 12px;
+		opacity: 0.8;
+		margin-bottom: 8px;
+		letter-spacing: 1px;
+	}
+
+	.main-word {
+		font-size: 32px;
+		font-weight: 700;
+		letter-spacing: 1px;
+	}
+
+	/* 分组标题 */
+	.section-title {
+		font-size: 14px;
+		color: #999;
+		margin-bottom: 12px;
+		margin-left: 4px;
 		font-weight: 500;
 	}
 
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
+	/* 基础活用 - 网格布局 */
+	.grid-container {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		margin-bottom: 24px;
 	}
 
-	.btn {
-		background: #07C160;
-		color: white;
-		border-radius: 8px;
+	.grid-item {
+		background: white;
+		padding: 16px;
+		border-radius: 12px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+	}
+
+	.grid-label {
+		font-size: 12px;
+		padding: 2px 8px;
+		border-radius: 4px;
+		margin-bottom: 8px;
+		font-weight: 500;
+	}
+	
+	/* 标签颜色 */
+	.tag-blue { background: #E6F7FF; color: #1890FF; }
+	.tag-red { background: #FFF1F0; color: #F5222D; }
+	.tag-green { background: #F6FFED; color: #52C41A; }
+	.tag-orange { background: #FFF7E6; color: #FA8C16; }
+
+	.grid-value {
+		font-size: 18px;
+		font-weight: 600;
+		color: #333;
+	}
+
+	/* 列表卡片布局 */
+	.list-card {
+		background: white;
+		border-radius: 12px;
 		padding: 0 16px;
+		margin-bottom: 24px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+	}
+
+	.list-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 16px 0;
+		border-bottom: 1px solid #F5F5F5;
+		
+		&.border-none {
+			border-bottom: none;
+		}
+	}
+
+	.row-label {
+		font-size: 14px;
+		color: #666;
+	}
+
+	.row-value {
 		font-size: 16px;
+		color: #333;
+		font-weight: 500;
+	}
+	
+	.text-danger {
+		color: #FF4D4F;
+	}
+
+	/* 空状态 */
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding-top: 60px;
+	}
+
+	.empty-img {
+		/* 优化：调小图标尺寸 */
+		width: 80px;
+		height: 80px;
+		margin-bottom: 16px;
+		opacity: 0.5;
+	}
+
+	.empty-text {
+		font-size: 16px;
+		color: #333;
+		margin-bottom: 8px;
+		font-weight: 500;
+	}
+
+	.empty-sub {
+		font-size: 12px;
+		color: #999;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
 	}
 </style>
