@@ -1,48 +1,32 @@
 import {
 	defineStore
 } from 'pinia'
+
+// 默认空状态
+const defaultCacheState = {
+	wordinfo: {},
+	doneTask: false,
+	showAnswer: false,
+	know: false,
+	sessionStep: 0,
+	lastWordId: null,
+	nextShouldBeNew: true,
+	queuePending: [],
+	queueActive: [],
+	queueCompleted: [],
+	queueHard: [],
+	wordList: [],
+}
+
 export const localwordsModule = defineStore('localwords', {
 	unistorage: true,
 	state: () => {
 		return {
 			writeWordList: [],
-			reviewCache: {
-				wordinfo: {},
-				doneTask: false,
-				showAnswer: false,
-				know: false,
-				sessionStep: 0,
-				learningPhase: 'initial',
-				interleaveCounter: 0,
-				isReviewTurn: true,
-				reviewTurnsLeft: 2,
-				heldReviewWord: null,
-				initialQueue: [],
-				pendingNew: [],
-				reviewQueue: [],
-				learnedQueue: [],
-				wordList: [],
-				lastWordId: null,
-			},
+			// 确保缓存字段结构完整，避免 undefined 错误
+			reviewCache: JSON.parse(JSON.stringify(defaultCacheState)),
 			reviewTime: 0,
-			learnCache: {
-				wordinfo: {},
-				doneTask: false,
-				showAnswer: false,
-				know: false,
-				sessionStep: 0,
-				learningPhase: 'initial',
-				interleaveCounter: 0,
-				isReviewTurn: true,
-				reviewTurnsLeft: 2,
-				heldReviewWord: null,
-				initialQueue: [],
-				pendingNew: [],
-				reviewQueue: [],
-				learnedQueue: [],
-				wordList: [],
-				lastWordId: null,
-			},
+			learnCache: JSON.parse(JSON.stringify(defaultCacheState)),
 			learnTime: 0,
 		}
 	},
@@ -58,24 +42,7 @@ export const localwordsModule = defineStore('localwords', {
 		},
 		clearReviewCache() {
 			this.reviewTime = 0;
-			this.reviewCache = {
-				wordinfo: {},
-				doneTask: false,
-				showAnswer: false,
-				know: false,
-				sessionStep: 0,
-				learningPhase: 'initial',
-				interleaveCounter: 0,
-				isReviewTurn: true,
-				reviewTurnsLeft: 2,
-				heldReviewWord: null,
-				initialQueue: [],
-				pendingNew: [],
-				reviewQueue: [],
-				learnedQueue: [],
-				wordList: [],
-				lastWordId: null,
-			};
+			this.reviewCache = JSON.parse(JSON.stringify(defaultCacheState));
 		},
 		setLearnCache(cache) {
 			this.learnCache = cache
@@ -85,24 +52,7 @@ export const localwordsModule = defineStore('localwords', {
 		},
 		clearLearnCache() {
 			this.learnTime = 0;
-			this.learnCache = {
-				wordinfo: {},
-				doneTask: false,
-				showAnswer: false,
-				know: false,
-				sessionStep: 0,
-				learningPhase: 'initial',
-				interleaveCounter: 0,
-				isReviewTurn: true,
-				reviewTurnsLeft: 2,
-				heldReviewWord: null,
-				initialQueue: [],
-				pendingNew: [],
-				reviewQueue: [],
-				learnedQueue: [],
-				wordList: [],
-				lastWordId: null,
-			};
+			this.learnCache = JSON.parse(JSON.stringify(defaultCacheState));
 		}
 	}
 })

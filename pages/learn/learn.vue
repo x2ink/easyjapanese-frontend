@@ -27,7 +27,7 @@
 
 				<view class="button-container">
 					<button @click="writefrommemory()" class="primary-button">立即默写</button>
-					<button @click="init(learnType)" class="secondary-button">再来一组</button>
+					<button @click="init(learnType, true)" class="secondary-button">再来一组</button>
 				</view>
 			</view>
 			<view v-else>
@@ -137,10 +137,10 @@
 	} from "@dcloudio/uni-app"
 
 	// --- 核心配置常量 ---
-	const WINDOW_SIZE = 6 // 活跃窗口大小（书桌上保持6个词）
-	const MIN_BUFFER = 4 // 最小缓冲阈值（少于4个时补充）
-	const TARGET_COUNT = 10 // 本次学习目标：掌握10个即结束
-	const MAX_ERROR_TOLERANCE = 3 // 熔断阈值：连续错3次认为不适合当前学习
+	const WINDOW_SIZE = 6
+	const MIN_BUFFER = 4
+	const TARGET_COUNT = 10
+	const MAX_ERROR_TOLERANCE = 3
 
 	// --- 工具函数 ---
 	const renderRubyHTMLWeb = (rubyList) => {
@@ -176,10 +176,10 @@
 
 	// --- 单词队列结构 ---
 	const wordList = ref([])
-	const queuePending = ref([]) // 仓库：这里现在会有15个词 (10个目标 + 5个备用)
-	const queueActive = ref([]) // 书桌：正在学习的词 (Active Window)
-	const queueHard = ref([]) // 待定区：熔断下来的难词
-	const queueCompleted = ref([]) // 成果：已掌握的词
+	const queuePending = ref([])
+	const queueActive = ref([])
+	const queueHard = ref([])
+	const queueCompleted = ref([])
 
 	const nextShouldBeNew = ref(true)
 
@@ -219,12 +219,11 @@
 		return Math.round((correctCount / sessionStep.value) * 100)
 	})
 
-	// 进度条：分母固定为 TARGET_COUNT (10)，给用户明确的目标感
 	const learned = computed(() => queueCompleted.value.length)
 	const progressPercent = computed(() => total.value === 0 ? 0 : Math.round((learned.value / total.value) * 100))
 
 	onLoad((e) => {
-		init(e.type)
+		init(e.type, false)
 	})
 
 	const resetAlgorithmState = () => {
@@ -240,20 +239,21 @@
 		doneTask.value = false
 	}
 
-	const init = async (type) => {
+	// forceRefresh: 是否强制刷新（用于“再来一组”按钮）
+	const init = async (type, forceRefresh = false) => {
 		learnType.value = type
 		loading.value = true
 
 		const store = localwordsStore()
 		let cache = type == "learn" ? store.learnCache : store.reviewCache
-		const timestamp = new Date().setHours(0, 0, 0, 0);
-
+		
 		const hasCache = cache && cache.wordList && cache.wordList.length > 0;
-		const isFresh = type == "learn" ? (store.learnTime >= timestamp) : (store.reviewTime >= timestamp);
 
-		if (hasCache && isFresh) {
+		if (hasCache && !forceRefresh) {
+			console.log("恢复现场：从缓存加载");
 			loadFromCache(cache)
 		} else {
+			console.log("新任务：网络加载");
 			const apiCall = type == "learn" ? $http.word.learnWord : $http.word.getReview;
 			const clearFunc = type == "learn" ? store.clearLearnCache : store.clearReviewCache;
 
@@ -274,12 +274,11 @@
 						types: types
 					},
 					error: 0,
-					consecutiveError: 0, // 连续错误计数
+					consecutiveError: 0,
 					submitted: false
 				}
 			})
 
-			// 核心调整：total 依然设为 10，queuePending 装入全部 15 个词
 			total.value = TARGET_COUNT
 			queuePending.value = [...wordList.value]
 
@@ -289,25 +288,38 @@
 	}
 
 	const loadFromCache = (cache) => {
+		// 1. 基础数据恢复
 		wordList.value = cache.wordList || []
-		wordinfo.value = cache.wordinfo || wordinfo.value
 		doneTask.value = cache.doneTask || false
-		showAnswer.value = cache.showAnswer || false
-		know.value = cache.know || false
 		sessionStep.value = cache.sessionStep || 0
-		lastWordId.value = cache.lastWordId || null
 		total.value = TARGET_COUNT
 		nextShouldBeNew.value = cache.nextShouldBeNew ?? true
+		
+		// 2. 关键UI状态恢复 (SnapShot)
+		showAnswer.value = cache.showAnswer || false
+		know.value = cache.know || false
+		lastWordId.value = cache.lastWordId || null
 
-		// 恢复引用链
+		// 3. 引用链恢复
 		const link = (list) => list.map(i => wordList.value.find(w => w.word.id === i.word.id)).filter(i => i)
 		queuePending.value = link(cache.queuePending || [])
 		queueActive.value = link(cache.queueActive || [])
 		queueCompleted.value = link(cache.queueCompleted || [])
 		queueHard.value = link(cache.queueHard || [])
 
-		if (wordinfo.value.id) {
-			currentItem.value = wordList.value.find(i => i.word.id === wordinfo.value.id)
+		// 4. 恢复当前词
+		if (lastWordId.value) {
+			const target = wordList.value.find(i => i.word.id === lastWordId.value)
+			if (target) {
+				currentItem.value = target
+				wordinfo.value = target.word
+			}
+		} else if (cache.wordinfo && cache.wordinfo.id) {
+			const target = wordList.value.find(i => i.word.id === cache.wordinfo.id)
+			if (target) {
+				currentItem.value = target
+				wordinfo.value = target.word
+			}
 		}
 	}
 
@@ -315,8 +327,8 @@
 		const cache = {
 			wordinfo: wordinfo.value,
 			doneTask: doneTask.value,
-			showAnswer: showAnswer.value,
-			know: know.value,
+			showAnswer: showAnswer.value, // 保存是否显示答案
+			know: know.value,           // 保存“认识/不认识”状态
 			sessionStep: sessionStep.value,
 			lastWordId: lastWordId.value,
 			nextShouldBeNew: nextShouldBeNew.value,
@@ -338,13 +350,11 @@
 
 	// --- 核心调度算法 ---
 	const getWord = () => {
-		// 1. 胜利检查：掌握 10 个即通关
 		if (queueCompleted.value.length >= TARGET_COUNT) {
 			finishTask()
 			return
 		}
 
-		// 2. 弹尽粮绝：所有词都过了一遍（极端情况）
 		if (queuePending.value.length === 0 && queueActive.value.length === 0 && queueHard.value.length === 0) {
 			finishTask()
 			return
@@ -352,53 +362,45 @@
 
 		let nextItem = null
 		let source = ''
-		let reason = ''
+		let reason = '' // 恢复：原因记录
 
 		const activeCount = queueActive.value.length
 		const pendingCount = queuePending.value.length
 
-		// --- 智能决策 ---
-
-		// A. 活跃池过载 -> 强制消化
+		// 调度策略
 		if (activeCount >= WINDOW_SIZE) {
 			source = 'review'
 			reason = '书桌已满'
-		}
-		// B. 活跃池不满 -> 补充
-		else if (activeCount < MIN_BUFFER) {
+		} else if (activeCount < MIN_BUFFER) {
 			if (pendingCount > 0) {
-				source = 'new' // 优先拿新词
+				source = 'new'
 				reason = '补充新词'
 			} else if (queueHard.value.length > 0) {
-				source = 'rescue' // 没新词了，捞回难词
+				source = 'rescue'
 				reason = '复活难词'
 			} else {
-				source = 'review' // 啥都没了，只能复习
+				source = 'review'
 				reason = '最后冲刺'
 			}
-		}
-		// C. 正常穿插
-		else {
+		} else {
 			source = nextShouldBeNew.value ? 'new' : 'review'
-			// 如果轮到新词但没库存，降级处理
 			if (source === 'new' && pendingCount === 0) {
 				source = queueHard.value.length > 0 ? 'rescue' : 'review'
 			}
 		}
 
-		// --- 执行取词 ---
+		// 执行取词
 		if (source === 'new') {
 			nextItem = queuePending.value.shift()
 			nextShouldBeNew.value = false
 		} else if (source === 'rescue') {
 			nextItem = queueHard.value.shift()
-			nextItem.consecutiveError = 0 // 复活后重置连续错误，给新机会
+			nextItem.consecutiveError = 0
 			queueActive.value.push(nextItem)
-			nextItem = queueActive.value.pop() // 立即使用
+			nextItem = queueActive.value.pop()
 			nextShouldBeNew.value = false
 		} else {
 			nextItem = queueActive.value.shift()
-			// 防连续
 			if (nextItem && nextItem.word.id === lastWordId.value && queueActive.value.length > 0) {
 				queueActive.value.push(nextItem)
 				nextItem = queueActive.value.shift()
@@ -407,7 +409,7 @@
 			nextShouldBeNew.value = true
 		}
 
-		// 日志
+		// 恢复：日志输出
 		const displayIcon = source === 'new' ? '🆕' : (source === 'rescue' ? '🚑' : '🔄');
 		const logWord = nextItem?.word?.words ? nextItem.word.words.join('·') : 'End';
 		console.log(
@@ -422,7 +424,12 @@
 		currentItem.value = nextItem
 		wordinfo.value = nextItem.word
 		lastWordId.value = nextItem.word.id
-		showAnswer.value = false
+		
+		showAnswer.value = false 
+		know.value = false
+		
+		// 进入新词时也保存一次，防止直接退出
+		writeCache() 
 	}
 
 	const finishTask = () => {
@@ -439,6 +446,7 @@
 			currentItem.value.word.step += 1
 			currentItem.value.consecutiveError = 0
 		}
+		writeCache() // 状态变更立即保存
 	}
 
 	const unknowBtn = () => {
@@ -449,6 +457,7 @@
 			currentItem.value.error += 1
 			currentItem.value.consecutiveError += 1
 		}
+		writeCache() // 状态变更立即保存
 	}
 
 	const misremember = () => {
@@ -465,7 +474,6 @@
 		const item = currentItem.value
 		if (!item) return
 
-		// 1. 掌握判定
 		if (item.word.step >= 3) {
 			if (!queueCompleted.value.find(i => i.word.id === item.word.id)) {
 				queueCompleted.value.push(item)
@@ -482,31 +490,24 @@
 				}
 			}
 		} else {
-			// 2. 未掌握判定
 			if (know.value) {
 				queueActive.value.push(item)
 			} else {
-				// 熔断检查：连续错3次 -> 移入待定区 (Hard Queue)
 				if (item.consecutiveError >= MAX_ERROR_TOLERANCE) {
 					if (queuePending.value.length > 0) {
 						queueHard.value.push(item)
-						toast.show({
-							message: '太难了？换个词先试试！'
-						})
+						toast.show({ message: '太难了？换个词先试试！' })
 						console.log(`[熔断] ⛔ ${item.word.words} 连续错误3次，移入待定区`);
 					} else {
-						// 没备用词了，只能硬着头皮复习
 						insertToPenaltyPosition(item)
 					}
 				} else {
-					// 普通错误 -> 插队复习
 					insertToPenaltyPosition(item)
 				}
 			}
 		}
 
 		sessionStep.value++
-		writeCache()
 		getWord()
 	}
 
@@ -526,7 +527,6 @@
 	}
 </style>
 <style scoped lang="scss">
-	/* 内容容器 */
 	.container {
 		padding: 32px 16px;
 		height: 100%;
@@ -535,7 +535,6 @@
 		align-items: center;
 	}
 
-	/* 完成图标 */
 	.completion-icon {
 		margin-top: 40px;
 		font-size: 70px;
@@ -543,7 +542,6 @@
 		color: #07C160;
 	}
 
-	/* 完成标题 */
 	.completion-title {
 		font-size: 24px;
 		font-weight: 600;
@@ -552,7 +550,6 @@
 		text-align: center;
 	}
 
-	/* 完成描述 */
 	.completion-desc {
 		font-size: 16px;
 		color: #757575;
@@ -573,7 +570,6 @@
 		}
 	}
 
-	/* 统计信息 */
 	.stats-container {
 		display: flex;
 		justify-content: space-around;
@@ -599,7 +595,6 @@
 		color: #757575;
 	}
 
-	/* 按钮容器 */
 	.button-container {
 		display: flex;
 		flex-direction: column;
@@ -609,7 +604,6 @@
 		margin-bottom: 40px;
 	}
 
-	/* 主按钮 */
 	.primary-button {
 		background-color: #07C160;
 		color: white;
@@ -627,7 +621,6 @@
 		background-color: #06AD56;
 	}
 
-	/* 次按钮 */
 	.secondary-button {
 		background-color: white;
 		color: #07C160;
@@ -661,7 +654,6 @@
 		padding: 16px;
 	}
 
-	/* 学习进度 */
 	.progress-container {
 		padding: 16px;
 	}
