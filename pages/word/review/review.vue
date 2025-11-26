@@ -9,7 +9,7 @@
 				<view class="data">
 					<view class="_GCENTER">
 						<view style="color: #07C160;">
-							{{wordList.length}}
+							{{total}}
 						</view>
 						<view>
 							已学习
@@ -17,7 +17,7 @@
 					</view>
 					<view class="_GCENTER">
 						<view style="color: #16A34A;">
-							{{wordList.filter(item=>item.write).length}}
+							{{stats.write}}
 						</view>
 						<view>
 							已默写
@@ -25,7 +25,7 @@
 					</view>
 					<view class="_GCENTER">
 						<view style="color: #2563EB;">
-							{{wordList.filter(item=>item.listen).length}}
+							{{stats.listen}}
 						</view>
 						<view>
 							已听写
@@ -34,7 +34,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="wordlist">
+		
+		<scroll-view scroll-y class="wordlist" @scrolltolower="loadMore">
 			<view class="worditem" @click="goPage('/pages/word/worddetail/worddetail',{
 				id:item.id
 			})" :key="item.id" v-for="item in wordList">
@@ -45,15 +46,16 @@
 						<view class="tag write" v-if="item.listen">已听写</view>
 					</view>
 				</view>
-				<wd-text size="14px" :lines="2" custom-class="body" color="#999" :text="item.description"></wd-text>
+				<view class="item-desc">{{item.description}}</view>
 			</view>
-		</view>
+            </scroll-view>
 	</view>
 </template>
 
 <script setup>
 	import {
-		ref
+		ref,
+		reactive
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import {
@@ -63,17 +65,65 @@
 		goPage,
 		formatWordName
 	} from "@/utils/common.js"
-	import {
-		localwordsStore
-	} from "@/stores"
 	import $http from "@/api/index.js"
+
+	// --- 状态管理 ---
 	const wordList = ref([])
-	const getAllWords = async () => {
-		const res = await $http.word.getLearnt()
-		wordList.value = res.data
+	const page = ref(1)
+	const pageSize = ref(10)
+	// 这里的 loading 和 finished 仅用于内部逻辑控制（防抖、判断结束），不再用于 UI 展示
+	const loading = ref(false)
+	const finished = ref(false)
+	const total = ref(0)
+	
+	const stats = reactive({
+		write: 0,
+		listen: 0
+	})
+
+	const loadMore = async () => {
+		if (loading.value || finished.value) return
+		
+		loading.value = true
+		try {
+			const res = await $http.word.getLearnt({
+				page: page.value,
+				page_size: pageSize.value
+			})
+			
+			const newItems = res.data || []
+			const totalCount = res.total || 0
+			
+			total.value = totalCount
+			
+			// 增量更新统计
+			newItems.forEach(item => {
+				if(item.write) stats.write++
+				if(item.listen) stats.listen++
+			})
+
+			if (page.value === 1) {
+				wordList.value = newItems
+			} else {
+				wordList.value.push(...newItems)
+			}
+
+			if (wordList.value.length >= totalCount) {
+				finished.value = true
+			} else {
+				page.value++
+			}
+		} catch (e) {
+			console.error(e)
+		} finally {
+			loading.value = false
+		}
 	}
+
 	onLoad(op => {
-		getAllWords()
+		stats.write = 0
+		stats.listen = 0
+		loadMore()
 	})
 </script>
 <style>
@@ -114,22 +164,35 @@
 
 	.wordlist {
 		flex: 1;
-		overflow: auto;
+		height: 0; 
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
 		margin-top: 16px;
-		padding: 8px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
+		padding: 8px 16px 0 16px; 
+		box-sizing: border-box;
 
 		.worditem {
 			border-bottom: 1px solid #f0f0f0;
 			padding-bottom: 15px;
+			margin-bottom: 16px;
 
 			.heads {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-
+				margin-bottom: 4px;
+			}
+			
+			.item-desc {
+				font-size: 14px;
+				color: #999;
+				line-height: 1.5;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
 			}
 		}
 	}
