@@ -135,19 +135,62 @@
 	import {
 		onLoad
 	} from "@dcloudio/uni-app"
+
+	// --- 核心配置常量 ---
+	const WINDOW_SIZE = 6 // 活跃窗口大小（书桌上保持6个词）
+	const MIN_BUFFER = 4 // 最小缓冲阈值（少于4个时补充）
+	const TARGET_COUNT = 10 // 本次学习目标：掌握10个即结束
+	const MAX_ERROR_TOLERANCE = 3 // 熔断阈值：连续错3次认为不适合当前学习
+
+	// --- 工具函数 ---
 	const renderRubyHTMLWeb = (rubyList) => {
 		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
 	}
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext()
 	innerAudioContext.autoplay = false
+
+	const playUserRecord = (url) => {
+		if (!url) return;
+		innerAudioContext.stop()
+		innerAudioContext.src = url
+		innerAudioContext.play()
+	}
+
 	const writefrommemory = () => {
-		localwordsStore().setWriteWordList(learnedQueue.value.map(item => item.word))
+		localwordsStore().setWriteWordList(queueCompleted.value.map(item => item.word))
 		goPage('/pages/word/writefrommemory/writefrommemory', {
 			type: 'local'
 		})
 	}
-	// 当前单词信息
+
+	// --- 核心状态 ---
+	const loading = ref(true)
+	const doneTask = ref(false)
+	const showAnswer = ref(false)
+	const know = ref(false)
+	const total = ref(0)
+	const sessionStep = ref(0)
+	const learnType = ref('learn')
+	const lastWordId = ref(null)
+
+	// --- 单词队列结构 ---
+	const wordList = ref([])
+	const queuePending = ref([]) // 仓库：这里现在会有15个词 (10个目标 + 5个备用)
+	const queueActive = ref([]) // 书桌：正在学习的词 (Active Window)
+	const queueHard = ref([]) // 待定区：熔断下来的难词
+	const queueCompleted = ref([]) // 成果：已掌握的词
+
+	const nextShouldBeNew = ref(true)
+
+	const qualityMap = ref(new Map([
+		[0, 5],
+		[1, 4],
+		[2, 3],
+		[3, 2],
+		[4, 1]
+	]))
+
 	const wordinfo = ref({
 		words: [],
 		tone: '',
@@ -161,171 +204,67 @@
 		step: 0,
 		isLearned: false
 	})
-	watch(() => wordinfo.value.id, (newVal, oldVal) => {
-		if (newVal) {
-			playUserRecord(wordinfo.value.voice)
-		}
+	const currentItem = ref(null)
+
+	watch(() => wordinfo.value.id, (newVal) => {
+		if (newVal) playUserRecord(wordinfo.value.voice)
 	})
-	const loading = ref(true)
-	const doneTask = ref(false)
-	const showAnswer = ref(false)
-	const know = ref(false)
-	const total = ref(0)
-	const sessionStep = ref(0)
 
-	const lastWordId = ref(null) // 用于防重
+	const typeTitle = computed(() => learnType.value == "learn" ? "学习" : "复习")
 
-	// 算法状态机
-	const learningPhase = ref('initial')
-	const interleaveCounter = ref(0)
-	const isReviewTurn = ref(true)
-	const reviewTurnsLeft = ref(2)
-	const heldReviewWord = ref(null)
+	const rightPercentage = computed(() => {
+		if (sessionStep.value === 0) return 100;
+		const totalError = wordList.value.reduce((sum, item) => sum + (item.error || 0), 0)
+		const correctCount = Math.max(0, sessionStep.value - totalError)
+		return Math.round((correctCount / sessionStep.value) * 100)
+	})
 
-	// 四大队列
-	const initialQueue = ref([])
-	const pendingNew = ref([])
-	const reviewQueue = ref([])
-	const learnedQueue = ref([])
-	const wordList = ref([])
+	// 进度条：分母固定为 TARGET_COUNT (10)，给用户明确的目标感
+	const learned = computed(() => queueCompleted.value.length)
+	const progressPercent = computed(() => total.value === 0 ? 0 : Math.round((learned.value / total.value) * 100))
 
-	const learnCount = ref(0) // 🌟 移到这里，以便 reset
-	const wordHistory = ref([]) // 🌟 移到这里，以便 reset
-
-	const qualityMap = ref(new Map([
-		[0, 5],
-		[1, 4],
-		[2, 3],
-		[3, 2],
-		[4, 1],
-	]))
 	onLoad((e) => {
 		init(e.type)
 	})
 
-	// 🌟 【新增】重置算法状态的辅助函数
 	const resetAlgorithmState = () => {
 		sessionStep.value = 0
 		lastWordId.value = null
-		learningPhase.value = 'initial'
-		interleaveCounter.value = 0
-		isReviewTurn.value = true
-		reviewTurnsLeft.value = 2
-		heldReviewWord.value = null
-
-		initialQueue.value = []
-		pendingNew.value = []
-		reviewQueue.value = []
-		learnedQueue.value = []
+		nextShouldBeNew.value = true
 		wordList.value = []
-
-		learnCount.value = 0
-		wordHistory.value = []
-
-		// 重置UI状态
+		queuePending.value = []
+		queueActive.value = []
+		queueHard.value = []
+		queueCompleted.value = []
 		showAnswer.value = false
-		know.value = false
+		doneTask.value = false
 	}
 
-
-	/**
-	 * 初始化 (你的缓存逻辑)
-	 */
-	const writeCache = () => {
-		if (learnType.value == "learn") {
-			localwordsStore().setLearnTime(new Date().getTime())
-			let cache = {
-				wordinfo: wordinfo.value,
-				doneTask: doneTask.value,
-				showAnswer: showAnswer.value,
-				know: know.value,
-				sessionStep: sessionStep.value,
-				learningPhase: learningPhase.value,
-				interleaveCounter: interleaveCounter.value,
-				isReviewTurn: isReviewTurn.value,
-				reviewTurnsLeft: reviewTurnsLeft.value,
-				heldReviewWord: heldReviewWord.value,
-				initialQueue: initialQueue.value,
-				pendingNew: pendingNew.value,
-				reviewQueue: reviewQueue.value,
-				learnedQueue: learnedQueue.value,
-				wordList: wordList.value,
-				lastWordId: lastWordId.value
-			}
-			localwordsStore().setLearnCache(cache)
-		} else {
-			localwordsStore().setReviewTime(new Date().getTime())
-			let cache = {
-				wordinfo: wordinfo.value,
-				doneTask: doneTask.value,
-				showAnswer: showAnswer.value,
-				know: know.value,
-				sessionStep: sessionStep.value,
-				learningPhase: learningPhase.value,
-				interleaveCounter: interleaveCounter.value,
-				isReviewTurn: isReviewTurn.value,
-				reviewTurnsLeft: reviewTurnsLeft.value,
-				heldReviewWord: heldReviewWord.value,
-				initialQueue: initialQueue.value,
-				pendingNew: pendingNew.value,
-				reviewQueue: reviewQueue.value,
-				learnedQueue: learnedQueue.value,
-				wordList: wordList.value,
-				lastWordId: lastWordId.value
-			}
-			localwordsStore().setReviewCache(cache)
-		}
-	}
-	const typeTitle = computed(() => {
-		if (learnType.value == "learn") {
-			return "学习"
-		} else {
-			return "复习"
-		}
-	})
-	const learnType = ref('learn')
 	const init = async (type) => {
 		learnType.value = type
 		loading.value = true
 
-		let learnCache = localwordsStore().learnCache
-		let reviewCache = localwordsStore().reviewCache
+		const store = localwordsStore()
+		let cache = type == "learn" ? store.learnCache : store.reviewCache
 		const timestamp = new Date().setHours(0, 0, 0, 0);
 
-		const loadData = (cache) => {
-			wordList.value = cache.wordList || []
-			initialQueue.value = cache.initialQueue || []
-			pendingNew.value = cache.pendingNew || []
-			wordinfo.value = cache.wordinfo || wordinfo.value
-			doneTask.value = cache.doneTask || false
-			showAnswer.value = cache.showAnswer || false
-			know.value = cache.know || false
-			sessionStep.value = cache.sessionStep || 0
-			learningPhase.value = cache.learningPhase || 'initial'
-			interleaveCounter.value = cache.interleaveCounter || 0
-			isReviewTurn.value = cache.isReviewTurn !== undefined ? cache.isReviewTurn : true
-			reviewTurnsLeft.value = cache.reviewTurnsLeft !== undefined ? cache.reviewTurnsLeft : 2
-			heldReviewWord.value = cache.heldReviewWord || null
-			reviewQueue.value = cache.reviewQueue || []
-			learnedQueue.value = cache.learnedQueue || []
-			lastWordId.value = cache.lastWordId || null
+		const hasCache = cache && cache.wordList && cache.wordList.length > 0;
+		const isFresh = type == "learn" ? (store.learnTime >= timestamp) : (store.reviewTime >= timestamp);
 
-			// 🌟 修复：加载缓存时，也必须重置 learnCount
-			learnCount.value = sessionStep.value // 用 sessionStep 近似
-			wordHistory.value = [] // 历史记录不恢复
-		}
+		if (hasCache && isFresh) {
+			loadFromCache(cache)
+		} else {
+			const apiCall = type == "learn" ? $http.word.learnWord : $http.word.getReview;
+			const clearFunc = type == "learn" ? store.clearLearnCache : store.clearReviewCache;
 
-		const fetchData = async (apiCall, clearCacheFunc) => {
 			resetAlgorithmState()
-			clearCacheFunc()
+			clearFunc()
+
 			const res = await apiCall()
+
 			wordList.value = res.data.map(item => {
-				const examples = item.detail
-					.flatMap(d => d.meanings)
-					.flatMap(m => m.examples)
-				const types = item.detail
-					.flatMap(d => d.type)
-					.join(';')
+				const examples = item.detail.flatMap(d => d.meanings).flatMap(m => m.examples)
+				const types = item.detail.flatMap(d => d.type).join(';')
 				return {
 					word: {
 						...item,
@@ -334,306 +273,253 @@
 						examples: examples,
 						types: types
 					},
-					error: 0
+					error: 0,
+					consecutiveError: 0, // 连续错误计数
+					submitted: false
 				}
 			})
-			total.value = wordList.value.length > 10 ? 10 : wordList.value.length
-			initialQueue.value = wordList.value.slice(0, 4)
-			pendingNew.value = wordList.value.slice(4)
+
+			// 核心调整：total 依然设为 10，queuePending 装入全部 15 个词
+			total.value = TARGET_COUNT
+			queuePending.value = [...wordList.value]
+
 			getWord()
 		}
-
-		if (type == "learn") {
-			if (learnCache && learnCache.wordList && learnCache.wordList.length > 0 && localwordsStore()
-				.learnTime >= timestamp) {
-				loadData(learnCache)
-			} else {
-				await fetchData($http.word.learnWord, localwordsStore().clearLearnCache)
-			}
-		} else { // type == "review"
-			if (reviewCache && reviewCache.wordList && reviewCache.wordList.length > 0 && localwordsStore()
-				.reviewTime >= timestamp) {
-				loadData(reviewCache)
-			} else {
-				await fetchData($http.word.getReview, localwordsStore().clearReviewCache)
-			}
-		}
 		loading.value = false
-		doneTask.value = false // 🌟 确保“再来一组”时 doneTask 总是 false
 	}
 
+	const loadFromCache = (cache) => {
+		wordList.value = cache.wordList || []
+		wordinfo.value = cache.wordinfo || wordinfo.value
+		doneTask.value = cache.doneTask || false
+		showAnswer.value = cache.showAnswer || false
+		know.value = cache.know || false
+		sessionStep.value = cache.sessionStep || 0
+		lastWordId.value = cache.lastWordId || null
+		total.value = TARGET_COUNT
+		nextShouldBeNew.value = cache.nextShouldBeNew ?? true
 
-	/**
-	 * 获取一个新单词
-	 */
-	const getNewWord = () => {
-		if (pendingNew.value.length > 0) {
-			return pendingNew.value.shift()
+		// 恢复引用链
+		const link = (list) => list.map(i => wordList.value.find(w => w.word.id === i.word.id)).filter(i => i)
+		queuePending.value = link(cache.queuePending || [])
+		queueActive.value = link(cache.queueActive || [])
+		queueCompleted.value = link(cache.queueCompleted || [])
+		queueHard.value = link(cache.queueHard || [])
+
+		if (wordinfo.value.id) {
+			currentItem.value = wordList.value.find(i => i.word.id === wordinfo.value.id)
 		}
-		return null
 	}
 
-	/**
-	 * 获取一个需要复习的单词
-	 */
-	const getReviewWord = () => {
-		if (reviewQueue.value.length > 0) {
-			return reviewQueue.value.shift()
+	const writeCache = () => {
+		const cache = {
+			wordinfo: wordinfo.value,
+			doneTask: doneTask.value,
+			showAnswer: showAnswer.value,
+			know: know.value,
+			sessionStep: sessionStep.value,
+			lastWordId: lastWordId.value,
+			nextShouldBeNew: nextShouldBeNew.value,
+			queuePending: queuePending.value,
+			queueActive: queueActive.value,
+			queueCompleted: queueCompleted.value,
+			queueHard: queueHard.value,
+			wordList: wordList.value,
 		}
-		return null
+
+		if (learnType.value == "learn") {
+			localwordsStore().setLearnTime(new Date().getTime())
+			localwordsStore().setLearnCache(cache)
+		} else {
+			localwordsStore().setReviewTime(new Date().getTime())
+			localwordsStore().setReviewCache(cache)
+		}
 	}
 
-	/**
-	 * 获取下一个单词的主逻辑 (三阶段 + 反转 + 防重)
-	 */
-	const rightPercentage = computed(() => {
-		if (learnCount.value === 0) return 100;
-		const totalError = wordList.value.reduce((sum, item) => sum + (item.error || 0), 0)
-		const correctCount = learnCount.value - totalError
-		return Math.max(0, Math.round((correctCount / learnCount.value) * 100))
-	})
-
+	// --- 核心调度算法 ---
 	const getWord = () => {
-
-		if (learned.value >= total.value) {
-			doneTask.value = true
-			if (learnType.value == "learn") {
-				localwordsStore().clearLearnCache()
-			} else {
-				localwordsStore().clearReviewCache()
-			}
+		// 1. 胜利检查：掌握 10 个即通关
+		if (queueCompleted.value.length >= TARGET_COUNT) {
+			finishTask()
 			return
 		}
 
-		let temp = null;
-
-		// --- 阶段1: 'initial' (前4个词) ---
-		if (learningPhase.value === 'initial') {
-			if (initialQueue.value.length > 0) {
-				temp = initialQueue.value.shift();
-			} else {
-				learningPhase.value = 'interleave_1_1';
-				isReviewTurn.value = true;
-			}
-		}
-
-		// --- 阶段2: 'interleave_1_1' (R, N, R, N... 循环4次) ---
-		if (learningPhase.value === 'interleave_1_1') {
-			if (isReviewTurn.value) {
-				temp = getReviewWord();
-			} else {
-				temp = getNewWord();
-				if (temp) {
-					interleaveCounter.value++;
-				}
-			}
-
-			if (!temp) {
-				isReviewTurn.value = !isReviewTurn.value;
-				temp = isReviewTurn.value ? getReviewWord() : getNewWord();
-				if (temp && !isReviewTurn.value) {
-					interleaveCounter.value++;
-				}
-			}
-
-			isReviewTurn.value = !isReviewTurn.value;
-
-			if (interleaveCounter.value >= 4) {
-				learningPhase.value = 'main_2_1';
-				reviewTurnsLeft.value = 2;
-			}
-		}
-
-		// --- 阶段3: 'main_2_1' (R, R, N... 循环) ---
-		else if (learningPhase.value === 'main_2_1') {
-
-			if (heldReviewWord.value) {
-				temp = heldReviewWord.value;
-				heldReviewWord.value = null;
-				reviewTurnsLeft.value = 0;
-			} else if (reviewTurnsLeft.value > 0) { // 该复习了
-
-				const nextReviewWord = reviewQueue.value.length > 0 ? reviewQueue.value[0] : null;
-				if (nextReviewWord && nextReviewWord.word.id === lastWordId.value) {
-					if (pendingNew.value.length > 0) {
-						temp = getNewWord();
-						reviewTurnsLeft.value = 2;
-					} else {
-						temp = getReviewWord();
-						reviewTurnsLeft.value--;
-					}
-				} else {
-					const tempR1 = getReviewWord();
-					const tempR2 = getReviewWord();
-
-					if (tempR1 && tempR2) {
-						temp = tempR2;
-						heldReviewWord.value = tempR1;
-						reviewTurnsLeft.value = 1;
-					} else if (tempR1 || tempR2) {
-						temp = tempR1 || tempR2;
-						reviewTurnsLeft.value--;
-					} else {
-						temp = getNewWord();
-						if (temp) {
-							reviewTurnsLeft.value = 2;
-						}
-					}
-				}
-			} else { // 该学新词了
-				temp = getNewWord();
-				if (temp) {
-					reviewTurnsLeft.value = 2;
-				} else {
-					temp = getReviewWord();
-					reviewTurnsLeft.value = 0;
-				}
-			}
-		}
-
-		if (!temp) {
-			doneTask.value = true
-			if (learnType.value == "learn") {
-				localwordsStore().clearLearnCache()
-			} else {
-				localwordsStore().clearReviewCache()
-			}
+		// 2. 弹尽粮绝：所有词都过了一遍（极端情况）
+		if (queuePending.value.length === 0 && queueActive.value.length === 0 && queueHard.value.length === 0) {
+			finishTask()
 			return
 		}
 
-		wordinfo.value = temp.word
-		lastWordId.value = temp.word.id // 记录最后出现的ID
+		let nextItem = null
+		let source = ''
+		let reason = ''
+
+		const activeCount = queueActive.value.length
+		const pendingCount = queuePending.value.length
+
+		// --- 智能决策 ---
+
+		// A. 活跃池过载 -> 强制消化
+		if (activeCount >= WINDOW_SIZE) {
+			source = 'review'
+			reason = '书桌已满'
+		}
+		// B. 活跃池不满 -> 补充
+		else if (activeCount < MIN_BUFFER) {
+			if (pendingCount > 0) {
+				source = 'new' // 优先拿新词
+				reason = '补充新词'
+			} else if (queueHard.value.length > 0) {
+				source = 'rescue' // 没新词了，捞回难词
+				reason = '复活难词'
+			} else {
+				source = 'review' // 啥都没了，只能复习
+				reason = '最后冲刺'
+			}
+		}
+		// C. 正常穿插
+		else {
+			source = nextShouldBeNew.value ? 'new' : 'review'
+			// 如果轮到新词但没库存，降级处理
+			if (source === 'new' && pendingCount === 0) {
+				source = queueHard.value.length > 0 ? 'rescue' : 'review'
+			}
+		}
+
+		// --- 执行取词 ---
+		if (source === 'new') {
+			nextItem = queuePending.value.shift()
+			nextShouldBeNew.value = false
+		} else if (source === 'rescue') {
+			nextItem = queueHard.value.shift()
+			nextItem.consecutiveError = 0 // 复活后重置连续错误，给新机会
+			queueActive.value.push(nextItem)
+			nextItem = queueActive.value.pop() // 立即使用
+			nextShouldBeNew.value = false
+		} else {
+			nextItem = queueActive.value.shift()
+			// 防连续
+			if (nextItem && nextItem.word.id === lastWordId.value && queueActive.value.length > 0) {
+				queueActive.value.push(nextItem)
+				nextItem = queueActive.value.shift()
+				reason += '(防连续)'
+			}
+			nextShouldBeNew.value = true
+		}
+
+		// 日志
+		const displayIcon = source === 'new' ? '🆕' : (source === 'rescue' ? '🚑' : '🔄');
+		const logWord = nextItem?.word?.words ? nextItem.word.words.join('·') : 'End';
+		console.log(
+			`[调度] ${displayIcon} ${logWord} | ${reason} | Active:${queueActive.value.length} Pending:${queuePending.value.length} Hard:${queueHard.value.length} Done:${queueCompleted.value.length}`
+			);
+
+		if (!nextItem) {
+			finishTask()
+			return
+		}
+
+		currentItem.value = nextItem
+		wordinfo.value = nextItem.word
+		lastWordId.value = nextItem.word.id
 		showAnswer.value = false
-		wordHistory.value.push({
-			step: sessionStep.value,
-			word: temp.word.kana,
-			id: temp.word.id,
-			wordStep: temp.word.step,
-			phase: learningPhase.value
-		})
-		console.log(wordHistory.value);
 	}
 
-	/**
-	 * 答对
-	 */
+	const finishTask = () => {
+		doneTask.value = true
+		if (learnType.value == "learn") localwordsStore().clearLearnCache()
+		else localwordsStore().clearReviewCache()
+	}
+
+	// --- 交互逻辑 ---
 	const knowBtn = () => {
 		know.value = true
-		showAnswer.value = true // 只显示答案
-
-		const temp = wordinfo.value
-		const wordObj = wordList.value.find(w => w.word.id === temp.id)
-		if (!wordObj) {
-			return
-		}
-
-		wordObj.word.step++
-
-		if (wordObj.word.step >= 3) {
-			wordObj.word.isLearned = true
-			learnedQueue.value.push(wordObj)
-		} else {
-			reviewQueue.value.push(wordObj)
+		showAnswer.value = true
+		if (currentItem.value) {
+			currentItem.value.word.step += 1
+			currentItem.value.consecutiveError = 0
 		}
 	}
 
-	/**
-	 * 答错
-	 */
 	const unknowBtn = () => {
 		know.value = false
-		showAnswer.value = true // 只显示答案
-
-		const temp = wordinfo.value
-		const wordObj = wordList.value.find(w => w.word.id === temp.id)
-		if (!wordObj) {
-			return
+		showAnswer.value = true
+		if (currentItem.value) {
+			currentItem.value.word.step = 0
+			currentItem.value.error += 1
+			currentItem.value.consecutiveError += 1
 		}
-
-		wordObj.word.step = 0
-		wordObj.error++
-
-		reviewQueue.value.push(wordObj)
 	}
 
-	/**
-	 * 记错
-	 */
 	const misremember = () => {
-		know.value = false
-		const temp = wordinfo.value
-		const wordObj = wordList.value.find(w => w.word.id === temp.id)
-		if (!wordObj) {
-			getNext()
-			return
+		if (currentItem.value) {
+			currentItem.value.word.step = 0
+			currentItem.value.error += 1
+			currentItem.value.consecutiveError += 1
 		}
-
-		wordObj.word.step = 0
-		wordObj.error++
-
-		wordObj.word.isLearned = false
-		learnedQueue.value = learnedQueue.value.filter(i => i.word.id !== temp.id)
-
-		reviewQueue.value.push(wordObj)
-
+		know.value = false
 		getNext()
 	}
 
-	/**
-	 * 获取下一个单词
-	 */
 	const getNext = async () => {
-		learnCount.value += 1
+		const item = currentItem.value
+		if (!item) return
 
-		const wordsToSubmit = learnedQueue.value.filter(item => !item.submitted);
-		if (wordsToSubmit.length > 0) {
-			try {
-				await Promise.all(
-					wordsToSubmit.map(async item => {
-						await $http.word.submitWord({
-							word_id: item.word.id,
-							quality: qualityMap.value.get(item.error) || 1
-						})
-						item.submitted = true
+		// 1. 掌握判定
+		if (item.word.step >= 3) {
+			if (!queueCompleted.value.find(i => i.word.id === item.word.id)) {
+				queueCompleted.value.push(item)
+			}
+			if (!item.submitted) {
+				try {
+					await $http.word.submitWord({
+						word_id: item.word.id,
+						quality: qualityMap.value.get(item.error) || 1
 					})
-				)
-			} catch (error) {
-				console.error("提交单词失败:", error)
+					item.submitted = true
+				} catch (e) {
+					console.error(e)
+				}
+			}
+		} else {
+			// 2. 未掌握判定
+			if (know.value) {
+				queueActive.value.push(item)
+			} else {
+				// 熔断检查：连续错3次 -> 移入待定区 (Hard Queue)
+				if (item.consecutiveError >= MAX_ERROR_TOLERANCE) {
+					if (queuePending.value.length > 0) {
+						queueHard.value.push(item)
+						toast.show({
+							message: '太难了？换个词先试试！'
+						})
+						console.log(`[熔断] ⛔ ${item.word.words} 连续错误3次，移入待定区`);
+					} else {
+						// 没备用词了，只能硬着头皮复习
+						insertToPenaltyPosition(item)
+					}
+				} else {
+					// 普通错误 -> 插队复习
+					insertToPenaltyPosition(item)
+				}
 			}
 		}
 
 		sessionStep.value++
+		writeCache()
 		getWord()
-
-		if (!doneTask.value) {
-			writeCache()
-		}
 	}
 
-	/**
-	 * 已掌握数量 (不变)
-	 */
-	const learned = computed(() => {
-		return wordList.value.filter(item => item.word.isLearned).length
-	})
-
-	/**
-	 * 进度百分比 (不变)
-	 */
-	const progressPercent = computed(() => {
-		if (total.value === 0) {
-			return 0
-		}
-		return Math.round((learned.value / total.value) * 100)
-	})
-	const playUserRecord = (url) => {
-		if (!url) return;
-		innerAudioContext.stop()
-		innerAudioContext.src = url
-		innerAudioContext.play()
+	const insertToPenaltyPosition = (item) => {
+		const len = queueActive.value.length
+		const minIdx = 2
+		const maxIdx = 4
+		let insertIndex = len <= minIdx ? len : Math.floor(Math.random() * (Math.min(len, maxIdx) - minIdx + 1)) +
+			minIdx
+		queueActive.value.splice(insertIndex, 0, item)
+		console.log(`[反馈] ❌ 答错插队: 位置 ${insertIndex}`)
 	}
 </script>
-
 <style>
 	page {
 		background-color: white;
