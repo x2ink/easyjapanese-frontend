@@ -85,8 +85,8 @@
 			</view>
 
 			<view v-else class="empty-state">
-				<image src="https://img.yzcdn.cn/vant/custom-empty-image.png" mode="aspectFit" class="empty-img">
-				</image>
+				<wd-status-tip :image-size="{ height: 128, width: 128 }"
+					image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" />
 				<text class="empty-text">输入动词开始查询变形</text>
 				<text class="empty-sub">支持输入：基本形、ます形</text>
 			</view>

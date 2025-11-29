@@ -7,7 +7,8 @@
 		<div class="main-content">
 			<!-- 应用信息卡片 -->
 			<div class="app-card">
-				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
+					class="app-logo"></image>
 				<div class="app-name">轻松日语</div>
 				<div class="app-version">版本 {{version}}</div>
 				<div class="app-desc">
@@ -33,7 +34,7 @@
 				<div class="info-content">
 					获取最新学习资源和活动信息
 				</div>
-			<!-- 	<div class="social-icons">
+				<!-- 	<div class="social-icons">
 					<a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
 					<a href="#" class="social-icon"><i class="fab fa-qq"></i></a>
 					<a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
@@ -42,16 +43,18 @@
 			</div>
 
 			<!-- 法律条款 -->
-			<div class="info-item"
-				@click="goPage('/pages/other/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ht003yxzz0egvmke'})">
+			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
+					src:`${http.baseUrl}html/user_agreement.html`
+				})">
 				<div class="info-title">
-					<span>服务条款</span>
+					<span>用户服务条款&隐私协议</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
 				</div>
 			</div>
 			<!-- 更新日志 -->
-			<div class="info-item"
-				@click="goPage('/pages/other/browse/browse',{src:'https://www.yuque.com/xiaoerwangluo/pteeim/ukw6hnx82vfrgg4g'})">
+			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
+					src:`${http.baseUrl}html/update_log.html`
+				})">
 				<div class="info-title">
 					<span>更新日志</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
@@ -83,6 +86,7 @@
 	import {
 		onLoad,
 	} from "@dcloudio/uni-app"
+	import http from '@/utils/request.js'
 	import {
 		goPage,
 	} from "@/utils/common.js"

@@ -139,7 +139,7 @@
 	// --- 核心配置常量 ---
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
-	const TARGET_COUNT = 10
+	// 删除 TARGET_COUNT 常量，不再硬编码为 10
 	const MAX_ERROR_TOLERANCE = 3
 
 	// --- 工具函数 ---
@@ -246,7 +246,7 @@
 
 		const store = localwordsStore()
 		let cache = type == "learn" ? store.learnCache : store.reviewCache
-		
+
 		const hasCache = cache && cache.wordList && cache.wordList.length > 0;
 
 		if (hasCache && !forceRefresh) {
@@ -262,7 +262,16 @@
 
 			const res = await apiCall()
 
-			wordList.value = res.data.map(item => {
+			// --- 修改：兼容数组或对象格式，适配 {data: [], total: x} 结构 ---
+			let rawData = []
+			if (Array.isArray(res.data)) {
+				rawData = res.data
+			} else if (res.data && Array.isArray(res.data.data)) {
+				rawData = res.data.data
+			}
+			// -----------------------------------------------------------
+
+			wordList.value = rawData.map(item => {
 				const examples = item.detail.flatMap(d => d.meanings).flatMap(m => m.examples)
 				const types = item.detail.flatMap(d => d.type).join(';')
 				return {
@@ -279,10 +288,16 @@
 				}
 			})
 
-			total.value = TARGET_COUNT
+			// --- 修改：total 不再硬编码，而是使用实际获取的单词数量 ---
+			total.value = wordList.value.length
 			queuePending.value = [...wordList.value]
 
-			getWord()
+			// 如果数据为空，直接显示完成（防止空数据卡死）
+			if (total.value === 0) {
+				doneTask.value = true
+			} else {
+				getWord()
+			}
 		}
 		loading.value = false
 	}
@@ -292,9 +307,12 @@
 		wordList.value = cache.wordList || []
 		doneTask.value = cache.doneTask || false
 		sessionStep.value = cache.sessionStep || 0
-		total.value = TARGET_COUNT
+
+		// --- 修改：从缓存恢复 total，如果缓存没有则使用列表长度 ---
+		total.value = cache.total || wordList.value.length
+
 		nextShouldBeNew.value = cache.nextShouldBeNew ?? true
-		
+
 		// 2. 关键UI状态恢复 (SnapShot)
 		showAnswer.value = cache.showAnswer || false
 		know.value = cache.know || false
@@ -328,7 +346,7 @@
 			wordinfo: wordinfo.value,
 			doneTask: doneTask.value,
 			showAnswer: showAnswer.value, // 保存是否显示答案
-			know: know.value,           // 保存“认识/不认识”状态
+			know: know.value, // 保存“认识/不认识”状态
 			sessionStep: sessionStep.value,
 			lastWordId: lastWordId.value,
 			nextShouldBeNew: nextShouldBeNew.value,
@@ -337,6 +355,7 @@
 			queueCompleted: queueCompleted.value,
 			queueHard: queueHard.value,
 			wordList: wordList.value,
+			total: total.value // --- 修改：将 total 也存入缓存 ---
 		}
 
 		if (learnType.value == "learn") {
@@ -350,7 +369,8 @@
 
 	// --- 核心调度算法 ---
 	const getWord = () => {
-		if (queueCompleted.value.length >= TARGET_COUNT) {
+		// --- 修改：判断完成条件改为 >= total.value ---
+		if (queueCompleted.value.length >= total.value && total.value > 0) {
 			finishTask()
 			return
 		}
@@ -414,7 +434,7 @@
 		const logWord = nextItem?.word?.words ? nextItem.word.words.join('·') : 'End';
 		console.log(
 			`[调度] ${displayIcon} ${logWord} | ${reason} | Active:${queueActive.value.length} Pending:${queuePending.value.length} Hard:${queueHard.value.length} Done:${queueCompleted.value.length}`
-			);
+		);
 
 		if (!nextItem) {
 			finishTask()
@@ -424,12 +444,12 @@
 		currentItem.value = nextItem
 		wordinfo.value = nextItem.word
 		lastWordId.value = nextItem.word.id
-		
-		showAnswer.value = false 
+
+		showAnswer.value = false
 		know.value = false
-		
+
 		// 进入新词时也保存一次，防止直接退出
-		writeCache() 
+		writeCache()
 	}
 
 	const finishTask = () => {
@@ -496,7 +516,9 @@
 				if (item.consecutiveError >= MAX_ERROR_TOLERANCE) {
 					if (queuePending.value.length > 0) {
 						queueHard.value.push(item)
-						toast.show({ message: '太难了？换个词先试试！' })
+						toast.show({
+							message: '太难了？换个词先试试！'
+						})
 						console.log(`[熔断] ⛔ ${item.word.words} 连续错误3次，移入待定区`);
 					} else {
 						insertToPenaltyPosition(item)
@@ -521,7 +543,9 @@
 		console.log(`[反馈] ❌ 答错插队: 位置 ${insertIndex}`)
 	}
 </script>
+
 <style>
+	/* 样式部分保持不变 */
 	page {
 		background-color: white;
 	}

@@ -32,7 +32,7 @@
 						<view class="actions">
 							<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">修改
 							</view>
-							<view class="_GCENTER" style="background: #E2231A;" @click="delComfirm(item.id)">删除</view>
+							<view class="_GCENTER" style="background: #E2231A;" @click="delComfirm(item)">删除</view>
 						</view>
 					</template>
 				</wd-swipe-action>
@@ -103,14 +103,20 @@
 	const changeTab = (e) => {
 		current.value = e
 	}
-	const delComfirm = (id) => {
+	const delComfirm = (item) => {
+		// 权限判断：如果不是当前用户的书，提示无权限
+		if (item.user_id != userStore().userInfo.id) {
+			toast.warning("您没有权限删除此单词本")
+			return
+		}
+
 		uni.showModal({
 			title: '温馨提示',
 			content: '单词本删除之后，所属单词也会全部被删除！',
 			success: async function(res) {
 				if (res.confirm) {
 					await $http.word.deleteBook({
-						id
+						id: item.id
 					})
 					toast.success("删除成功")
 					getWordBook()
@@ -134,6 +140,14 @@
 		describe: ""
 	})
 	const openPopup = (type, data) => {
+		// 权限判断：如果是修改操作，且不是当前用户的书，提示无权限
+		if (type == "update") {
+			if (data.user_id != userStore().userInfo.id) {
+				toast.warning("您没有权限修改此单词本")
+				return
+			}
+		}
+
 		createdShow.value = true
 		pattern.value = type
 		if (type == "update") {
