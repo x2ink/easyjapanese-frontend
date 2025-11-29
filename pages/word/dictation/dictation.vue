@@ -1,84 +1,91 @@
 <template>
-	<view class="head">
-		<NavbarDefault border title="单词听写"></NavbarDefault>
-	</view>
-	<view class="progress-bar">
-		<view class="progress-fill" :style="{width:`${progress}%`}"></view>
-	</view>
-	
-	<div v-if="isBatchComplete" class="container">
-		<div class="completion-icon">
-			<i class="fa-solid fa-circle-check"></i>
-		</div>
-		<h1 class="completion-title">本组听写完成！</h1>
-		<p class="completion-desc">
-			你已经完成了本组的{{doneList.length}}个单词听写<br>
-			<text v-if="serverRemaining > 0" style="font-size: 14px; color: #999; margin-top: 8px; display: block;">
-				今日剩余待听写: {{serverRemaining}} 个
-			</text>
-			<text v-else>今日任务已全部完成，太棒了！</text>
-		</p>
-		<div class="button-container">
-			<button v-if="serverRemaining > 0" class="primary-button" @click="getAllWords()">继续听写</button>
-			<button class="secondary-button" @click="goLearn()">去学习新词</button>
-		</div>
-	</div>
-	
-	<view v-else>
-		<view class="word-display _GCENTER">
-			<button @click="playUserRecord(wordinfo.voice)" class="pronounce-btn pronounce-header" title="发音">
-				<text class="fas fa-volume-up"></text>
-			</button>
-			<view style="margin-top: 20px; color: #999; font-size: 14px;">点击喇叭再次播放</view>
+	<view class="page-container">
+		<view class="top-header">
+			<NavbarDefault border title="单词听写"></NavbarDefault>
+			<view class="progress-bar">
+				<view class="progress-fill" :style="{width:`${progress}%`}"></view>
+			</view>
 		</view>
 		
-		<wd-divider>请选择正确答案</wd-divider>
-		
-		<view class="options">
-			<view 
-				:class="['option', item.class]" 
-				@click="select(index,item)" 
-				class="option" 
-				v-for="(item,index) in options"
-				:key="item.word.id"
-			>
-				<view class="index _GCENTER">
-					{{optionKey.get(index)}}
-				</view>
-				<view class="option-text">
-					{{item.word.description}}
+		<scroll-view scroll-y class="scroll-content">
+			<div v-if="isBatchComplete" class="container">
+				<div class="completion-icon">
+					<i class="fa-solid fa-circle-check"></i>
+				</div>
+				<h1 class="completion-title">本组听写完成！</h1>
+				<p class="completion-desc">
+					你已经完成了本组的{{doneList.length}}个单词听写<br>
+					<text v-if="serverRemaining > 0" style="font-size: 14px; color: #999; margin-top: 8px; display: block;">
+						今日剩余待听写: {{serverRemaining}} 个
+					</text>
+					<text v-else>今日任务已全部完成，太棒了！</text>
+				</p>
+				<div class="button-container">
+					<button v-if="serverRemaining > 0" class="primary-button" @click="getAllWords()">继续听写</button>
+					<button class="secondary-button" @click="goLearn()">去学习新词</button>
+				</div>
+			</div>
+			
+			<view v-else class="dictation-wrap">
+				<view class="word-display _GCENTER">
+					<button @click="playUserRecord(wordinfo.voice)" class="pronounce-btn pronounce-header" title="发音">
+						<text class="fas fa-volume-up"></text>
+					</button>
+					<view style="margin-top: 20px; color: #999; font-size: 14px;">点击喇叭再次播放</view>
 				</view>
 				
-				<view v-if="item.class=='fail'" class="anwser _GCENTER fail-bg">
-					<text class="fa-solid fa-xmark"></text>
+				<wd-divider>请选择正确答案</wd-divider>
+				
+				<view class="options">
+					<view 
+						:class="['option', item.class]" 
+						@click="select(index,item)" 
+						class="option" 
+						v-for="(item,index) in options"
+						:key="item.word.id"
+					>
+						<view class="index _GCENTER">
+							{{optionKey.get(index)}}
+						</view>
+						<view class="option-text">
+							{{item.word.description}}
+						</view>
+						
+						<view v-if="item.class=='fail'" class="anwser _GCENTER fail-bg">
+							<text class="fa-solid fa-xmark"></text>
+						</view>
+						<view v-if="item.class=='success'" class="anwser _GCENTER success-bg">
+							<text class="fa-solid fa-check"></text>
+						</view>
+					</view>
 				</view>
-				<view v-if="item.class=='success'" class="anwser _GCENTER success-bg">
-					<text class="fa-solid fa-check"></text>
-				</view>
-			</view>
-		</view>
-
-		<view class="_GCENTER" v-if="showManualContinue">
-			<view class="continue" @click="getNext()">
-				<text>继续下一个</text>
-				<i style="font-size: 22px;" class="fa-solid fa-arrow-right"></i>
-			</view>
-		</view>
 		
-		<view v-if="showDetailCard" @click="goPage('/pages/word/worddetail/worddetail',{ id:wordinfo.id })" class="word-card">
-			<view class="card-header">
-				<view>
-					<view class="card-japanese">{{formatWordName(wordinfo.words,wordinfo.kana)}}</view>
-					<view class="card-pronunciation">{{wordinfo.rome}}</view>
+				<view class="_GCENTER" v-if="showManualContinue">
+					<view class="continue" @click="getNext()">
+						<text>继续下一个</text>
+						<i style="font-size: 22px;" class="fa-solid fa-arrow-right"></i>
+					</view>
 				</view>
-				<view class="icon">
-					<i class="fa-solid fa-chevron-right"></i>
+				
+				<view v-if="showDetailCard" @click="goPage('/pages/word/worddetail/worddetail',{ id:wordinfo.id })" class="word-card">
+					<view class="card-header">
+						<view>
+							<view class="card-japanese">{{formatWordName(wordinfo.words,wordinfo.kana)}}</view>
+							<view class="card-pronunciation">{{wordinfo.rome}}</view>
+						</view>
+						<view class="icon">
+							<i class="fa-solid fa-chevron-right"></i>
+						</view>
+					</view>
 				</view>
+				
+				<view style="height: 40px;"></view>
 			</view>
-		</view>
+		</scroll-view>
+		
+		<wd-toast />
+		<wd-message-box />
 	</view>
-	<wd-toast />
-	<wd-message-box />
 </template>
 
 <script setup>
@@ -167,7 +174,7 @@
 				word_id: wordinfo.value.id
 			})
 
-			// 4. 自动跳转 (延迟改为 1000ms)
+			// 4. 自动跳转 (延迟1000ms)
 			setTimeout(() => {
 				getNext()
 			}, 1000)
@@ -258,11 +265,26 @@
 		background-color: white;
 	}
 	
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
+	/* 核心布局优化：Flex 垂直布局 */
+	.page-container {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background-color: white;
+		overflow: hidden; /* 防止页面整体滚动 */
+	}
+	
+	.top-header {
 		background: white;
+		z-index: 99;
+		flex-shrink: 0;
+	}
+	
+	/* 滚动区域：自动占据剩余高度 */
+	.scroll-content {
+		flex: 1;
+		height: 0; /* 配合 flex:1 实现内部滚动 */
+		background-color: white;
 	}
 
 	/* 进度条 */
@@ -375,9 +397,8 @@
 		margin: 0 16px 24px;
 		padding: 16px 20px;
 		background: white;
-		border: 1px solid #F3F4F6; /* 边框也稍微变淡一点 */
+		border: 1px solid #F3F4F6; 
 		border-radius: 12px;
-		/* 修改点：更柔和简约的阴影 */
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03); 
 		transition: opacity 0.2s;
 		
@@ -425,7 +446,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		height: 80vh;
+		/* 移除固定高度，改为最小高度，允许滚动 */
+		min-height: 60vh; 
 	}
 
 	.completion-icon {

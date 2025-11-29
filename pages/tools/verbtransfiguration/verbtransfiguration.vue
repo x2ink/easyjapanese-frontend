@@ -150,21 +150,19 @@
 </script>
 
 <style lang="scss" scoped>
-	/* 核心布局优化：Flex 垂直布局 */
 	.page-container {
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		background-color: #F7F8FA;
-		overflow: hidden; /* 防止整体页面滚动 */
+		overflow: hidden;
 	}
 
-	/* 头部区域：取消 fixed，让它自然堆叠 */
 	.head {
 		background: #fff;
 		z-index: 99;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-		flex-shrink: 0; /* 防止头部被压缩 */
+		flex-shrink: 0;
 	}
 
 	.search-wrapper {
@@ -172,12 +170,15 @@
 		background: #fff;
 	}
 
+	/* 修改点 1: 搜索框样式重构，解决文字跳动 */
 	.search-box {
 		display: flex;
 		align-items: center;
 		background: #F5F5F5;
 		border-radius: 50px;
-		padding: 8px 16px;
+		/* 关键修改：移除垂直 padding，改用固定高度 */
+		padding: 0 16px; 
+		height: 40px;    
 		transition: all 0.3s;
 		
 		&:active {
@@ -194,8 +195,11 @@
 	.search-input {
 		flex: 1;
 		font-size: 16px;
-		height: 24px;
+		/* 关键修改：高度设为 100%，填满父容器 */
+		height: 100%; 
 		color: #333;
+		/* 移除可能的默认行高干扰 */
+		line-height: normal; 
 	}
 	
 	.placeholder-style {
@@ -209,12 +213,13 @@
 		padding-left: 12px;
 		border-left: 1px solid #E0E0E0;
 		margin-left: 8px;
+		/* 垂直居中对齐 */
+		line-height: 20px; 
 	}
 
-	/* 滚动区域：自动占据剩余高度 */
 	.content-container {
 		flex: 1;
-		height: 0; /* 关键：配合 flex:1 实现内部滚动 */
+		height: 0;
 		padding: 16px;
 		box-sizing: border-box;
 	}
@@ -223,7 +228,6 @@
 		animation: fadeIn 0.5s ease;
 	}
 
-	/* 核心词汇卡片 */
 	.main-card {
 		background: linear-gradient(135deg, #07C160 0%, #05A050 100%);
 		border-radius: 12px;
@@ -247,7 +251,6 @@
 		letter-spacing: 1px;
 	}
 
-	/* 分组标题 */
 	.section-title {
 		font-size: 14px;
 		color: #999;
@@ -256,7 +259,6 @@
 		font-weight: 500;
 	}
 
-	/* 基础活用 - 网格布局 */
 	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -282,7 +284,6 @@
 		font-weight: 500;
 	}
 	
-	/* 标签颜色 */
 	.tag-blue { background: #E6F7FF; color: #1890FF; }
 	.tag-red { background: #FFF1F0; color: #F5222D; }
 	.tag-green { background: #F6FFED; color: #52C41A; }
@@ -294,7 +295,6 @@
 		color: #333;
 	}
 
-	/* 列表卡片布局 */
 	.list-card {
 		background: white;
 		border-radius: 12px;
@@ -330,7 +330,6 @@
 		color: #FF4D4F;
 	}
 
-	/* 空状态 */
 	.empty-state {
 		display: flex;
 		flex-direction: column;
@@ -340,7 +339,6 @@
 	}
 
 	.empty-img {
-		/* 优化：调小图标尺寸 */
 		width: 80px;
 		height: 80px;
 		margin-bottom: 16px;
