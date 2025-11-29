@@ -1,66 +1,76 @@
 <template>
-	<div class="page-container">
-		<!-- 顶部导航栏 -->
-		<div :style="{paddingTop:`calc(${navBarHeight} + 5px)`}" class="search-header">
-			<div class="search-bar-container">
-				<!-- 黑色单调返回按钮 -->
+	<view class="page-container">
+		<view :style="{paddingTop:`calc(${navBarHeight} + 5px)`}" class="search-header">
+			<view class="search-bar-container">
 				<text @click="back()" class="fas fa-chevron-left back-btn"></text>
-				<!-- 搜索框 -->
-				<div class="search-input-container">
-					<input v-model="value" confirm-type="search" @confirm="confirm" type="text" placeholder="输入关键词搜索"
-						class="search-input">
+				<view class="search-input-container">
+					<input v-model="value" confirm-type="search" @confirm="onSearchConfirm" type="text"
+						placeholder="输入关键词搜索" class="search-input">
 					<text class="fas fa-search search-icon"></text>
-				</div>
-			</div>
+					<text v-if="value" @click="clearInput" class="fas fa-times-circle clear-input-icon"></text>
+				</view>
+			</view>
 
-			<!-- 语言切换标签 -->
-			<div class="language-tabs">
-				<view @click="current='jc'" :class="{active:current=='jc',inactive:current!='jc'}" class="search-tab">
-					日中词典</view>
-				<view @click="current='cj'" :class="{active:current=='cj',inactive:current!='cj'}" class="search-tab">
-					中文词典</view>
-			</div>
-		</div>
-		<!-- 占位 -->
-		<view :style="{height:`calc(102px + ${navBarHeight})`}">
-
+			<view class="language-tabs">
+				<view @click="switchTab('jc')" :class="['search-tab', current==='jc' ? 'active' : 'inactive']">
+					日中词典
+				</view>
+				<view @click="switchTab('cj')" :class="['search-tab', current==='cj' ? 'active' : 'inactive']">
+					中文词典
+				</view>
+			</view>
 		</view>
-		<!-- 主要内容 -->
-		<div class="main-content">
-			<!-- 搜索历史 -->
-			<div v-if="total==0">
-				<div class="section-title" style="margin-top: 12px;">
-					<span>搜索历史</span>
-					<view class="clear-btn" @click="clear()">清空</view>
-				</div>
 
-				<div class="history-container">
-					<text @click="fastlook(item)" v-for="item in history" :key="item"
-						class="history-chip _GCENTER">{{item}}<text @click.stop="clearVal(item)"
-							class="fas fa-times close-icon"></text></text>
-				</div>
-			</div>
+		<view :style="{height:`calc(102px + ${navBarHeight})`}"></view>
 
-			<!-- 热门搜索 -->
-			<div class="hot-words" v-if="total==0">
-				<div class="section-title">
-					<span>热门搜索</span>
-				</div>
+		<view class="main-content">
 
-				<div class="hot-words-container">
-					<text @click="fastlook(item)" v-for="item in recommendWord" :key="item"
-						class="hot-word">{{item}}</text>
-				</div>
-			</div>
-			<!-- 搜索结果示例 -->
-			<div style="padding-bottom: env(safe-area-inset-bottom);">
-				<!-- 日语单词项 -->
-				<view v-if="total>0&&current=='jc'">
+			<view v-if="!isSearching">
+				<view v-if="history.length > 0">
+					<view class="section-title" style="margin-top: 12px;">
+						<text>搜索历史</text>
+						<view class="clear-btn" @click="clearHistory()">清空</view>
+					</view>
+
+					<view class="history-container">
+						<view @click="fastLook(item)" v-for="item in history" :key="item" class="history-chip">
+							<text>{{item}}</text>
+							<text @click.stop="removeHistoryItem(item)" class="fas fa-times close-icon"></text>
+						</view>
+					</view>
+				</view>
+
+				<view class="hot-words" v-if="recommendWord.length > 0">
+					<view class="section-title">
+						<text>热门搜索</text>
+					</view>
+
+					<view class="hot-words-container">
+						<text @click="fastLook(item)" v-for="item in recommendWord" :key="item" class="hot-word">
+							{{item}}
+						</text>
+					</view>
+				</view>
+			</view>
+
+			<view v-else-if="isSearching && !loading && total === 0" class="empty-state">
+				<wd-status-tip custom-style="margin-top: 40px;" :image-size="{ height: 128, width: 128 }"
+					image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+					tip="没有找到相关结果" />
+
+				<view class="feedback-action">
+					<wd-button custom-style="width: 120px;background:#07C160" size="medium"
+						@click="onFeedback">提交反馈</wd-button>
+				</view>
+			</view>
+
+			<view v-else style="padding-bottom: env(safe-area-inset-bottom);">
+				<view v-if="current === 'jc'">
 					<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
-						v-for="item in List" :key="item.id">
+						v-for="(item, index) in List" :key="index">
 						<view class="word-header">
 							<view>
-								<span class="word-kanji">{{formatWordName(item.words,item.kana)}}{{item.tone}}</span>
+								<text class="word-kanji">{{formatWordName(item.words, item.kana)}}{{item.tone}}</text>
 							</view>
 						</view>
 						<view class="word-meaning">
@@ -68,18 +78,14 @@
 						</view>
 					</view>
 				</view>
-				<!-- 日中词典项 -->
-				<!-- 	<view>
-					<div class="dict-item">
-						<div class="dict-chinese">漂亮</div>
-						<div class="dict-pinyin">piào liang</div>
-					</div>
-				</view> -->
-			</div>
-		</div>
+
+				<wd-loadmore v-if="List.length > 0" :state="loadStatus" />
+			</view>
+		</view>
+
 		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
 		<wd-toast />
-	</div>
+	</view>
 </template>
 
 <script setup>
@@ -92,7 +98,7 @@
 		onLoad,
 		onShow,
 		onReachBottom,
-		onPageScroll,
+		onPageScroll
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -105,118 +111,204 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	onReachBottom(() => {
-		if (total.value > List.value.length) {
-			++page.value
-			getList()
-		}
+
+	// --- 状态变量 ---
+	const toast = useToast()
+	const scrollTop = ref(0)
+	const navBarHeight = ref('0px')
+	const current = ref('jc')
+	const value = ref('')
+
+	// 列表相关
+	const List = ref([])
+	const page = ref(1)
+	const size = ref(20)
+	const total = ref(0)
+
+	// 状态控制
+	const loadStatus = ref('more') // 'more' | 'loading' | 'noMore'
+	const isSearching = ref(false) // 是否进入了搜索模式
+	const loading = ref(false) // 接口是否请求中(用于控制缺省页显隐)
+
+	// 历史与推荐
+	const recommendWord = ref([])
+	const history = ref([])
+	const historyStore = historyrecordStore()
+
+	// --- 生命周期 ---
+	onMounted(() => {
+		const systemInfo = uni.getSystemInfoSync();
+		navBarHeight.value = (systemInfo.statusBarHeight || 0) + 'px'
+
+		getRecommend()
+		loadHistory()
 	})
+
+	onPageScroll((e) => {
+		scrollTop.value = e.scrollTop
+	})
+
+	// --- 触底加载 ---
+	onReachBottom(() => {
+		// 如果没在搜索模式，或者没有更多数据，或者正在加载中，则不执行
+		if (!isSearching.value || loadStatus.value === 'noMore' || loadStatus.value === 'loading') return;
+
+		page.value++
+		getList()
+	})
+
+	// --- 方法 ---
+
 	const back = () => {
 		uni.navigateBack({
 			delta: 1
 		})
 	}
-	const scrollTop = ref(0)
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
-	const toast = useToast()
-	const current = ref('jc')
-	const navBarHeight = ref(0)
-	const recommendWord = ref([])
-	const total = ref(0)
-	const history = ref([])
-	const page = ref(1)
-	const size = ref(20)
-	const List = ref([])
-	const value = ref('')
-	watch(current, (newVal, oldVal) => {
-		if (newVal == "cj") {
-			toast.close()
+
+	const clearInput = () => {
+		value.value = ''
+		// 清空输入框后，回到初始历史记录状态
+		isSearching.value = false
+		List.value = []
+	}
+
+	const switchTab = (tab) => {
+		if (tab === 'cj') {
 			toast.warning("中日词典暂未开放")
+			return
 		}
-	})
-	const fastlook = (val) => {
+		current.value = tab
+		if (value.value && isSearching.value) {
+			search()
+		}
+	}
+
+	// 历史记录相关
+	const loadHistory = () => {
+		let record = historyStore.wordlist || []
+		history.value = record.slice(0, 10)
+	}
+
+	const clearHistory = () => {
+		history.value = []
+		historyStore.clear('word')
+	}
+
+	const removeHistoryItem = (val) => {
+		historyStore.del('word', val)
+		loadHistory()
+	}
+
+	const getRecommend = async () => {
+		try {
+			const res = await $http.word.getRecommend()
+			recommendWord.value = res.data || []
+		} catch (e) {
+			console.error(e)
+		}
+	}
+
+	const fastLook = (val) => {
 		value.value = val
 		search()
 	}
-	const getList = async () => {
-		let res;
-		if (current.value == 'jc') {
-			res = await $http.word.jcSearch({
-				page: page.value,
-				page_size: size.value,
-				val: value.value
-			})
-		} else {
-			toast.close()
-			toast.warning("中日词典暂未开放")
-			return
-			// res = await $http.word.cjSearch(page.value, size.value, value.value)
-		}
-		toast.close()
-		total.value = res.total
-		if (total.value === 0) {
-			toast.warning("没有搜到结果")
-			$http.common.feedback({
-				type: "词库补充",
-				content: value.value
-			})
-			return
-		}
-		List.value = List.value.concat(res.data)
-	}
-	const getRecommend = async () => {
-		const res = await $http.word.getRecommend()
-		recommendWord.value = res.data
-	}
-	const clear = () => {
-		history.value = []
-		historyrecordStore().clear('word')
-	}
-	const clearVal = (val) => {
-		historyrecordStore().del('word', val)
-		let record = historyrecordStore().wordlist
-		history.value = record.slice(0, 10)
-	}
-	const confirm = ({
+
+	const onSearchConfirm = ({
 		detail
 	}) => {
-		if (detail.value.trim().length === 0) {
+		const val = detail.value.trim()
+		if (val.length === 0) {
 			toast.warning("搜索内容为空")
 			return
 		}
-		if (!historyrecordStore().wordlist.includes(detail.value.trim())) {
-			history.value.unshift(detail.value.trim())
-			historyrecordStore().push(detail.value.trim(), 'word')
+
+		// 存历史
+		if (!historyStore.wordlist.includes(val)) {
+			historyStore.push(val, 'word')
+			history.value.unshift(val)
+			if (history.value.length > 10) history.value.pop()
 		}
-		value.value = detail.value.trim()
+
+		value.value = val
 		search()
 	}
+
+	// 初始化搜索
 	const search = () => {
+		isSearching.value = true
 		toast.loading('正在查询中...')
-		List.value = []
+
 		page.value = 1
+		List.value = []
+		total.value = 0
+		loadStatus.value = 'loading'
+
 		getList()
 	}
-	onMounted(() => {
-		const systemInfo = uni.getSystemInfoSync();
-		const statusBarHeight = systemInfo.statusBarHeight;
-		navBarHeight.value = statusBarHeight + 'px'
-		getRecommend()
-		let record = historyrecordStore().wordlist
-		history.value = record.slice(0, 10)
-	})
+
+	const getList = async () => {
+		loading.value = true
+		loadStatus.value = 'loading'
+
+		try {
+			let res;
+			if (current.value === 'jc') {
+				res = await $http.word.jcSearch({
+					page: page.value,
+					page_size: size.value,
+					val: value.value
+				})
+			} else {
+				// 中日词典逻辑预留
+			}
+
+			toast.close()
+
+			const newData = res.data || []
+			total.value = res.total || 0
+
+			// 只有当有数据时才拼接列表
+			if (newData.length > 0) {
+				List.value = List.value.concat(newData)
+			}
+
+			// 判断分页状态
+			if (List.value.length >= total.value) {
+				loadStatus.value = 'noMore'
+			} else {
+				loadStatus.value = 'more'
+			}
+
+		} catch (err) {
+			toast.close()
+			loadStatus.value = 'more'
+			console.error("搜索失败", err)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	// --- 按钮逻辑 ---
+	const onFeedback = () => {
+		// TODO: 在这里写你的提交反馈逻辑
+		console.log('点击了提交反馈按钮，关键词：', value.value)
+
+		// 示例跳转（如果你有反馈页面的话）
+		// uni.navigateTo({ url: `/pages/other/feedback/feedback?content=${value.value}` })
+	}
 </script>
+
 <style>
 	page {
 		background-color: white;
 	}
 </style>
+
 <style scoped lang="scss">
 	.page-container {
 		display: flex;
 		flex-direction: column;
+		min-height: 100vh;
 	}
 
 	/* 顶部导航栏 */
@@ -230,6 +322,7 @@
 		left: 0;
 		right: 0;
 		top: 0;
+		z-index: 99;
 	}
 
 	.search-bar-container {
@@ -237,15 +330,16 @@
 		align-items: center;
 	}
 
-	/* 黑色单调返回按钮 */
 	.back-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-right: 8px;
+		margin-right: 12px;
 		background-color: transparent;
 		color: #212121;
 		font-size: 20px;
+		width: 30px;
+		height: 30px;
 	}
 
 	.search-input-container {
@@ -254,17 +348,13 @@
 	}
 
 	.search-input {
-		padding: 0 12px 0 36px;
-		height: 40px;
+		padding: 0 34px;
+		height: 36px;
 		border-radius: 40px;
 		border: none;
 		background-color: #f5f5f5;
 		font-size: 14px;
-		outline: none;
-	}
-
-	.search-input:focus {
-		box-shadow: 0 0 0 1px #07C160;
+		color: #333;
 	}
 
 	.search-icon {
@@ -276,6 +366,18 @@
 		font-size: 14px;
 	}
 
+	.clear-input-icon {
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #ccc;
+		font-size: 16px;
+		z-index: 2;
+		padding: 4px;
+		/* 增加点击区域 */
+	}
+
 	.language-tabs {
 		display: flex;
 		margin-top: 12px;
@@ -283,185 +385,132 @@
 	}
 
 	.search-tab {
-		padding: 6px 12px;
+		padding: 6px 16px;
 		border-radius: 16px;
-		font-size: 14px;
-		margin-right: 8px;
+		font-size: 13px;
+		margin-right: 12px;
 		border: none;
-		cursor: pointer;
-	}
+		transition: all 0.2s;
 
-	.search-tab.active {
-		background-color: #07C160;
-		color: white;
-	}
+		&.active {
+			background-color: #E8F5E9;
+			color: #2E7D32;
+			font-weight: 500;
+		}
 
-	.search-tab.inactive {
-		background-color: #f0f0f0;
-		color: #757575;
+		&.inactive {
+			background-color: #f5f5f5;
+			color: #757575;
+		}
 	}
 
 	/* 主要内容区 */
 	.main-content {
 		flex: 1;
-		overflow-y: auto;
 		padding: 0 16px;
 	}
 
-	/* 搜索历史 */
+	/* 搜索历史 & 标题通用 */
 	.section-title {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		font-size: 14px;
-		font-weight: 500;
+		font-weight: 600;
 		color: #333;
+		margin-bottom: 10px;
 	}
 
 	.clear-btn {
 		font-size: 12px;
 		color: #999;
-		border: none;
-		background: none;
-		cursor: pointer;
+		padding: 4px;
 	}
 
 	.history-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 6px;
-		margin: 12px 0;
+		gap: 10px;
+		margin-bottom: 24px;
 	}
 
 	.history-chip {
+		display: flex;
+		align-items: center;
 		padding: 6px 12px;
 		background-color: #f5f5f5;
-		border-radius: 16px;
+		border-radius: 4px;
 		font-size: 13px;
-		color: #424242;
-	}
+		color: #555;
 
-	.history-chip .close-icon {
-		color: #999;
-		margin-left: 4px;
-		font-size: 12px;
+		.close-icon {
+			color: #bbb;
+			margin-left: 6px;
+			font-size: 12px;
+			padding: 2px;
+		}
 	}
 
 	/* 热门搜索 */
 	.hot-words-container {
 		display: flex;
 		flex-wrap: wrap;
-		margin-top: 12px;
-		gap: 6px;
+		gap: 10px;
 	}
 
 	.hot-word {
-		display: inline-block;
-		padding: 0 16px;
-		line-height: 30px;
-		background-color: #E8F5E9;
-		border-radius: 30px;
-		font-size: 14px;
-		color: #2E7D32;
-		font-weight: 500;
+		padding: 6px 12px;
+		background-color: #fff;
+		border: 1px solid #e0e0e0;
+		border-radius: 20px;
+		font-size: 13px;
+		color: #424242;
 	}
 
+	/* 单词列表项 */
 	.word-item {
-		padding: 12px 0;
-		border-bottom: 1px solid #f0f0f0;
+		padding: 16px 0;
+		border-bottom: 1px solid #f5f5f5;
+
+		&:active {
+			background-color: #fafafa;
+		}
 	}
 
 	.word-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 8px;
+		margin-bottom: 6px;
 	}
 
 	.word-kanji {
-		font-size: 18px;
+		font-size: 17px;
 		font-weight: 600;
 		color: #212121;
 	}
 
-	.word-furigana {
-		font-size: 14px;
-		color: #757575;
-		margin-left: 8px;
-	}
-
-	.word-katakana {
-		font-size: 14px;
-		color: #757575;
-		font-style: italic;
-	}
-
-	.word-level {
-		font-size: 12px;
-		padding: 2px 6px;
-		border-radius: 4px;
-		color: white;
-		font-weight: 500;
-	}
-
-	.level-n5 {
-		background-color: #4CAF50;
-	}
-
-	.level-n4 {
-		background-color: #2196F3;
-	}
-
-	.level-n3 {
-		background-color: #9C27B0;
-	}
-
-	.level-n2 {
-		background-color: #FF9800;
-	}
-
-	.level-n1 {
-		background-color: #F44336;
-	}
-
 	.word-meaning {
-		font-size: 14px;
-		color: #424242;
-		margin-top: 6px;
-		line-height: 1.4;
-	}
-
-	.word-stats {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		margin-top: 8px;
-		font-size: 12px;
-		color: #9E9E9E;
-	}
-
-	.word-stats i {
-		margin-right: 4px;
-	}
-
-	/* 日中词典结果项 */
-	.dict-item {
-		background-color: white;
-		border-radius: 8px;
-		padding: 12px;
-		margin-bottom: 12px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-
-	.dict-chinese {
-		font-size: 16px;
-		font-weight: 500;
-		color: #212121;
-	}
-
-	.dict-pinyin {
-		font-size: 14px;
-		color: #757575;
 		margin-top: 4px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+	}
+
+	/* 缺省页样式 */
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding-top: 20px;
+	}
+
+	.feedback-action {
+		margin-top: 24px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 </style>

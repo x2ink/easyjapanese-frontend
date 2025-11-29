@@ -1,20 +1,13 @@
 <template>
 	<view class="page-container">
-		
+
 		<view class="head">
 			<NavbarDefault border title="动词变形"></NavbarDefault>
 			<view class="search-wrapper">
 				<view class="search-box">
 					<text class="fas fa-search search-icon"></text>
-					<input 
-						class="search-input"
-						confirm-type="search" 
-						@confirm="confirm" 
-						v-model="value" 
-						type="text"
-						placeholder="请输入动词 (如: 食べる / 行きます)"
-						placeholder-class="placeholder-style"
-					>
+					<input class="search-input" confirm-type="search" @confirm="confirm" v-model="value" type="text"
+						placeholder="请输入动词">
 					<view class="search-btn" @click="confirm">查询</view>
 				</view>
 			</view>
@@ -22,7 +15,7 @@
 
 		<scroll-view scroll-y class="content-container">
 			<view v-if="data && data.length > 0" class="result-wrapper">
-				
+
 				<view class="main-card">
 					<view class="main-label">基本形 (辞書形)</view>
 					<view class="main-word">{{ get('基本形') }}</view>
@@ -87,12 +80,13 @@
 						<view class="row-value text-danger">{{ get('禁止形') }}</view>
 					</view>
 				</view>
-				
+
 				<view style="height: 40px;"></view>
 			</view>
 
 			<view v-else class="empty-state">
-				<image src="https://img.yzcdn.cn/vant/custom-empty-image.png" mode="aspectFit" class="empty-img"></image>
+				<image src="https://img.yzcdn.cn/vant/custom-empty-image.png" mode="aspectFit" class="empty-img">
+				</image>
 				<text class="empty-text">输入动词开始查询变形</text>
 				<text class="empty-sub">支持输入：基本形、ます形</text>
 			</view>
@@ -111,14 +105,16 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	
+
 	const toast = useToast()
 	const data = ref([])
 	const value = ref('')
 
 	const get = (key) => {
 		if (!data.value) return '-'
-		const res = data.value.find(({ category }) => category == key)
+		const res = data.value.find(({
+			category
+		}) => category == key)
 		return res ? res.result : '-'
 	}
 
@@ -129,11 +125,11 @@
 				return
 			}
 			toast.loading("正在变形中...")
-			
+
 			const res = await $http.common.getVerbTrans({
 				word: value.value.trim()
 			})
-			
+
 			if (res.data && res.data.length > 0) {
 				data.value = res.data
 				toast.close()
@@ -170,20 +166,15 @@
 		background: #fff;
 	}
 
-	/* 修改点 1: 搜索框样式重构，解决文字跳动 */
+
 	.search-box {
 		display: flex;
 		align-items: center;
 		background: #F5F5F5;
 		border-radius: 50px;
-		/* 关键修改：移除垂直 padding，改用固定高度 */
-		padding: 0 16px; 
-		height: 40px;    
-		transition: all 0.3s;
-		
-		&:active {
-			background: #EFEFEF;
-		}
+		box-sizing: border-box;
+		padding: 0 16px;
+		height: 40px;
 	}
 
 	.search-icon {
@@ -193,15 +184,15 @@
 	}
 
 	.search-input {
+		height: 40px;
+		line-height: 40px;
 		flex: 1;
-		font-size: 16px;
-		/* 关键修改：高度设为 100%，填满父容器 */
-		height: 100%; 
+		box-sizing: border-box;
+		font-size: 14px;
 		color: #333;
-		/* 移除可能的默认行高干扰 */
-		line-height: normal; 
+
 	}
-	
+
 	.placeholder-style {
 		color: #BBB;
 	}
@@ -214,7 +205,7 @@
 		border-left: 1px solid #E0E0E0;
 		margin-left: 8px;
 		/* 垂直居中对齐 */
-		line-height: 20px; 
+		line-height: 20px;
 	}
 
 	.content-container {
@@ -283,11 +274,26 @@
 		margin-bottom: 8px;
 		font-weight: 500;
 	}
-	
-	.tag-blue { background: #E6F7FF; color: #1890FF; }
-	.tag-red { background: #FFF1F0; color: #F5222D; }
-	.tag-green { background: #F6FFED; color: #52C41A; }
-	.tag-orange { background: #FFF7E6; color: #FA8C16; }
+
+	.tag-blue {
+		background: #E6F7FF;
+		color: #1890FF;
+	}
+
+	.tag-red {
+		background: #FFF1F0;
+		color: #F5222D;
+	}
+
+	.tag-green {
+		background: #F6FFED;
+		color: #52C41A;
+	}
+
+	.tag-orange {
+		background: #FFF7E6;
+		color: #FA8C16;
+	}
 
 	.grid-value {
 		font-size: 18px;
@@ -309,7 +315,7 @@
 		align-items: center;
 		padding: 16px 0;
 		border-bottom: 1px solid #F5F5F5;
-		
+
 		&.border-none {
 			border-bottom: none;
 		}
@@ -325,7 +331,7 @@
 		color: #333;
 		font-weight: 500;
 	}
-	
+
 	.text-danger {
 		color: #FF4D4F;
 	}
@@ -358,7 +364,14 @@
 	}
 
 	@keyframes fadeIn {
-		from { opacity: 0; transform: translateY(10px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 </style>
