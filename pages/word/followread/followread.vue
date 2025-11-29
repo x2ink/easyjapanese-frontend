@@ -1,72 +1,74 @@
 <template>
-	<view>
-		<view class="head">
+	<view class="page-container">
+		<view class="fixed-header">
 			<NavbarDefault title="单词跟读"></NavbarDefault>
-		</view>
-		<!-- 单词展示区 -->
-		<view class="word-display">
-			<button hover-class="none" title="发音">
-				<i style="color: #07C160;" class="fas fa-volume-up"></i>
-			</button>
-			<view class="word-kanji">{{ word.words.join('·') }}</view>
-			<view class="word-furigana">{{word.kana}}</view>
-			<view class="word-meaning">{{word.description}}</view>
-		</view>
-		<!-- 录音控制区 -->
-		<view class="recording-control">
-			<button @longpress="startRecord" @touchend="endRecord" class="record-btn _GCENTER">
-				<view v-if="recording" class="loadership_XNYIJ">
-					<view></view>
-					<view></view>
-					<view></view>
-					<view></view>
-					<view></view>
-				</view>
-				<text v-else class="fas fa-microphone"></text>
-			</button>
-			<view class="recording-time">长按麦克风开始录音</view>
-			<!-- 录音操作按钮组 (初始隐藏) -->
-			<view class="recording-actions" style="display: none;">
-				<button class="action-btn">取消</button>
-				<button class="action-btn primary">发布</button>
+			<view class="word-display">
+				<button hover-class="none" title="发音">
+					<i style="color: #07C160;" class="fas fa-volume-up"></i>
+				</button>
+				<view class="word-kanji">{{ word.words.join('·') }}</view>
+				<view class="word-furigana">{{word.kana}}</view>
+				<view class="word-meaning">{{word.description}}</view>
 			</view>
-		</view>
-		<!-- 其他用户录音列表 -->
-		<view class="recordings-list">
-			<view class="section-title">大家的发音</view>
-			<!-- 录音项1 -->
-			<view class="recording-item" v-for="(item,index) in List" :key="item.id">
-				<view class="user-info">
-					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
-					<view class="user-name">
-						<view>{{item.user.nickname}}</view>
-						<view class="recording-meta">{{dayjs().to(dayjs(item.time))}}</view>
+			<view class="recording-control">
+				<button @longpress="startRecord" @touchend="endRecord" class="record-btn _GCENTER">
+					<view v-if="recording" class="loadership_XNYIJ">
+						<view></view>
+						<view></view>
+						<view></view>
+						<view></view>
+						<view></view>
 					</view>
-					<view class="recording-actions">
-						<button @click="like(index,item.id)" class="like-btn" :class="{liked:item.has}">
-							<i class="fas fa-heart"></i>
-							<span class="like-count">{{item.like}}</span>
-						</button>
-						<button class="play-btn" @click="playUserRecord(index,item.voice)">
-							<view v-if="item.play" class="loadership_XNYIJ" style="transform: scale(0.5);">
-								<view></view>
-								<view></view>
-								<view></view>
-								<view></view>
-								<view></view>
-							</view>
-							<i v-else class="fas fa-play"></i>
-						</button>
-					</view>
+					<text v-else class="fas fa-microphone"></text>
+				</button>
+				<view class="recording-time">长按麦克风开始录音</view>
+				<view class="recording-actions" style="display: none;">
+					<button class="action-btn">取消</button>
+					<button class="action-btn primary">发布</button>
 				</view>
 			</view>
-			<wd-status-tip custom-style="margin-top: 40px;" :image-size="{
-          height: 128,
-          width: 128
-  }" v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
-				tip="还没有用户录音~" />
+			<view class="list-title-bar">
+				<view class="section-title">大家的发音</view>
+			</view>
 		</view>
-		<!-- 发布弹窗 -->
+
+		<scroll-view class="scroll-list" scroll-y @scrolltolower="loadMore" :lower-threshold="50">
+			<view class="recordings-list">
+				<view class="recording-item" v-for="(item,index) in List" :key="item.id">
+					<view class="user-info">
+						<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
+						<view class="user-name">
+							<view>{{item.user.nickname}}</view>
+							<view class="recording-meta">{{dayjs().to(dayjs(item.time))}}</view>
+						</view>
+						<view class="recording-actions">
+							<button @click="like(index,item.id)" class="like-btn" :class="{liked:item.has}">
+								<i class="fas fa-heart"></i>
+								<span class="like-count">{{item.like}}</span>
+							</button>
+							<button class="play-btn" @click="playUserRecord(index,item.voice)">
+								<view v-if="item.play" class="loadership_XNYIJ" style="transform: scale(0.5);">
+									<view></view>
+									<view></view>
+									<view></view>
+									<view></view>
+									<view></view>
+								</view>
+								<i v-else class="fas fa-play"></i>
+							</button>
+						</view>
+					</view>
+				</view>
+
+				<view v-if="total === 0 && !loading" style="padding-top: 40px;">
+					<wd-status-tip :image-size="{ height: 128, width: 128 }"
+						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+						tip="还没有用户录音~" />
+				</view>
+				<wd-loadmore v-if="total > 0" :state="loadStatus" />
+			</view>
+		</scroll-view>
+
 		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
 			@close="recorded=false">
 			<view class="release">
@@ -90,9 +92,9 @@
 						<i class="fas fa-check" style="font-size: 12px;"></i>
 					</view>
 					<view class="agreement-text">
-						我已阅读并同意<text class="agreement-link" @click="goPage('/pages/other/browse/browse',{
+						我已阅读并同意<text @click="goPage('/pages/other/browse/browse',{
 							src:`${http.baseUrl}html/tts_agreement.html`
-						})">《轻松日语用户发音功能使用协议》</text>
+						})" class="agreement-link">《轻松日语用户发音功能使用协议》</text>
 					</view>
 				</view>
 				<view class="modal-actions">
@@ -112,19 +114,19 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onReachBottom,
 		onUnload,
 		onShow
+		// 移除 onReachBottom
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
 	} from "@/utils/common.js"
-	import http from '@/utils/request.js'
 	import {
 		userStore
 	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+	import http from '@/utils/request.js'
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import 'dayjs/locale/zh'
@@ -133,9 +135,11 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;
+
 	const playUserRecord = (index, url) => {
 		innerAudioContext.src = url;
 		innerAudioContext.play();
@@ -149,6 +153,7 @@
 			List.value[index].play = false
 		})
 	}
+
 	// 开始录音
 	const recording = ref(false)
 	const playing = ref(false)
@@ -203,6 +208,7 @@
 		recorderManager.stop();
 		recording.value = false
 	}
+
 	// 加载用户发音
 	const id = ref(null)
 	const word = ref({
@@ -211,27 +217,50 @@
 		kana: null,
 		description: null
 	})
+
 	const total = ref(0)
 	const page = ref(1)
 	const size = ref(10)
 	const List = ref([])
-	const noResult = ref(false)
+	const loading = ref(false)
+	const loadStatus = ref('more') // more, loading, noMore
+
 	const getList = async () => {
-		const res = await $http.word.getFollowRead({
-			id: id.value,
-			page: page.value,
-			pageSize: size.value
-		})
-		total.value = res.total
-		List.value = List.value.concat(res.data.map(item => ({
-			...item,
-			has: false,
-			play: false,
-		})));
-		if (total.value == 0) {
-			noResult.value = true
+		loading.value = true
+		loadStatus.value = 'loading'
+		try {
+			const res = await $http.word.getFollowRead({
+				id: id.value,
+				page: page.value,
+				pageSize: size.value
+			})
+			total.value = res.total
+			const newData = res.data.map(item => ({
+				...item,
+				has: false,
+				play: false,
+			}))
+			List.value = List.value.concat(newData);
+
+			if (List.value.length >= total.value) {
+				loadStatus.value = 'noMore'
+			} else {
+				loadStatus.value = 'more'
+			}
+		} catch (e) {
+			loadStatus.value = 'more'
+			console.error(e)
+		} finally {
+			loading.value = false
 		}
 	}
+
+	const loadMore = () => {
+		if (loadStatus.value === 'loading' || loadStatus.value === 'noMore') return
+		page.value++
+		getList()
+	}
+
 	const agree = ref(false)
 	const submit = () => {
 		if (!agree.value) {
@@ -265,12 +294,7 @@
 			}
 		});
 	}
-	onReachBottom(() => {
-		if (total.value > List.value.length) {
-			++page.value
-			getList()
-		}
-	})
+
 	onLoad((op) => {
 		id.value = op.id
 		if (op.word) {
@@ -284,6 +308,7 @@
 	onShow(() => {
 		endRecord()
 	})
+
 	const like = async (index, id) => {
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
@@ -306,6 +331,7 @@
 		}
 		List.value[index].has = !List.value[index].has
 	}
+
 	const recorderManager = uni.getRecorderManager()
 	const voicePath = ref(null)
 	const recordDuration = ref(0)
@@ -328,12 +354,36 @@
 		})
 	})
 </script>
+
 <style>
 	page {
 		background-color: white;
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
 <style lang="scss" scoped>
+	.page-container {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.fixed-header {
+		flex-shrink: 0;
+		background-color: #fff;
+		position: relative;
+		z-index: 10;
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.02);
+	}
+
+	.scroll-list {
+		flex: 1;
+		height: 0;
+		background-color: #fff;
+	}
+
 	.loadership_XNYIJ {
 		display: flex;
 		position: relative;
@@ -515,9 +565,8 @@
 	}
 
 	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
+		/* 移除原有 sticky，改为 Flex 布局控制 */
+		/* position: sticky; top: 0; z-index: 9; */
 	}
 
 	/* 单词展示区 */
@@ -616,10 +665,17 @@
 
 	/* 其他用户录音列表 */
 	.recordings-list {
-		flex: 1;
-		overflow-y: auto;
 		padding: 16px;
+		/* 移除 flex: 1，由 scroll-view 接管 */
+		/* flex: 1; overflow-y: auto; */
 		background-color: white;
+		min-height: 100%;
+		/* 确保内容撑开 */
+	}
+
+	.list-title-bar {
+		background-color: white;
+		padding: 0 16px;
 	}
 
 	.section-title {
@@ -642,8 +698,6 @@
 		align-items: center;
 	}
 
-
-
 	.user-name {
 		margin-left: 8px;
 		font-size: 14px;
@@ -657,8 +711,6 @@
 		color: #9E9E9E;
 		margin-left: auto;
 	}
-
-
 
 	.recording-actions {
 		display: flex;

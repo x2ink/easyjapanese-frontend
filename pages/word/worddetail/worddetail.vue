@@ -1,7 +1,6 @@
 <template>
-	<scroll-view scroll-y="true" class="scroll-container">
+	<view class="scroll-container">
 		<view class="content-container">
-			<!-- 顶部区 -->
 			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 4px)` }">
 				<view class="back-btn" @click="back">
 					<text class="fas fa-arrow-left"></text>
@@ -48,17 +47,15 @@
 						</view>
 					</view>
 				</view>
-				<!-- 占位 -->
 				<view class="bottom-space"></view>
 			</view>
-			<!-- 操作 -->
 			<view @click="openSheet()" class="sheet-btn _GCENTER">
 				<text class="fa-regular fa-pen-to-square"></text>
 				<view>操作</view>
 			</view>
 			<wd-toast />
 		</view>
-	</scroll-view>
+	</view>
 </template>
 
 <script setup>
@@ -162,12 +159,16 @@
 	/* 布局容器 */
 	.scroll-container {
 		height: 100vh;
+		/* 优化核心: 只有内容溢出时才滚动 */
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.content-container {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		/* 优化: 移除 height: 100%，改用 min-height，允许内容自然撑开 */
+		min-height: 100%;
 	}
 
 	/* 头部区域 */
@@ -177,6 +178,8 @@
 		background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
 		color: #fff;
 		padding: 0 16px 32px;
+		/* 优化: 增加层级，防止滚动时内容盖过头部 */
+		z-index: 100;
 	}
 
 	.back-btn {
@@ -242,7 +245,6 @@
 	/* 主要内容区域 */
 	.main-content {
 		flex: 1;
-		overflow: auto;
 		padding: 16px;
 	}
 
@@ -301,7 +303,7 @@
 	}
 
 	.bottom-space {
-		height: calc(env(safe-area-inset-bottom) + 40px);
+		height: env(safe-area-inset-bottom);
 	}
 
 	/* 操作按钮 */

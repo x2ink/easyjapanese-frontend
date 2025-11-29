@@ -15,6 +15,7 @@
 		{
 			"path": "pages/login/login",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -49,6 +50,7 @@
 		{
 			"path": "pages/word/writefrommemory/writefrommemory",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -102,17 +104,20 @@
 		{
 			"path": "pages/word/followread/followread",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/other/feedback/feedback",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/other/about/about",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -131,6 +136,7 @@
 		{
 			"path": "pages/other/browse/browse",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "default"
 			}
 		},
