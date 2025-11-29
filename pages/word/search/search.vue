@@ -21,69 +21,68 @@
 			</view>
 		</view>
 
-		<view :style="{height:`calc(102px + ${navBarHeight})`}"></view>
+		<scroll-view scroll-y class="scroll-content" @scrolltolower="loadMore" :lower-threshold="50">
+			<view class="main-content">
 
-		<view class="main-content">
-
-			<view v-if="!isSearching">
-				<view v-if="history.length > 0">
-					<view class="section-title" style="margin-top: 12px;">
-						<text>搜索历史</text>
-						<view class="clear-btn" @click="clearHistory()">清空</view>
-					</view>
-
-					<view class="history-container">
-						<view @click="fastLook(item)" v-for="item in history" :key="item" class="history-chip">
-							<text>{{item}}</text>
-							<text @click.stop="removeHistoryItem(item)" class="fas fa-times close-icon"></text>
+				<view v-if="!isSearching">
+					<view v-if="history.length > 0">
+						<view class="section-title" style="margin-top: 12px;">
+							<text>搜索历史</text>
+							<view class="clear-btn" @click="clearHistory()">清空</view>
 						</view>
-					</view>
-				</view>
 
-				<view class="hot-words" v-if="recommendWord.length > 0">
-					<view class="section-title">
-						<text>热门搜索</text>
-					</view>
-
-					<view class="hot-words-container">
-						<text @click="fastLook(item)" v-for="item in recommendWord" :key="item" class="hot-word">
-							{{item}}
-						</text>
-					</view>
-				</view>
-			</view>
-
-			<view v-else-if="isSearching && !loading && total === 0" class="empty-state">
-				<wd-status-tip custom-style="margin-top: 40px;" :image-size="{ height: 128, width: 128 }"
-					image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
-					tip="没有找到相关结果" />
-
-				<view class="feedback-action">
-					<wd-button custom-style="width: 120px;background:#07C160" size="medium"
-						@click="onFeedback">提交反馈</wd-button>
-				</view>
-			</view>
-
-			<view v-else style="padding-bottom: env(safe-area-inset-bottom);">
-				<view v-if="current === 'jc'">
-					<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
-						v-for="(item, index) in List" :key="index">
-						<view class="word-header">
-							<view>
-								<text class="word-kanji">{{formatWordName(item.words, item.kana)}}{{item.tone}}</text>
+						<view class="history-container">
+							<view @click="fastLook(item)" v-for="item in history" :key="item" class="history-chip">
+								<text>{{item}}</text>
+								<text @click.stop="removeHistoryItem(item)" class="fas fa-times close-icon"></text>
 							</view>
 						</view>
-						<view class="word-meaning">
-							<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
+					</view>
+
+					<view class="hot-words" v-if="recommendWord.length > 0">
+						<view class="section-title">
+							<text>热门搜索</text>
+						</view>
+
+						<view class="hot-words-container">
+							<text @click="fastLook(item)" v-for="item in recommendWord" :key="item" class="hot-word">
+								{{item}}
+							</text>
 						</view>
 					</view>
 				</view>
 
-				<wd-loadmore v-if="List.length > 0" :state="loadStatus" />
-			</view>
-		</view>
+				<view v-else-if="isSearching && !loading && total === 0" class="empty-state">
+					<wd-status-tip custom-style="margin-top: 40px;" :image-size="{ height: 128, width: 128 }"
+						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+						tip="没有找到相关结果" />
 
-		<wd-backtop :scrollTop="scrollTop"></wd-backtop>
+					<view class="feedback-action">
+						<wd-button custom-style="width: 120px;background:#07C160" size="medium"
+							@click="onFeedback">提交反馈</wd-button>
+					</view>
+				</view>
+
+				<view v-else style="padding-bottom: env(safe-area-inset-bottom);">
+					<view v-if="current === 'jc'">
+						<view @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})" class="word-item"
+							v-for="(item, index) in List" :key="index">
+							<view class="word-header">
+								<view>
+									<text class="word-kanji">{{formatWordName(item.words, item.kana)}}{{item.tone}}</text>
+								</view>
+							</view>
+							<view class="word-meaning">
+								<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
+							</view>
+						</view>
+					</view>
+
+					<wd-loadmore v-if="List.length > 0" :state="loadStatus" />
+				</view>
+			</view>
+		</scroll-view>
+
 		<wd-toast />
 	</view>
 </template>
@@ -96,9 +95,8 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onShow,
-		onReachBottom,
-		onPageScroll
+		onShow
+		// 移除 onReachBottom 和 onPageScroll 引用
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -114,7 +112,7 @@
 
 	// --- 状态变量 ---
 	const toast = useToast()
-	const scrollTop = ref(0)
+	// 移除 scrollTop
 	const navBarHeight = ref('0px')
 	const current = ref('jc')
 	const value = ref('')
@@ -144,20 +142,18 @@
 		loadHistory()
 	})
 
-	onPageScroll((e) => {
-		scrollTop.value = e.scrollTop
-	})
+	// 移除 onPageScroll
 
-	// --- 触底加载 ---
-	onReachBottom(() => {
+	// --- 方法 ---
+
+	// 改为 scroll-view 的触底事件处理
+	const loadMore = () => {
 		// 如果没在搜索模式，或者没有更多数据，或者正在加载中，则不执行
 		if (!isSearching.value || loadStatus.value === 'noMore' || loadStatus.value === 'loading') return;
 
 		page.value++
 		getList()
-	})
-
-	// --- 方法 ---
+	}
 
 	const back = () => {
 		uni.navigateBack({
@@ -298,6 +294,9 @@
 <style>
 	page {
 		background-color: white;
+		/* 确保 page 高度填满，方便内部 flex 布局生效 */
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
 
@@ -305,7 +304,8 @@
 	.page-container {
 		display: flex;
 		flex-direction: column;
-		min-height: 100vh;
+		height: 100vh; /* 占满全屏 */
+		overflow: hidden; /* 禁止外层滚动 */
 	}
 
 	/* 顶部导航栏 */
@@ -315,11 +315,15 @@
 		padding-bottom: 12px;
 		background-color: white;
 		border-bottom: 1px solid #f0f0f0;
-		position: fixed;
-		left: 0;
-		right: 0;
-		top: 0;
+		/* 移除 fixed 定位，让其在 flex 布局中自然占据顶部 */
 		z-index: 99;
+		flex-shrink: 0; /* 防止头部被压缩 */
+	}
+
+	.scroll-content {
+		flex: 1; /* 占据剩余空间 */
+		height: 0; /* 配合 flex:1 使用，确保 scroll-view 能够正确计算高度并滚动 */
+		background-color: white;
 	}
 
 	.search-bar-container {
@@ -403,7 +407,7 @@
 
 	/* 主要内容区 */
 	.main-content {
-		flex: 1;
+		/* padding 移到这里或 scroll-view 内部 */
 		padding: 0 16px;
 	}
 

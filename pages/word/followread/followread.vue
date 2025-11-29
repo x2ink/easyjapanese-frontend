@@ -90,7 +90,9 @@
 						<i class="fas fa-check" style="font-size: 12px;"></i>
 					</view>
 					<view class="agreement-text">
-						我已阅读并同意<text class="agreement-link">《轻松日语用户发音功能使用协议》</text>
+						我已阅读并同意<text class="agreement-link" @click="goPage('/pages/other/browse/browse',{
+							src:`${http.baseUrl}html/tts_agreement.html`
+						})">《轻松日语用户发音功能使用协议》</text>
 					</view>
 				</view>
 				<view class="modal-actions">
@@ -117,12 +119,12 @@
 	import {
 		goPage,
 	} from "@/utils/common.js"
+	import http from '@/utils/request.js'
 	import {
 		userStore
 	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-	import http from '@/utils/request.js'
 	import dayjs from 'dayjs'
 	import relativeTime from 'dayjs/plugin/relativeTime'
 	import 'dayjs/locale/zh'
