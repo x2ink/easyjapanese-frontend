@@ -74,6 +74,8 @@
 			current.value = "问题反馈"
 			if (e.type == "单词纠错") {
 				source.value = `来自单词纠错 · ${e.wordType=='jc'?'日中':'中日'}单词ID：${e.wordId}`
+			} else if (e.type == "补充单词") {
+				source.value = `补充单词：${e.data}`
 			}
 		} else {
 			current.value = "意见建议"

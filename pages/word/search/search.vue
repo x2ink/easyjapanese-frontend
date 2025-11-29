@@ -287,14 +287,11 @@
 			loading.value = false
 		}
 	}
-
-	// --- 按钮逻辑 ---
 	const onFeedback = () => {
-		// TODO: 在这里写你的提交反馈逻辑
-		console.log('点击了提交反馈按钮，关键词：', value.value)
-
-		// 示例跳转（如果你有反馈页面的话）
-		// uni.navigateTo({ url: `/pages/other/feedback/feedback?content=${value.value}` })
+		goPage("/pages/other/feedback/feedback", {
+			type: "补充单词",
+			data: value.value
+		})
 	}
 </script>
 
