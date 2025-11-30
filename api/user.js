@@ -9,39 +9,13 @@ export default {
 	getUserInfoSimple() {
 		return http.get(`user/info`)
 	},
-
-
-
-
-
-	getChartList() {
-		return http.get('note/info')
-	},
-	getCaptcha(type, email) {
-		return http.get(`captcha/${type}/${email}`)
-	},
-	register(data) {
-		return http.post(`register`, data)
-	},
-	login(type, data) {
-		return http.post(`login/${type}`, data)
-	},
-
-
 	getConfig() {
 		return http.get(`config`)
 	},
 	updateConfig(data) {
 		return http.post(`config`, data)
 	},
-
 	ranking() {
 		return http.get(`ranking`)
-	},
-	repwd(data) {
-		return http.post(`repwd`, data)
-	},
-	reemail(data) {
-		return http.post(`reemail`, data)
 	}
 }

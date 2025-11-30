@@ -15,23 +15,14 @@ export default {
 	getGrammarInfo(data) {
 		return http.get(`grammar/info`, data)
 	},
-
-
-
-
-
 	getVerbTrans(data) {
 		return http.get(`verbtrans`, data)
 	},
-
 	feedback(data) {
 		return http.post(`feedback`, data)
 	},
 	addNote(data) {
 		return http.post(`notes`, data)
-	},
-	delNote(id) {
-		return http.delete(`notes/${id}`)
 	},
 	delQuote(id) {
 		return http.delete(`notes/quote/${id}`)
@@ -48,23 +39,14 @@ export default {
 	getNoteInfo(id) {
 		return http.get(`notes/info/${id}`)
 	},
-	getMessageList(page, size, type) {
-		return http.get(`message/${type}/${page}/${size}`)
-	},
-	readMessage(id) {
-		return http.get(`message/read/${id}`)
-	},
-	getUnread(id) {
-		return http.get(`unread`)
-	},
-	getMessageInfo(id) {
-		return http.get(`message/info/${id}`)
-	},
 	getSentence() {
 		return http.get(`sentence`)
 	},
 	getDailyTalk(page, size) {
-		console.log(page, size);
 		return http.get(`dailytalk/${page}/${size}`)
+	},
+	// 句子拆分
+	breakSentence(data) {
+		return http.post(`tools/break-sentence`, data)
 	}
 }
