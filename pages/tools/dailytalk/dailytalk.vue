@@ -3,7 +3,7 @@
 
 		<view class="fixed-header">
 			<view class="head">
-				<NavbarDefault border title="每日会话"></NavbarDefault>
+				<NavbarDefault border title="日常会话"></NavbarDefault>
 			</view>
 		</view>
 
@@ -14,13 +14,13 @@
 					<view class="jp-row">
 						<view class="jp-text-wrapper">
 							<view class="jp-ruby" v-for="(rubyItem, index) in item.ruby" :key="index">
-								<text v-if="rubyItem.ruby" class="ruby-text">{{ rubyItem.ruby }}</text>
+								<text class="ruby-text">{{ rubyItem.ruby || '' }}</text>
 								<text class="base-text">{{ rubyItem.base }}</text>
 							</view>
 						</view>
 
-						<view class="sound-icon-wrapper">
-							<i class="fas fa-volume-up sound-icon"></i>
+						<view class="sound-btn" @click.stop="playAudio(item)">
+							<i class="fas fa-volume-up"></i>
 						</view>
 					</view>
 
@@ -28,9 +28,24 @@
 						<text class="meaning-text">{{item.zh}}</text>
 					</view>
 
+					<view class="divider"></view>
+
+					<view class="action-row">
+						<view class="action-item" @click.stop="handleCopy(item)">
+							<text>复制</text>
+						</view>
+						<view class="action-item" @click.stop="handleFavorite(item)">
+							<text>收藏</text>
+						</view>
+						<view class="action-item" @click.stop="handleShare(item)">
+							<text>分享</text>
+						</view>
+					</view>
+
 				</view>
 			</view>
 
+			<view class="bottom-spacer"></view>
 
 		</scroll-view>
 	</view>
@@ -47,20 +62,18 @@
 	// 分页和列表数据状态
 	const total = ref(0)
 	const page = ref(1)
-	const size = ref(10) // 每页10条，与您提供的API示例一致
+	const size = ref(10)
 	const List = ref([])
 
 	/**
 	 * 获取每日会话列表数据
 	 */
 	const getList = async () => {
-		// 如果已加载全部数据，则不再请求
 		if (List.value.length >= total.value && total.value !== 0) {
 			return
 		}
 
 		try {
-			// 调用 api/common.js 中封装的 getDailyTalk 接口
 			const res = await $http.common.getDailyTalk({
 				page: page.value,
 				page_size: size.value
@@ -70,7 +83,6 @@
 			if (total.value === 0) {
 				return
 			}
-			// 拼接新数据到列表
 			List.value = List.value.concat(res.data)
 
 		} catch (error) {
@@ -79,38 +91,91 @@
 	}
 
 	/**
-	 * 触底加载更多（无限滚动）
+	 * 触底加载更多
 	 */
 	const reachBottom = () => {
-		// 只有在还有更多数据时才加载下一页
 		if (total.value > List.value.length) {
 			++page.value
 			getList()
 		}
 	}
 
-	// 组件挂载时加载数据
+	/**
+	 * 播放音频 (占位)
+	 */
+	const playAudio = (item) => {
+		console.log('播放音频', item)
+		// 这里实现你的播放逻辑
+	}
+
+	/**
+	 * 复制功能：将 Ruby 格式转为纯文本
+	 */
+	const handleCopy = (item) => {
+		if (!item.ruby || !Array.isArray(item.ruby)) {
+			uni.showToast({
+				title: '暂无内容',
+				icon: 'none'
+			})
+			return
+		}
+
+		// 提取 base 字段拼接
+		const textToCopy = item.ruby.map(r => r.base).join('')
+
+		uni.setClipboardData({
+			data: textToCopy,
+			success: () => {
+				uni.showToast({
+					title: '复制成功',
+					icon: 'none'
+				})
+			}
+		})
+	}
+
+	/**
+	 * 收藏 (占位)
+	 */
+	const handleFavorite = (item) => {
+		console.log('点击收藏', item)
+		uni.showToast({
+			title: '收藏功能开发中',
+			icon: 'none'
+		})
+	}
+
+	/**
+	 * 分享 (占位)
+	 */
+	const handleShare = (item) => {
+		console.log('点击分享', item)
+		uni.showToast({
+			title: '分享功能开发中',
+			icon: 'none'
+		})
+	}
+
 	onMounted(() => {
 		getList()
 	})
 </script>
 
 <style>
-	/* 确保页面占满整个视口且背景为白色，并禁止原生滚动 */
 	page {
-		background-color: #ffffff;
+		background-color: #f5f7fa;
+		/* 稍微深一点的背景色，突出卡片 */
 		height: 100vh;
 		overflow: hidden;
 	}
 </style>
 
 <style lang="scss" scoped>
-	/* 页面布局：固定头部 + 撑满剩余空间的滚动内容 */
 	.page-container {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		background-color: #ffffff;
+		background-color: #f5f7fa;
 	}
 
 	.fixed-header {
@@ -122,35 +187,32 @@
 	.scroll-content {
 		flex: 1;
 		height: 0;
-		/* 必须设置高度为 0，才能让 flex: 1 生效 */
 		overflow: hidden;
-		padding-top: 4px;
+		padding: 10px 12px;
+		/* 给列表外围加一点内边距 */
+		box-sizing: border-box;
 	}
 
-	.head {
-		background-color: white;
-	}
-
-	/* 列表样式 */
 	.list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		/* 卡片之间的间距 */
+
 		.item {
-			padding: 18px 20px;
-			/* 增加上下边距 */
-			border-bottom: 1px solid #f7f8fa;
-			/* 极淡的分割线 */
+			background-color: #fff;
+			padding: 15px 15px 10px 15px;
+			border-radius: 8px;
+			/* 圆角卡片 */
 			display: flex;
 			flex-direction: column;
-			gap: 10px;
-			transition: background-color 0.2s;
 
-			&:active {
-				background-color: #fafafa;
-			}
-
+			/* 日文行 */
 			.jp-row {
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
+				align-items: flex-start;
+				margin-bottom: 8px;
 			}
 
 			.jp-text-wrapper {
@@ -159,68 +221,97 @@
 				align-items: flex-end;
 				flex: 1;
 				line-height: 1.2;
+				padding-right: 10px;
+				/* 防止文字紧贴图标 */
 			}
 
 			.jp-ruby {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				margin-right: 6px;
-				/* 单词之间的间距 */
+				margin-right: 2px;
+				/* 缩小单词间距，更连贯 */
 			}
 
 			.ruby-text {
-				font-size: 10px;
-				color: #aeb4c0;
-				margin-bottom: 1px;
-				min-height: 10px;
-				/* 保持没有假名时的排版稳定 */
+				font-size: 9px;
+				/* 字体调小 */
+				color: #999;
+				margin-bottom: 0px;
+				min-height: 12px;
+				/* 占位高度 */
+				text-align: center;
 			}
 
 			.base-text {
-				font-size: 20px;
-				/* 突出日文会话 */
-				font-weight: 600;
+				font-size: 17px;
+				/* 字体调小 */
+				font-weight: 500;
+				/* 字重稍微减轻一点点 */
 				color: #333;
 			}
 
-			/* 发音按钮样式 */
-			.sound-icon-wrapper {
-				margin-left: 15px;
-				padding: 5px;
+			/* 播放按钮 */
+			.sound-btn {
+				padding: 0 0 0 8px;
 				color: #4CAF50;
-				/* 绿色图标 */
-				flex-shrink: 0;
-
-				.sound-icon {
-					font-size: 18px;
-				}
+				font-size: 16px;
+				height: 24px;
+				display: flex;
+				align-items: flex-end;
+				/* 图标对齐到底部，和文字基线接近 */
 			}
 
+			/* 中文行 */
 			.content-row {
-				margin-top: 4px;
+				margin-bottom: 10px;
 			}
 
 			.meaning-text {
-				font-size: 15px;
+				font-size: 14px;
 				color: #666;
-				line-height: 1.5;
+				line-height: 1.4;
+			}
+
+			/*内部分割线*/
+			.divider {
+				height: 1px;
+				background-color: #f0f0f0;
+				margin: 5px 0 8px 0;
+				transform: scaleY(0.5);
+				/* 细线 */
+			}
+
+			/* 底部操作栏 */
+			.action-row {
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				gap: 20px;
+				/* 按钮之间的间距 */
+
+				.action-item {
+					display: flex;
+					align-items: center;
+					color: #888;
+					font-size: 12px;
+					padding: 4px 0;
+					/* 增加点击区域 */
+
+					i {
+						font-size: 14px;
+						margin-right: 4px;
+					}
+
+					&:active {
+						opacity: 0.6;
+					}
+				}
 			}
 		}
 	}
 
-	/* 加载和空数据提示样式 */
-	.loadmore {
-		text-align: center;
-		padding: 20px 0;
-		font-size: 14px;
-		color: #999;
-	}
-
-	.loadmore-empty {
-		text-align: center;
-		padding-top: 50px;
-		font-size: 16px;
-		color: #999;
+	.bottom-spacer {
+		height: 30px;
 	}
 </style>
