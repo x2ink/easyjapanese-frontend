@@ -42,8 +42,8 @@ export default {
 	getSentence() {
 		return http.get(`sentence`)
 	},
-	getDailyTalk(page, size) {
-		return http.get(`dailytalk/${page}/${size}`)
+	getDailyTalk(data) {
+		return http.get(`dailytalk`, data)
 	},
 	// 句子拆分
 	breakSentence(data) {

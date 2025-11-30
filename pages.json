@@ -84,6 +84,7 @@
 		{
 			"path": "pages/tools/dailytalk/dailytalk",
 			"style": {
+				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
 		},
