@@ -82,7 +82,7 @@
 			}
 		},
 		{
-			"path": "pages/tools/commonwords/commonwords",
+			"path": "pages/tools/dailytalk/dailytalk",
 			"style": {
 				"navigationStyle": "custom"
 			}

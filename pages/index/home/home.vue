@@ -128,7 +128,7 @@
 					</view>
 				</view>
 
-				<view class="func-card" @click="goPage('/pages/tools/commonwords/commonwords')">
+				<view class="func-card" @click="goPage('/pages/tools/dailytalk/dailytalk')">
 					<view class="func-icon-bg bg-purple">
 						<text class="fas fa-comments"></text>
 					</view>
