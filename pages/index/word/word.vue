@@ -60,7 +60,7 @@
 					<view class="feature-name">我的词库</view>
 				</view>
 
-				
+
 
 				<view class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
 					<view class="feature-icon orange">
@@ -283,7 +283,7 @@
 			position: relative;
 			z-index: 3;
 			height: 100%;
-			padding: 16px 20px;
+			padding: 12px;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;

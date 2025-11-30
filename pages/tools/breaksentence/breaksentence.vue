@@ -2,42 +2,51 @@
 	<view class="container">
 		<NavbarDefault title="句子拆分"></NavbarDefault>
 		
-		<view class="content-wrapper">
-			<view class="form-group">
-				<textarea 
-					v-model="sentence" 
-					class="form-textarea" 
-					placeholder="请输入需要拆分的日语句子..." 
-					maxlength="500"
-				></textarea>
-				<view class="word-count">{{ sentence.length }}/500</view>
-			</view>
-
-			<button @click="handleBreak" class="action-btn" :loading="loading" :disabled="loading">
-				<i class="fas fa-cut" style="margin-right: 8px;"></i> 拆分句子
-			</button>
-
-			<view v-if="resultList.length > 0" class="result-area">
-				<view class="result-header">
-					<text class="title">拆分结果</text>
-					<view class="actions">
-						<text class="copy-btn" @click="copyResult">复制结果</text>
-					</view>
-				</view>
+		<scroll-view scroll-y class="content-scroll" :enable-back-to-top="true">
+			<view class="content-wrapper">
 				
-				<view class="token-list">
-					<view v-for="(item, index) in resultList" :key="index" class="token-item">
-						<text class="token-reading">{{ item.hiragana || '&nbsp;' }}</text>
-						<text class="token-surface">{{ item.surface }}</text>
-						<view class="token-pos-tag">
-							{{ item.pos[0] }}
+				<view class="input-block">
+					<view class="block-header">
+						<i class="fas fa-pen" style="color: #999; font-size: 14px; margin-right: 6px;"></i>
+						<text class="block-title">输入句子</text>
+					</view>
+					<textarea 
+						v-model="sentence" 
+						class="custom-textarea" 
+						placeholder="请输入需要拆分的日语句子..." 
+						maxlength="500"
+						:disable-default-padding="true"
+					></textarea>
+					<view class="word-count">{{ sentence.length }}/500</view>
+				</view>
+
+				<button @click="handleBreak" class="action-btn" :loading="loading" :disabled="loading">
+					<i class="fas fa-cut" style="margin-right: 8px;"></i> 
+					{{ loading ? '拆分中...' : '拆分句子' }}
+				</button>
+
+				<view v-if="resultList.length > 0" class="result-block">
+					<view class="result-header">
+						<text class="block-title">拆分结果</text>
+						<view class="copy-action" @click="copyResult">
+							<i class="fas fa-copy" style="margin-right: 4px;"></i> 复制
+						</view>
+					</view>
+					
+					<view class="token-list">
+						<view v-for="(item, index) in resultList" :key="index" class="token-item">
+							<text class="token-reading">{{ item.hiragana || '' }}</text>
+							<text class="token-surface">{{ item.surface }}</text>
+							<view class="token-pos-tag">
+								{{ item.pos[0] }}
+							</view>
 						</view>
 					</view>
 				</view>
-			</view>
 
-			<wd-status-tip v-if="!loading && resultList.length === 0 && searched" image="search" tip="未找到结果或解析失败" />
-		</view>
+				<wd-status-tip v-if="!loading && resultList.length === 0 && searched" image="search" tip="未找到结果或解析失败" />
+			</view>
+		</scroll-view>
 		
 		<wd-toast />
 	</view>
@@ -105,33 +114,55 @@
 </script>
 
 <style>
+	/* 页面整体纯白背景 */
 	page {
-		background-color: #f5f5f5;
+		background-color: #ffffff;
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
 
 <style lang="scss" scoped>
 	.container {
-		min-height: 100vh;
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
+		background-color: #ffffff;
+		overflow: hidden;
+	}
+
+	.content-scroll {
+		flex: 1;
+		height: 0;
+		width: 100%;
 	}
 
 	.content-wrapper {
-		padding: 16px;
-		padding-bottom: 40px;
+		padding: 12px 20px 40px; /* 增加内边距，保持通透 */
 	}
 
-	.form-group {
-		position: relative;
+	/* --- 输入色块 --- */
+	.input-block {
+		background-color: #f7f8fa; /* 浅灰背景 */
+		border-radius: 16px; /* 大圆角 */
+		padding: 16px;
 		margin-bottom: 24px;
-		background-color: #fff;
-		border-radius: 12px;
-		padding: 16px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+		position: relative;
+	}
+	
+	.block-header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 12px;
 	}
 
-	.form-textarea {
+	.block-title {
+		font-size: 14px;
+		color: #999;
+		font-weight: 600;
+	}
+
+	.custom-textarea {
 		width: 100%;
 		height: 120px;
 		font-size: 16px;
@@ -139,72 +170,68 @@
 		color: #333;
 		border: none;
 		outline: none;
+		background: transparent; /* 透明背景，透出父级色块 */
 	}
 
 	.word-count {
-		position: absolute;
-		bottom: 12px;
-		right: 16px;
+		text-align: right;
 		font-size: 12px;
-		color: #999;
+		color: #ccc;
+		margin-top: 8px;
 	}
 
+	/* --- 按钮样式 --- */
 	.action-btn {
-		background: linear-gradient(135deg, #07C160, #05a350);
+		background: #07C160; /* 纯色 */
 		color: white;
 		border: none;
-		border-radius: 50px;
+		border-radius: 100px; /* 胶囊按钮 */
 		padding: 12px 0;
 		font-size: 16px;
 		font-weight: 600;
-		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+		box-shadow: none; /* 去除阴影 */
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin-bottom: 30px;
 		
+		/* 点击效果改为透明度 */
 		&:active {
-			transform: scale(0.98);
-			box-shadow: 0 2px 6px rgba(7, 193, 96, 0.2);
+			opacity: 0.85;
+			transform: none;
+			box-shadow: none;
 		}
 		
 		&[disabled] {
 			background: #a0dec0;
-			box-shadow: none;
+			opacity: 1;
 		}
 	}
 
-	.result-area {
-		margin-top: 24px;
-		background-color: #fff;
-		border-radius: 12px;
+	/* --- 结果色块 --- */
+	.result-block {
+		background-color: #f7f8fa;
+		border-radius: 16px;
 		padding: 16px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 		
 		.result-header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			margin-bottom: 16px;
-			padding-bottom: 12px;
-			border-bottom: 1px solid #f0f0f0;
 			
-			.title {
-				font-size: 16px;
-				font-weight: bold;
-				color: #333;
-				border-left: 4px solid #07C160;
-				padding-left: 8px;
-			}
-			
-			.copy-btn {
+			.copy-action {
 				font-size: 13px;
 				color: #07C160;
+				font-weight: 500;
+				display: flex;
+				align-items: center;
 				padding: 4px 8px;
-				background-color: rgba(7, 193, 96, 0.1);
 				border-radius: 4px;
+				transition: background-color 0.2s;
 				
 				&:active {
-					opacity: 0.7;
+					background-color: rgba(7, 193, 96, 0.1);
 				}
 			}
 		}
@@ -213,34 +240,37 @@
 	.token-list {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 12px;
+		gap: 10px;
 	}
 
 	.token-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 8px 10px;
-		background-color: #f9f9f9;
+		padding: 8px 12px;
+		/* Token 使用纯白背景，与浅灰底色形成对比 */
+		background-color: #ffffff; 
 		border-radius: 8px;
-		border: 1px solid #eee;
+		/* 去除边框线 */
+		border: none; 
 		min-width: 40px;
-		transition: all 0.3s;
+		transition: transform 0.2s;
 		
-		&:hover {
-			border-color: #07C160;
-			background-color: #f0fdf4;
+		/* 极轻微的交互反馈 */
+		&:active {
+			transform: scale(0.98);
+			background-color: #fafafa;
 		}
 
 		.token-reading {
-			font-size: 12px;
-			color: #888;
+			font-size: 11px;
+			color: #999;
 			margin-bottom: 2px;
-			min-height: 16px; // 防止没有读音时高度塌陷
+			min-height: 14px;
 		}
 
 		.token-surface {
-			font-size: 18px;
+			font-size: 17px;
 			font-weight: 500;
 			color: #333;
 			margin-bottom: 4px;
@@ -249,9 +279,10 @@
 		.token-pos-tag {
 			font-size: 10px;
 			color: #07C160;
-			background-color: rgba(7, 193, 96, 0.1);
+			background-color: rgba(7, 193, 96, 0.08); /* 非常淡的绿色背景 */
 			padding: 2px 6px;
 			border-radius: 4px;
+			font-weight: 500;
 		}
 	}
 </style>

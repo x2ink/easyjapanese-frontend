@@ -1,35 +1,46 @@
 <template>
-	<view>
-		<NavbarDefault border title="意见反馈"></NavbarDefault>
-		<div class="feedback-content">
-			<!-- 反馈类型选择 -->
-			<div class="feedback-type">
-				<div class="type-title">反馈类型</div>
-				<div class="type-options">
-					<view :class="{active:current=='问题反馈'}" @click="current='问题反馈'" class="type-option _GCENTER">问题反馈
+	<page-meta page-style="background-color:#ffffff;">
+		<view class="page-container">
+			<NavbarDefault border title="意见反馈"></NavbarDefault>
+
+			<view class="content-wrapper">
+
+				<view class="section-row">
+					<text class="section-label">反馈类型</text>
+					<view class="type-group">
+						<view :class="{active:current=='问题反馈'}" @click="current='问题反馈'" class="type-chip">
+							问题反馈
+						</view>
+						<view :class="{active:current=='意见建议'}" @click="current='意见建议'" class="type-chip">
+							意见建议
+						</view>
 					</view>
-					<view :class="{active:current=='意见建议'}" @click="current='意见建议'" class="type-option _GCENTER">意见建议
-					</view>
-				</div>
-			</div>
-			<!-- 反馈表单 -->
-			<div class="feedback-form">
-				<div class="form-title">反馈内容</div>
-				<textarea v-model="formData.content" class="feedback-textarea"
-					placeholder="请详细描述您遇到的问题或建议..."></textarea>
-			</div>
-			<!-- 来源信息 -->
-			<div v-if="source!=''" class="source-info">
-				{{source}}
-			</div>
-			<!-- 提交按钮 -->
-			<button class="submit-btn" @click="submit()">提交反馈</button>
-			<wd-toast />
-		</div>
-	</view>
+				</view>
+
+				<view class="input-block">
+					<textarea v-model="formData.content" class="compact-textarea"
+						placeholder-style="color:#aab2bd;font-size:14px;" placeholder="请描述您的问题或建议..."
+						:disable-default-padding="true" maxlength="500"></textarea>
+					<view class="word-count">{{ formData.content.length }}/500</view>
+				</view>
+
+				<view v-if="source!=''" class="source-block">
+					<i class="fas fa-info-circle" style="margin-right: 4px;"></i>
+					<text class="source-text">{{source}}</text>
+				</view>
+
+				<view class="action-area">
+					<button class="compact-btn" @click="submit()">提交反馈</button>
+				</view>
+
+				<wd-toast />
+			</view>
+		</view>
+	</page-meta>
 </template>
 
 <script setup>
+	// 逻辑完全保持不变
 	import {
 		ref,
 	} from 'vue'
@@ -82,99 +93,134 @@
 		}
 	})
 </script>
+
 <style>
 	page {
-		background-color: white;
+		background-color: #ffffff;
 	}
 </style>
+
 <style lang="scss" scoped>
-	/* 主要内容区 */
-	.feedback-content {
-		flex: 1;
-		overflow-y: auto;
-		padding: 16px;
-	}
-
-	/* 反馈类型选择 */
-	.feedback-type {
-		margin-bottom: 20px;
-	}
-
-	.type-title {
-		font-size: 14px;
-		color: #757575;
-		margin-bottom: 12px;
-	}
-
-	.type-options {
+	.page-container {
+		min-height: 100vh;
 		display: flex;
-		gap: 12px;
+		flex-direction: column;
+		background-color: #ffffff;
 	}
 
-	.type-option {
-		height: 35px;
-		padding: 0 16px;
-		border-radius: 35px;
-		font-size: 14px;
-		border: 1px solid #E0E0E0;
-		background-color: white;
-		color: #757575;
+	.content-wrapper {
+		padding: 16px;
+		/* 紧凑边距 */
 	}
 
-	.type-option.active {
-		background-color: #07C160;
-		color: white;
-		border-color: #07C160;
+	/* 标签通用样式 */
+	.section-label {
+		font-size: 13px;
+		font-weight: 600;
+		color: #1a1a1a;
+		white-space: nowrap;
 	}
 
-	/* 反馈表单 */
-	.feedback-form {
-		margin-bottom: 20px;
-	}
-
-	.form-title {
-		font-size: 14px;
-		color: #757575;
+	/* 第一行：类型选择 */
+	.section-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		margin-bottom: 12px;
 	}
 
-	.feedback-textarea {
-		width: auto;
-		min-height: 120px;
-		padding: 12px;
-		border-radius: 8px;
-		border: 1px solid #E0E0E0;
-		font-size: 14px;
-		resize: none;
+	.type-group {
+		display: flex;
+		gap: 8px;
 	}
 
-	.feedback-textarea:focus {
-		outline: none;
-		border-color: #07C160;
-	}
-
-	/* 来源信息 */
-	.source-info {
+	/* 这里的 Chip 做得更小 */
+	.type-chip {
 		font-size: 12px;
-		color: #9E9E9E;
-		margin-bottom: 20px;
-		padding: 8px 0;
-		border-top: 1px solid #f0f0f0;
+		padding: 4px 12px;
+		background-color: #f7f8fa;
+		color: #5f6368;
+		border-radius: 6px;
+		/* 小圆角 */
+		transition: all 0.2s;
+		font-weight: 500;
+
+		&.active {
+			background-color: #07C160;
+			color: white;
+		}
 	}
 
-	/* 提交按钮 */
-	.submit-btn {
+	/* 输入区域：模仿 breaksentence 的紧凑风格 */
+	.input-block {
+		background-color: #f7f8fa;
+		border-radius: 12px;
 		padding: 12px;
+		margin-bottom: 12px;
+		position: relative;
+	}
+
+	.compact-textarea {
+		width: 100%;
+		height: 140px;
+		/* 高度适中 */
+		font-size: 14px;
+		/* 字号调小 */
+		line-height: 1.5;
+		color: #333;
+		background: transparent;
+		border: none;
+	}
+
+	.word-count {
+		text-align: right;
+		font-size: 11px;
+		color: #ccc;
+		margin-top: 4px;
+	}
+
+	/* 来源信息：非常低调 */
+	.source-block {
+		display: flex;
+		align-items: center;
+		background-color: #fff;
+		padding: 0 4px;
+		margin-bottom: 20px;
+		font-size: 12px;
+		color: #9aa0a6;
+
+		.source-text {
+			font-size: 11px;
+			color: #aab2bd;
+			/* 超出省略 */
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	/* 按钮：高度 40px，精简 */
+	.action-area {
+		margin-top: 8px;
+	}
+
+	.compact-btn {
+		height: 44px;
+		/* 紧凑高度 */
+		line-height: 44px;
 		background-color: #07C160;
 		color: white;
-		border: none;
 		border-radius: 8px;
-		font-size: 16px;
-		font-weight: 500;
-		cursor: pointer;
-	}
+		font-size: 15px;
+		font-weight: 600;
+		border: none;
 
-	.submit-btn:active {
-		background-color: #06AD56;
+		&:active {
+			opacity: 0.85;
+		}
+
+		&::after {
+			border: none;
+		}
 	}
 </style>

@@ -1,94 +1,111 @@
 <template>
-	<view class="page-container">
-
+	<view class="container">
 		<view class="head">
-			<NavbarDefault border title="动词变形"></NavbarDefault>
+			<NavbarDefault title="动词变形"></NavbarDefault>
 			<view class="search-wrapper">
 				<view class="search-box">
-					<text class="fas fa-search search-icon"></text>
-					<input class="search-input" confirm-type="search" @confirm="confirm" v-model="value" type="text"
-						placeholder="请输入动词">
+					<i class="fas fa-search search-icon"></i>
+					<input 
+						class="search-input" 
+						confirm-type="search" 
+						@confirm="confirm" 
+						v-model="value" 
+						type="text"
+						placeholder="请输入动词 (如：食べる)" 
+						placeholder-class="placeholder-style"
+					>
 					<view class="search-btn" @click="confirm">查询</view>
 				</view>
 			</view>
 		</view>
 
-		<scroll-view scroll-y class="content-container">
-			<view v-if="data && data.length > 0" class="result-wrapper">
+		<scroll-view scroll-y class="content-scroll" :enable-back-to-top="true">
+			<view class="content-wrapper">
+				
+				<view v-if="data && data.length > 0" class="result-area">
+					
+					<view class="result-block main-block">
+						<text class="main-label">基本形</text>
+						<text class="main-word">{{ get('基本形') }}</text>
+					</view>
 
-				<view class="main-card">
-					<view class="main-label">基本形 (辞書形)</view>
-					<view class="main-word">{{ get('基本形') }}</view>
+					<view class="result-block">
+						<view class="block-header">
+							<text class="block-title">基础活用</text>
+						</view>
+						<view class="grid-container">
+							<view class="grid-item">
+								<view class="tag tag-blue">ます形</view>
+								<text class="grid-value">{{ get('ます形') }}</text>
+							</view>
+							<view class="grid-item">
+								<view class="tag tag-red">ない形</view>
+								<text class="grid-value">{{ get('ない形') }}</text>
+							</view>
+							<view class="grid-item">
+								<view class="tag tag-green">て形</view>
+								<text class="grid-value">{{ get('て形') }}</text>
+							</view>
+							<view class="grid-item">
+								<view class="tag tag-orange">た形</view>
+								<text class="grid-value">{{ get('た形') }}</text>
+							</view>
+						</view>
+					</view>
+
+					<view class="result-block">
+						<view class="block-header">
+							<text class="block-title">态与语气</text>
+						</view>
+						<view class="list-container">
+							<view class="list-item">
+								<text class="list-label">可能形</text>
+								<text class="list-value">{{ get('可能形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">被动形</text>
+								<text class="list-value">{{ get('被动形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">使役形</text>
+								<text class="list-value">{{ get('使役形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">使役被动</text>
+								<text class="list-value">{{ get('使役被动形') }}</text>
+							</view>
+						</view>
+					</view>
+
+					<view class="result-block">
+						<view class="block-header">
+							<text class="block-title">其他变形</text>
+						</view>
+						<view class="list-container">
+							<view class="list-item">
+								<text class="list-label">假定形 (ば)</text>
+								<text class="list-value">{{ get('假定形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">意向形 (よう)</text>
+								<text class="list-value">{{ get('意向形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">命令形</text>
+								<text class="list-value text-danger">{{ get('命令形') }}</text>
+							</view>
+							<view class="list-item">
+								<text class="list-label">禁止形</text>
+								<text class="list-value text-danger">{{ get('禁止形') }}</text>
+							</view>
+						</view>
+					</view>
 				</view>
 
-				<view class="section-title">基础活用</view>
-				<view class="grid-container">
-					<view class="grid-item">
-						<text class="grid-label tag-blue">ます形</text>
-						<text class="grid-value">{{ get('ます形') }}</text>
-					</view>
-					<view class="grid-item">
-						<text class="grid-label tag-red">ない形</text>
-						<text class="grid-value">{{ get('ない形') }}</text>
-					</view>
-					<view class="grid-item">
-						<text class="grid-label tag-green">て形</text>
-						<text class="grid-value">{{ get('て形') }}</text>
-					</view>
-					<view class="grid-item">
-						<text class="grid-label tag-orange">た形</text>
-						<text class="grid-value">{{ get('た形') }}</text>
-					</view>
+				<view v-else class="empty-state">
+					<wd-status-tip image="search" tip="输入动词开始查询" />
+					<text class="empty-sub">支持输入：基本形、ます形等</text>
 				</view>
-
-				<view class="section-title">态与语气</view>
-				<view class="list-card">
-					<view class="list-row">
-						<view class="row-label">可能形</view>
-						<view class="row-value">{{ get('可能形') }}</view>
-					</view>
-					<view class="list-row">
-						<view class="row-label">被动形 (受身)</view>
-						<view class="row-value">{{ get('被动形') }}</view>
-					</view>
-					<view class="list-row">
-						<view class="row-label">使役形</view>
-						<view class="row-value">{{ get('使役形') }}</view>
-					</view>
-					<view class="list-row">
-						<view class="row-label">使役被动</view>
-						<view class="row-value">{{ get('使役被动形') }}</view>
-					</view>
-				</view>
-
-				<view class="section-title">其他变形</view>
-				<view class="list-card">
-					<view class="list-row">
-						<view class="row-label">假定形 (ば形)</view>
-						<view class="row-value">{{ get('假定形') }}</view>
-					</view>
-					<view class="list-row">
-						<view class="row-label">意向形 (よう形)</view>
-						<view class="row-value">{{ get('意向形') }}</view>
-					</view>
-					<view class="list-row">
-						<view class="row-label">命令形</view>
-						<view class="row-value text-danger">{{ get('命令形') }}</view>
-					</view>
-					<view class="list-row border-none">
-						<view class="row-label">禁止形</view>
-						<view class="row-value text-danger">{{ get('禁止形') }}</view>
-					</view>
-				</view>
-
-				<view style="height: 40px;"></view>
-			</view>
-
-			<view v-else class="empty-state">
-				<wd-status-tip :image-size="{ height: 128, width: 128 }"
-					image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" />
-				<text class="empty-text">输入动词开始查询变形</text>
-				<text class="empty-sub">支持输入：基本形、ます形</text>
 			</view>
 		</scroll-view>
 
@@ -97,14 +114,10 @@
 </template>
 
 <script setup>
-	import {
-		ref,
-	} from 'vue'
+	import { ref } from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-	import {
-		useToast
-	} from '@/uni_modules/wot-design-uni'
+	import { useToast } from '@/uni_modules/wot-design-uni'
 
 	const toast = useToast()
 	const data = ref([])
@@ -112,9 +125,7 @@
 
 	const get = (key) => {
 		if (!data.value) return '-'
-		const res = data.value.find(({
-			category
-		}) => category == key)
+		const res = data.value.find(({ category }) => category == key)
 		return res ? res.result : '-'
 	}
 
@@ -145,197 +156,214 @@
 	}
 </script>
 
+<style>
+	/* 全局背景纯白 */
+	page {
+		background-color: #ffffff;
+		height: 100%;
+		overflow: hidden;
+	}
+</style>
+
 <style lang="scss" scoped>
-	.page-container {
+	.container {
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		background-color: #F7F8FA;
-		overflow: hidden;
+		background-color: #ffffff;
 	}
 
 	.head {
-		background: #fff;
-		z-index: 99;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+		/* 去除阴影，保持纯净 */
+		background: #ffffff;
 		flex-shrink: 0;
+		z-index: 10;
 	}
 
 	.search-wrapper {
-		padding: 12px 16px 16px;
-		background: #fff;
+		padding: 6px 20px 12px; /* 调整内边距 */
+		background: #ffffff;
 	}
-
 
 	.search-box {
 		display: flex;
 		align-items: center;
-		background: #F5F5F5;
-		border-radius: 50px;
-		box-sizing: border-box;
+		background: #f7f8fa; /* 浅灰搜索块 */
+		border-radius: 100px;
 		padding: 0 16px;
-		height: 40px;
+		height: 44px; /* 稍微加高 */
+		transition: background-color 0.2s;
+		
+		&:focus-within {
+			background: #f0f2f5; /* 聚焦时稍微加深 */
+		}
 	}
 
 	.search-icon {
 		font-size: 16px;
 		color: #999;
-		margin-right: 8px;
+		margin-right: 10px;
 	}
 
 	.search-input {
-		height: 40px;
-		line-height: 40px;
 		flex: 1;
-		box-sizing: border-box;
-		font-size: 14px;
+		height: 100%;
+		font-size: 15px;
 		color: #333;
-
 	}
 
 	.placeholder-style {
-		color: #BBB;
+		color: #bbb;
 	}
 
 	.search-btn {
-		font-size: 14px;
+		font-size: 15px;
 		color: #07C160;
 		font-weight: 600;
 		padding-left: 12px;
-		border-left: 1px solid #E0E0E0;
 		margin-left: 8px;
-		/* 垂直居中对齐 */
-		line-height: 20px;
+		/* 使用伪元素做分割线，比border更灵活 */
+		position: relative;
+		
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			height: 14px;
+			width: 1px;
+			background-color: #e0e0e0;
+		}
+		
+		&:active {
+			opacity: 0.7;
+		}
 	}
 
-	.content-container {
+	.content-scroll {
 		flex: 1;
 		height: 0;
+	}
+
+	.content-wrapper {
+		padding: 12px 20px 40px; /* 增加左右留白 */
+	}
+
+	/* --- 通用结果色块 --- */
+	.result-block {
+		background-color: #f7f8fa; /* 浅灰底色 */
+		border-radius: 16px;
 		padding: 16px;
-		box-sizing: border-box;
+		margin-bottom: 20px;
 	}
 
-	.result-wrapper {
-		animation: fadeIn 0.5s ease;
+	.block-header {
+		margin-bottom: 12px;
+		padding-left: 4px;
 	}
 
-	.main-card {
-		background: linear-gradient(135deg, #07C160 0%, #05A050 100%);
-		border-radius: 12px;
-		padding: 24px;
-		color: white;
-		text-align: center;
-		margin-bottom: 24px;
-		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+	.block-title {
+		font-size: 14px;
+		color: #999;
+		font-weight: 600;
+	}
+
+	/* --- 核心词块 --- */
+	.main-block {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 24px 16px;
+		background-color: #f0fdf4; /* 极淡的绿色背景，突出主体 */
+		/* 如果想要纯灰也可改为 #f7f8fa */
 	}
 
 	.main-label {
 		font-size: 12px;
+		color: #07C160;
 		opacity: 0.8;
-		margin-bottom: 8px;
+		margin-bottom: 6px;
 		letter-spacing: 1px;
 	}
 
 	.main-word {
 		font-size: 32px;
-		font-weight: 700;
+		font-weight: bold;
+		color: #333;
 		letter-spacing: 1px;
 	}
 
-	.section-title {
-		font-size: 14px;
-		color: #999;
-		margin-bottom: 12px;
-		margin-left: 4px;
-		font-weight: 500;
-	}
-
+	/* --- 网格布局 (基础活用) --- */
 	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 12px;
-		margin-bottom: 24px;
 	}
 
 	.grid-item {
-		background: white;
-		padding: 16px;
+		background-color: #ffffff; /* 纯白胶囊 */
+		padding: 12px;
 		border-radius: 12px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+		/* 无边框，无阴影 */
 	}
 
-	.grid-label {
-		font-size: 12px;
+	.tag {
+		font-size: 11px;
 		padding: 2px 8px;
-		border-radius: 4px;
-		margin-bottom: 8px;
+		border-radius: 6px;
+		margin-bottom: 6px;
 		font-weight: 500;
 	}
 
-	.tag-blue {
-		background: #E6F7FF;
-		color: #1890FF;
-	}
-
-	.tag-red {
-		background: #FFF1F0;
-		color: #F5222D;
-	}
-
-	.tag-green {
-		background: #F6FFED;
-		color: #52C41A;
-	}
-
-	.tag-orange {
-		background: #FFF7E6;
-		color: #FA8C16;
-	}
+	/* 扁平化标签颜色 */
+	.tag-blue { background: #e6f7ff; color: #0099ff; }
+	.tag-red { background: #fff1f0; color: #ff4d4f; }
+	.tag-green { background: #f6ffed; color: #52c41a; }
+	.tag-orange { background: #fff7e6; color: #fa8c16; }
 
 	.grid-value {
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: 600;
 		color: #333;
 	}
 
-	.list-card {
-		background: white;
-		border-radius: 12px;
-		padding: 0 16px;
-		margin-bottom: 24px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+	/* --- 列表布局 (其他变形) --- */
+	.list-container {
+		display: flex;
+		flex-direction: column;
+		gap: 10px; /* 列表项之间的间距 */
 	}
 
-	.list-row {
+	.list-item {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 16px 0;
-		border-bottom: 1px solid #F5F5F5;
-
-		&.border-none {
-			border-bottom: none;
-		}
+		padding: 14px 16px;
+		background-color: #ffffff; /* 纯白条目 */
+		border-radius: 12px;
 	}
 
-	.row-label {
+	.list-label {
 		font-size: 14px;
 		color: #666;
 	}
 
-	.row-value {
+	.list-value {
 		font-size: 16px;
 		color: #333;
 		font-weight: 500;
 	}
 
 	.text-danger {
-		color: #FF4D4F;
+		color: #ff4d4f;
 	}
 
+	/* 空状态 */
 	.empty-state {
 		display: flex;
 		flex-direction: column;
@@ -344,34 +372,9 @@
 		padding-top: 60px;
 	}
 
-	.empty-img {
-		width: 80px;
-		height: 80px;
-		margin-bottom: 16px;
-		opacity: 0.5;
-	}
-
-	.empty-text {
-		font-size: 16px;
-		color: #333;
-		margin-bottom: 8px;
-		font-weight: 500;
-	}
-
 	.empty-sub {
-		font-size: 12px;
-		color: #999;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(10px);
-		}
-
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+		font-size: 13px;
+		color: #ccc;
+		margin-top: 8px;
 	}
 </style>

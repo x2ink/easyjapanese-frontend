@@ -118,7 +118,7 @@
 			</view>
 
 			<view class="func-grid">
-				<view class="func-card" @click="goPage('/pages/tools/notes/notes')">
+				<view class="func-card" @click="goPage('/pages/tools/grammar/grammar')">
 					<view class="func-icon-bg bg-orange">
 						<text class="fas fa-pen-ruler"></text>
 					</view>
@@ -126,7 +126,6 @@
 						<text class="func-title">语法学习</text>
 						<text class="func-desc">解析核心 掌握规律</text>
 					</view>
-					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 
 				<view class="func-card" @click="goPage('/pages/tools/commonwords/commonwords')">
@@ -137,7 +136,6 @@
 						<text class="func-title">日常会话</text>
 						<text class="func-desc">高频场景 地道表达</text>
 					</view>
-					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 
 				<view class="func-card" @click="goPage('/pages/other/setplan/setplan')">
@@ -148,7 +146,6 @@
 						<text class="func-title">入门知识</text>
 						<text class="func-desc">夯实基础 轻松起步</text>
 					</view>
-					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 
 				<view class="func-card" @click="goPage('/pages/other/feedback/feedback')">
@@ -159,7 +156,6 @@
 						<text class="func-title">文化常识</text>
 						<text class="func-desc">风土人情 拓展视野</text>
 					</view>
-					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 			</view>
 
@@ -630,7 +626,7 @@
 			position: relative;
 			background-color: white;
 			border-radius: 12px;
-			padding: 16px;
+			padding: 12px;
 			display: flex;
 			align-items: center;
 			gap: 12px;
@@ -675,7 +671,7 @@
 				flex: 1;
 				display: flex;
 				flex-direction: column;
-				gap: 4px;
+				gap: 2px;
 
 				.func-title {
 					font-size: 14px;
@@ -687,13 +683,6 @@
 					font-size: 11px;
 					color: #9CA3AF;
 				}
-			}
-
-			.func-arrow {
-				position: absolute;
-				font-size: 12px;
-				right: 16px;
-				color: #D1D5DB;
 			}
 		}
 	}

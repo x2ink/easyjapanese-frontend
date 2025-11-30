@@ -1,140 +1,153 @@
 <template>
-	<view>
-		<view style="height: 100vh;display: flex;flex-direction: column;">
-			<NavbarDefault title="翻译"></NavbarDefault>
-			<view class="translation-mode">
-				<view @click="current='标准翻译'" :class="{active:current=='标准翻译'}" class="mode-btn">标准翻译</view>
-				<view @click="current='AI翻译'" :class="{active:current=='AI翻译'}" class="mode-btn">AI翻译</view>
-			</view>
-			<view v-if="current=='标准翻译'" class="language-selector">
-				<view :class="{active:pattern=='cj'}" class="language-item">
-					<span>中文</span>
+	<view class="container">
+		<NavbarDefault title="翻译助手"></NavbarDefault>
+
+		<scroll-view scroll-y class="content-scroll" :enable-back-to-top="true">
+			<view class="content-wrapper">
+				
+				<view class="mode-switch">
+					<view 
+						class="mode-item" 
+						:class="{ active: current === '标准翻译' }" 
+						@click="current = '标准翻译'"
+					>
+						标准翻译
+					</view>
+					<view 
+						class="mode-item" 
+						:class="{ active: current === 'AI翻译' }" 
+						@click="current = 'AI翻译'"
+					>
+						AI 深度解析
+					</view>
 				</view>
-				<button @click="patternChange()" class="swap-btn">
-					<i class="fas fa-exchange-alt" style="color: #757575;"></i>
+
+				<view class="input-block">
+					<view v-if="current === '标准翻译'" class="block-header">
+						<view class="lang-opt" :class="{ active: pattern === 'cj' }">中文</view>
+						<view class="swap-btn" @click="patternChange">
+							<i class="fas fa-exchange-alt"></i>
+						</view>
+						<view class="lang-opt" :class="{ active: pattern === 'jc' }">日语</view>
+					</view>
+					
+					<view v-else class="block-header ai-header">
+						<i class="fas fa-robot" style="margin-right: 6px;"></i>
+						<text>AI 智能助手</text>
+					</view>
+
+					<textarea 
+						v-model="value" 
+						class="custom-textarea" 
+						:placeholder="current === '标准翻译' ? '请输入内容...' : '输入句子，AI 将为您解析...'" 
+						maxlength="1000"
+						:disable-default-padding="true"
+					></textarea>
+					
+					<view class="word-count">{{ value.length }}/1000</view>
+				</view>
+
+				<button @click="submit" class="submit-btn" :loading="loading" :disabled="loading">
+					{{ loading ? '翻译中...' : '开始翻译' }}
 				</button>
-				<view :class="{active:pattern=='jc'}" class="language-item">
-					<span>日语</span>
-				</view>
-			</view>
-			<view class="form-group">
-				<textarea v-model="value" class="form-textarea" placeholder="请输入需要翻译的内容"></textarea>
-			</view>
-			<button @click="submit()" class="translate-btn">
-				<text class="fas fa-language"></text>翻译
-			</button>
-			<view v-if="current=='标准翻译'" style="padding-top: 16px;">
-				<view class="output-area">
-					<textarea v-model="result" class="textarea" placeholder="翻译结果将显示在这里..."></textarea>
-					<view class="action-bar">
-						<button class="action-btn" @click="playVoice()">
-							<i class="fas fa-volume-up"></i> 朗读
-						</button>
-						<button @click="copy(result)" class="action-btn">
-							<i class="fas fa-copy"></i> 复制
-						</button>
+
+				<view v-if="result || loading" class="result-block">
+					<view class="block-header">
+						<text class="block-title">结果</text>
+						<view class="actions">
+							<view v-if="current === '标准翻译' && result" class="icon-btn" @click="playVoice">
+								<i class="fas fa-volume-up"></i>
+							</view>
+							<view v-if="result" class="icon-btn" @click="copy(result)">
+								<i class="fas fa-copy"></i>
+							</view>
+						</view>
+					</view>
+					
+					<view v-if="loading" class="loading-wrap">
+						<view class="dot-spinner">
+							<view class="dot"></view>
+							<view class="dot"></view>
+							<view class="dot"></view>
+						</view>
+					</view>
+
+					<view v-else class="result-text">
+						<text v-if="current === '标准翻译'" user-select>{{ result }}</text>
+						<view v-else class="ai-content" v-html="result"></view>
 					</view>
 				</view>
-			</view>
-			<view v-else class="result">
-				<view v-if="loading" class="loading _GCENTER">
-					<view class="loadership_KUDLC">
-						<view></view>
-						<view></view>
-						<view></view>
-						<view></view>
-						<view></view>
-					</view>
-					<text class="tip">
-						AI正在思考,大概需要10s
-					</text>
+
+				<view v-if="!loading && !result" class="empty-tip">
+					在上方输入内容即可开始翻译
 				</view>
-				<view v-if="result.length>0&&!loading" @click="copy(result)" v-html="result"></view>
 			</view>
-			<view :style="{height:getOs()=='ios'?'env(safe-area-inset-bottom)':'16px'}"></view>
-		</view>
-		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
-			@onFinish="finishCore" />
+		</scroll-view>
+
+		<ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore" @onFinish="finishCore" />
 		<wd-toast />
 	</view>
 </template>
 
 <script setup>
-	import {
-		ref,
-		onMounted,
-		computed,
-		watch
-	} from 'vue'
-	import {
-		onLoad,
-		onShow,
-		onReachBottom,
-		onPageScroll,
-	} from "@dcloudio/uni-app"
-	import {
-		goPage,
-		formatWordName,
-		copy,
-		getOs
-	} from "@/utils/common.js"
+	import { ref, computed, watch } from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
-	import $http from "@/api/index.js"
-	import {
-		useToast
-	} from '@/uni_modules/wot-design-uni'
+	import { useToast } from '@/uni_modules/wot-design-uni'
+	import { copy, getOs } from "@/utils/common.js"
 	import ChatSSEClient from "@/components/gao-ChatSSEClient/gao-ChatSSEClient.vue";
 	import sha256 from 'crypto-js/sha256';
-	const playVoice = () => {
-		toast.warning(`服务暂未开放`)
-	}
-	const current = ref('标准翻译')
-	watch(current, (newVal, oldVal) => {
-		result.value = ""
-	})
-	const pattern = ref('cj')
-	const fromTo = computed(() => {
-		if (pattern.value == "cj") {
-			return {
-				'from': 'zh-CHS',
-				'to': 'ja'
-			}
-		} else {
-			return {
-				'from': 'ja',
-				'to': 'zh-CHS'
-			}
-		}
-	})
-	const patternChange = () => {
-		if (pattern.value == 'jc') {
-			pattern.value = 'cj'
-		} else {
-			pattern.value = 'jc'
-		}
-	}
+
 	const toast = useToast()
+	const current = ref('标准翻译')
 	const value = ref("")
-	const result = ref(``);
+	const result = ref("")
 	const loading = ref(false)
+	const pattern = ref('cj')
+	const chatSSEClientRef = ref(null)
+
+	// AI 提示词配置 (保持简洁，不展示复杂代码)
+	const content = ref(
+		`你是一个中日翻译，我会给你中文或者日文，然后你翻译为日文或者中文，并且我还要你对翻译进行讲解，为什么这么翻译，这句话用了哪些语法点，返回html格式如下<div class="ai-box"><h3 class="ai-h3">翻译：</h3><p class="ai-p">这里是翻译内容。</p></div><div class="ai-box"><h3 class="ai-h3">解析：</h3><p class="ai-p">这里是解析内容。</p></div>`
+	)
+
+	watch(current, () => {
+		result.value = ""
+		loading.value = false
+	})
+
+	const fromTo = computed(() => {
+		return pattern.value == "cj" ? { 'from': 'zh-CHS', 'to': 'ja' } : { 'from': 'ja', 'to': 'zh-CHS' }
+	})
+
+	const patternChange = () => {
+		pattern.value = pattern.value == 'jc' ? 'cj' : 'jc'
+	}
+
+	const playVoice = () => {
+		toast.warning(`朗读服务开发中`)
+	}
+
 	const truncate = (q) => {
 		var len = q.length;
 		if (len <= 20) return q;
 		return q.substring(0, 10) + len + q.substring(len - 10, len);
 	}
+
 	const submit = () => {
+		if (value.value.trim().length == 0) {
+			toast.warning(`内容不可为空`)
+			return
+		}
 		if (current.value == "标准翻译") {
 			ydsubmit()
 		} else {
 			aisubmit()
 		}
 	}
+
 	const ydsubmit = async () => {
-		if (value.value.trim().length == 0) {
-			toast.warning(`内容不可为空`)
-			return
-		}
 		loading.value = true
+		result.value = "" 
 		let appKey = '56120852712fa563';
 		let key = 'Tyg8O47AvACFjpzh3acoEaFs85VpfuJ2';
 		let salt = (new Date).getTime();
@@ -142,6 +155,7 @@
 		let query = value.value;
 		let str1 = appKey + truncate(query) + salt + curtime + key;
 		var sign = sha256(str1).toString();
+		
 		uni.request({
 			url: 'https://openapi.youdao.com/api',
 			method: "GET",
@@ -155,41 +169,24 @@
 				curtime: curtime,
 			},
 			success: function(res) {
-				result.value = res.data.translation[0]
+				if (res.data && res.data.translation) {
+					result.value = res.data.translation[0]
+				} else {
+					toast.error("翻译失败")
+				}
+			},
+			fail: () => {
+				toast.error("网络请求失败")
+			},
+			complete: () => {
 				loading.value = false
 			}
 		})
 	}
-	const chatSSEClientRef = ref(null);
-	const openCore = () => {
-		console.log("open sse");
-	}
-	const errorCore = (err) => {
-		console.log("error sse：", err);
-	}
-	const messageCore = (msg) => {
-		loading.value = false
-		const lines = msg.split('\n').filter(line => line.trim().startsWith('data:'));
-		const chunks = lines.map(line => JSON.parse(line.replace('data: ', '')));
-		chunks.map(item => {
-			result.value += item.choices[0].delta.content
-		})
-	}
-	const finishCore = () => {
-		loading.value = false;
-	}
-	const stop = () => {
-		chatSSEClientRef.value.stopChat()
-	}
-	const content = ref(
-		`你是一个中日翻译，我会给你中文或者日文，然后你翻译为日文或者中文，并且我还要你对翻译进行讲解，为什么这么翻译，这句话用了哪些语法点，返回html格式如下<div><h3>翻译：</h3><p>这里是翻译内容。</p></div><div><h3>翻译讲解：</h3><h4>句子结构分析：</h4><p>这里是句子结构分析。</p><h4>关键词翻译：</h4><ul><li><strong>关键词1</strong>：解释1</li><li><strong>关键词2</strong>：解释2</li></ul><h4>语法点解析：</h4><ul><li><strong>语法点1</strong>：解释1</li><li><strong>语法点2</strong>：解释2</li></ul><h4>翻译思路：</h4><p>这里是翻译思路。</p></div>`
-	)
+
 	const aisubmit = async () => {
-		if (value.value == "" || value.value.length == 0) {
-			toast.warning(`内容不可为空`)
-			return
-		}
 		loading.value = true
+		result.value = ""
 		chatSSEClientRef.value.startChat({
 			url: "https://api.deepseek.com/chat/completions",
 			headers: {
@@ -198,233 +195,239 @@
 				"Authorization": "Bearer sk-7f2affcd4e1549b8b53b08d5afca6077",
 			},
 			body: {
-				messages: [{
-						content: content.value,
-						role: "system"
-					},
-					{
-						content: value.value,
-						role: "user"
-					}
+				messages: [
+					{ content: content.value, role: "system" },
+					{ content: value.value, role: "user" }
 				],
 				model: "deepseek-chat",
-				response_format: {
-					type: "text"
-				},
-				stop: null,
 				stream: true,
 				temperature: 1.3,
-				tools: null,
-				tool_choice: "none",
-				logprobs: false,
-				top_logprobs: null
 			}
 		})
 	}
+
+	const openCore = () => console.log("open sse")
+	const errorCore = (err) => {
+		loading.value = false;
+		toast.error("AI 服务连接失败");
+	}
+	const messageCore = (msg) => {
+		const lines = msg.split('\n').filter(line => line.trim().startsWith('data:'));
+		const chunks = lines.map(line => {
+			try { return JSON.parse(line.replace('data: ', '')) } catch(e) { return null }
+		}).filter(item => item !== null);
+		chunks.forEach(item => {
+			if(item.choices && item.choices[0].delta.content) {
+				result.value += item.choices[0].delta.content
+			}
+		})
+	}
+	const finishCore = () => {
+		loading.value = false;
+	}
 </script>
+
 <style>
+	/* 全局背景设为纯白 */
 	page {
-		background-color: white;
+		background-color: #ffffff;
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
+
 <style lang="scss" scoped>
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
-	}
-
-	.form-group {
-		padding: 16px;
-	}
-
-	.result {
-		padding: 0 16px;
-		flex: 1;
-		overflow: auto;
-
-		.smalltitle {
-			font-size: 14px;
-			color: #999
-		}
-	}
-
-	.loading {
+	.container {
+		height: 100vh;
+		display: flex;
 		flex-direction: column;
-		margin-top: 20px;
-
-		.tip {
-			margin-top: 10px;
-			font-size: 12px;
-			color: #d9d9d9;
-		}
-
-		.loadership_KUDLC {
-			display: flex;
-			position: relative;
-			width: 46px;
-			height: 60px;
-		}
-
-		.loadership_KUDLC view {
-			position: absolute;
-			width: 6px;
-			height: 20px;
-			background: #d9d9d9;
-			top: 20px;
-			animation:
-				loadership_KUDLC_scale 1.8s infinite,
-				loadership_KUDLC_fade 1.8s infinite;
-			animation-timing-function: ease-in-out;
-		}
-
-		.loadership_KUDLC view:nth-child(1) {
-			animation-delay: 0s;
-			left: 0px;
-		}
-
-		.loadership_KUDLC view:nth-child(2) {
-			animation-delay: 0.16s;
-			left: 10px;
-		}
-
-		.loadership_KUDLC view:nth-child(3) {
-			animation-delay: 0.32s;
-			left: 20px;
-		}
-
-		.loadership_KUDLC view:nth-child(4) {
-			animation-delay: 0.48s;
-			left: 30px;
-		}
-
-		.loadership_KUDLC view:nth-child(5) {
-			animation-delay: 0.64s;
-			left: 40px;
-		}
-
-		@keyframes loadership_KUDLC_scale {
-
-			0%,
-			44.44444444444445%,
-			100% {
-				transform: scaleY(1);
-			}
-
-			22.222222222222225% {
-				transform: scaleY(3);
-			}
-		}
-
-		@keyframes loadership_KUDLC_fade {
-
-			0%,
-			44.44444444444445%,
-			100% {
-				opacity: 1;
-			}
-
-			22.222222222222225% {
-				opacity: 1;
-			}
-		}
+		background-color: #ffffff;
 	}
 
-	.output-area {
-		margin: 0 16px 16px;
-		border-radius: 8px;
-		border: 1px solid #E0E0E0;
+	.content-scroll {
+		flex: 1;
+		height: 0;
 	}
 
-	.textarea {
-		min-height: 120px;
-		width: auto;
-		border: none;
-		padding: 12px;
-		font-size: 16px;
-		resize: none;
-		outline: none;
-		box-sizing: border-box;
+	.content-wrapper {
+		padding: 12px 20px 40px; /* 增加左右间距，让页面更透气 */
 	}
 
-	.action-bar {
+	/* --- 1. 模式切换 (Pill Style) --- */
+	.mode-switch {
 		display: flex;
-		justify-content: space-between;
-		padding: 8px 16px;
-		border-top: 1px solid #E0E0E0;
-	}
-
-	.action-btn {
-		background: none;
-		border: none;
-		color: #757575;
-		font-size: 14px;
-		cursor: pointer;
-	}
-
-	.translate-btn {
-		background-color: #07C160;
-		color: white;
-		border: none;
-		border-radius: 8px;
-		padding: 12px 24px;
-		font-size: 16px;
-		font-weight: 500;
-		margin: 16px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		justify-content: center;
-	}
-
-	.language-selector {
-		display: flex;
-		justify-content: space-between;
-		margin: 0 16px;
-		padding: 8px 0;
-		border-bottom: 1px solid #E0E0E0;
-	}
-
-	.language-item {
-		display: flex;
-		align-items: center;
-		color: #757575;
-	}
-
-	.language-item.active {
-		color: #07C160;
-		font-weight: 500;
-	}
-
-	.form-textarea {
-		width: auto;
-		padding: 12px;
-		border: 1px solid #E0E0E0;
-		border-radius: 8px;
-		font-size: 15px;
-		min-height: 80px;
-		resize: none;
-	}
-
-	.translation-mode {
-		display: flex;
-		background-color: #F5F5F5;
-		border-radius: 8px;
-		margin: 12px 16px;
+		background-color: #f5f5f5; /* 浅灰底 */
+		border-radius: 100px;
 		padding: 4px;
+		margin-bottom: 24px;
 	}
 
-	.mode-btn {
+	.mode-item {
 		flex: 1;
 		text-align: center;
-		padding: 8px;
-		border-radius: 6px;
+		padding: 8px 0;
+		border-radius: 100px;
 		font-size: 14px;
+		color: #888;
+		transition: all 0.3s;
+		
+		&.active {
+			background-color: #fff; /* 激活变为白色 */
+			color: #333;
+			font-weight: 600;
+			/* 极轻微的视觉凸起，不算卡片 */
+		}
 	}
 
-	.mode-btn.active {
-		background-color: #FFFFFF;
+	/* --- 2. 输入块 (灰色背景块，无边框) --- */
+	.input-block {
+		background-color: #f7f8fa; /* 极浅的蓝灰/纯灰背景 */
+		border-radius: 16px;
+		padding: 16px;
+		margin-bottom: 20px;
+		position: relative;
+	}
+
+	.block-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 12px;
+		
+		&.ai-header {
+			color: #07C160;
+			font-weight: 600;
+			font-size: 14px;
+		}
+	}
+
+	.lang-opt {
+		font-size: 14px;
+		color: #999;
+		&.active {
+			color: #333;
+			font-weight: 600;
+		}
+	}
+
+	.swap-btn {
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: #07C160;
-		font-weight: 500;
+		font-size: 12px;
+	}
+
+	.custom-textarea {
+		width: 100%;
+		height: 120px;
+		font-size: 16px;
+		line-height: 1.6;
+		color: #333;
+		border: none;
+		outline: none;
+		background: transparent;
+	}
+
+	.word-count {
+		text-align: right;
+		font-size: 12px;
+		color: #ccc;
+		margin-top: 4px;
+	}
+
+	/* --- 3. 按钮 (扁平纯色) --- */
+	.submit-btn {
+		background-color: #07C160;
+		color: #fff;
+		border-radius: 100px;
+		font-size: 16px;
+		font-weight: 600;
+		padding: 12px 0;
+		margin-bottom: 30px;
+		border: none;
+		
+		&::after { border: none; }
+		&:active { opacity: 0.85; }
+	}
+
+	/* --- 4. 结果块 (浅色背景，无边框) --- */
+	.result-block {
+		background-color: #f7f8fa;
+		border-radius: 16px;
+		padding: 16px;
+		min-height: 120px;
+	}
+
+	.block-title {
+		font-size: 14px;
+		color: #999;
+		font-weight: 600;
+	}
+
+	.actions {
+		display: flex;
+		gap: 16px;
+	}
+
+	.icon-btn {
+		color: #999;
+		font-size: 16px;
+		&:active { color: #07C160; }
+	}
+
+	.result-text {
+		font-size: 16px;
+		color: #333;
+		line-height: 1.8;
+		
+		/* AI 解析内容样式 */
+		::v-deep .ai-box {
+			margin-bottom: 12px;
+		}
+		::v-deep .ai-h3 {
+			font-size: 14px;
+			color: #07C160;
+			margin: 8px 0 4px;
+			font-weight: bold;
+		}
+		::v-deep .ai-p {
+			font-size: 15px;
+			color: #444;
+		}
+	}
+	
+	.empty-tip {
+		text-align: center;
+		color: #eee;
+		font-size: 14px;
+		margin-top: 20px;
+	}
+
+	/* Loading 动画 */
+	.loading-wrap {
+		display: flex;
+		justify-content: center;
+		padding: 20px;
+	}
+	.dot-spinner {
+		display: flex;
+		gap: 6px;
+	}
+	.dot {
+		width: 8px;
+		height: 8px;
+		background-color: #07C160;
+		border-radius: 50%;
+		animation: bounce 1.4s infinite ease-in-out both;
+	}
+	.dot:nth-child(1) { animation-delay: -0.32s; }
+	.dot:nth-child(2) { animation-delay: -0.16s; }
+	
+	@keyframes bounce {
+		0%, 80%, 100% { transform: scale(0); }
+		40% { transform: scale(1); }
 	}
 </style>

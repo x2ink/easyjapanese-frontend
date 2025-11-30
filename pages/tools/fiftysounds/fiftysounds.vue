@@ -1,9 +1,9 @@
 <template>
-	<page-meta :page-style="`overflow:${showDetail? 'hidden' : 'visible'};`">
-		<view style="height: 100vh;display: flex;flex-direction: column;">
-			<view>
+	<page-meta :page-style="`overflow:${showDetail? 'hidden' : 'visible'};background-color:#ffffff;`">
+		<view style="height: 100vh;display: flex;flex-direction: column;background-color: #ffffff;">
+			<view class="header-section">
 				<NavbarDefault border title="五十音图"></NavbarDefault>
-				<view class="bg-white">
+				<view class="tab-container">
 					<view @click="current='平假名'" :class="{active:current=='平假名'}" class="kana-tab _GCENTER">
 						平假名
 					</view>
@@ -12,9 +12,10 @@
 					</view>
 				</view>
 			</view>
+			
 			<view style="flex: 1;overflow: scroll;">
 				<div class="table">
-					<div class="space-y-2">
+					<div class="section-block">
 						<div class="kana-row-header">清音</div>
 						<div class="grid">
 							<div @click="openDetail(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
@@ -23,7 +24,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="space-y-2">
+					<div class="section-block">
 						<div class="kana-row-header">浊音</div>
 						<div class="grid">
 							<div @click="openDetail(item)" class="kana-card" v-for="item in dakutenHiragana"
@@ -33,7 +34,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="space-y-2">
+					<div class="section-block">
 						<div class="kana-row-header">拗音</div>
 						<div class="grid">
 							<div @click="openDetail(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
@@ -47,12 +48,15 @@
 		</view>
 	</page-meta>
 	<wd-toast />
-	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="detail-popup">
-		<view class="_GCENTER" style="flex-direction: column;padding: 16px;">
-			<view class="detail-title">
-				假名手写板
+	
+	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="minimal-popup">
+		<view class="_GCENTER" style="flex-direction: column;padding: 24px 20px;">
+			<view class="detail-header">
+				<view class="detail-title">假名手写板</view>
+				<view class="detail-subtitle">跟随描红练习书写</view>
 			</view>
-			<view class="detail-img">
+			
+			<view class="detail-board-area">
 				<image v-if="boardShow" class="kana-write"
 					:src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
 					mode="aspectFill"></image>
@@ -61,24 +65,28 @@
 						:openSmooth="true"></l-signature>
 				</view>
 				<view v-else class="loadingtext">
-					<wd-loading size="40px" />
-					<text>手写板加载中</text>
+					<wd-loading size="40px" color="#999"/>
+					<text>加载中...</text>
 				</view>
 			</view>
+			
 			<view class="tools-btns">
-				<view>
-					<button @click="onClick('undo')" class="btn-info"> <text class="fas fa-reply"></text>
-						撤销</button>
-					<button @click="onClick('clear')" class="btn-info"> <text class="fas fa-trash"></text>
-						清空</button>
+				<view class="left-actions">
+					<button @click="onClick('undo')" class="btn-flat-secondary"> 
+						<text class="fas fa-reply"></text>
+					</button>
+					<button @click="onClick('clear')" class="btn-flat-secondary"> 
+						<text class="fas fa-trash"></text>
+					</button>
 				</view>
-				<button @click="onClick('save')" class="btn-primary">保存图片</button>
+				<button @click="onClick('save')" class="btn-flat-primary">保存图片</button>
 			</view>
 		</view>
 	</wd-popup>
 </template>
 
 <script setup>
+	// 逻辑部分完全保持不变，原样保留
 	import {
 		ref,
 	} from 'vue'
@@ -730,63 +738,166 @@
 </script>
 
 <style lang="scss">
-	.loadingtext {
+	/* 全局工具类与基础样式 */
+	._GCENTER {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.header-section {
+		background: #fff;
+		/* 确保头部背景纯白 */
+		padding-bottom: 8px;
+	}
+
+	/* Tab样式 - 改为灰色底色，选中项为纯色按钮 */
+	.tab-container {
+		background-color: #f7f8fa;
+		border-radius: 100px;
+		padding: 4px;
+		margin: 12px 20px;
+		display: flex;
+		gap: 4px;
+	}
+
+	.kana-tab {
+		border-radius: 100px;
+		font-size: 14px;
+		font-weight: 500;
+		flex: 1;
+		height: 40px;
+		color: #8c9096;
+		transition: all 0.3s ease;
+		background-color: transparent;
+	}
+
+	.kana-tab.active {
+		background-color: #07C160;
+		/* 主色调填充 */
+		color: white;
+		font-weight: 600;
+	}
+
+	/* 列表区域 */
+	.table {
+		margin: 0 20px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 32px);
+	}
+
+	.section-block {
+		margin-bottom: 32px;
+	}
+
+	.kana-row-header {
+		font-size: 20px;
+		font-weight: 700;
+		color: #1a1a1a;
+		/* 深黑字体 */
+		background-color: transparent;
+		padding: 16px 4px 12px 4px;
+		margin: 0;
+		display: flex;
+		align-items: center;
+	}
+
+	/* 装饰性小圆点，替代大背景块 */
+	.kana-row-header::before {
+		content: '';
+		display: block;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background-color: #07C160;
+		margin-right: 8px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 12px;
+		/* 增加间距 */
+	}
+
+	/* 卡片样式 - 极简色块 */
+	.kana-card {
+		aspect-ratio: 1;
+		border-radius: 16px;
+		/* 更圆润的角 */
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 10px;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-
-		text {
-			font-size: 12px;
-			color: #999;
-		}
+		background-color: #f7f8fa;
+		/* 浅灰色块 */
+		transition: all 0.2s ease;
+		box-shadow: none;
+		/* 去除阴影 */
 	}
 
-	.detail-popup {
-		border-radius: 16px 16px 0 0;
+	.kana-card:active {
+		transform: scale(0.96);
+		background-color: #ebedf0;
+		/* 点击时稍微变深 */
+	}
 
-		.detail-title {
-			font-size: 22px;
-		}
+	.kana-character {
+		font-size: 24px;
+		font-weight: 500;
+		margin-bottom: 2px;
+		color: #333;
+	}
 
-		.tools-btns {
-			margin-top: 16px;
-			width: calc(100% - 32px);
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
+	.kana-romaji {
+		font-size: 11px;
+		color: #9aa0a6;
+		font-weight: 500;
+	}
 
-			view {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-		}
+	/* 弹窗样式重构 */
+	.minimal-popup {
+		border-radius: 24px 24px 0 0 !important;
+		background-color: #ffffff !important;
+	}
 
-		.detail-img {
-			border-radius: 8px;
-			width: calc(100% - 32px);
-			margin-top: 16px;
-			aspect-ratio: 880/739;
-			position: relative;
-			border: 2px dashed #ccc;
+	.detail-header {
+		width: 100%;
+		text-align: left;
+		margin-bottom: 20px;
+	}
 
-			.kana-write {
-				width: 100%;
-				height: 100%;
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				opacity: 0.5;
-			}
-		}
+	.detail-title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #1a1a1a;
+		margin-bottom: 4px;
+	}
+
+	.detail-subtitle {
+		font-size: 14px;
+		color: #9aa0a6;
+	}
+
+	.detail-board-area {
+		border-radius: 20px;
+		width: 100%;
+		aspect-ratio: 880/739;
+		position: relative;
+		background-color: #f7f8fa;
+		/* 手写板改为灰色背景 */
+		border: none;
+		/* 去除虚线边框 */
+		overflow: hidden;
+	}
+
+	.kana-write {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0.3;
+		/* 降低透明度使背景更柔和 */
 	}
 
 	.drawingboard {
@@ -796,81 +907,85 @@
 		z-index: 9;
 		top: 0;
 		left: 0;
-		right: 0;
-		bottom: 0;
 	}
 
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
-	}
-
-	.table {
-		margin: 16px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-	}
-
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 10px;
-	}
-
-	.kana-tab {
-		border-radius: 35px;
-		font-size: 14px;
-		flex: 1;
-		height: 35px;
-	}
-
-	.bg-white {
-		background-color: white;
-		border-radius: 8px;
-		padding: 8px;
-		margin: 12px 16px;
-		display: flex;
-	}
-
-	.kana-tab.active {
-		background-color: #07C160;
-		color: white;
-	}
-
-	.kana-card {
-		aspect-ratio: 1;
-		border-radius: 12px;
+	.loadingtext {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background-color: white;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-		transition: all 0.2s ease;
+		gap: 12px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		text {
+			font-size: 13px;
+			color: #9aa0a6;
+		}
 	}
 
-	.kana-card:active {
-		transform: scale(0.96);
-		background-color: #f5f5f5;
+	/* 按钮区域 */
+	.tools-btns {
+		margin-top: 24px;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
 	}
 
-	.kana-character {
-		font-size: 24px;
-		margin-bottom: 4px;
+	.left-actions {
+		display: flex;
+		gap: 12px;
+		flex: 1;
 	}
 
-	.kana-romaji {
-		font-size: 12px;
-		color: #757575;
+	/* 扁平化按钮样式 */
+	button::after {
+		border: none;
 	}
 
-	.kana-row-header {
+	.btn-flat-secondary {
+		background-color: #f7f8fa;
+		color: #555;
 		font-size: 14px;
+		font-weight: 500;
+		border-radius: 12px;
+		padding: 0 16px;
+		height: 48px;
+		line-height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		margin: 0;
+		flex: 1;
+	}
+
+	.btn-flat-primary {
+		background-color: #07C160;
+		color: #ffffff;
+		font-size: 16px;
 		font-weight: 600;
-		color: #07C160;
-		background-color: #f0f9f0;
-		border-radius: 8px;
-		padding: 4px 8px;
-		margin: 12px 0;
+		border-radius: 12px;
+		padding: 0 24px;
+		height: 48px;
+		line-height: 48px;
+		margin: 0;
+		flex: 1.5;
+		/* 保存按钮稍微宽一点 */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.btn-flat-primary:active {
+		opacity: 0.85;
+	}
+
+	.btn-flat-secondary:active {
+		background-color: #ebedf0;
 	}
 </style>
