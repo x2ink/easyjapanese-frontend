@@ -180,6 +180,13 @@
 				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/other/markdown/markdown",
+			"style": {
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

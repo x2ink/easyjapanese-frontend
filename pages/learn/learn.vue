@@ -1,11 +1,12 @@
 <template>
-	<scroll-view scroll-y="true" style="height: 100vh;">
+	<scroll-view scroll-y="true" class="page-scroll">
 		<Loading v-if="loading"></Loading>
-		<view v-else>
+		<view v-else class="main-container">
 			<view class="head">
 				<NavbarDefault :title="`单词${typeTitle}`"></NavbarDefault>
 			</view>
-			<view v-if="doneTask" class="container">
+			
+			<view v-if="doneTask" class="content-wrapper done-wrapper">
 				<view class="completion-icon">
 					<i class="fa-solid fa-circle-check"></i>
 				</view>
@@ -14,11 +15,13 @@
 					你已经完成了本组的{{total}}个单词{{typeTitle}}<br>
 					坚持就是胜利，继续加油！
 				</p>
-				<view class="stats-container">
+				
+				<view class="stats-block">
 					<view class="stat-item">
 						<view class="stat-value">{{total}}</view>
 						<view class="stat-label">本组{{typeTitle}}</view>
 					</view>
+					<view class="stat-divider"></view>
 					<view class="stat-item">
 						<view class="stat-value">{{rightPercentage}}%</view>
 						<view class="stat-label">正确率</view>
@@ -30,7 +33,8 @@
 					<button @click="init(learnType, true)" class="secondary-button">再来一组</button>
 				</view>
 			</view>
-			<view v-else>
+			
+			<view v-else class="content-wrapper">
 				<view class="progress-container">
 					<view class="progress-text">
 						<span>今日进度: {{learned}}/{{total}}</span>
@@ -40,17 +44,18 @@
 						<view class="progress-fill" :style="{width:`${progressPercent}%`}"></view>
 					</view>
 				</view>
-				<view class="word-card">
-					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn"
-						title="发音">
+				
+				<view class="content-block word-block">
+					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
-					<view class="word-header _GCENTER">
+					
+					<view class="word-header-container">
 						<button @click="playUserRecord(wordinfo.voice)" v-if="wordinfo.step==2&&!showAnswer"
-							class="pronounce-btn pronounce-header" title="发音">
+							class="pronounce-btn pronounce-center" title="发音">
 							<i class="fas fa-volume-up"></i>
 						</button>
-						<view v-else class="_GCENTER" style="flex-direction: column;">
+						<view v-else class="word-text-group">
 							<view class="word-kanji">{{wordinfo.words.join('·')}}</view>
 							<view class="word-furigana">{{wordinfo.kana}}</view>
 							<view class="word-romaji">{{wordinfo.rome}}</view>
@@ -58,52 +63,56 @@
 					</view>
 
 					<view class="word-details">
-						<view v-if="showAnswer" style="display: flex;flex-direction: column;gap: 12px;">
+						<view v-if="showAnswer" class="detail-list">
 							<view class="detail-row">
-								<view class="detail-label">词性</view>
+								<view class="detail-tag">词性</view>
 								<view class="detail-content">{{wordinfo.types}}</view>
 							</view>
 							<view class="detail-row">
-								<view class="detail-label">释义</view>
+								<view class="detail-tag">释义</view>
 								<view class="detail-content">
 									{{wordinfo.description}}
 								</view>
 							</view>
 						</view>
-						<wd-skeleton v-else theme="paragraph"
-							:row-col="[
-						[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
+						<wd-skeleton v-else theme="paragraph" :row-col="[[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
 					</view>
 				</view>
-				<view class="example" v-if="showAnswer||wordinfo.step==0">
+				
+				<view class="content-block example-block" v-if="showAnswer||wordinfo.step==0">
+					<view class="block-label">
+						<i class="fas fa-quote-left"></i> 例句
+					</view>
 					<view
+						class="example-item"
 						@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${wordinfo.id}/${item.voice}`)"
 						v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
 						<view class="example-sentence" v-html="renderRubyHTMLWeb(item.read)"></view>
 						<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
 					</view>
 				</view>
+				
 				<view v-if="showAnswer" @click="goPage('/pages/word/worddetail/worddetail',{
 					id:wordinfo.id
-				})" class="search">
-					<text>查看词典</text>
+				})" class="search-link">
+					<text>查看完整词典详情 <i class="fas fa-chevron-right"></i></text>
 				</view>
-				<view style="height: calc(env(safe-area-inset-bottom) + 77px);">
-
-				</view>
-				<view v-if="showAnswer" class="action-buttons">
-					<button v-if="know" @click="misremember()" class="action-btn dont-know-btn">
+				
+				<view class="safe-area-spacer"></view>
+				
+				<view v-if="showAnswer" class="action-bar">
+					<button v-if="know" @click="misremember()" class="action-btn btn-warning">
 						<text>记错了</text>
 					</button>
-					<button @click="getNext()" class="action-btn next-btn">
+					<button @click="getNext()" class="action-btn btn-primary">
 						<text>下一个</text>
 					</button>
 				</view>
-				<view v-else class="action-buttons">
-					<button @click="unknowBtn()" class="action-btn dont-know-btn">
+				<view v-else class="action-bar">
+					<button @click="unknowBtn()" class="action-btn btn-danger">
 						<text>不认识</text>
 					</button>
-					<button @click="knowBtn()" class="action-btn know-btn">
+					<button @click="knowBtn()" class="action-btn btn-success">
 						<text>认识</text>
 					</button>
 				</view>
@@ -139,7 +148,6 @@
 	// --- 核心配置常量 ---
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
-	// 删除 TARGET_COUNT 常量，不再硬编码为 10
 	const MAX_ERROR_TOLERANCE = 3
 
 	// --- 工具函数 ---
@@ -239,7 +247,6 @@
 		doneTask.value = false
 	}
 
-	// forceRefresh: 是否强制刷新（用于“再来一组”按钮）
 	const init = async (type, forceRefresh = false) => {
 		learnType.value = type
 		loading.value = true
@@ -262,14 +269,12 @@
 
 			const res = await apiCall()
 
-			// --- 修改：兼容数组或对象格式，适配 {data: [], total: x} 结构 ---
 			let rawData = []
 			if (Array.isArray(res.data)) {
 				rawData = res.data
 			} else if (res.data && Array.isArray(res.data.data)) {
 				rawData = res.data.data
 			}
-			// -----------------------------------------------------------
 
 			wordList.value = rawData.map(item => {
 				const examples = item.detail.flatMap(d => d.meanings).flatMap(m => m.examples)
@@ -288,11 +293,9 @@
 				}
 			})
 
-			// --- 修改：total 不再硬编码，而是使用实际获取的单词数量 ---
 			total.value = wordList.value.length
 			queuePending.value = [...wordList.value]
 
-			// 如果数据为空，直接显示完成（防止空数据卡死）
 			if (total.value === 0) {
 				doneTask.value = true
 			} else {
@@ -303,29 +306,21 @@
 	}
 
 	const loadFromCache = (cache) => {
-		// 1. 基础数据恢复
 		wordList.value = cache.wordList || []
 		doneTask.value = cache.doneTask || false
 		sessionStep.value = cache.sessionStep || 0
-
-		// --- 修改：从缓存恢复 total，如果缓存没有则使用列表长度 ---
 		total.value = cache.total || wordList.value.length
-
 		nextShouldBeNew.value = cache.nextShouldBeNew ?? true
-
-		// 2. 关键UI状态恢复 (SnapShot)
 		showAnswer.value = cache.showAnswer || false
 		know.value = cache.know || false
 		lastWordId.value = cache.lastWordId || null
 
-		// 3. 引用链恢复
 		const link = (list) => list.map(i => wordList.value.find(w => w.word.id === i.word.id)).filter(i => i)
 		queuePending.value = link(cache.queuePending || [])
 		queueActive.value = link(cache.queueActive || [])
 		queueCompleted.value = link(cache.queueCompleted || [])
 		queueHard.value = link(cache.queueHard || [])
 
-		// 4. 恢复当前词
 		if (lastWordId.value) {
 			const target = wordList.value.find(i => i.word.id === lastWordId.value)
 			if (target) {
@@ -345,8 +340,8 @@
 		const cache = {
 			wordinfo: wordinfo.value,
 			doneTask: doneTask.value,
-			showAnswer: showAnswer.value, // 保存是否显示答案
-			know: know.value, // 保存“认识/不认识”状态
+			showAnswer: showAnswer.value,
+			know: know.value,
 			sessionStep: sessionStep.value,
 			lastWordId: lastWordId.value,
 			nextShouldBeNew: nextShouldBeNew.value,
@@ -355,7 +350,7 @@
 			queueCompleted: queueCompleted.value,
 			queueHard: queueHard.value,
 			wordList: wordList.value,
-			total: total.value // --- 修改：将 total 也存入缓存 ---
+			total: total.value
 		}
 
 		if (learnType.value == "learn") {
@@ -367,9 +362,7 @@
 		}
 	}
 
-	// --- 核心调度算法 ---
 	const getWord = () => {
-		// --- 修改：判断完成条件改为 >= total.value ---
 		if (queueCompleted.value.length >= total.value && total.value > 0) {
 			finishTask()
 			return
@@ -382,12 +375,11 @@
 
 		let nextItem = null
 		let source = ''
-		let reason = '' // 恢复：原因记录
+		let reason = ''
 
 		const activeCount = queueActive.value.length
 		const pendingCount = queuePending.value.length
 
-		// 调度策略
 		if (activeCount >= WINDOW_SIZE) {
 			source = 'review'
 			reason = '书桌已满'
@@ -409,7 +401,6 @@
 			}
 		}
 
-		// 执行取词
 		if (source === 'new') {
 			nextItem = queuePending.value.shift()
 			nextShouldBeNew.value = false
@@ -429,11 +420,8 @@
 			nextShouldBeNew.value = true
 		}
 
-		// 恢复：日志输出
-		const displayIcon = source === 'new' ? '🆕' : (source === 'rescue' ? '🚑' : '🔄');
-		const logWord = nextItem?.word?.words ? nextItem.word.words.join('·') : 'End';
 		console.log(
-			`[调度] ${displayIcon} ${logWord} | ${reason} | Active:${queueActive.value.length} Pending:${queuePending.value.length} Hard:${queueHard.value.length} Done:${queueCompleted.value.length}`
+			`[调度] ${source === 'new' ? '🆕' : (source === 'rescue' ? '🚑' : '🔄')} ${nextItem?.word?.words ? nextItem.word.words.join('·') : 'End'} | ${reason}`
 		);
 
 		if (!nextItem) {
@@ -448,7 +436,6 @@
 		showAnswer.value = false
 		know.value = false
 
-		// 进入新词时也保存一次，防止直接退出
 		writeCache()
 	}
 
@@ -458,7 +445,6 @@
 		else localwordsStore().clearReviewCache()
 	}
 
-	// --- 交互逻辑 ---
 	const knowBtn = () => {
 		know.value = true
 		showAnswer.value = true
@@ -466,7 +452,7 @@
 			currentItem.value.word.step += 1
 			currentItem.value.consecutiveError = 0
 		}
-		writeCache() // 状态变更立即保存
+		writeCache()
 	}
 
 	const unknowBtn = () => {
@@ -477,7 +463,7 @@
 			currentItem.value.error += 1
 			currentItem.value.consecutiveError += 1
 		}
-		writeCache() // 状态变更立即保存
+		writeCache()
 	}
 
 	const misremember = () => {
@@ -519,7 +505,6 @@
 						toast.show({
 							message: '太难了？换个词先试试！'
 						})
-						console.log(`[熔断] ⛔ ${item.word.words} 连续错误3次，移入待定区`);
 					} else {
 						insertToPenaltyPosition(item)
 					}
@@ -540,282 +525,194 @@
 		let insertIndex = len <= minIdx ? len : Math.floor(Math.random() * (Math.min(len, maxIdx) - minIdx + 1)) +
 			minIdx
 		queueActive.value.splice(insertIndex, 0, item)
-		console.log(`[反馈] ❌ 答错插队: 位置 ${insertIndex}`)
 	}
 </script>
 
 <style>
-	/* 样式部分保持不变 */
 	page {
-		background-color: white;
+		background-color: #ffffff;
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
+
 <style scoped lang="scss">
-	.container {
-		padding: 32px 16px;
+	/* --- 容器布局 --- */
+	.page-scroll {
+		height: 100vh;
+		background-color: #ffffff;
+	}
+
+	.main-container {
+		display: flex;
+		flex-direction: column;
 		height: 100%;
+		background-color: #ffffff;
+	}
+	
+	.head {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background-color: #ffffff;
+	}
+
+	.content-wrapper {
+		padding: 12px 20px 0; /* 底部padding交给占位块 */
+	}
+	
+	.done-wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding-top: 40px;
 	}
 
+	/* --- 通用：内容色块 (Gray Block) --- */
+	.content-block {
+		background-color: #f7f8fa; /* 极浅灰背景 */
+		border-radius: 16px;       /* 大圆角 */
+		padding: 20px;
+		margin-bottom: 24px;
+		position: relative;
+	}
+	
+	.block-label {
+		font-size: 13px;
+		color: #999;
+		margin-bottom: 12px;
+		font-weight: 600;
+	}
+
+	/* --- 完成状态样式 --- */
 	.completion-icon {
-		margin-top: 40px;
-		font-size: 70px;
-		margin-bottom: 20px;
+		font-size: 80px;
 		color: #07C160;
+		margin-bottom: 24px;
 	}
 
 	.completion-title {
 		font-size: 24px;
 		font-weight: 600;
-		color: #212121;
+		color: #333;
 		margin-bottom: 12px;
-		text-align: center;
 	}
 
 	.completion-desc {
-		font-size: 16px;
-		color: #757575;
+		font-size: 15px;
+		color: #888;
 		text-align: center;
-		margin-bottom: 48px;
-		line-height: 1.5;
+		margin-bottom: 40px;
+		line-height: 1.6;
 	}
 
-	.search {
+	/* 统计数据块 */
+	.stats-block {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-
-		text {
-			text-decoration: underline;
-			font-size: 24rpx;
-			color: #212121;
-		}
-	}
-
-	.stats-container {
-		display: flex;
 		justify-content: space-around;
+		background-color: #f7f8fa; /* 灰色块 */
 		width: 100%;
-		margin-bottom: 72px;
+		padding: 20px 0;
+		border-radius: 16px;
+		margin-bottom: 40px;
 	}
-
+	
 	.stat-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
+	
+	.stat-divider {
+		width: 1px;
+		height: 30px;
+		background-color: #e0e0e0;
+	}
 
 	.stat-value {
-		font-size: 20px;
+		font-size: 24px;
 		font-weight: 600;
 		color: #07C160;
 		margin-bottom: 4px;
+		font-family: 'DIN', sans-serif;
 	}
 
 	.stat-label {
-		font-size: 14px;
-		color: #757575;
+		font-size: 13px;
+		color: #999;
 	}
 
-	.button-container {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		gap: 16px;
-		margin-top: auto;
-		margin-bottom: 40px;
-	}
-
-	.primary-button {
-		background-color: #07C160;
-		color: white;
-		border: none;
-		border-radius: 12px;
-		padding: 12px 0;
-		font-size: 16px;
-		font-weight: 500;
-		width: 100%;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
-
-	.primary-button:hover {
-		background-color: #06AD56;
-	}
-
-	.secondary-button {
-		background-color: white;
-		color: #07C160;
-		border: 1px solid #07C160;
-		border-radius: 12px;
-		padding: 12px 0;
-		font-size: 16px;
-		font-weight: 500;
-		width: 100%;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
-
-	.secondary-button:hover {
-		background-color: #F5F5F5;
-	}
-
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
-	}
-
-	.example {
-		margin: 16px;
-		background-color: white;
-		border-radius: 12px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-		padding: 16px;
-	}
-
+	/* --- 学习页样式 --- */
+	
+	/* 进度条 */
 	.progress-container {
-		padding: 16px;
+		margin-bottom: 20px;
 	}
-
+	
 	.progress-text {
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: 8px;
-		font-size: 14px;
-		color: #757575;
+		font-size: 13px;
+		color: #999;
+		font-weight: 500;
 	}
-
+	
 	.progress-bar {
-		height: 4px;
-		background-color: #E0E0E0;
-		border-radius: 4px;
+		height: 6px;
+		background-color: #f0f0f0;
+		border-radius: 6px;
 		overflow: hidden;
 	}
-
+	
 	.progress-fill {
 		height: 100%;
 		background-color: #07C160;
-		transition: width 0.3s ease;
+		transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.word-card {
-		margin: 16px;
-		border: 1px solid #E5E7EB;
-		border-radius: 12px;
-		padding: 16px;
-		position: relative;
-	}
-
-	.word-header {
-		margin-bottom: 16px;
+	/* 单词块 (关键布局修复) */
+	.word-block {
+		min-height: 220px;
+		display: flex;
 		flex-direction: column;
+		justify-content: flex-start; /* 重点：从上到下排列，防止中间撑开挤压头部 */
+		align-items: stretch;
+	}
+
+	.word-header-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 24px; /* 固定头部下方间距 */
+		min-height: 80px;    /* 预留高度 */
+	}
+
+	.word-text-group {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.word-kanji {
-		font-size: 32px;
+		font-size: 36px;
 		font-weight: 600;
-		color: #212121;
-		margin-bottom: 4px;
+		color: #333;
+		margin-bottom: 6px;
+		line-height: 1.2;
 	}
 
 	.word-furigana {
-		font-size: 18px;
-		color: #757575;
-		margin-bottom: 8px;
+		font-size: 16px;
+		color: #888;
+		margin-bottom: 4px;
 	}
 
 	.word-romaji {
 		font-size: 14px;
-		color: #9E9E9E;
-		margin-bottom: 8px;
-	}
-
-	.word-details {
-		max-height: 500px;
-		margin-top: 16px;
-		border-top: 1px solid #F0F0F0;
-		padding-top: 16px;
-	}
-
-	.detail-row {
-		display: flex;
-
-	}
-
-	.detail-label {
-		width: 50px;
-		font-size: 14px;
-		color: #757575;
-		font-weight: bold;
-	}
-
-	.detail-content {
-		flex: 1;
-		font-size: 14px;
-		color: #212121;
-		font-weight: bold;
-		white-space: pre-line;
-	}
-
-	.example-sentence {
-		font-size: 16px;
-		color: #212121;
-	}
-
-	.example-translation {
-		font-size: 14px;
-		color: #757575;
-	}
-
-	.action-buttons {
-		position: fixed;
-		display: flex;
-		justify-content: center;
-		gap: 16px;
-		left: 16px;
-		right: 16px;
-		bottom: 0;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-	}
-
-	.action-btn {
-		flex: 1;
-		padding: 12px;
-		border-radius: 12px;
-		font-size: 16px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-	}
-
-	.dont-know-btn {
-		background-color: #F44336;
-		color: white;
-	}
-
-	.know-btn {
-		background-color: #07C160;
-		color: white;
-	}
-
-	.next-btn {
-		background-color: #2196F3;
-		color: white;
-	}
-
-	.pronounce-header {
-		width: 60px !important;
-		height: 60px !important;
-		position: relative !important;
-		right: 0 !important;
-		top: 0 !important;
-		font-size: 18px !important;
+		color: #ccc;
+		font-family: monospace;
 	}
 
 	.pronounce-btn {
@@ -824,14 +721,207 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #f0f0f0;
+		background-color: #ffffff; /* 灰色块内的白色按钮，增加层次 */
 		border-radius: 50%;
 		border: none;
-		color: #555;
+		color: #666;
 		font-size: 16px;
 		position: absolute;
 		right: 16px;
 		top: 16px;
 		margin: 0;
+		box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+		
+		&:active {
+			background-color: #f0f0f0;
+			transform: scale(0.95);
+		}
+	}
+	
+	.pronounce-center {
+		position: relative !important;
+		right: auto !important;
+		top: auto !important;
+		width: 64px !important;
+		height: 64px !important;
+		font-size: 24px !important;
+		margin-top: 10px;
+	}
+
+	/* 详情区域 */
+	.word-details {
+		padding-top: 20px;
+		border-top: 1px dashed #e0e0e0; /* 虚线分割，更轻盈 */
+	}
+
+	.detail-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.detail-row {
+		display: flex;
+		align-items: baseline;
+	}
+
+	.detail-tag {
+		font-size: 12px;
+		color: #fff;
+		background-color: #b0b0b0;
+		padding: 2px 6px;
+		border-radius: 4px;
+		margin-right: 10px;
+		white-space: nowrap;
+		font-weight: 600;
+	}
+
+	.detail-content {
+		font-size: 15px;
+		color: #444;
+		line-height: 1.6;
+		font-weight: 500;
+	}
+
+	/* 例句区域 */
+	.example-item {
+		margin-bottom: 16px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid rgba(0,0,0,0.03);
+		
+		&:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+	}
+
+	.example-sentence {
+		font-size: 16px;
+		color: #333;
+		line-height: 1.6;
+		margin-bottom: 4px;
+	}
+
+	.example-translation {
+		font-size: 14px;
+		color: #888;
+	}
+
+	.search-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px;
+		
+		text {
+			font-size: 14px;
+			color: #07C160;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+
+	/* 安全占位块: 按钮高度 + 间距 */
+	.safe-area-spacer {
+		height: calc(env(safe-area-inset-bottom) + 90px);
+		width: 100%;
+	}
+
+	/* --- 底部操作栏 (悬浮) --- */
+	.action-bar {
+		position: fixed;
+		left: 20px;
+		right: 20px;
+		bottom: calc(env(safe-area-inset-bottom) + 20px); /* 悬浮距离 */
+		display: flex;
+		gap: 16px; /* 按钮之间间距 */
+		z-index: 99;
+		pointer-events: none; /* 容器透传点击，避免遮挡 */
+	}
+	
+	.button-container {
+		/* 完成页面的按钮容器 */
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-bottom: 40px;
+	}
+
+	.action-btn {
+		pointer-events: auto; /* 按钮恢复点击 */
+		flex: 1; /* 平分宽度 */
+		min-width: 0; /* 防止内容撑开容器，确保严格平分 */
+		height: 52px; /* 统一高度 */
+		border-radius: 100px;
+		border: none;
+		font-size: 16px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* 极淡投影 */
+		padding: 0; /* 清除默认padding */
+		margin: 0;
+		
+		&::after { border: none; }
+		
+		&:active {
+			opacity: 0.85;
+			transform: scale(0.98);
+		}
+	}
+	
+	.primary-button, .secondary-button {
+		/* 复用部分样式 */
+		flex: none;
+		width: 100%;
+		height: 52px;
+		border-radius: 100px;
+		border: none;
+		font-size: 16px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		&::after { border: none; }
+		&:active { opacity: 0.8; }
+	}
+	
+	.btn-primary, .primary-button {
+		background-color: #07C160;
+		color: white;
+	}
+	
+	.btn-secondary, .secondary-button {
+		background-color: #f5f5f5;
+		color: #333;
+	}
+	
+	.btn-danger {
+		background-color: #ff4d4f;
+		color: white;
+	}
+	
+	.btn-success {
+		background-color: #07C160;
+		color: white;
+	}
+	
+	.btn-warning {
+		background-color: #ffa940;
+		color: white;
+	}
+
+	:deep(ruby) {
+		font-family: inherit;
+	}
+	:deep(rt) {
+		font-size: 60%;
+		color: #888;
 	}
 </style>

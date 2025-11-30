@@ -7,8 +7,8 @@
 			</view>
 			<view class="search-bg">
 				<view class="search-bar">
-					<text class="fas fa-search"></text>
-					<input @confirm="search" confirm-type="search" type="text" placeholder="搜索语法">
+					<i class="fas fa-search search-icon"></i>
+					<input @confirm="search" confirm-type="search" type="text" placeholder="搜索语法" placeholder-class="placeholder-text">
 				</view>
 			</view>
 			<view class="tabs-container">
@@ -21,16 +21,18 @@
 			<view class="list">
 				<view class="item" @click="goPage('/pages/tools/grammardetail/grammardetail',{id:item.id})"
 					:key="item.id" v-for="item in List">
-					<view>
-						<view class="title">
-							<text>{{item.grammar}}</text>
-							<span class="level-tag" :class="item.level">N{{item.level}}</span>
-						</view>
-						<view class="content">
-							<view style="font-size: 14px;color: #4b5563;">{{item.meanings.join(';')}}</view>
-						</view>
+					
+					<view class="title-row">
+						<text class="grammar-text">{{item.grammar}}</text>
+						<span class="level-tag" :class="item.level">N{{item.level}}</span>
 					</view>
+					
+					<view class="content-row">
+						<text class="meaning-text">{{item.meanings.join('；')}}</text>
+					</view>
+					
 				</view>
+				<view style="height: 40px;"></view>
 			</view>
 		</scroll-view>
 	</view>
@@ -42,7 +44,7 @@
 		onMounted,
 		computed,
 		watch
-	} from 'vue' // 移除了 nextTick
+	} from 'vue'
 	import {
 		onLoad,
 		onShow
@@ -56,7 +58,6 @@
 	
 	const menu = ref(['全部', 'N1', 'N2', 'N3', 'N4', 'N5'])
 	const current = ref(0)
-	// 移除了 scrollTop 变量
 
 	const changeTab = (e) => {
 		current.value = e
@@ -110,8 +111,6 @@
 		List.value = List.value.concat(res.data)
 	}
 	
-	// 移除了 wrapScrollTop, scroll 方法, backTop 方法
-	
 	const reachBottom = () => {
 		if (total.value > List.value.length) {
 			++page.value
@@ -126,7 +125,7 @@
 
 <style>
 	page {
-		background-color: white;
+		background-color: #ffffff;
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -137,13 +136,14 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		background-color: white;
+		background-color: #ffffff;
 	}
 
 	.fixed-header {
-		background-color: white;
+		background-color: #ffffff;
 		z-index: 10;
 		flex-shrink: 0;
+		/* 移除底部阴影，保持极简 */
 	}
 
 	.scroll-content {
@@ -152,96 +152,129 @@
 		overflow: hidden;
 	}
 
-	.level-tag {
-		font-size: 10px;
-		padding: 2px 6px;
-		border-radius: 4px;
-		font-weight: bold;
-		margin-left: 6px;
+	/* 搜索栏样式优化 */
+	.search-bg {
+		padding: 8px 16px 4px;
+		background-color: #ffffff;
+	}
+
+	.search-bar {
+		background-color: #f5f7fa; /* 更淡的背景色 */
+		border-radius: 100px; /* 全圆角胶囊样式 */
+		height: 40px;
+		padding: 0 16px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		transition: background-color 0.2s;
+
+		&:active {
+			background-color: #edf0f3;
+		}
+
+		input {
+			flex: 1;
+			font-size: 14px;
+			color: #333;
+		}
+
+		.search-icon {
+			font-size: 14px;
+			color: #aeb4c0;
+		}
+	}
+	
+	/* 深度选择器修改 placeholder 颜色 */
+	:deep(.placeholder-text) {
+		color: #aeb4c0;
 	}
 
 	.tabs-container {
-		background-color: white;
-		padding: 6px 0 12px 0;
+		background-color: #ffffff;
+		padding: 4px 0 8px 0;
 	}
 
-	.N1 {
-		background-color: #F44336;
-		color: white;
-	}
-
-	.N2 {
-		background-color: #FF9800;
-		color: white;
-	}
-
-	.N3 {
-		background-color: #4CAF50;
-		color: white;
-	}
-
-	.N4 {
-		background-color: #2196F3;
-		color: white;
-	}
-
-	.N5 {
-		background-color: #9C27B0;
-		color: white;
-	}
-
+	/* 列表样式优化 */
 	.list {
+		padding-top: 4px;
+		
 		.item {
-			padding: 12px 16px;
-			border-bottom: 1px solid #eee;
+			padding: 16px 20px; /* 增加内边距 */
+			border-bottom: 1px solid #f7f8fa; /* 极淡的分割线 */
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			transition: background-color 0.2s;
+			
+			&:active {
+				background-color: #fafafa;
+			}
 
-			.title {
-				font-size: 16px;
-				font-weight: bold;
+			.title-row {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 			}
+			
+			.grammar-text {
+				font-size: 17px;
+				font-weight: 600;
+				color: #333;
+			}
 
-			.content {
-				margin: 4px 0;
+			.content-row {
+				margin-top: 2px;
+			}
+			
+			.meaning-text {
+				font-size: 14px;
+				color: #666;
+				line-height: 1.5;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2; /* 最多显示2行 */
+				overflow: hidden;
 			}
 		}
 	}
 
+	/* 标签样式优化 */
+	.level-tag {
+		font-size: 11px;
+		padding: 2px 8px;
+		border-radius: 6px;
+		font-weight: 600;
+		margin-left: 12px;
+		flex-shrink: 0;
+		line-height: 1.4;
+	}
+
+	.N1 {
+		background-color: rgba(244, 67, 54, 0.1);
+		color: #F44336;
+	}
+
+	.N2 {
+		background-color: rgba(255, 152, 0, 0.1);
+		color: #FF9800;
+	}
+
+	.N3 {
+		background-color: rgba(76, 175, 80, 0.1);
+		color: #4CAF50;
+	}
+
+	.N4 {
+		background-color: rgba(33, 150, 243, 0.1);
+		color: #2196F3;
+	}
+
+	.N5 {
+		background-color: rgba(156, 39, 176, 0.1);
+		color: #9C27B0;
+	}
+
 	.head {
 		background-color: white;
-	}
-
-	.tab-item {
-		font-size: 14px;
-		white-space: nowrap;
-	}
-
-	.tabactive {
-		color: #07C160;
-	}
-
-	.search-bar {
-		background-color: #FAFAFA;
-		border-radius: 8px;
-		padding: 8px 12px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-
-		input {
-			flex: 1;
-		}
-
-		text {
-			font-size: 18px;
-			color: #9DA3AF;
-		}
-	}
-
-	.search-bg {
-		padding: 12px 16px;
 	}
 </style>

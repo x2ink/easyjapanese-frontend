@@ -138,7 +138,9 @@
 					</view>
 				</view>
 
-				<view class="func-card" @click="goPage('/pages/other/setplan/setplan')">
+				<view class="func-card" @click="goPage('/pages/other/markdown/markdown',{
+					url:http.baseUrl + `html/introduction.md`,
+					title:'入门知识' })">
 					<view class="func-icon-bg bg-blue">
 						<text class="fas fa-seedling"></text>
 					</view>
@@ -185,6 +187,7 @@
 	} from "@/stores/index.js"
 	import $http from "@/api/index.js"
 	const navBarHeight = ref(0)
+	import http from '@/utils/request.js'
 	const goLearn = (type) => {
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")

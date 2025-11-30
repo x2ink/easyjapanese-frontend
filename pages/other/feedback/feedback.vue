@@ -140,7 +140,7 @@
 		padding: 4px 12px;
 		background-color: #f7f8fa;
 		color: #5f6368;
-		border-radius: 6px;
+		border-radius: 100px; /* 胶囊按钮 */
 		/* 小圆角 */
 		transition: all 0.2s;
 		font-weight: 500;
@@ -210,7 +210,7 @@
 		line-height: 44px;
 		background-color: #07C160;
 		color: white;
-		border-radius: 8px;
+		border-radius: 100px; /* 胶囊按钮 */
 		font-size: 15px;
 		font-weight: 600;
 		border: none;
