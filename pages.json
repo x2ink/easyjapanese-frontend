@@ -173,6 +173,13 @@
 				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/tools/breaksentence/breaksentence",
+			"style": {
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

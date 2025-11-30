@@ -68,26 +68,29 @@
 					</view>
 					<text class="tool-text">文本翻译</text>
 				</view>
-				<view class="tool-btn" @click="goPage('/pages/tools/grammar/grammar')">
+
+				<view class="tool-btn" @click="goPage('/pages/tools/breaksentence/breaksentence')">
 					<view class="tool-icon">
-						<text class="fas fa-book-open"></text>
+						<text class="fas fa-puzzle-piece"></text>
 					</view>
-					<text class="tool-text">语法学习</text>
+					<text class="tool-text">词句拆解</text>
 				</view>
+
 				<view class="tool-btn" @click="goPage('/pages/tools/fiftysounds/fiftysounds')">
 					<view class="tool-icon">
-						<text class="fa-solid fa-turkish-lira-sign"></text>
+						<text class="fas fa-table-cells"></text>
 					</view>
 					<text class="tool-text">五十音图</text>
 				</view>
+
 				<view class="tool-btn" @click="goPage('/pages/tools/verbtransfiguration/verbtransfiguration')">
 					<view class="tool-icon">
-						<text class="fas fa-random"></text>
+						<text class="fas fa-arrow-right-arrow-left"></text>
 					</view>
 					<text class="tool-text">动词变形</text>
 				</view>
 			</view>
-			
+
 			<view class="calendar-container">
 				<view class="section-header">
 					<text class="section-title">学习打卡</text>
@@ -109,57 +112,57 @@
 						v-for="item in calendar" :key="item.key" class="calendar-day">{{item.day}}</text>
 				</view>
 			</view>
-			
+
 			<view class="section-header">
 				<text class="section-title">常用功能</text>
 			</view>
-			
+
 			<view class="func-grid">
 				<view class="func-card" @click="goPage('/pages/tools/notes/notes')">
 					<view class="func-icon-bg bg-orange">
-						<text class="fas fa-star"></text>
+						<text class="fas fa-pen-ruler"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">生词笔记</text>
-						<text class="func-desc">重点词汇 随时回顾</text>
+						<text class="func-title">语法学习</text>
+						<text class="func-desc">解析核心 掌握规律</text>
 					</view>
 					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
-				
+
 				<view class="func-card" @click="goPage('/pages/tools/commonwords/commonwords')">
 					<view class="func-icon-bg bg-purple">
 						<text class="fas fa-comments"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">常用语手册</text>
-						<text class="func-desc">日常会话 场景分类</text>
+						<text class="func-title">日常会话</text>
+						<text class="func-desc">高频场景 地道表达</text>
 					</view>
 					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
-				
+
 				<view class="func-card" @click="goPage('/pages/other/setplan/setplan')">
 					<view class="func-icon-bg bg-blue">
-						<text class="fas fa-calendar-check"></text>
+						<text class="fas fa-seedling"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">调整计划</text>
-						<text class="func-desc">循序渐进 量力而行</text>
+						<text class="func-title">入门知识</text>
+						<text class="func-desc">夯实基础 轻松起步</text>
 					</view>
 					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
-				
+
 				<view class="func-card" @click="goPage('/pages/other/feedback/feedback')">
 					<view class="func-icon-bg bg-green">
-						<text class="fas fa-envelope-open-text"></text>
+						<text class="fas fa-landmark"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">意见反馈</text>
-						<text class="func-desc">帮助我们做得更好</text>
+						<text class="func-title">文化常识</text>
+						<text class="func-desc">风土人情 拓展视野</text>
 					</view>
 					<text class="fas fa-angle-right func-arrow"></text>
 				</view>
 			</view>
-			
+
 		</view>
 		<wd-toast />
 	</view>
@@ -212,7 +215,7 @@
 		navBarHeight.value = statusBarHeight + 'px'
 	})
 	// 移除多余的 navigateTo 函数，统一使用 goPage
-	
+
 	const learnInfo = ref({
 		"book_info": {
 			"name": "",
@@ -524,12 +527,12 @@
 			color: #3B82F6;
 		}
 
-		.tool-btn:nth-child(2) .tool-icon {
+		.tool-btn:nth-child(3) .tool-icon {
 			background-color: #F5F3FF;
 			color: #8B5CF6;
 		}
 
-		.tool-btn:nth-child(3) .tool-icon {
+		.tool-btn:nth-child(2) .tool-icon {
 			background-color: #FFEDD5;
 			color: #F97316;
 		}
@@ -616,14 +619,15 @@
 			}
 		}
 	}
-	
+
 	/* 新增：更多功能网格样式 */
 	.func-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 12px;
-		
+
 		.func-card {
+			position: relative;
 			background-color: white;
 			border-radius: 12px;
 			padding: 16px;
@@ -631,11 +635,11 @@
 			align-items: center;
 			gap: 12px;
 			position: relative;
-			
+
 			&:active {
 				background-color: #F9FAFB;
 			}
-			
+
 			.func-icon-bg {
 				width: 40px;
 				height: 40px;
@@ -645,33 +649,50 @@
 				justify-content: center;
 				font-size: 18px;
 				flex-shrink: 0;
-				
-				&.bg-orange { background-color: #FFF7ED; color: #F97316; }
-				&.bg-purple { background-color: #F3F0FF; color: #7C3AED; }
-				&.bg-blue { background-color: #EFF6FF; color: #3B82F6; }
-				&.bg-green { background-color: #ECFDF5; color: #10B981; }
+
+				&.bg-orange {
+					background-color: #FFF7ED;
+					color: #F97316;
+				}
+
+				&.bg-purple {
+					background-color: #F3F0FF;
+					color: #7C3AED;
+				}
+
+				&.bg-blue {
+					background-color: #EFF6FF;
+					color: #3B82F6;
+				}
+
+				&.bg-green {
+					background-color: #ECFDF5;
+					color: #10B981;
+				}
 			}
-			
+
 			.func-info {
 				flex: 1;
 				display: flex;
 				flex-direction: column;
 				gap: 4px;
-				
+
 				.func-title {
 					font-size: 14px;
 					font-weight: 600;
 					color: #1F2937;
 				}
-				
+
 				.func-desc {
 					font-size: 11px;
 					color: #9CA3AF;
 				}
 			}
-			
+
 			.func-arrow {
+				position: absolute;
 				font-size: 12px;
+				right: 16px;
 				color: #D1D5DB;
 			}
 		}

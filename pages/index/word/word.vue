@@ -7,75 +7,98 @@
 				<view class="description">自由的日语单词学习助手</view>
 			</view>
 		</view>
-		<!-- 功能入口 -->
-		<div class="action-buttons">
-			<div class="button-item" @click="goToolPage('/pages/word/review/review')">
+
+		<view class="action-buttons">
+			<view class="button-item" @click="goToolPage('/pages/word/review/review')">
 				<button class="action-button blue">
-					<i class="fas fa-history mr-1"></i> 回顾
+					<text class="fas fa-history mr-1"></text> 回顾
 				</button>
-			</div>
-			<div class="button-item" @click="goToolPage('/pages/word/dictation/dictation')">
+			</view>
+			<view class="button-item" @click="goToolPage('/pages/word/dictation/dictation')">
 				<button class="action-button green">
-					<i class="fa-solid fa-headphones mr-1"></i> 听写
+					<text class="fa-solid fa-headphones mr-1"></text> 听写
 				</button>
-			</div>
-			<div class="button-item" @click="goToolPage('/pages/word/writefrommemory/writefrommemory')">
+			</view>
+			<view class="button-item" @click="goToolPage('/pages/word/writefrommemory/writefrommemory')">
 				<button class="action-button purple">
-					<i class="fas fa-pen-fancy mr-1"></i> 默写
+					<text class="fas fa-pen-fancy mr-1"></text> 默写
 				</button>
-			</div>
-		</div>
-		<div class="main-content">
-			<div class="daily-proverb">
-				<div class="quote-mark">「</div>
-				<div class="proverb-content">
-					<div class="proverb-text">{{sentence.ja}}</div>
-					<div class="proverb-translation">{{sentence.ch}}</div>
-					<div class="proverb-source">— {{sentence.source}}</div>
-				</div>
-			</div>
-			<div class="feature-grid">
-				<div class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus',{title:'词库'})">
-					<div class="feature-icon blue">
-						<i class="fas fa-book"></i>
-					</div>
-					<div class="feature-name">我的词库</div>
-				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/tools/grammar/grammar')">
-					<div class="feature-icon purple">
-						<i class="fas fa-book-open"></i>
-					</div>
-					<div class="feature-name">语法学习</div>
-				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
-					<div class="feature-icon orange">
-						<i class="fas fa-sticky-note"></i>
-					</div>
-					<div class="feature-name">学习笔记</div>
-				</div>
-				<div class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
-					<div class="feature-icon green">
-						<i class="fas fa-comment-dots"></i>
-					</div>
-					<div class="feature-name">日常会话</div>
-				</div>
-			</div>
-			<div class="ranking-header">
-				<div class="ranking-title">单词达人榜</div>
-			</div>
-			<div class="ranking-list">
-				<div v-for="(item,index) in ranks" :key="item.user.id" class="ranking-item">
-					<div :class="{blue:index==0,purple:index==1,green:index==2,gray:index>2}" class="rank-number">
+			</view>
+		</view>
+
+		<view class="main-content">
+			<view class="daily-card">
+				<image class="card-bg"
+					:src="sentence.picture || 'https://pic1.imgdb.cn/item/692be430291f309b79e90b56.png'"
+					mode="aspectFill"></image>
+
+				<view class="card-mask"></view>
+
+				<view class="card-content">
+					<view class="card-header">
+						<view class="tag">每日一句</view>
+						<view class="date">{{ todayDate }}</view>
+					</view>
+
+					<view class="text-group">
+						<view class="ja-text">{{sentence.ja}}</view>
+						<view class="ch-text">{{sentence.ch}}</view>
+					</view>
+
+					<view class="card-footer">
+						<text class="fas fa-quote-left quote-icon"></text>
+						<text class="source-text">{{sentence.source}}</text>
+					</view>
+				</view>
+			</view>
+
+			<view class="feature-grid">
+				<view class="feature-card word-card" @click="goPage('/pages/word/thesaurus/thesaurus',{title:'词库'})">
+					<view class="feature-icon blue">
+						<text class="fas fa-book-bookmark"></text>
+					</view>
+					<view class="feature-name">我的词库</view>
+				</view>
+
+				
+
+				<view class="feature-card word-card" @click="goPage('/pages/tools/notes/notes')">
+					<view class="feature-icon orange">
+						<text class="fas fa-pen-to-square"></text>
+					</view>
+					<view class="feature-name">学习笔记</view>
+				</view>
+
+				<view class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
+					<view class="feature-icon green">
+						<text class="fa-solid fa-message"></text>
+					</view>
+					<view class="feature-name">常用词汇</view>
+				</view>
+				<view class="feature-card word-card" @click="goPage('/pages/tools/grammar/grammar')">
+					<view class="feature-icon purple">
+						<text class="fas fa-folder-open"></text>
+					</view>
+					<view class="feature-name">学习资料</view>
+				</view>
+			</view>
+
+			<view class="ranking-header">
+				<view class="ranking-title">单词达人榜</view>
+			</view>
+			<view class="ranking-list">
+				<view v-for="(item,index) in ranks" :key="item.user.id" class="ranking-item">
+					<view :class="{blue:index==0,purple:index==1,green:index==2,gray:index>2}" class="rank-number">
 						{{index+1}}
-					</div>
-					<div class="user-info">
-						<div class="username">{{item.user.nickname}}</div>
-						<div class="user-stats">已背 {{item.word_count}} 个单词</div>
-					</div>
+					</view>
+					<view class="user-info">
+						<view class="username">{{item.user.nickname}}</view>
+						<view class="user-stats">已背 {{item.word_count}} 个单词</view>
+					</view>
 					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
-				</div>
-			</div>
-		</div>
+				</view>
+			</view>
+		</view>
 		<wd-toast />
 	</view>
 </template>
@@ -83,9 +106,9 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed // 引入 computed
 	} from 'vue'
-	const navBarHeight = ref(0)
 	import {
 		goPage
 	} from "@/utils/common.js"
@@ -93,7 +116,6 @@
 		useToast,
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
-	const toast = useToast()
 	import $http from "@/api/index.js"
 	import {
 		onLoad,
@@ -102,12 +124,25 @@
 	import {
 		userStore
 	} from "@/stores/index.js"
+
+	const toast = useToast()
+	const navBarHeight = ref(0)
 	const sentence = ref({})
+	const ranks = ref([])
+	const todayWordCount = ref(0)
+
+	// 获取今天的日期，增强卡片展示效果
+	const todayDate = computed(() => {
+		const date = new Date();
+		const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+		return `${date.getMonth() + 1}.${date.getDate()} ${days[date.getDay()]}`;
+	});
+
 	const getSentence = async () => {
 		const res = await $http.common.getSentence()
 		sentence.value = res.data
 	}
-	const ranks = ref([])
+
 	const goToolPage = (path) => {
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
@@ -119,18 +154,21 @@
 			goPage(path)
 		}
 	}
+
 	const getRanking = async () => {
 		const res = await $http.user.ranking()
 		ranks.value = res.data.slice(0, 10)
 	}
-	const todayWordCount = ref(0)
+
 	const getTodayWords = async () => {
 		const res = await $http.word.getLearnt()
 		todayWordCount.value = res.data.length
 	}
+
 	onShow(() => {
 		getTodayWords()
 	})
+
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
@@ -161,7 +199,6 @@
 		.description {
 			font-size: 10px;
 		}
-
 	}
 
 	.action-buttons {
@@ -169,7 +206,6 @@
 		background: white;
 		display: flex;
 		justify-content: space-between;
-
 
 		.button-item {
 			flex: 1;
@@ -212,75 +248,113 @@
 		padding: 16px;
 	}
 
-	.book-selector {
-		background: white;
-		border-radius: 8px;
-		padding: 16px;
-		margin-bottom: 12px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+	/* --- 每日一句卡片样式 (无阴影) --- */
+	.daily-card {
+		position: relative;
+		width: 100%;
+		height: 200px;
+		border-radius: 16px;
+		overflow: hidden;
+		margin-bottom: 16px;
+		/* box-shadow 已移除 */
+		background-color: #f0f0f0;
 
-		.book-info {
+		.card-bg {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+
+		.card-mask {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 2;
+			/* 黑色渐变，底部较深以衬托文字 */
+			background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.7) 100%);
+		}
+
+		.card-content {
+			position: relative;
+			z-index: 3;
+			height: 100%;
+			padding: 16px 20px;
 			display: flex;
-			align-items: center;
+			flex-direction: column;
+			justify-content: space-between;
+			box-sizing: border-box;
 		}
 
-		.book-level {
-			width: 48px;
-			height: 64px;
-			border-radius: 8px;
-			background: linear-gradient(to bottom right, #4ade80, #22d3ee);
+		.card-header {
 			display: flex;
+			justify-content: space-between;
 			align-items: center;
-			justify-content: center;
-			color: white;
-			font-weight: bold;
-			margin-right: 12px;
+
+			.tag {
+				background: rgba(255, 255, 255, 0.25);
+				backdrop-filter: blur(4px);
+				padding: 4px 10px;
+				border-radius: 20px;
+				font-size: 10px;
+				color: #fff;
+				font-weight: bold;
+				letter-spacing: 1px;
+			}
+
+			.date {
+				font-size: 12px;
+				color: rgba(255, 255, 255, 0.9);
+				font-family: sans-serif;
+				font-weight: 500;
+			}
 		}
 
-		.book-name {
-			font-size: 16px;
-			font-weight: 500;
+		.text-group {
+			margin-top: auto;
+			margin-bottom: 8px;
+
+			.ja-text {
+				font-size: 18px;
+				font-weight: bold;
+				color: #fff;
+				line-height: 1.5;
+				margin-bottom: 6px;
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+			}
+
+			.ch-text {
+				font-size: 13px;
+				color: rgba(255, 255, 255, 0.95);
+				line-height: 1.4;
+				text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+			}
 		}
 
-		.book-progress {
-			font-size: 12px;
-			color: #666;
-			margin-top: 4px;
+		.card-footer {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 6px;
+
+			.quote-icon {
+				font-size: 10px;
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			.source-text {
+				font-size: 11px;
+				color: rgba(255, 255, 255, 0.8);
+				font-style: italic;
+			}
 		}
 	}
 
-	.daily-proverb {
-		background: white;
-		border-radius: 8px;
-		padding: 16px;
-		margin-bottom: 12px;
-		display: flex;
-
-		.quote-mark {
-			font-size: 24px;
-			color: #f59e0b;
-			margin-right: 12px;
-		}
-
-		.proverb-text {
-			font-size: 16px;
-			color: #333;
-		}
-
-		.proverb-translation {
-			font-size: 14px;
-			color: #666;
-			margin-top: 4px;
-		}
-
-		.proverb-source {
-			font-size: 12px;
-			color: #999;
-			margin-top: 8px;
-		}
-	}
+	/* --- 每日一句样式结束 --- */
 
 	.feature-grid {
 		display: grid;
@@ -351,7 +425,6 @@
 			font-size: 14px;
 			font-weight: 500;
 		}
-
 	}
 
 	.ranking-list {
@@ -411,7 +484,6 @@
 					margin-top: 2px;
 				}
 			}
-
 		}
 	}
 </style>
