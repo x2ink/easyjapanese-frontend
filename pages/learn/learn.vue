@@ -5,7 +5,7 @@
 			<view class="head">
 				<NavbarDefault :title="`单词${typeTitle}`"></NavbarDefault>
 			</view>
-			
+
 			<view v-if="doneTask" class="content-wrapper done-wrapper">
 				<view class="completion-icon">
 					<i class="fa-solid fa-circle-check"></i>
@@ -15,7 +15,7 @@
 					你已经完成了本组的{{total}}个单词{{typeTitle}}<br>
 					坚持就是胜利，继续加油！
 				</p>
-				
+
 				<view class="stats-block">
 					<view class="stat-item">
 						<view class="stat-value">{{total}}</view>
@@ -33,7 +33,7 @@
 					<button @click="init(learnType, true)" class="secondary-button">再来一组</button>
 				</view>
 			</view>
-			
+
 			<view v-else class="content-wrapper">
 				<view class="progress-container">
 					<view class="progress-text">
@@ -44,12 +44,13 @@
 						<view class="progress-fill" :style="{width:`${progressPercent}%`}"></view>
 					</view>
 				</view>
-				
+
 				<view class="content-block word-block">
-					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn" title="发音">
+					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn"
+						title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
-					
+
 					<view class="word-header-container">
 						<button @click="playUserRecord(wordinfo.voice)" v-if="wordinfo.step==2&&!showAnswer"
 							class="pronounce-btn pronounce-center" title="发音">
@@ -75,31 +76,31 @@
 								</view>
 							</view>
 						</view>
-						<wd-skeleton v-else theme="paragraph" :row-col="[[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
+						<wd-skeleton v-else theme="paragraph"
+							:row-col="[[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
 					</view>
 				</view>
-				
+
 				<view class="content-block example-block" v-if="showAnswer||wordinfo.step==0">
 					<view class="block-label">
 						<i class="fas fa-quote-left"></i> 例句
 					</view>
-					<view
-						class="example-item"
+					<view class="example-item"
 						@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${wordinfo.id}/${item.voice}`)"
 						v-for="(item,index) in wordinfo.examples" :key="`example=${index}`">
 						<view class="example-sentence" v-html="renderRubyHTMLWeb(item.read)"></view>
 						<view v-if="showAnswer" class="example-translation">{{item.zh}}</view>
 					</view>
 				</view>
-				
+
 				<view v-if="showAnswer" @click="goPage('/pages/word/worddetail/worddetail',{
 					id:wordinfo.id
 				})" class="search-link">
 					<text>查看完整词典详情 <i class="fas fa-chevron-right"></i></text>
 				</view>
-				
+
 				<view class="safe-area-spacer"></view>
-				
+
 				<view v-if="showAnswer" class="action-bar">
 					<button v-if="know" @click="misremember()" class="action-btn btn-warning">
 						<text>记错了</text>
@@ -549,7 +550,7 @@
 		height: 100%;
 		background-color: #ffffff;
 	}
-	
+
 	.head {
 		position: sticky;
 		top: 0;
@@ -558,9 +559,9 @@
 	}
 
 	.content-wrapper {
-		padding: 12px 20px 0; /* 底部padding交给占位块 */
+		padding: 12px 20px 0;
 	}
-	
+
 	.done-wrapper {
 		display: flex;
 		flex-direction: column;
@@ -570,13 +571,14 @@
 
 	/* --- 通用：内容色块 (Gray Block) --- */
 	.content-block {
-		background-color: #f7f8fa; /* 极浅灰背景 */
-		border-radius: 16px;       /* 大圆角 */
+		background-color: #f7f8fa;
+		border-radius: 16px;
 		padding: 20px;
+		/* 父容器内边距：决定了底部留白 */
 		margin-bottom: 24px;
 		position: relative;
 	}
-	
+
 	.block-label {
 		font-size: 13px;
 		color: #999;
@@ -611,19 +613,19 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
-		background-color: #f7f8fa; /* 灰色块 */
+		background-color: #f7f8fa;
 		width: 100%;
 		padding: 20px 0;
 		border-radius: 16px;
 		margin-bottom: 40px;
 	}
-	
+
 	.stat-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
-	
+
 	.stat-divider {
 		width: 1px;
 		height: 30px;
@@ -644,12 +646,12 @@
 	}
 
 	/* --- 学习页样式 --- */
-	
+
 	/* 进度条 */
 	.progress-container {
 		margin-bottom: 20px;
 	}
-	
+
 	.progress-text {
 		display: flex;
 		justify-content: space-between;
@@ -658,26 +660,29 @@
 		color: #999;
 		font-weight: 500;
 	}
-	
+
 	.progress-bar {
 		height: 6px;
 		background-color: #f0f0f0;
 		border-radius: 6px;
 		overflow: hidden;
 	}
-	
+
 	.progress-fill {
 		height: 100%;
 		background-color: #07C160;
 		transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	/* 单词块 (关键布局修复) */
+	/* 单词块修改：
+		1. 移除 min-height: 220px，实现高度自适应内容。
+		2. 内容（骨架屏/详情）底部会自然撑开，下方距离由父级 .content-block 的 padding-bottom (20px) 决定。
+	*/
 	.word-block {
-		min-height: 220px;
+		/* min-height: 220px;  <-- 已移除 */
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-start; /* 重点：从上到下排列，防止中间撑开挤压头部 */
+		justify-content: flex-start;
 		align-items: stretch;
 	}
 
@@ -685,8 +690,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-bottom: 24px; /* 固定头部下方间距 */
-		min-height: 80px;    /* 预留高度 */
+		margin-bottom: 24px;
+		min-height: 80px;
 	}
 
 	.word-text-group {
@@ -721,7 +726,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #ffffff; /* 灰色块内的白色按钮，增加层次 */
+		background-color: #ffffff;
 		border-radius: 50%;
 		border: none;
 		color: #666;
@@ -730,14 +735,14 @@
 		right: 16px;
 		top: 16px;
 		margin: 0;
-		box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-		
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
 		&:active {
 			background-color: #f0f0f0;
 			transform: scale(0.95);
 		}
 	}
-	
+
 	.pronounce-center {
 		position: relative !important;
 		right: auto !important;
@@ -748,10 +753,10 @@
 		margin-top: 10px;
 	}
 
-	/* 详情区域 */
+	/* 详情区域：骨架屏放在这里 */
 	.word-details {
 		padding-top: 20px;
-		border-top: 1px dashed #e0e0e0; /* 虚线分割，更轻盈 */
+		border-top: 1px dashed #e0e0e0;
 	}
 
 	.detail-list {
@@ -787,8 +792,8 @@
 	.example-item {
 		margin-bottom: 16px;
 		padding-bottom: 16px;
-		border-bottom: 1px solid rgba(0,0,0,0.03);
-		
+		border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+
 		&:last-child {
 			margin-bottom: 0;
 			padding-bottom: 0;
@@ -813,7 +818,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 10px;
-		
+
 		text {
 			font-size: 14px;
 			color: #07C160;
@@ -823,7 +828,7 @@
 		}
 	}
 
-	/* 安全占位块: 按钮高度 + 间距 */
+	/* 安全占位块 */
 	.safe-area-spacer {
 		height: calc(env(safe-area-inset-bottom) + 90px);
 		width: 100%;
@@ -834,15 +839,14 @@
 		position: fixed;
 		left: 20px;
 		right: 20px;
-		bottom: calc(env(safe-area-inset-bottom) + 20px); /* 悬浮距离 */
+		bottom: calc(env(safe-area-inset-bottom) + 20px);
 		display: flex;
-		gap: 16px; /* 按钮之间间距 */
+		gap: 16px;
 		z-index: 99;
-		pointer-events: none; /* 容器透传点击，避免遮挡 */
+		pointer-events: none;
 	}
-	
+
 	.button-container {
-		/* 完成页面的按钮容器 */
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -851,10 +855,10 @@
 	}
 
 	.action-btn {
-		pointer-events: auto; /* 按钮恢复点击 */
-		flex: 1; /* 平分宽度 */
-		min-width: 0; /* 防止内容撑开容器，确保严格平分 */
-		height: 52px; /* 统一高度 */
+		pointer-events: auto;
+		flex: 1;
+		min-width: 0;
+		height: 52px;
 		border-radius: 100px;
 		border: none;
 		font-size: 16px;
@@ -863,20 +867,22 @@
 		align-items: center;
 		justify-content: center;
 		transition: all 0.2s;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* 极淡投影 */
-		padding: 0; /* 清除默认padding */
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+		padding: 0;
 		margin: 0;
-		
-		&::after { border: none; }
-		
+
+		&::after {
+			border: none;
+		}
+
 		&:active {
 			opacity: 0.85;
 			transform: scale(0.98);
 		}
 	}
-	
-	.primary-button, .secondary-button {
-		/* 复用部分样式 */
+
+	.primary-button,
+	.secondary-button {
 		flex: none;
 		width: 100%;
 		height: 52px;
@@ -887,31 +893,38 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
-		&::after { border: none; }
-		&:active { opacity: 0.8; }
+
+		&::after {
+			border: none;
+		}
+
+		&:active {
+			opacity: 0.8;
+		}
 	}
-	
-	.btn-primary, .primary-button {
+
+	.btn-primary,
+	.primary-button {
 		background-color: #07C160;
 		color: white;
 	}
-	
-	.btn-secondary, .secondary-button {
+
+	.btn-secondary,
+	.secondary-button {
 		background-color: #f5f5f5;
 		color: #333;
 	}
-	
+
 	.btn-danger {
 		background-color: #ff4d4f;
 		color: white;
 	}
-	
+
 	.btn-success {
 		background-color: #07C160;
 		color: white;
 	}
-	
+
 	.btn-warning {
 		background-color: #ffa940;
 		color: white;
@@ -920,6 +933,7 @@
 	:deep(ruby) {
 		font-family: inherit;
 	}
+
 	:deep(rt) {
 		font-size: 60%;
 		color: #888;
