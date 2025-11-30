@@ -1,115 +1,117 @@
 <template>
-	<view class="head">
-		<NavbarDefault border title="单词默写"></NavbarDefault>
-	</view>
-	<view class="progress-bar">
-		<view class="progress-fill" :style="{width:`${progress}%`}"></view>
-	</view>
-	
-	<div v-if="isBatchComplete" class="container">
-		<div class="completion-icon">
-			<i class="fa-solid fa-circle-check"></i>
-		</div>
-		<h1 class="completion-title">默写完成！</h1>
-		<view class="completion-desc">
-			你已经完成了本组的{{doneList.length}}个单词默写<br>
-			<text v-if="serverRemaining > 0" style="font-size: 14px; color: #999; margin-top: 8px; display: block;">
-				今日剩余待默写: {{serverRemaining}} 个
-			</text>
-			<text v-else>今日任务已全部完成，继续加油！</text>
-		</view>
-		<view class="button-container">
-			<button v-if="serverRemaining > 0" class="primary-button" @click="getAllWords()">继续默写</button>
-			<button class="secondary-button" @click="goLearn()">去学习新词</button>
-		</view>
-	</div>
-	
-	<view v-else>
-		<div class="word-display">
-			<div class="japanese-word">{{wordinfo.description}}</div>
-			<div class="play-icon" @click="playUserRecord(wordinfo.voice)">
-				<i class="fas fa-volume-up"></i>
-			</div>
-		</div>
-		
-		<div class="input-section">
-			<div class="input-wrapper" :class="{'error': isError}">
-				<input 
-					v-model="value" 
-					type="text" 
-					confirm-type="done"
-					@confirm="submit()"
-					:disabled="showAnwser && !isError" 
-					placeholder="请输入日语单词、假名或罗马音"
-				/>
-				<view class="keyboard-trigger" @click.stop="toggleKeyboard">
-					<i class="fa-solid fa-keyboard"></i>
-				</view>
-				
-				<view class="clear-btn" v-if="value" @click="value=''">
-					<i class="fa-solid fa-circle-xmark"></i>
-				</view>
-			</div>
-			
-			<button v-if="!showAnwser" class="submit-btn" @click="submit()">确认</button>
-			
-			<button v-else class="continue-btn" @click="getNext()">
-				继续下一个 <i class="fa-solid fa-arrow-right"></i>
-			</button>
-			
-			<view v-if="!showAnwser" @click="giveUp()" class="look-answer">
-				<text>不记得了，查看答案</text>
+	<view class="page-container">
+		<view class="top-header">
+			<NavbarDefault title="单词默写"></NavbarDefault>
+			<view class="progress-bar">
+				<view class="progress-fill" :style="{width:`${progress}%`}"></view>
 			</view>
-		</div>
+		</view>
 
-		<div v-if="showAnwser" @click="goPage('/pages/word/worddetail/worddetail',{ id:wordinfo.id })" class="word-card">
-			<div class="card-header">
-				<div>
-					<div class="card-japanese">
-						<text style="color: #07C160;">{{formatWordName(wordinfo.words,wordinfo.kana)}}</text>
+		<scroll-view scroll-y class="scroll-content">
+			<div v-if="isBatchComplete" class="container">
+				<view class="result-icon-box">
+					<i class="fa-solid fa-circle-check"></i>
+				</view>
+				<h1 class="completion-title">默写完成</h1>
+				<view class="completion-desc">
+					本次练习 {{doneList.length}} 个单词<br>
+					<text v-if="serverRemaining > 0" class="sub-text">
+						今日剩余待默写: {{serverRemaining}} 个
+					</text>
+					<text v-else class="sub-text">今日任务已全部完成，继续加油！</text>
+				</view>
+				<view class="button-container">
+					<button v-if="serverRemaining > 0" class="action-btn primary-btn"
+						@click="getAllWords()">继续默写</button>
+					<button class="action-btn secondary-btn" @click="goLearn()">去学习新词</button>
+				</view>
+			</div>
+
+			<view v-else class="write-wrap">
+				<div class="word-block">
+					<div class="word-text">{{wordinfo.description}}</div>
+					<div class="play-btn-area" @click="playUserRecord(wordinfo.voice)">
+						<i class="fas fa-volume-up play-icon"></i>
+						<text class="play-hint">点击播放读音</text>
 					</div>
-					<div class="card-pronunciation">{{wordinfo.rome}}</div>
 				</div>
-				<view class="icon">
-					<i class="fa-solid fa-chevron-right"></i>
-				</view>
-			</div>
-		</div>
-	</view>
-	
-	<wd-popup v-model="showSoftKeyboard" position="bottom" safe-area-inset-bottom>
-		<view class="keyboard-container">
-			<view class="keyboard-header">
-				<view class="keyboard-tabs">
-					<text :class="{active: kbTab==='hira'}" @click="kbTab='hira'">平假名</text>
-					<text :class="{active: kbTab==='kata'}" @click="kbTab='kata'">片假名</text>
-				</view>
-				<view class="keyboard-close" @click="showSoftKeyboard=false">完成</view>
-			</view>
-			
-			<scroll-view scroll-y class="keyboard-body">
-				<view class="key-grid">
-					<view 
-						class="key-btn" 
-						v-for="(char, idx) in currentKeys" 
-						:key="idx"
-						@click="onKeyClick(char)"
-					>
-						{{char}}
-					</view>
-					<view class="key-btn action-key" @click="onKeyBackspace">
-						<i class="fa-solid fa-delete-left"></i>
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-	</wd-popup>
 
-	<wd-toast />
-	<wd-message-box />
+				<div class="input-section">
+					<div class="input-block" :class="{'is-error': isError}">
+						<input class="main-input" v-model="value" type="text" confirm-type="done" @confirm="submit()"
+							:disabled="showAnwser && !isError" placeholder="请输入日语单词、假名或罗马音"
+							placeholder-class="input-placeholder" />
+
+						<view class="input-actions">
+							<view class="action-icon" @click="value=''" v-if="value">
+								<i class="fa-solid fa-circle-xmark clear-icon"></i>
+							</view>
+							<view class="action-icon keyboard-trigger" @click.stop="toggleKeyboard">
+								<i class="fa-solid fa-keyboard"></i>
+							</view>
+						</view>
+					</div>
+
+					<button v-if="!showAnwser" class="action-btn primary-btn submit-btn" @click="submit()">确认提交</button>
+
+					<button v-else class="action-btn primary-btn continue-btn" @click="getNext()">
+						继续下一个 <i class="fa-solid fa-arrow-right icon-right"></i>
+					</button>
+
+					<view v-if="!showAnwser" @click="giveUp()" class="link-btn">
+						<text>不记得了，查看答案</text>
+					</view>
+				</div>
+
+				<div v-if="showAnwser" @click="goPage('/pages/word/worddetail/worddetail',{ id:wordinfo.id })"
+					class="answer-block">
+					<div class="answer-content">
+						<div class="answer-info">
+							<div class="japanese-text">{{formatWordName(wordinfo.words,wordinfo.kana)}}</div>
+							<div class="rome-text">{{wordinfo.rome}}</div>
+						</div>
+						<view class="arrow-icon">
+							<i class="fa-solid fa-chevron-right"></i>
+						</view>
+					</div>
+				</div>
+
+				<view style="height: 60px;"></view>
+			</view>
+		</scroll-view>
+
+		<wd-popup v-model="showSoftKeyboard" position="bottom" safe-area-inset-bottom>
+			<view class="keyboard-container">
+				<view class="keyboard-header">
+					<view class="keyboard-tabs">
+						<text :class="{active: kbTab==='hira'}" @click="kbTab='hira'">平假名</text>
+						<text :class="{active: kbTab==='kata'}" @click="kbTab='kata'">片假名</text>
+					</view>
+					<view class="keyboard-close" @click="showSoftKeyboard=false">完成</view>
+				</view>
+
+				<scroll-view scroll-y class="keyboard-body">
+					<view class="key-grid">
+						<view class="key-btn" v-for="(char, idx) in currentKeys" :key="idx" @click="onKeyClick(char)">
+							{{char}}
+						</view>
+						<view class="key-btn action-key" @click="onKeyBackspace">
+							<i class="fa-solid fa-delete-left"></i>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+		</wd-popup>
+
+		<wd-toast />
+		<wd-message-box />
+	</view>
 </template>
 
 <script setup>
+	// ----------------------------------------------------------------
+	// 逻辑部分完全保持你提供的原样，未做任何修改
+	// ----------------------------------------------------------------
 	import {
 		ref,
 		computed
@@ -138,46 +140,46 @@
 	const wordList = ref([])
 	const doneList = ref([])
 	const value = ref('')
-	
+
 	// 状态控制
 	const isBatchComplete = ref(false)
 	const showAnwser = ref(false)
-	const isError = ref(false) 
-	
+	const isError = ref(false)
+
 	// 软键盘相关
 	const showSoftKeyboard = ref(false)
 	const kbTab = ref('hira') // hira | kata
-	
+
 	// 基础五十音数据
 	const hiragana = [
-		'あ','い','う','え','お',
-		'か','き','く','け','こ',
-		'さ','し','す','せ','そ',
-		'た','ち','つ','て','と',
-		'な','に','ぬ','ね','の',
-		'は','ひ','ふ','へ','ほ',
-		'ま','み','む','め','も',
-		'や','ゆ','よ','わ','を',
-		'ら','り','る','れ','ろ',
-		'ん','っ','ゃ','ゅ','ょ',
-		'゛','゜','ー','、','。'
+		'あ', 'い', 'う', 'え', 'お',
+		'か', 'き', 'く', 'け', 'こ',
+		'さ', 'し', 'す', 'せ', 'そ',
+		'た', 'ち', 'つ', 'て', 'と',
+		'な', 'に', 'ぬ', 'ね', 'の',
+		'は', 'ひ', 'ふ', 'へ', 'ほ',
+		'ま', 'み', 'む', 'め', 'も',
+		'や', 'ゆ', 'よ', 'わ', 'を',
+		'ら', 'り', 'る', 'れ', 'ろ',
+		'ん', 'っ', 'ゃ', 'ゅ', 'ょ',
+		'゛', '゜', 'ー', '、', '。'
 	]
 	const katakana = [
-		'ア','イ','ウ','エ','オ',
-		'カ','キ','ク','ケ','コ',
-		'サ','シ','ス','セ','ソ',
-		'タ','チ','ツ','テ','ト',
-		'ナ','ニ','ヌ','ネ','ノ',
-		'ハ','ヒ','フ','ヘ','ホ',
-		'マ','ミ','ム','メ','モ',
-		'ヤ','ユ','ヨ','ワ','ヲ',
-		'ラ','リ','ル','レ','ロ',
-		'ン','ッ','ャ','ュ','ョ',
-		'゛','゜','ー','、','。'
+		'ア', 'イ', 'ウ', 'エ', 'オ',
+		'カ', 'キ', 'ク', 'ケ', 'コ',
+		'サ', 'シ', 'ス', 'セ', 'ソ',
+		'タ', 'チ', 'ツ', 'テ', 'ト',
+		'ナ', 'ニ', 'ヌ', 'ネ', 'ノ',
+		'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
+		'マ', 'ミ', 'ム', 'メ', 'モ',
+		'ヤ', 'ユ', 'ヨ', 'ワ', 'ヲ',
+		'ラ', 'リ', 'ル', 'レ', 'ロ',
+		'ン', 'ッ', 'ャ', 'ュ', 'ョ',
+		'゛', '゜', 'ー', '、', '。'
 	]
-	
+
 	const currentKeys = computed(() => kbTab.value === 'hira' ? hiragana : katakana)
-	
+
 	// 统计
 	const batchTotal = ref(0)
 	const serverTotal = ref(0)
@@ -186,14 +188,14 @@
 		if (batchTotal.value === 0) return 0
 		return (doneList.value.length / batchTotal.value) * 100
 	})
-	
+
 	const serverRemaining = computed(() => {
 		let left = serverTotal.value - doneList.value.length
 		return left < 0 ? 0 : left
 	})
 
 	const playUserRecord = (url) => {
-		if(!url) return
+		if (!url) return
 		innerAudioContext.stop();
 		innerAudioContext.src = url;
 		innerAudioContext.play();
@@ -209,24 +211,28 @@
 	}
 
 	const getAllWords = async () => {
-		uni.showLoading({ title: '加载中' })
+		uni.showLoading({
+			title: '加载中'
+		})
 		try {
-			const res = await $http.word.getLearnt({ filter: "write" })
+			const res = await $http.word.getLearnt({
+				filter: "write"
+			})
 			const list = res.data || []
-			
+
 			if (list.length === 0) {
 				isBatchComplete.value = true
 				serverTotal.value = 0
 				uni.hideLoading()
 				return
 			}
-			
+
 			wordList.value = list
 			doneList.value = []
 			batchTotal.value = list.length
 			serverTotal.value = res.total || list.length
 			isBatchComplete.value = false
-			
+
 			getNext()
 		} catch (e) {
 			console.error(e)
@@ -236,16 +242,16 @@
 	}
 
 	const getNext = () => {
-		if(wordList.value.length === 0) {
+		if (wordList.value.length === 0) {
 			isBatchComplete.value = true
 			return
 		}
-		
+
 		value.value = ""
 		showAnwser.value = false
 		isError.value = false
 		// 关闭键盘以免遮挡
-		showSoftKeyboard.value = false 
+		showSoftKeyboard.value = false
 		wordinfo.value = wordList.value[0]
 	}
 
@@ -254,62 +260,62 @@
 			toast.warning(`请输入答案`)
 			return
 		}
-		
+
 		const inputVal = value.value.trim()
 		const targetWord = wordinfo.value
-		
+
 		// 核心判定逻辑优化：兼容 汉字、假名、罗马音(不区分大小写)
 		const isKanji = targetWord.words.includes(inputVal)
 		const isKana = inputVal == targetWord.kana
 		const isRome = targetWord.rome && (inputVal.toLowerCase() == targetWord.rome.toLowerCase())
-		
+
 		const isCorrect = isKanji || isKana || isRome
-		
+
 		if (isCorrect) {
 			// --- 答对 ---
 			$http.word.setLearnt({
 				type: "write",
 				word_id: targetWord.id
 			})
-			
+
 			doneList.value.push(targetWord)
 			wordList.value.shift()
-			
+
 			toast.success("正确")
-			value.value = "" 
+			value.value = ""
 			showSoftKeyboard.value = false
-			
+
 			setTimeout(() => {
 				getNext()
 			}, 500)
-			
+
 		} else {
 			// --- 答错 ---
 			isError.value = true
 			showAnwser.value = true
 			playUserRecord(targetWord.voice)
 			showSoftKeyboard.value = false // 答错后收起键盘看答案
-			
+
 			const current = wordList.value.shift()
 			wordList.value.push(current)
 		}
 	}
-	
+
 	const giveUp = () => {
-		isError.value = true 
+		isError.value = true
 		showAnwser.value = true
 		playUserRecord(wordinfo.value.voice)
 		showSoftKeyboard.value = false
-		
+
 		const current = wordList.value.shift()
 		wordList.value.push(current)
 	}
-	
+
 	// --- 软键盘逻辑 ---
 	const toggleKeyboard = () => {
 		showSoftKeyboard.value = !showSoftKeyboard.value
 	}
-	
+
 	const onKeyClick = (char) => {
 		// 简单的浊音处理逻辑可以在这里扩展，目前简化为直接追加字符
 		if (char === '゛' || char === '゜') {
@@ -318,7 +324,7 @@
 		}
 		value.value += char
 	}
-	
+
 	const onKeyBackspace = () => {
 		if (value.value.length > 0) {
 			value.value = value.value.slice(0, -1)
@@ -328,10 +334,10 @@
 	onLoad(op => {
 		if (op.type == "local") {
 			const localList = localwordsStore().writeWordList
-			if(localList && localList.length > 0) {
+			if (localList && localList.length > 0) {
 				wordList.value = [...localList]
 				batchTotal.value = localList.length
-				serverTotal.value = localList.length 
+				serverTotal.value = localList.length
 				getNext()
 			} else {
 				isBatchComplete.value = true
@@ -343,303 +349,384 @@
 </script>
 
 <style lang="scss">
+	/* 基础变量定义 */
+	$bg-color: #ffffff;
+	$block-bg: #f7f8fa;
+	$primary-color: #07C160;
+	$error-bg: #fff5f5;
+	$text-main: #333333;
+	$text-sub: #999999;
+	$border-radius: 32rpx;
+
 	page {
-		background-color: white;
-	}
-	
-	.head {
-		position: sticky;
-		top: 0;
-		z-index: 9;
-		background: white;
+		background-color: $bg-color;
 	}
 
+	.page-container {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background-color: $bg-color;
+	}
+
+	.top-header {
+		background: $bg-color;
+		z-index: 10;
+		flex-shrink: 0;
+	}
+
+	.scroll-content {
+		flex: 1;
+		height: 0;
+	}
+
+	/* 极简进度条 */
 	.progress-bar {
 		height: 4px;
-		background-color: #F3F4F6;
-		overflow: hidden;
+		background-color: #f0f0f0;
 	}
 
 	.progress-fill {
 		height: 100%;
-		background-color: #07C160;
+		background-color: $primary-color;
+		border-radius: 0 4px 4px 0;
 		transition: width 0.3s ease;
 	}
 
-	.container {
-		padding: 60px 20px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		height: 80vh;
+	.write-wrap {
+		padding: 40rpx;
 	}
 
-	.completion-icon {
-		font-size: 80px;
-		margin-bottom: 24px;
-		color: #07C160;
-	}
-
-	.completion-title {
-		font-size: 24px;
-		font-weight: 700;
-		color: #111827;
-		margin-bottom: 12px;
-	}
-
-	.completion-desc {
-		font-size: 16px;
-		color: #6B7280;
-		text-align: center;
-		line-height: 1.6;
-		margin-bottom: 60px;
-	}
-
-	/* 单词展示区 */
-	.word-display {
-		padding: 40px 20px;
+	/* 单词展示块 - 色块化 */
+	.word-block {
+		background-color: $block-bg;
+		border-radius: $border-radius;
+		padding: 60rpx 40rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 16px;
-	}
+		margin-bottom: 40rpx;
 
-	.japanese-word {
-		font-size: 24px;
-		font-weight: bold;
-		color: #111827;
-		text-align: center;
-	}
-	
-	.play-icon {
-		width: 40px;
-		height: 40px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: #F3F4F6;
-		border-radius: 50%;
-		color: #6B7280;
-		
-		&:active {
-			background-color: #E5E7EB;
+		.word-text {
+			font-size: 40rpx;
+			font-weight: 700;
+			color: $text-main;
+			margin-bottom: 24rpx;
+			text-align: center;
+		}
+
+		.play-btn-area {
+			display: flex;
+			align-items: center;
+			gap: 12rpx;
+			padding: 16rpx 32rpx;
+			background-color: #ffffff;
+			/* 白色子块 */
+			border-radius: 999px;
+			transition: opacity 0.2s;
+
+			&:active {
+				opacity: 0.7;
+			}
+
+			.play-icon {
+				color: $primary-color;
+				font-size: 28rpx;
+			}
+
+			.play-hint {
+				font-size: 24rpx;
+				color: $text-sub;
+			}
 		}
 	}
 
 	/* 输入区域 */
 	.input-section {
-		padding: 0 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 30rpx;
 	}
 
-	.input-wrapper {
-		position: relative;
+	/* 输入块 - 无框设计 */
+	.input-block {
+		background-color: $block-bg;
+		border-radius: $border-radius;
+		padding: 10rpx 30rpx;
 		display: flex;
 		align-items: center;
-		border: 1px solid #E5E7EB;
-		border-radius: 12px;
-		padding: 4px 12px;
-		background-color: #F9FAFB;
-		transition: all 0.3s;
-		
-		&.error {
-			border-color: #EF4444;
-			background-color: #FEF2F2;
+		height: 110rpx;
+		transition: background-color 0.2s;
+
+		&.is-error {
+			background-color: $error-bg;
+
+			/* 错误时可以使用红色文字提示，但尽量不加边框 */
+			.main-input {
+				color: #e53e3e;
+			}
 		}
-		
-		input {
+
+		.main-input {
 			flex: 1;
-			height: 48px;
-			font-size: 18px;
-			color: #111827;
+			height: 100%;
+			font-size: 32rpx;
+			color: $text-main;
+			background: transparent;
 		}
-		
-		.keyboard-trigger {
-			padding: 8px;
-			color: #6B7280;
-			font-size: 20px;
-			margin-right: 4px;
-			&:active { color: #07C160; }
+
+		.input-placeholder {
+			color: #c0c4cc;
 		}
-		
-		.clear-btn {
-			padding: 8px;
-			color: #9CA3AF;
+
+		.input-actions {
+			display: flex;
+			align-items: center;
+			gap: 20rpx;
+
+			.action-icon {
+				padding: 10rpx;
+				font-size: 36rpx;
+				color: #c0c4cc;
+				display: flex;
+				align-items: center;
+
+				&:active {
+					color: $text-main;
+				}
+			}
+
+			.keyboard-trigger {
+				color: $text-sub;
+				font-size: 40rpx;
+
+				&:active {
+					color: $primary-color;
+				}
+			}
+
+			.clear-icon {
+				font-size: 32rpx;
+			}
 		}
 	}
 
-	.submit-btn {
-		background-color: #07C160;
-		color: white;
-		border-radius: 50px;
-		font-size: 16px;
+	/* 通用按钮样式 */
+	.action-btn {
+		width: 100%;
+		height: 100rpx;
+		line-height: 100rpx;
+		border-radius: 999px;
+		font-size: 32rpx;
 		font-weight: 600;
-		height: 48px;
-		line-height: 48px;
-		
+		text-align: center;
+		border: none;
+		box-shadow: none;
+		/* 去除阴影 */
+
+		&::after {
+			border: none;
+		}
+
 		&:active {
-			opacity: 0.9;
+			opacity: 0.8;
 		}
 	}
-	
-	.continue-btn {
-		background-color: #07C160;
+
+	.primary-btn {
+		background-color: $primary-color;
 		color: white;
-		border-radius: 50px;
-		font-size: 16px;
-		font-weight: 600;
-		height: 48px;
-		line-height: 48px;
+	}
+
+	.secondary-btn {
+		background-color: $block-bg;
+		color: $text-main;
+	}
+
+	.continue-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
-		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.25);
-	}
+		gap: 12rpx;
 
-	.look-answer {
-		text-align: center;
-		color: #6B7280;
-		font-size: 14px;
-		padding: 10px;
-		text-decoration: underline;
-	}
-
-	/* 单词卡片 */
-	.word-card {
-		margin: 24px 20px;
-		padding: 16px 20px;
-		background: white;
-		border: 1px solid #F3F4F6;
-		border-radius: 12px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-		
-		&:active {
-			opacity: 0.7;
+		.icon-right {
+			font-size: 28rpx;
 		}
 	}
 
-	.card-header {
+	.link-btn {
+		text-align: center;
+		padding: 20rpx;
+
+		text {
+			font-size: 28rpx;
+			color: $text-sub;
+			text-decoration: underline;
+		}
+	}
+
+	/* 答案展示块 - 扁平化 */
+	.answer-block {
+		margin-top: 40rpx;
+		padding: 30rpx 40rpx;
+		background-color: $block-bg;
+		/* 融入背景 */
+		border-radius: 24rpx;
+		transition: opacity 0.2s;
+
+		&:active {
+			opacity: 0.8;
+		}
+
+		.answer-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.japanese-text {
+			font-size: 36rpx;
+			font-weight: bold;
+			color: $primary-color;
+			margin-bottom: 8rpx;
+		}
+
+		.rome-text {
+			font-size: 26rpx;
+			color: $text-sub;
+		}
+
+		.arrow-icon {
+			color: #dcdfe6;
+			font-size: 28rpx;
+		}
+	}
+
+	/* 完成页面 */
+	.container {
+		padding: 100rpx 40rpx;
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
 		align-items: center;
+		min-height: 60vh;
 	}
 
-	.card-japanese {
-		font-size: 20px;
-		font-weight: bold;
-		margin-bottom: 4px;
+	.result-icon-box {
+		font-size: 100rpx;
+		color: $primary-color;
+		margin-bottom: 40rpx;
 	}
 
-	.card-pronunciation {
-		font-size: 14px;
-		color: #6B7280;
+	.completion-title {
+		font-size: 40rpx;
+		font-weight: 600;
+		color: $text-main;
+		margin-bottom: 20rpx;
 	}
-	
+
+	.completion-desc {
+		font-size: 28rpx;
+		color: $text-sub;
+		text-align: center;
+		line-height: 1.8;
+		margin-bottom: 80rpx;
+	}
+
+	.sub-text {
+		display: block;
+		margin-top: 10rpx;
+	}
+
 	.button-container {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 30rpx;
 	}
-	
-	.primary-button {
-		background-color: #07C160;
-		color: white;
-		border: none;
-		border-radius: 12px;
-		padding: 14px 0;
-		font-size: 16px;
-		font-weight: 600;
-		width: 100%;
-		
-		&:active {
-			background-color: #059669;
-		}
-	}
-	
-	.secondary-button {
-		background-color: white;
-		color: #07C160;
-		border: 1px solid #07C160;
-		border-radius: 12px;
-		padding: 14px 0;
-		font-size: 16px;
-		font-weight: 600;
-		width: 100%;
-		
-		&:active {
-			background-color: #ECFDF5;
-		}
-	}
-	
-	/* 软键盘样式 */
-	.keyboard-container {
-		background-color: #F3F4F6;
 
+	/* 软键盘样式重构 - 扁平化 */
+	.keyboard-container {
+		background-color: #f0f2f5;
 	}
-	
+
 	.keyboard-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 8px 16px;
-		background: white;
-		border-bottom: 1px solid #E5E7EB;
-		
+		padding: 20rpx 30rpx;
+		background: #ffffff;
+		/* 移除边框线，用极淡的阴影区分，或者完全去掉 */
+
 		.keyboard-tabs {
 			display: flex;
-			gap: 16px;
-			font-size: 14px;
-			color: #6B7280;
-			
+			gap: 40rpx;
+			font-size: 30rpx;
+			color: $text-sub;
+
 			text.active {
-				color: #07C160;
+				color: $primary-color;
 				font-weight: 600;
+				position: relative;
+
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: -10rpx;
+					left: 0;
+					right: 0;
+					height: 4rpx;
+					background-color: $primary-color;
+					border-radius: 2rpx;
+				}
 			}
 		}
-		
+
 		.keyboard-close {
-			color: #07C160;
+			color: $primary-color;
+			font-size: 28rpx;
 			font-weight: 600;
-			padding: 4px 8px;
+			padding: 10rpx 20rpx;
 		}
 	}
-	
+
 	.keyboard-body {
-		height: 260px; /* 固定高度 */
-		padding: 8px;
+		height: 540rpx;
+		/* 增加高度适应 */
+		padding: 20rpx 10rpx;
 	}
-	
+
 	.key-grid {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 6px;
+		gap: 12rpx;
 		justify-content: center;
 	}
-	
+
 	.key-btn {
-		width: calc(20% - 6px); /* 5列 */
-		height: 44px;
-		background: white;
-		border-radius: 6px;
+		width: calc(20% - 12rpx);
+		/* 5列布局 */
+		height: 90rpx;
+		background: #ffffff;
+		border-radius: 12rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 18px;
-		color: #1F2937;
-		box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-		
+		font-size: 36rpx;
+		color: $text-main;
+		/* 去除阴影，纯平 */
+		box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.05);
+
 		&:active {
-			background-color: #E5E7EB;
+			background-color: #e6e6e6;
 		}
-		
+
 		&.action-key {
-			background-color: #E5E7EB;
-			color: #4B5563;
+			background-color: #e1e4e9;
+			/* 功能键深一点 */
+			color: #555;
+			font-size: 32rpx;
+			box-shadow: none;
 		}
 	}
 </style>
