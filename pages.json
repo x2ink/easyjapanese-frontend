@@ -188,6 +188,13 @@
 				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/other/culture/culture",
+			"style": {
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
