@@ -78,7 +78,7 @@
 	}
 
 	.markdown-wrapper {
-		padding: 16px;
+		padding:0 16px;
 		box-sizing: border-box;
 	}
 </style>

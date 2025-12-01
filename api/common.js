@@ -45,6 +45,10 @@ export default {
 	getDailyTalk(data) {
 		return http.get(`dailytalk`, data)
 	},
+	// 新增：获取文化常识列表
+	getCultureList(data) {
+		return http.get(`culture`, data)
+	},
 	// 句子拆分
 	breakSentence(data) {
 		return http.post(`tools/break-sentence`, data)

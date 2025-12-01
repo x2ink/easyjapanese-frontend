@@ -139,7 +139,7 @@
 				</view>
 
 				<view class="func-card" @click="goPage('/pages/other/markdown/markdown',{
-					url:http.baseUrl + `html/introduction.md`,
+					url:http.baseUrl + `md/introduction.md`,
 					title:'入门知识' })">
 					<view class="func-icon-bg bg-blue">
 						<text class="fas fa-seedling"></text>
@@ -150,7 +150,7 @@
 					</view>
 				</view>
 
-				<view class="func-card" @click="goPage('/pages/other/feedback/feedback')">
+				<view class="func-card" @click="goPage('/pages/other/culture/culture')">
 					<view class="func-icon-bg bg-green">
 						<text class="fas fa-landmark"></text>
 					</view>
