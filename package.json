@@ -3,6 +3,8 @@
     "@microsoft/fetch-event-source": "^2.0.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
+    "marked": "^17.0.1",
+    "mp-html": "^2.5.1",
     "pinia": "^2.2.6"
   }
 }

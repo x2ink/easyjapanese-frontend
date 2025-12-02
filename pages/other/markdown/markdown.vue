@@ -7,7 +7,7 @@
 
 			<scroll-view scroll-y="true" class="scroll-box">
 				<view class="markdown-wrapper">
-					<zero-markdown-view themeColor="#000000" :markdown="content"></zero-markdown-view>
+					<MdParser :markdown="content" />
 				</view>
 				<view style="height: calc(env(safe-area-inset-bottom) + 20px);"></view>
 			</scroll-view>
@@ -78,7 +78,7 @@
 	}
 
 	.markdown-wrapper {
-		padding:0 16px;
+		padding: 0 16px;
 		box-sizing: border-box;
 	}
 </style>
