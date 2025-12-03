@@ -1,23 +1,22 @@
 <template>
 	<view class="page-container">
-		<view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
-			<NavbarDefault border title="意见反馈"></NavbarDefault>
-		</view>
+		<NavbarDefault border title="添加笔记"></NavbarDefault>
+
 		<view class="editor-wrapper">
 			<sv-editor eid="note-editor" placeholder="请输入笔记内容" :show-count="true" :maxlength="5000"
 				@ready="onEditorReady" @input="onEditorInput"></sv-editor>
-			<sv-editor-toolbar ref="toolbarRef" :style-tools="[
-	      'header',
-	      'divider',
-	      'bold',
-	      'italic',
-	      'underline',
-	      'strike',
-	      'align',
-	      'color',
-	      'backgroundColor',
-	      'removeformat'
-	    ]">
+			<sv-editor-toolbar :moreTools="[
+				'image',
+				'link',
+				'attachment',
+				'clear'
+			]" :tools="[
+				'style',
+				'emoji',
+				'undo',
+				'redo',
+				'more',
+			]" @changeTool="changeTool" @toolMoreItem="onToolMoreItem" @moreItemConfirm="moreItemConfirm" ref="toolbarRef">
 			</sv-editor-toolbar>
 		</view>
 		<view class="bottom-area safe-area-bottom">
@@ -46,16 +45,23 @@
 		addLink,
 		addVideo
 	} from '@/uni_modules/sv-editor/components/common/utils.js'
+	const onToolMoreItem = (e) => {
+		console.log('onToolMoreItem ==>', e)
+	}
 	const toolbarRef = ref(null)
-	const statusBarHeight = ref(0)
-	onLoad((options) => {
-		const sysInfo = uni.getSystemInfoSync()
-		statusBarHeight.value = sysInfo.statusBarHeight || 20
-	})
+
+	// 移除了多余的 statusBarHeight 获取逻辑，因为 NavbarDefault 内部已处理
+
 	// 编辑器相关
 	const editorCtx = ref(null)
 	const noteContent = ref(null)
 	const noteText = ref(null)
+	const moreItemConfirm = (e) => {
+		console.log(e);
+	}
+	const changeTool = (e) => {
+		console.log(e);
+	}
 	const onEditorReady = (ctx) => {
 		editorCtx.value = ctx
 	}
@@ -63,6 +69,11 @@
 	const onEditorInput = (e) => {
 		noteContent.value = e.html
 		noteText.value = e.text
+	}
+
+	const handleSave = () => {
+		// 这里补充原代码可能缺失的保存逻辑占位，或保持原样
+		console.log('Save:', noteContent.value);
 	}
 </script>
 
@@ -102,15 +113,5 @@
 		}
 	}
 
-	/* 1. 自定义导航栏样式 */
-	.custom-navbar {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		background-color: #fff;
-		z-index: 999;
-		border-bottom: 1rpx solid #eee;
-	}
-
+	/* 移除了 .custom-navbar 样式，因为不再需要 */
 </style>
