@@ -1,100 +1,105 @@
 <template>
-	<div class="screen">
-		<div class="profile-bg">
+	<view class="screen">
+		<view class="profile-bg">
 			<button class="avatar-container" open-type="chooseAvatar" @chooseavatar="chooseavatar">
 				<image v-if="userStore().loginStatus" :src="userStore().userInfo.avatar" class="avatar-image"
 					mode="aspectFill" />
 				<image v-else src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" class="avatar-image"
 					mode="aspectFill" />
-				<div v-if="userStore().loginStatus" class="camera-icon">
-					<div class="camera-bg">
-						<i class="fas fa-camera"></i>
-					</div>
-				</div>
+				<view v-if="userStore().loginStatus" class="camera-icon">
+					<view class="camera-bg">
+						<text class="fas fa-camera"></text>
+					</view>
+				</view>
 			</button>
-		</div>
-		<view class="content-area">
-			<div class="content-container">
-				<div class="user-info">
-					<div @click="login()" class="user-name-container">
-						<h2 class="user-name">{{userStore().userInfo.nickname}}</h2><text v-if="userStore().loginStatus"
-							class="fa-solid fa-pen-to-square"></text>
-					</div>
-					<p class="user-id">{{userStore().userInfo.email}}</p>
-				</div>
-				<div class="stats-grid">
-					<div class="stat-item">
-						<div class="stat-value">{{learnInfo.day}}</div>
-						<div class="stat-label">连续打卡</div>
-					</div>
-					<div class="stat-item">
-						<div class="stat-value">{{learnInfo.learnt}}</div>
-						<div class="stat-label">已学词汇</div>
-					</div>
-					<div class="stat-item">
-						<div class="stat-value">{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(0)}}%</div>
-						<div class="stat-label">记忆保持率</div>
-					</div>
-				</div>
-				<div class="function-list">
-					<div @click="goPage('/pages/other/setplan/setplan')" class="function-item">
-						<div class="function-icon orange">
-							<i class="fas fa-cog"></i>
-						</div>
-						<span class="function-name">背词设置</span>
-						<i class="fas fa-chevron-right arrow-icon"></i>
-					</div>
-					<div @click="goPage('/pages/other/feedback/feedback')" class="function-item">
-						<div class="function-icon red">
-							<i class="fas fa-comment-dots"></i>
-						</div>
-						<span class="function-name">意见反馈</span>
-						<i class="fas fa-chevron-right arrow-icon"></i>
-					</div>
-					<div @click="goPage('/pages/other/about/about')" class="function-item">
-						<div class="function-icon gray">
-							<i class="fas fa-info-circle"></i>
-						</div>
-						<span class="function-name">关于我们</span>
-						<i class="fas fa-chevron-right arrow-icon"></i>
-					</div>
-					<div class="function-item">
-						<div class="function-icon blue">
-							<i class="fas fa-share-alt"></i>
-						</div>
-						<span class="function-name">分享应用</span>
-						<i class="fas fa-chevron-right arrow-icon"></i>
-					</div>
-				</div>
-			</div>
 		</view>
+		<view class="content-area">
+			<view class="content-container">
+				<view class="user-info">
+					<view @click="login()" class="user-name-container">
+						<view class="user-name">{{userStore().userInfo.nickname}}</view>
+						<text v-if="userStore().loginStatus" class="fa-solid fa-pen-to-square"></text>
+					</view>
+					<text class="user-id">{{userStore().userInfo.email}}</text>
+				</view>
+				<view class="stats-grid">
+					<view class="stat-item">
+						<text class="stat-value">{{learnInfo.day}}</text>
+						<text class="stat-label">连续打卡</text>
+					</view>
+					<view class="stat-item">
+						<text class="stat-value">{{learnInfo.learnt}}</text>
+						<text class="stat-label">已学词汇</text>
+					</view>
+					<view class="stat-item">
+						<text class="stat-value">{{((learnInfo.learnnum/learnInfo.wordnum)*100).toFixed(0)}}%</text>
+						<text class="stat-label">记忆保持率</text>
+					</view>
+				</view>
+				
+				<view class="function-list">
+					<view @click="goPage('/pages/other/setplan/setplan')" class="function-item">
+						<view class="function-icon orange">
+							<text class="fas fa-headset"></text>
+						</view>
+						<text class="function-name">联系客服</text>
+						<text class="fas fa-chevron-right arrow-icon"></text>
+					</view>
+					
+					<view @click="goPage('/pages/other/feedback/feedback')" class="function-item">
+						<view class="function-icon red">
+							<text class="fas fa-comment-dots"></text>
+						</view>
+						<text class="function-name">意见反馈</text>
+						<text class="fas fa-chevron-right arrow-icon"></text>
+					</view>
+					
+					<view @click="goPage('/pages/other/about/about')" class="function-item">
+						<view class="function-icon gray">
+							<text class="fas fa-info-circle"></text>
+						</view>
+						<text class="function-name">关于我们</text>
+						<text class="fas fa-chevron-right arrow-icon"></text>
+					</view>
+					
+					<view class="function-item">
+						<view class="function-icon blue">
+							<text class="fas fa-share-alt"></text>
+						</view>
+						<text class="function-name">分享应用</text>
+						<text class="fas fa-chevron-right arrow-icon"></text>
+					</view>
+				</view>
+			</view>
+		</view>
+
 		<wd-popup v-model="nicknameShow" custom-style="border-radius:16px;width:280px;padding:16px"
 			@close="nicknameShow=false">
 			<view>
-				<div class="modal-title">
+				<view class="modal-title">
 					修改昵称
-					<div @click="nicknameShow=false" class="modal-close">
+					<view @click="nicknameShow=false" class="modal-close">
 						<text class="fas fa-times"></text>
-					</div>
-				</div>
-				<div class="input-container">
+					</view>
+				</view>
+				<view class="input-container">
 					<input type="text" class="modal-input" placeholder="请输入新的昵称" maxlength="12" v-model="nickname">
-					<div class="char-count">
-						<span class="current-count">5</span>/12
-					</div>
-				</div>
-				<div class="button-container">
+					<view class="char-count">
+						<text class="current-count">5</text>/12
+					</view>
+				</view>
+				<view class="button-container">
 					<button @click="nicknameShow=false" class="modal-button cancel _GCENTER">
 						取消
 					</button>
 					<button @click="setnickname" class="modal-button confirm  _GCENTER">
 						确定
 					</button>
-				</div>
+				</view>
 			</view>
 		</wd-popup>
 		<wd-toast />
-	</div>
+	</view>
 </template>
 
 <script setup>
@@ -116,9 +121,11 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	
 	const toast = useToast()
 	const nicknameShow = ref(false)
 	const nickname = ref("")
+	
 	const setnickname = async () => {
 		if (nickname.value.length < 2 || nickname.value.length > 8) {
 			toast.warning(`昵称长度在2-8之间`)
@@ -132,6 +139,7 @@
 		userStore().setUserInfo()
 		nicknameShow.value = false
 	}
+	
 	const learnInfo = ref({
 		"book_info": {
 			"name": "",
@@ -151,6 +159,7 @@
 		"review": 0,
 		"wordnum": 100
 	})
+	
 	const chooseavatar = (resAvatarUrl) => {
 		uni.getFileSystemManager().readFile({
 			filePath: resAvatarUrl.detail.avatarUrl,
@@ -171,16 +180,19 @@
 			}
 		});
 	}
+	
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
 	}
+	
 	const login = () => {
 		if (userStore().loginStatus)
 			nicknameShow.value = true
 		else
 			goPage("/pages/login/login")
 	}
+	
 	onShow(() => {
 		getInfo()
 	})
@@ -290,16 +302,24 @@
 		background-color: white;
 		z-index: 10;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		padding: 0; /* 修复 button 默认 padding */
+		margin: 0; /* 修复 button 默认 margin */
 
 		&:active {
 			transform: scale(1) !important;
 			opacity: 1 !important;
+		}
+		
+		/* 修复 button 默认伪元素边框 */
+		&::after {
+			border: none;
 		}
 
 		.avatar-image {
 			width: 100%;
 			height: 100%;
 			border-radius: 50%;
+			display: block; /* 防止图片底部留白 */
 		}
 
 		.camera-icon {
@@ -357,6 +377,7 @@
 			font-size: 24px;
 			font-weight: bold;
 			margin: 0;
+			color: #333; /* 补充颜色 */
 		}
 
 		.vip-badge {
@@ -365,8 +386,9 @@
 			color: #d97706;
 			border-radius: 12px;
 			font-size: 12px;
-
-			i {
+			
+			/* 修改选择器以匹配 text 标签 */
+			text {
 				margin-right: 4px;
 			}
 		}
@@ -375,6 +397,7 @@
 			font-size: 12px;
 			color: #6b7280;
 			margin-top: 4px;
+			display: block; /* 确保 text 换行 */
 		}
 	}
 
@@ -389,6 +412,8 @@
 			border-radius: 8px;
 			padding: 12px;
 			text-align: center;
+			display: flex;
+			flex-direction: column;
 
 			.stat-value {
 				font-size: 24px;
