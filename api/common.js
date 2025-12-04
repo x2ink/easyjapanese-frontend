@@ -45,12 +45,22 @@ export default {
 	getDailyTalk(data) {
 		return http.get(`dailytalk`, data)
 	},
-	// 新增：获取文化常识列表
 	getCultureList(data) {
 		return http.get(`culture`, data)
 	},
-	// 句子拆分
 	breakSentence(data) {
 		return http.post(`tools/break-sentence`, data)
+	},
+	queryNoteOrigin(data) {
+		return http.get(`notes/origin`, data)
+	},
+	addNote(data) {
+		return http.post(`notes/add`, data)
+	},
+	updateNote(data) {
+		return http.post("notes/update", data)
+	},
+	queryNoteInfo(data) {
+		return http.get("notes/info", data)
 	}
 }

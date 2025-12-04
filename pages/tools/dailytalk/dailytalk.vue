@@ -10,7 +10,6 @@
 		<scroll-view class="scroll-content" @scrolltolower="reachBottom" scroll-y="true" :scroll-with-animation="true">
 			<view class="list">
 				<view class="item" :key="item.id" v-for="item in List">
-
 					<view class="jp-row">
 						<view class="jp-text-wrapper">
 							<view class="jp-ruby" v-for="(rubyItem, index) in item.ruby" :key="index">
@@ -35,7 +34,7 @@
 							<text>复制</text>
 						</view>
 						<view class="action-item" @click.stop="handleFavorite(item)">
-							<text>收藏</text>
+							<text>笔记</text>
 						</view>
 						<view class="action-item" @click.stop="handleShare(item)">
 							<text>分享</text>
@@ -58,7 +57,9 @@
 	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default.vue"
 	import $http from "@/api/index.js"
-
+	import {
+		goPage
+	} from '@/utils/common'
 	// 分页和列表数据状态
 	const total = ref(0)
 	const page = ref(1)
@@ -138,10 +139,10 @@
 	 * 收藏 (占位)
 	 */
 	const handleFavorite = (item) => {
-		console.log('点击收藏', item)
-		uni.showToast({
-			title: '收藏功能开发中',
-			icon: 'none'
+		console.log(item);
+		goPage("/pages/tools/addnote/addnote", {
+			id: item.id,
+			type: 'talk'
 		})
 	}
 

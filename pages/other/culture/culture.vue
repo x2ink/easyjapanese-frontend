@@ -101,9 +101,12 @@
 	 * 跳转详情
 	 */
 	const goDetail = (item) => {
+		console.log(item);
 		goPage('/pages/other/markdown/markdown', {
 			url: item.url,
-			title: item.title
+			title: item.title,
+			id: item.ID,
+			type: "culture"
 		})
 	}
 

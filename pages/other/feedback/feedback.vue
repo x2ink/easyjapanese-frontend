@@ -87,6 +87,8 @@
 				source.value = `来自单词纠错 · ${e.wordType=='jc'?'日中':'中日'}单词ID：${e.wordId}`
 			} else if (e.type == "补充单词") {
 				source.value = `补充单词：${e.data}`
+			} else if (e.type == "问题反馈") {
+				source.value = `反馈来源：${e.data}`
 			}
 		} else {
 			current.value = "意见建议"
@@ -140,7 +142,8 @@
 		padding: 4px 12px;
 		background-color: #f7f8fa;
 		color: #5f6368;
-		border-radius: 100px; /* 胶囊按钮 */
+		border-radius: 100px;
+		/* 胶囊按钮 */
 		/* 小圆角 */
 		transition: all 0.2s;
 		font-weight: 500;
@@ -210,7 +213,8 @@
 		line-height: 44px;
 		background-color: #07C160;
 		color: white;
-		border-radius: 100px; /* 胶囊按钮 */
+		border-radius: 100px;
+		/* 胶囊按钮 */
 		font-size: 15px;
 		font-weight: 600;
 		border: none;
