@@ -4,7 +4,8 @@
 		<view class="main-content">
 			<!-- APP Logo -->
 			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 40px;">
-				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit" class="app-logo"></image>
+				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
+					class="app-logo"></image>
 				<view class="text-2xl font-medium text-gray-800">轻松日语</view>
 				<view class="text-gray-500 text-sm mt-1">单词学习小助手</view>
 			</view>
@@ -88,7 +89,7 @@
 						delta: 1
 					})
 				} else {
-					uni.navigateTo({
+					uni.reLaunch({
 						url: "/pages/index/index/index"
 					})
 				}

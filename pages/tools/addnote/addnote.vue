@@ -77,7 +77,6 @@
 	const onEditorReady = async (ctx) => {
 		editorCtx.value = ctx
 		try {
-			console.log(noteId.value);
 			if (noteId.value || targetId.value || targetType.value) {
 				const params = {
 					...(noteId.value && {
@@ -110,33 +109,25 @@
 			toast.warning("笔记不可为空")
 			return
 		}
-
-		if (noteId.value) {
+		if (targetId.value && targetType.value) {
 			try {
-				const res = await $http.common.updateNote({
-					id: Number(noteId.value),
-					content: noteContent.value
-				})
-				toast.success("修改笔记成功")
-			} catch (err) {
-				toast.warning("修改失败")
-			}
-		} else {
-			try {
-				const res = await $http.common.addNote({
+				const res = await $http.common.submitNote({
 					target_id: Number(targetId.value),
 					target_type: targetType.value,
 					content: noteContent.value
 				})
-				toast.success("新增笔记成功")
-				noteId.value = res.data
-			} catch (err) {
-				if (err.code == 400) {
-					toast.warning("不得重复提交笔记")
+				if (res.data) {
+					toast.success("新增笔记成功")
+					noteId.value = res.data
 				} else {
-					toast.warning("新增失败")
+					toast.success("修改笔记成功")
 				}
+			} catch (err) {
+				console.log(err);
+				toast.warning("新增失败")
 			}
+		} else {
+			toast.warning("新增失败")
 		}
 	}
 	const origin = ref('')

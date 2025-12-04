@@ -35,27 +35,18 @@ export default {
 	breakSentence(data) {
 		return http.post(`tools/break-sentence`, data)
 	},
-	// 新增笔记
-	addNote(data) {
-		return http.post(`notes/add`, data)
+	submitNote(data) {
+		return http.post(`notes/submit`, data)
 	},
-	// 删除笔记 (Go后端接收 JSON body: { "id": 4 })
 	deleteNote(data) {
 		return http.post(`notes/delete`, data)
 	},
-	// 更新笔记
-	updateNote(data) {
-		return http.post("notes/update", data)
-	},
-	// 查询笔记列表 (Go后端接收 Query: page, pageSize)
 	getNoteList(params) {
 		return http.get(`notes/list`, params)
 	},
-	// 查询笔记详情 (Go后端接收 Query: id)
 	getNoteInfo(params) {
 		return http.get(`notes/info`, params)
 	},
-	// 查询笔记源 (Go后端接收 Query: type, id)
 	queryNoteOrigin(params) {
 		return http.get(`notes/origin`, params)
 	}
