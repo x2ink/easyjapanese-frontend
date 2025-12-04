@@ -1,60 +1,63 @@
 <template>
-	<view class="container">
-		<navbar title="我的笔记" :showleft="true"></navbar>
-		
-		<scroll-view 
-			scroll-y 
-			class="scroll-box" 
-			@scrolltolower="loadMore" 
-			:lower-threshold="50"
-		>
-			<view class="list-wrapper">
-				<view class="empty-tip" v-if="!loading && list.length === 0">
-					<wd-status-tip image="content" tip="暂无笔记内容" />
-				</view>
+	<page-meta page-style="background-color:#ffffff;">
+		<view class="container">
+			<NavbarDefault border title="我的笔记"></NavbarDefault>
+			
+			<scroll-view 
+				scroll-y 
+				class="scroll-box" 
+				@scrolltolower="loadMore" 
+				:lower-threshold="50"
+			>
+				<view class="content-wrapper">
+					<view class="empty-box" v-if="!loading && list.length === 0">
+						<text class="fas fa-book-open empty-icon"></text>
+						<text class="empty-text">暂无笔记内容</text>
+					</view>
 
-				<block v-else>
-					<wd-swipe-action v-for="(item, index) in list" :key="item.id">
-						<view class="note-card" @click="goDetail(item.id)">
-							<view class="card-header">
+					<block v-else>
+						<view class="note-item" v-for="(item, index) in list" :key="item.id" @click="goDetail(item.id)">
+							<view class="item-header">
 								<view class="header-left">
-									<wd-tag :type="getTypeColor(item.target_type)" plain size="small" custom-style="margin-right: 8px;">
+									<view class="tag" :class="getTypeClass(item.target_type)">
 										{{ getTypeLabel(item.target_type) }}
-									</wd-tag>
+									</view>
 									<text class="time">{{ formatDate(item.created_at) }}</text>
 								</view>
+								<view class="delete-btn" @click.stop="handleDelete(item.id, index)">
+									<text class="fas fa-trash-alt"></text>
+								</view>
 							</view>
-							<view class="card-content">
-								{{ filterHtml(item.content) }}
+							
+							<view class="item-content">
+								{{ filterHtml(item.content) || '暂无文字内容' }}
 							</view>
 						</view>
-						
-						<template #right>
-							<view class="action-btn delete-btn" @click.stop="handleDelete(item.id, index)">
-								<wd-icon name="delete" size="24px" color="#fff" />
-							</view>
-						</template>
-					</wd-swipe-action>
-				</block>
-			</view>
-			
-			<wd-loadmore v-if="list.length > 0" :state="loadState"></wd-loadmore>
-			<view style="height: 30px;"></view>
-		</scroll-view>
-	</view>
+					</block>
+					
+					<view class="load-more" v-if="loadState === 'loading'">
+						<text class="loading-text">加载中...</text>
+					</view>
+				</view>
+				
+				<view style="height: 40px;"></view>
+			</scroll-view>
+		</view>
+	</page-meta>
 </template>
 
 <script setup>
 	import { ref } from 'vue';
 	import { onShow } from '@dcloudio/uni-app';
-	import api from '@/api/index.js'; // 确保 api/index.js 导出了 common
+	import api from '@/api/index.js';
 	import dayjs from '@/uni_modules/uv-ui-tools/libs/util/dayjs.js';
+	import NavbarDefault from "@/components/navbar/default.vue";
 
 	const list = ref([]);
 	const page = ref(1);
 	const pageSize = 10;
 	const total = ref(0);
-	const loadState = ref('loading'); // 'loading', 'finished', 'error'
+	const loadState = ref('loading');
 	const loading = ref(false);
 
 	onShow(() => {
@@ -108,14 +111,13 @@
 		uni.showModal({
 			title: '提示',
 			content: '确定要删除这条笔记吗？',
+			confirmColor: '#FF4D4F',
 			success: async (res) => {
 				if (res.confirm) {
 					try {
-						// 根据Go后端，delete接收json body: {id: ...}
 						await api.common.deleteNote({ id: id });
 						uni.showToast({ title: '删除成功', icon: 'success' });
 						list.value.splice(index, 1);
-						// 如果当前页删空了，且还有数据，建议刷新
 						if (list.value.length === 0 && total.value > 0) {
 							refresh();
 						}
@@ -134,24 +136,24 @@
 	};
 
 	// --- Helpers ---
-	const formatDate = (str) => dayjs(str).format('YYYY-MM-DD HH:mm');
+	const formatDate = (str) => dayjs(str).format('MM-DD HH:mm');
 	
 	const getTypeLabel = (type) => {
 		const map = {
 			'word_jp': '单词',
 			'talk': '每日一句',
-			'culture': '日本文化'
+			'culture': '文化'
 		};
-		return map[type] || '其他';
+		return map[type] || '笔记';
 	};
 
-	const getTypeColor = (type) => {
+	const getTypeClass = (type) => {
 		const map = {
-			'word_jp': 'primary',
-			'talk': 'warning',
-			'culture': 'success'
+			'word_jp': 'tag-blue',
+			'talk': 'tag-orange',
+			'culture': 'tag-green'
 		};
-		return map[type] || 'info';
+		return map[type] || 'tag-gray';
 	};
 
 	const filterHtml = (html) => {
@@ -165,48 +167,63 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		background-color: $uni-bg-color-grey;
-		overflow: hidden;
+		background-color: #ffffff;
 	}
 
 	.scroll-box {
 		flex: 1;
-		height: 0; 
-		box-sizing: border-box;
+		height: 0;
 	}
 
-	.list-wrapper {
-		padding: 12px;
+	.content-wrapper {
+		padding: 16px;
 	}
 
-	.empty-tip {
-		padding-top: 100px;
-		display: flex;
-		justify-content: center;
-	}
-
-	.note-card {
-		background-color: #fff;
-		border-radius: $uni-border-radius-base;
-		padding: 15px;
+	/* 列表项 - 极简卡片 */
+	.note-item {
+		background-color: #f7f8fa;
+		border-radius: 12px;
+		padding: 16px;
 		margin-bottom: 12px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+		transition: opacity 0.2s;
 
-		.card-header {
+		&:active {
+			opacity: 0.8;
+		}
+
+		.item-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			margin-bottom: 10px;
+
 			.header-left {
 				display: flex;
 				align-items: center;
+				gap: 8px;
 			}
+
 			.time {
 				font-size: 12px;
-				color: $uni-text-color-grey;
+				color: #999;
+				font-family: Arial, sans-serif;
+			}
+			
+			.delete-btn {
+				padding: 4px;
+				color: #ccc;
+				font-size: 14px;
+				transition: color 0.2s;
+				
+				&:active {
+					color: #FF4D4F;
+				}
 			}
 		}
 
-		.card-content {
-			font-size: 15px;
-			color: $uni-text-color;
+		.item-content {
+			font-size: 14px;
+			color: #333;
 			line-height: 1.6;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
@@ -216,15 +233,44 @@
 		}
 	}
 
-	.action-btn {
-		height: 100%;
+	/* 标签样式 */
+	.tag {
+		font-size: 11px;
+		padding: 2px 8px;
+		border-radius: 4px;
+		font-weight: 500;
+	}
+	.tag-blue { background-color: rgba(77, 128, 240, 0.1); color: #4D80F0; }
+	.tag-orange { background-color: rgba(255, 149, 0, 0.1); color: #FF9500; }
+	.tag-green { background-color: rgba(7, 193, 96, 0.1); color: #07C160; }
+	.tag-gray { background-color: #eaeaea; color: #666; }
+
+	/* 空状态 */
+	.empty-box {
+		padding-top: 120px;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		justify-content: center;
-		padding: 0 20px;
+		color: #ddd;
 		
-		&.delete-btn {
-			background-color: $uni-color-error;
+		.empty-icon {
+			font-size: 48px;
+			margin-bottom: 16px;
+			color: #eee;
+		}
+		
+		.empty-text {
+			font-size: 14px;
+			color: #ccc;
+		}
+	}
+	
+	.load-more {
+		text-align: center;
+		padding: 20px 0;
+		.loading-text {
+			font-size: 12px;
+			color: #ccc;
 		}
 	}
 </style>

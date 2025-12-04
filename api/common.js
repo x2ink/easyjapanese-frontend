@@ -35,9 +35,6 @@ export default {
 	breakSentence(data) {
 		return http.post(`tools/break-sentence`, data)
 	},
-
-	// --- 笔记相关接口 (根据您提供的Go后端适配) ---
-	
 	// 新增笔记
 	addNote(data) {
 		return http.post(`notes/add`, data)

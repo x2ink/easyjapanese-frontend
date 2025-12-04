@@ -77,6 +77,7 @@
 	const onEditorReady = async (ctx) => {
 		editorCtx.value = ctx
 		try {
+			console.log(noteId.value);
 			if (noteId.value || targetId.value || targetType.value) {
 				const params = {
 					...(noteId.value && {
@@ -89,7 +90,7 @@
 						target_type: targetType.value
 					})
 				}
-				const res = await $http.common.queryNoteInfo(params)
+				const res = await $http.common.getNoteInfo(params)
 				ctx.initHtml(res.data.content)
 			}
 		} catch (err) {
@@ -109,6 +110,7 @@
 			toast.warning("笔记不可为空")
 			return
 		}
+
 		if (noteId.value) {
 			try {
 				const res = await $http.common.updateNote({

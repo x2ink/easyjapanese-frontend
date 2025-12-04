@@ -1,100 +1,106 @@
 <template>
-	<view class="container">
-		<navbar title="笔记详情" :showleft="true">
-			<template #right>
-				<view class="nav-btn" @click="toggleEdit">
-					<text class="btn-text">{{ isEdit ? '保存' : '编辑' }}</text>
-				</view>
-			</template>
-		</navbar>
+	<page-meta page-style="background-color:#ffffff;">
+		<view class="container">
+			<NavbarDefault border title="笔记详情"></NavbarDefault>
 
-		<scroll-view scroll-y class="scroll-box">
-			<view class="content-wrapper">
-				<view class="origin-box" v-if="originContent">
-					<view class="origin-label">
-						<wd-icon name="link" size="14px" color="#4D80F0"></wd-icon>
-						<text>关联内容</text>
-					</view>
-					<view class="origin-text">{{ originContent }}</view>
-				</view>
+			<scroll-view scroll-y class="scroll-box">
+				<view class="content-wrapper">
 
-				<view class="editor-wrapper">
-					<view class="info-bar">
-						<text class="label">我的笔记</text>
-						<text class="time" v-if="noteInfo.created_at">{{ formatDate(noteInfo.created_at) }}</text>
+					<view class="origin-box" v-if="originContent">
+						<view class="origin-header">
+							<text class="fas fa-link origin-icon"></text>
+							<text class="origin-title">关联内容</text>
+						</view>
+						<view class="origin-text">{{ originContent }}</view>
 					</view>
 
-					<view class="content-area">
-						<editor 
-							v-show="isEdit"
-							id="editor" 
-							class="ql-editor" 
-							placeholder="在此输入笔记内容..." 
-							@ready="onEditorReady"
-							@input="onEditorInput"
-						></editor>
+					<view class="note-container">
+						<view class="meta-info">
+							<text class="meta-label">我的记录</text>
+							<text class="meta-time"
+								v-if="noteInfo.created_at">{{ formatDate(noteInfo.created_at) }}</text>
+						</view>
 
-						<view v-show="!isEdit" class="html-view">
-							<rich-text :nodes="currentContent" v-if="currentContent"></rich-text>
-							<view v-else class="empty-text">暂无内容，点击右上角编辑</view>
+						<view class="content-view">
+							<rich-text :nodes="currentContent"
+								v-if="currentContent && currentContent !== '<p><br></p>'"></rich-text>
+							<view v-else class="empty-placeholder">暂无详细内容</view>
 						</view>
 					</view>
 				</view>
+
+				<view style="height: 100px;"></view>
+			</scroll-view>
+
+			<view class="footer-action">
+				<button class="action-btn" @click="goToEdit">
+					编辑笔记
+				</button>
 			</view>
-			<view style="height: 40px;"></view>
-		</scroll-view>
-	</view>
+		</view>
+	</page-meta>
 </template>
 
 <script setup>
-	import { ref } from 'vue';
-	import { onLoad } from '@dcloudio/uni-app';
+	import {
+		ref
+	} from 'vue';
+	import {
+		onLoad,
+		onShow
+	} from '@dcloudio/uni-app';
 	import api from '@/api/index.js';
 	import dayjs from '@/uni_modules/uv-ui-tools/libs/util/dayjs.js';
+	import NavbarDefault from "@/components/navbar/default.vue";
+	import {
+		goPage
+	} from '@/utils/common';
 
 	const id = ref('');
 	const noteInfo = ref({});
 	const originContent = ref('');
-	const isEdit = ref(false);
-	const currentContent = ref(''); // 当前展示/编辑的HTML内容
-	const editorCtx = ref(null);
+	const currentContent = ref('');
 
-	onLoad(async (options) => {
+	onLoad((options) => {
 		if (options.id) {
 			id.value = options.id;
-			await getDetail();
 		}
 	});
 
-	// 获取详情
+	// 从 addnote 返回时可能修改了内容，需要刷新
+	onShow(() => {
+		if (id.value) {
+			getDetail();
+		}
+	})
+
 	const getDetail = async () => {
-		uni.showLoading({ title: '加载中' });
+		uni.showLoading({
+			title: '加载中',
+			mask: true
+		});
 		try {
-			// 根据Go后端，get info 传 id
-			const res = await api.common.getNoteInfo({ id: id.value });
+			const res = await api.common.getNoteInfo({
+				id: id.value
+			});
 			noteInfo.value = res.data;
 			currentContent.value = res.data.content;
 
-			// 获取关联原始内容
 			if (noteInfo.value.target_type && noteInfo.value.target_id) {
 				fetchOrigin(noteInfo.value.target_type, noteInfo.value.target_id);
 			}
-
-			// 如果当前处于编辑态（极端情况），重新设置内容
-			if (isEdit.value && editorCtx.value) {
-				editorCtx.value.setContents({ html: currentContent.value });
-			}
 		} catch (e) {
-			uni.showToast({ title: '获取详情失败', icon: 'none' });
+			uni.showToast({
+				title: '获取详情失败',
+				icon: 'none'
+			});
 		} finally {
 			uni.hideLoading();
 		}
 	};
 
-	// 获取关联来源
 	const fetchOrigin = async (type, targetId) => {
 		try {
-			// 根据Go后端，query origin 传 type 和 id
 			const res = await api.common.queryNoteOrigin({
 				type: type,
 				id: targetId
@@ -105,62 +111,13 @@
 		}
 	};
 
-	// 编辑器初始化
-	const onEditorReady = () => {
-		uni.createSelectorQuery().select('#editor').context((res) => {
-			editorCtx.value = res.context;
-			// 如果已有内容，初始化进去
-			if (currentContent.value) {
-				editorCtx.value.setContents({ html: currentContent.value });
-			}
-		}).exec();
-	};
-
-	// 编辑输入监听
-	const onEditorInput = (e) => {
-		currentContent.value = e.detail.html;
-	};
-
-	// 切换编辑/保存
-	const toggleEdit = async () => {
-		if (isEdit.value) {
-			// 保存逻辑
-			await handleSave();
-		} else {
-			// 进入编辑模式
-			isEdit.value = true;
-			// 延迟确保 editor 显示后再设置内容
-			setTimeout(() => {
-				if (editorCtx.value && currentContent.value) {
-					editorCtx.value.setContents({ html: currentContent.value });
-				}
-			}, 100);
-		}
-	};
-
-	// 保存笔记
-	const handleSave = async () => {
-		if (!currentContent.value || currentContent.value === '<p><br></p>') {
-			uni.showToast({ title: '内容不能为空', icon: 'none' });
-			return;
-		}
-
-		uni.showLoading({ title: '保存中' });
-		try {
-			// 根据Go后端，update 传 id 和 content
-			await api.common.updateNote({
-				id: parseInt(id.value),
-				content: currentContent.value
-			});
-			uni.showToast({ title: '已保存', icon: 'success' });
-			isEdit.value = false;
-			// 更新本地缓存显示的字段
-			noteInfo.value.content = currentContent.value;
-		} catch (e) {
-			uni.showToast({ title: '保存失败', icon: 'none' });
-		} finally {
-			uni.hideLoading();
-		}
+	// 跳转到编辑页面
+	const goToEdit = () => {
+		goPage("/pages/tools/addnote/addnote", {
+			noteId: id.value,
+			id: noteInfo.value.target_id,
+			type: noteInfo.value.target_type
+		})
 	};
 
 	const formatDate = (str) => dayjs(str).format('YYYY年MM月DD日 HH:mm');
@@ -171,16 +128,7 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		background-color: $uni-bg-color-grey;
-	}
-
-	.nav-btn {
-		padding: 4px 12px;
-		.btn-text {
-			color: $uni-color-primary;
-			font-size: 14px;
-			font-weight: bold;
-		}
+		background-color: #ffffff;
 	}
 
 	.scroll-box {
@@ -189,106 +137,117 @@
 	}
 
 	.content-wrapper {
-		padding: 15px;
+		padding: 20px 16px;
 	}
 
-	/* 关联来源样式 */
+	/* 关联来源 */
 	.origin-box {
-		background-color: #EBF2FF;
-		border-radius: 8px;
-		padding: 12px;
-		margin-bottom: 15px;
-		border: 1px solid rgba(77, 128, 240, 0.1);
+		background-color: #f0f2f5;
+		border-radius: 12px;
+		padding: 16px;
+		margin-bottom: 24px;
 
-		.origin-label {
+		.origin-header {
 			display: flex;
 			align-items: center;
-			margin-bottom: 6px;
-			gap: 4px;
-			font-size: 13px;
-			color: $uni-color-primary;
-			font-weight: bold;
+			margin-bottom: 8px;
+			color: #666;
+
+			.origin-icon {
+				font-size: 12px;
+				margin-right: 6px;
+			}
+
+			.origin-title {
+				font-size: 13px;
+				font-weight: 600;
+			}
 		}
 
 		.origin-text {
 			font-size: 15px;
 			color: #333;
-			line-height: 1.5;
+			line-height: 1.6;
 		}
 	}
 
-	/* 编辑器及内容样式 */
-	.editor-wrapper {
-		background-color: #fff;
-		border-radius: 8px;
-		padding: 20px 15px;
-		min-height: 400px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-		display: flex;
-		flex-direction: column;
-
-		.info-bar {
+	/* 笔记主体 */
+	.note-container {
+		.meta-info {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			padding-bottom: 15px;
+			margin-bottom: 16px;
+			padding-bottom: 16px;
 			border-bottom: 1px solid #f5f5f5;
-			margin-bottom: 15px;
 
-			.label {
-				font-size: 16px;
-				font-weight: bold;
-				color: #333;
-				position: relative;
-				padding-left: 10px;
-				
-				&::before {
-					content: '';
-					position: absolute;
-					left: 0;
-					top: 50%;
-					transform: translateY(-50%);
-					width: 4px;
-					height: 16px;
-					background-color: $uni-color-primary;
-					border-radius: 2px;
-				}
+			.meta-label {
+				font-size: 18px;
+				font-weight: 700;
+				color: #1a1a1a;
 			}
 
-			.time {
+			.meta-time {
 				font-size: 12px;
-				color: #999;
+				color: #ccc;
 			}
 		}
+	}
 
-		.content-area {
-			flex: 1;
-			position: relative;
+	.content-view {
+		font-size: 16px;
+		color: #333;
+		line-height: 1.8;
+		word-break: break-all;
+		min-height: 200px;
+
+		img {
+			max-width: 100%;
+			border-radius: 8px;
+		}
+	}
+
+	.empty-placeholder {
+		color: #ccc;
+		font-size: 14px;
+		padding-top: 20px;
+		font-style: italic;
+	}
+
+	/* 底部操作区 */
+	.footer-action {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(255, 255, 255, 0.95);
+		padding: 12px 20px 30px;
+		backdrop-filter: blur(10px);
+		z-index: 10;
+		border-top: 1px solid #f9f9f9;
+	}
+
+	.action-btn {
+		height: 48px;
+		line-height: 48px;
+		background-color: #07C160;
+		/* 使用绿色强调主操作 */
+		color: #ffffff;
+		border-radius: 100px;
+		font-size: 16px;
+		font-weight: 600;
+		border: none;
+		text-align: center;
+		transition: all 0.2s;
+		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+
+		&::after {
+			border: none;
 		}
 
-		.ql-editor {
-			height: 100%;
-			min-height: 300px;
-			font-size: 15px;
-			line-height: 1.6;
-		}
-
-		.html-view {
-			font-size: 15px;
-			color: #333;
-			line-height: 1.8;
-			word-break: break-all;
-			
-			img {
-				max-width: 100%;
-			}
-		}
-		
-		.empty-text {
-			color: #ccc;
-			font-size: 14px;
-			text-align: center;
-			margin-top: 50px;
+		&:active {
+			transform: scale(0.98);
+			opacity: 0.9;
 		}
 	}
 </style>
