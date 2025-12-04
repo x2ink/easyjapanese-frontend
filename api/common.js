@@ -1,5 +1,7 @@
 import http from '@/utils/request.js'
+
 export default {
+	// ---原有其他接口保留---
 	uploadbase64(data) {
 		return http.post(`base64`, data)
 	},
@@ -21,24 +23,6 @@ export default {
 	feedback(data) {
 		return http.post(`feedback`, data)
 	},
-	addNote(data) {
-		return http.post(`notes`, data)
-	},
-	delQuote(id) {
-		return http.delete(`notes/quote/${id}`)
-	},
-	likeNote(type, id) {
-		return http.get(`notes/like/${type}/${id}`)
-	},
-	getNoteList(id, page, size) {
-		return http.get(`notes/list/${id}/${page}/${size}`)
-	},
-	getSelfNoteList(page, size) {
-		return http.get(`notes/self/${page}/${size}`)
-	},
-	getNoteInfo(id) {
-		return http.get(`notes/info/${id}`)
-	},
 	getSentence() {
 		return http.get(`sentence`)
 	},
@@ -51,16 +35,31 @@ export default {
 	breakSentence(data) {
 		return http.post(`tools/break-sentence`, data)
 	},
-	queryNoteOrigin(data) {
-		return http.get(`notes/origin`, data)
-	},
+
+	// --- 笔记相关接口 (根据您提供的Go后端适配) ---
+	
+	// 新增笔记
 	addNote(data) {
 		return http.post(`notes/add`, data)
 	},
+	// 删除笔记 (Go后端接收 JSON body: { "id": 4 })
+	deleteNote(data) {
+		return http.post(`notes/delete`, data)
+	},
+	// 更新笔记
 	updateNote(data) {
 		return http.post("notes/update", data)
 	},
-	queryNoteInfo(data) {
-		return http.get("notes/info", data)
+	// 查询笔记列表 (Go后端接收 Query: page, pageSize)
+	getNoteList(params) {
+		return http.get(`notes/list`, params)
+	},
+	// 查询笔记详情 (Go后端接收 Query: id)
+	getNoteInfo(params) {
+		return http.get(`notes/info`, params)
+	},
+	// 查询笔记源 (Go后端接收 Query: type, id)
+	queryNoteOrigin(params) {
+		return http.get(`notes/origin`, params)
 	}
 }
