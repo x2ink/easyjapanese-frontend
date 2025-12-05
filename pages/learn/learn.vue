@@ -150,6 +150,7 @@
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
 	const MAX_ERROR_TOLERANCE = 3
+	const MAX_SESSION_LEARN = 10 // [新增] 每组最大学习数量限制
 
 	// --- 工具函数 ---
 	const renderRubyHTMLWeb = (rubyList) => {
@@ -294,7 +295,9 @@
 				}
 			})
 
-			total.value = wordList.value.length
+			// [修改] 限制每组最多学习 MAX_SESSION_LEARN (10个)，
+			// 但仍保留全部数据在 pending 中作为缓冲
+			total.value = Math.min(wordList.value.length, MAX_SESSION_LEARN)
 			queuePending.value = [...wordList.value]
 
 			if (total.value === 0) {
