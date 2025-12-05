@@ -60,7 +60,7 @@
 					</view>
 				</view>
 
-				<view v-if="total === 0 && !loading" style="padding-top: 40px;">
+				<view v-if="total === 0 && !loading" style="padding-top: 80rpx;">
 					<wd-status-tip :image-size="{ height: 128, width: 128 }"
 						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
 						tip="还没有用户录音~" />
@@ -69,7 +69,7 @@
 			</view>
 		</scroll-view>
 
-		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:16px 16px 0 0;"
+		<wd-popup position="bottom" v-model="recorded" custom-style="border-radius:32rpx 32rpx 0 0;"
 			@close="recorded=false">
 			<view class="release">
 				<view class="modal-header">录音完成</view>
@@ -89,7 +89,7 @@
 				<view class="playback-time">{{Math.round(recordDuration/1000)}}"</view>
 				<view class="agreement-checkbox">
 					<view @click="agree=!agree" :class="{checked:agree}" class="checkbox">
-						<i class="fas fa-check" style="font-size: 12px;"></i>
+						<i class="fas fa-check" style="font-size: 24rpx;"></i>
 					</view>
 					<view class="agreement-text">
 						我已阅读并同意<text @click="goPage('/pages/other/browse/browse',{
@@ -375,7 +375,7 @@
 		background-color: #fff;
 		position: relative;
 		z-index: 10;
-		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.02);
+		box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.02);
 	}
 
 	.scroll-list {
@@ -387,16 +387,16 @@
 	.loadership_XNYIJ {
 		display: flex;
 		position: relative;
-		width: 23px;
-		height: 30px;
+		width: 46rpx;
+		height: 60rpx;
 	}
 
 
 	.modal-header {
-		font-size: 18px;
+		font-size: 36rpx;
 		font-weight: 600;
 		color: #212121;
-		margin-bottom: 16px;
+		margin-bottom: 32rpx;
 		text-align: center;
 	}
 
@@ -404,48 +404,48 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 20px 0;
+		margin: 40rpx 0;
 	}
 
 	.playback-btn {
-		width: 48px;
-		height: 48px;
+		width: 96rpx;
+		height: 96rpx;
 		border-radius: 50%;
 		background-color: #07C160;
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 20px;
+		font-size: 40rpx;
 		border: none;
 		cursor: pointer;
-		margin: 0 12px;
+		margin: 0 24rpx;
 	}
 
 	.playback-time {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #757575;
 		text-align: center;
-		margin-top: 8px;
+		margin-top: 16rpx;
 	}
 
 	.agreement-checkbox {
 		display: flex;
 		align-items: center;
-		margin: 16px 0;
+		margin: 32rpx 0;
 	}
 
 	.checkbox {
-		width: 18px;
-		height: 18px;
-		border-radius: 4px;
-		margin-right: 8px;
+		width: 36rpx;
+		height: 36rpx;
+		border-radius: 8rpx;
+		margin-right: 16rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		color: #eeeeee;
 		background-color: white;
-		border: 1px solid #eeeeee;
+		border: 2rpx solid #eeeeee;
 	}
 
 	.checked {
@@ -454,7 +454,7 @@
 	}
 
 	.agreement-text {
-		font-size: 13px;
+		font-size: 26rpx;
 		color: #757575;
 		line-height: 1.4;
 		flex: 1;
@@ -467,14 +467,14 @@
 	.modal-actions {
 		display: flex;
 		justify-content: space-between;
-		margin-top: 20px;
+		margin-top: 40rpx;
 	}
 
 	.modal-btn {
 		flex: 1;
-		padding: 12px;
-		border-radius: 8px;
-		font-size: 14px;
+		padding: 24rpx;
+		border-radius: 16rpx;
+		font-size: 28rpx;
 		font-weight: 500;
 		border: none;
 		cursor: pointer;
@@ -483,14 +483,14 @@
 	.cancel-btn {
 		background-color: white;
 		color: #757575;
-		border: 1px solid #E0E0E0;
-		margin-right: 8px;
+		border: 2rpx solid #E0E0E0;
+		margin-right: 16rpx;
 	}
 
 	.confirm-btn {
 		background-color: #07C160;
 		color: white;
-		margin-left: 8px;
+		margin-left: 16rpx;
 	}
 
 	.confirm-btn:disabled {
@@ -500,42 +500,42 @@
 
 
 	.release {
-		padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
+		padding: 32rpx 32rpx calc(env(safe-area-inset-bottom) + 32rpx) 32rpx;
 	}
 
 	.loadership_XNYIJ view {
 		position: absolute;
-		width: 3px;
-		height: 10px;
+		width: 6rpx;
+		height: 20rpx;
 		background: #ffffff;
-		top: 10px;
+		top: 20rpx;
 		animation: loadership_XNYIJ_scale 1.8s infinite, loadership_XNYIJ_fade 1.8s infinite;
 		animation-timing-function: ease-in-out;
 	}
 
 	.loadership_XNYIJ view:nth-child(1) {
 		animation-delay: 0.00s;
-		left: 0px;
+		left: 0rpx;
 	}
 
 	.loadership_XNYIJ view:nth-child(2) {
 		animation-delay: 0.16s;
-		left: 5px;
+		left: 10rpx;
 	}
 
 	.loadership_XNYIJ view:nth-child(3) {
 		animation-delay: 0.32s;
-		left: 10px;
+		left: 20rpx;
 	}
 
 	.loadership_XNYIJ view:nth-child(4) {
 		animation-delay: 0.48s;
-		left: 15px;
+		left: 30rpx;
 	}
 
 	.loadership_XNYIJ view:nth-child(5) {
 		animation-delay: 0.64s;
-		left: 20px;
+		left: 40rpx;
 	}
 
 	@keyframes loadership_XNYIJ_scale {
@@ -572,40 +572,40 @@
 	/* 单词展示区 */
 	.word-display {
 		position: relative;
-		padding: 24px 16px;
-		margin: 16px 16px 0 16px;
-		border-radius: 8px;
+		padding: 48rpx 32rpx;
+		margin: 32rpx 32rpx 0 32rpx;
+		border-radius: 16rpx;
 		text-align: center;
 		background-color: #f8f9fa;
 
 		button {
 			position: absolute;
-			top: 16px;
-			right: 16px;
+			top: 32rpx;
+			right: 32rpx;
 		}
 	}
 
 	.word-kanji {
-		font-size: 28px;
+		font-size: 56rpx;
 		font-weight: 600;
 		color: #212121;
-		margin-bottom: 8px;
+		margin-bottom: 16rpx;
 	}
 
 	.word-furigana {
-		font-size: 20px;
+		font-size: 40rpx;
 		color: #757575;
 	}
 
 	.word-meaning {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #424242;
-		margin-top: 12px;
+		margin-top: 24rpx;
 	}
 
 	/* 录音控制区 */
 	.recording-control {
-		padding: 24px 16px;
+		padding: 48rpx 32rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -614,15 +614,15 @@
 	}
 
 	.record-btn {
-		width: 72px;
-		height: 72px;
+		width: 144rpx;
+		height: 144rpx;
 		border-radius: 50%;
 		background-color: #07C160;
 		color: white;
 		border: none;
-		font-size: 24px;
+		font-size: 48rpx;
 		cursor: pointer;
-		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+		box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
 		transition: all 0.2s ease;
 	}
 
@@ -631,23 +631,23 @@
 	}
 
 	.recording-time {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #757575;
-		margin-top: 12px;
+		margin-top: 24rpx;
 	}
 
 	/* 录音操作按钮组 */
 	.recording-actions {
 		display: flex;
 		justify-content: center;
-		gap: 16px;
+		gap: 32rpx;
 	}
 
 	.action-btn {
-		padding: 8px 16px;
-		border-radius: 20px;
-		font-size: 14px;
-		border: 1px solid #E0E0E0;
+		padding: 16rpx 32rpx;
+		border-radius: 40rpx;
+		font-size: 28rpx;
+		border: 2rpx solid #E0E0E0;
 		background-color: white;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -665,7 +665,7 @@
 
 	/* 其他用户录音列表 */
 	.recordings-list {
-		padding: 16px;
+		padding: 32rpx;
 		/* 移除 flex: 1，由 scroll-view 接管 */
 		/* flex: 1; overflow-y: auto; */
 		background-color: white;
@@ -675,22 +675,22 @@
 
 	.list-title-bar {
 		background-color: white;
-		padding: 0 16px;
+		padding: 0 32rpx;
 	}
 
 	.section-title {
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
 		color: #212121;
-		padding-bottom: 8px;
-		border-bottom: 1px solid #f0f0f0;
+		padding-bottom: 16rpx;
+		border-bottom: 2rpx solid #f0f0f0;
 	}
 
 	/* 录音项 */
 	.recording-item {
 		background-color: white;
-		padding: 12px;
-		border-bottom: 1px solid #f0f0f0;
+		padding: 24rpx;
+		border-bottom: 2rpx solid #f0f0f0;
 	}
 
 	.user-info {
@@ -699,15 +699,15 @@
 	}
 
 	.user-name {
-		margin-left: 8px;
-		font-size: 14px;
+		margin-left: 16rpx;
+		font-size: 28rpx;
 		font-weight: 500;
 		color: #212121;
 		flex: 1;
 	}
 
 	.recording-meta {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #9E9E9E;
 		margin-left: auto;
 	}
@@ -719,8 +719,8 @@
 
 	.like-btn {
 		color: #9E9E9E;
-		font-size: 14px;
-		margin-left: 8px;
+		font-size: 28rpx;
+		margin-left: 16rpx;
 		border: none;
 		background: none;
 		cursor: pointer;
@@ -731,15 +731,15 @@
 	}
 
 	.like-count {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #9E9E9E;
-		margin-left: 4px;
+		margin-left: 8rpx;
 	}
 
 	.play-btn {
-		width: 32px;
-		height: 32px;
-		font-size: 16px;
+		width: 64rpx;
+		height: 64rpx;
+		font-size: 32rpx;
 		border-radius: 50%;
 		background-color: #07C160;
 		color: white;

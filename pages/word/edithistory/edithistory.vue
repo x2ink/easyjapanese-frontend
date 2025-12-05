@@ -72,44 +72,44 @@
 	.content {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		padding: 8px 16px 0 16px;
+		gap: 32rpx;
+		padding: 16rpx 32rpx 0 32rpx;
 	}
 
 	.revision-item {
-		padding-bottom: 16px;
-		border-bottom: 1px solid #E0E0E0;
+		padding-bottom: 32rpx;
+		border-bottom: 2rpx solid #E0E0E0;
 	}
 
 	.revision-header {
 		display: flex;
 		align-items: center;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	.user-info {
-		margin-left: 12px;
+		margin-left: 24rpx;
 		flex: 1;
 	}
 
 	.user-name {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #212121;
 		font-weight: 500;
 	}
 
 	.revision-time {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #757575;
-		margin-top: 2px;
+		margin-top: 4rpx;
 	}
 
 
 	.revision-content {
 		color: #393939;
-		font-size: 14px;
+		font-size: 28rpx;
 		background-color: #FAFAFA;
-		border-radius: 8px;
-		padding: 12px;
+		border-radius: 16rpx;
+		padding: 24rpx;
 	}
 </style>

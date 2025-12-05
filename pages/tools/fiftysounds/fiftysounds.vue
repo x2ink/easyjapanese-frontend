@@ -50,7 +50,7 @@
 	<wd-toast />
 	
 	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="minimal-popup">
-		<view class="_GCENTER" style="flex-direction: column;padding: 24px 20px;">
+		<view class="_GCENTER" style="flex-direction: column;padding: 48rpx 40rpx;">
 			<view class="detail-header">
 				<view class="detail-title">假名手写板</view>
 				<view class="detail-subtitle">跟随描红练习书写</view>
@@ -65,7 +65,7 @@
 						:openSmooth="true"></l-signature>
 				</view>
 				<view v-else class="loadingtext">
-					<wd-loading size="40px" color="#999"/>
+					<wd-loading size="80rpx" color="#999"/>
 					<text>加载中...</text>
 				</view>
 			</view>
@@ -748,25 +748,25 @@
 	.header-section {
 		background: #fff;
 		/* 确保头部背景纯白 */
-		padding-bottom: 8px;
+		padding-bottom: 16rpx;
 	}
 
 	/* Tab样式 - 改为灰色底色，选中项为纯色按钮 */
 	.tab-container {
 		background-color: #f7f8fa;
-		border-radius: 100px;
-		padding: 4px;
-		margin: 12px 20px;
+		border-radius: 200rpx;
+		padding: 8rpx;
+		margin: 24rpx 40rpx;
 		display: flex;
-		gap: 4px;
+		gap: 8rpx;
 	}
 
 	.kana-tab {
-		border-radius: 100px;
-		font-size: 14px;
+		border-radius: 200rpx;
+		font-size: 28rpx;
 		font-weight: 500;
 		flex: 1;
-		height: 40px;
+		height: 80rpx;
 		color: #8c9096;
 		transition: all 0.3s ease;
 		background-color: transparent;
@@ -781,21 +781,21 @@
 
 	/* 列表区域 */
 	.table {
-		margin: 0 20px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 32px);
+		margin: 0 40rpx;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 64rpx);
 	}
 
 	.section-block {
-		margin-bottom: 32px;
+		margin-bottom: 64rpx;
 	}
 
 	.kana-row-header {
-		font-size: 20px;
+		font-size: 40rpx;
 		font-weight: 700;
 		color: #1a1a1a;
 		/* 深黑字体 */
 		background-color: transparent;
-		padding: 16px 4px 12px 4px;
+		padding: 32rpx 8rpx 24rpx 8rpx;
 		margin: 0;
 		display: flex;
 		align-items: center;
@@ -805,24 +805,24 @@
 	.kana-row-header::before {
 		content: '';
 		display: block;
-		width: 6px;
-		height: 6px;
+		width: 12rpx;
+		height: 12rpx;
 		border-radius: 50%;
 		background-color: #07C160;
-		margin-right: 8px;
+		margin-right: 16rpx;
 	}
 
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
-		gap: 12px;
+		gap: 24rpx;
 		/* 增加间距 */
 	}
 
 	/* 卡片样式 - 极简色块 */
 	.kana-card {
 		aspect-ratio: 1;
-		border-radius: 16px;
+		border-radius: 32rpx;
 		/* 更圆润的角 */
 		display: flex;
 		flex-direction: column;
@@ -842,44 +842,44 @@
 	}
 
 	.kana-character {
-		font-size: 24px;
+		font-size: 48rpx;
 		font-weight: 500;
-		margin-bottom: 2px;
+		margin-bottom: 4rpx;
 		color: #333;
 	}
 
 	.kana-romaji {
-		font-size: 11px;
+		font-size: 22rpx;
 		color: #9aa0a6;
 		font-weight: 500;
 	}
 
 	/* 弹窗样式重构 */
 	.minimal-popup {
-		border-radius: 24px 24px 0 0 !important;
+		border-radius: 48rpx 48rpx 0 0 !important;
 		background-color: #ffffff !important;
 	}
 
 	.detail-header {
 		width: 100%;
 		text-align: left;
-		margin-bottom: 20px;
+		margin-bottom: 40rpx;
 	}
 
 	.detail-title {
-		font-size: 24px;
+		font-size: 48rpx;
 		font-weight: 700;
 		color: #1a1a1a;
-		margin-bottom: 4px;
+		margin-bottom: 8rpx;
 	}
 
 	.detail-subtitle {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #9aa0a6;
 	}
 
 	.detail-board-area {
-		border-radius: 20px;
+		border-radius: 40rpx;
 		width: 100%;
 		aspect-ratio: 880/739;
 		position: relative;
@@ -914,31 +914,31 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 12px;
+		gap: 24rpx;
 		position: absolute;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 
 		text {
-			font-size: 13px;
+			font-size: 26rpx;
 			color: #9aa0a6;
 		}
 	}
 
 	/* 按钮区域 */
 	.tools-btns {
-		margin-top: 24px;
+		margin-top: 48rpx;
 		width: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 16px;
+		gap: 32rpx;
 	}
 
 	.left-actions {
 		display: flex;
-		gap: 12px;
+		gap: 24rpx;
 		flex: 1;
 	}
 
@@ -950,16 +950,16 @@
 	.btn-flat-secondary {
 		background-color: #f7f8fa;
 		color: #555;
-		font-size: 14px;
+		font-size: 28rpx;
 		font-weight: 500;
-		border-radius: 12px;
-		padding: 0 16px;
-		height: 48px;
-		line-height: 48px;
+		border-radius: 24rpx;
+		padding: 0 32rpx;
+		height: 96rpx;
+		line-height: 96rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 6px;
+		gap: 12rpx;
 		margin: 0;
 		flex: 1;
 	}
@@ -967,12 +967,12 @@
 	.btn-flat-primary {
 		background-color: #07C160;
 		color: #ffffff;
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
-		border-radius: 12px;
-		padding: 0 24px;
-		height: 48px;
-		line-height: 48px;
+		border-radius: 24rpx;
+		padding: 0 48rpx;
+		height: 96rpx;
+		line-height: 96rpx;
 		margin: 0;
 		flex: 1.5;
 		/* 保存按钮稍微宽一点 */

@@ -3,7 +3,7 @@
 		<!-- 主要内容 -->
 		<view class="main-content">
 			<!-- APP Logo -->
-			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 40px;">
+			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 80rpx;">
 				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
 					class="app-logo"></image>
 				<view class="text-2xl font-medium text-gray-800">轻松日语</view>
@@ -111,15 +111,15 @@
 
 <style scoped lang="scss">
 	.app-logo {
-		width: 80px;
-		height: 80px;
-		border-radius: 16px;
-		margin-bottom: 16px;
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: 32rpx;
+		margin-bottom: 32rpx;
 	}
 
 	.login-container {
 		height: 100vh;
-		padding: 0 32px;
+		padding: 0 64rpx;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -134,7 +134,7 @@
 		}
 
 		.text-2xl {
-			font-size: 24px;
+			font-size: 48rpx;
 		}
 
 		.font-medium {
@@ -150,11 +150,11 @@
 		}
 
 		.text-sm {
-			font-size: 14px;
+			font-size: 28rpx;
 		}
 
 		.mt-1 {
-			margin-top: 4px;
+			margin-top: 8rpx;
 		}
 
 		.w-full {
@@ -162,7 +162,7 @@
 		}
 
 		.mb-6 {
-			margin-bottom: 24px;
+			margin-bottom: 48rpx;
 		}
 
 		.text-green-500 {
@@ -172,22 +172,22 @@
 		.flex {
 			display: flex;
 			align-items: center;
-			font-size: 12px;
+			font-size: 24rpx;
 		}
 
 		.login-btn {
 			background: #07c160;
 			color: white;
-			border-radius: 8px;
-			padding: 12px;
-			font-size: 16px;
+			border-radius: 16rpx;
+			padding: 24rpx;
+			font-size: 32rpx;
 			font-weight: 500;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			box-shadow: 0 2px 10px rgba(7, 193, 96, 0.2);
+			box-shadow: 0 4rpx 20rpx rgba(7, 193, 96, 0.2);
 			border: none;
-			gap: 10px;
+			gap: 20rpx;
 			position: relative;
 			overflow: hidden;
 
@@ -196,8 +196,8 @@
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				width: 5px;
-				height: 5px;
+				width: 10rpx;
+				height: 10rpx;
 				background: rgba(7, 193, 96, 0.2);
 				opacity: 0;
 				border-radius: 100%;

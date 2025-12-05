@@ -9,7 +9,7 @@
 				<view class="markdown-wrapper">
 					<MdParser :markdown="content" />
 				</view>
-				<view style="height: calc(env(safe-area-inset-bottom) + 20px);"></view>
+				<view style="height: calc(env(safe-area-inset-bottom) + 40rpx);"></view>
 			</scroll-view>
 			<view v-if="id" @click="openSheet()" class="sheet-btn _GCENTER">
 				<text class="fa-regular fa-pen-to-square"></text>
@@ -92,21 +92,21 @@
 <style lang="scss" scoped>
 	.sheet-btn {
 		flex-direction: column;
-		font-size: 12px;
+		font-size: 24rpx;
 		position: fixed;
-		bottom: 40px;
-		right: 20px;
+		bottom: 80rpx;
+		right: 40rpx;
 		background-color: #07C160;
-		width: 60px;
-		height: 60px;
+		width: 120rpx;
+		height: 120rpx;
 		border-radius: 50%;
-		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+		box-shadow: rgba(100, 100, 111, 0.2) 0rpx 14rpx 58rpx 0rpx;
 		color: #ffffff;
 
 		text {
-			font-size: 18px;
+			font-size: 36rpx;
 			color: #ffffff;
-			margin-bottom: 4px;
+			margin-bottom: 8rpx;
 		}
 	}
 
@@ -134,7 +134,7 @@
 	}
 
 	.markdown-wrapper {
-		padding: 0 16px;
+		padding: 0 32rpx;
 		box-sizing: border-box;
 	}
 </style>

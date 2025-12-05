@@ -32,7 +32,7 @@
 					</view>
 					
 				</view>
-				<view style="height: 40px;"></view>
+				<view style="height: 80rpx;"></view>
 			</view>
 		</scroll-view>
 	</view>
@@ -154,18 +154,18 @@
 
 	/* 搜索栏样式优化 */
 	.search-bg {
-		padding: 8px 16px 4px;
+		padding: 16rpx 32rpx 8rpx;
 		background-color: #ffffff;
 	}
 
 	.search-bar {
 		background-color: #f5f7fa; /* 更淡的背景色 */
-		border-radius: 100px; /* 全圆角胶囊样式 */
-		height: 40px;
-		padding: 0 16px;
+		border-radius: 200rpx; /* 全圆角胶囊样式 */
+		height: 80rpx;
+		padding: 0 32rpx;
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 20rpx;
 		transition: background-color 0.2s;
 
 		&:active {
@@ -174,12 +174,12 @@
 
 		input {
 			flex: 1;
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #333;
 		}
 
 		.search-icon {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #aeb4c0;
 		}
 	}
@@ -191,19 +191,19 @@
 
 	.tabs-container {
 		background-color: #ffffff;
-		padding: 4px 0 8px 0;
+		padding: 8rpx 0 16rpx 0;
 	}
 
 	/* 列表样式优化 */
 	.list {
-		padding-top: 4px;
+		padding-top: 8rpx;
 		
 		.item {
-			padding: 16px 20px; /* 增加内边距 */
-			border-bottom: 1px solid #f7f8fa; /* 极淡的分割线 */
+			padding: 32rpx 40rpx; /* 增加内边距 */
+			border-bottom: 2rpx solid #f7f8fa; /* 极淡的分割线 */
 			display: flex;
 			flex-direction: column;
-			gap: 6px;
+			gap: 12rpx;
 			transition: background-color 0.2s;
 			
 			&:active {
@@ -217,17 +217,17 @@
 			}
 			
 			.grammar-text {
-				font-size: 17px;
+				font-size: 34rpx;
 				font-weight: 600;
 				color: #333;
 			}
 
 			.content-row {
-				margin-top: 2px;
+				margin-top: 4rpx;
 			}
 			
 			.meaning-text {
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #666;
 				line-height: 1.5;
 				display: -webkit-box;
@@ -240,11 +240,11 @@
 
 	/* 标签样式优化 */
 	.level-tag {
-		font-size: 11px;
-		padding: 2px 8px;
-		border-radius: 6px;
+		font-size: 22rpx;
+		padding: 4rpx 16rpx;
+		border-radius: 12rpx;
 		font-weight: 600;
-		margin-left: 12px;
+		margin-left: 24rpx;
 		flex-shrink: 0;
 		line-height: 1.4;
 	}

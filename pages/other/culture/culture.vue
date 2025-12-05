@@ -28,7 +28,7 @@
 			</view>
 
 			<view class="loading-status" v-if="isLoading">
-				<wd-loading size="20px" color="#999"></wd-loading>
+				<wd-loading size="40rpx" color="#999"></wd-loading>
 			</view>
 			<view class="no-more" v-else-if="list.length >= total && total > 0">
 				<text>没有更多了</text>
@@ -141,21 +141,21 @@
 		flex: 1;
 		height: 0;
 		overflow: hidden;
-		padding: 12px;
+		padding: 24rpx;
 		box-sizing: border-box;
 	}
 
 	.list {
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
+		gap: 30rpx;
 		/* 增加卡片间距 */
 	}
 
 	/* 卡片样式调整 */
 	.card {
 		background-color: #ffffff;
-		border-radius: 8px;
+		border-radius: 16rpx;
 		overflow: hidden;
 		/* 确保图片圆角跟随 */
 		display: flex;
@@ -170,13 +170,13 @@
 		}
 
 		.info-container {
-			padding: 12px;
+			padding: 24rpx;
 
 			.title-box {
-				margin-bottom: 10px;
+				margin-bottom: 20rpx;
 
 				.title {
-					font-size: 16px;
+					font-size: 32rpx;
 					font-weight: 500;
 					color: #333;
 					line-height: 1.5;
@@ -196,17 +196,17 @@
 				align-items: center;
 
 				.date {
-					font-size: 12px;
+					font-size: 24rpx;
 					color: #999;
 				}
 
 				.stat-item {
 					display: flex;
 					align-items: center;
-					gap: 4px;
+					gap: 8rpx;
 
 					.num {
-						font-size: 12px;
+						font-size: 24rpx;
 						color: #999;
 					}
 				}
@@ -218,15 +218,15 @@
 	.no-more {
 		display: flex;
 		justify-content: center;
-		padding: 20px 0;
+		padding: 40rpx 0;
 
 		text {
-			font-size: 12px;
+			font-size: 24rpx;
 			color: #ccc;
 		}
 	}
 
 	.bottom-spacer {
-		height: 30px;
+		height: 60rpx;
 	}
 </style>

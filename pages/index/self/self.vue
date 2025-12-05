@@ -73,7 +73,7 @@
 			</view>
 		</view>
 
-		<wd-popup v-model="nicknameShow" custom-style="border-radius:16px;width:280px;padding:16px"
+		<wd-popup v-model="nicknameShow" custom-style="border-radius:32rpx;width:560rpx;padding:32rpx"
 			@close="nicknameShow=false">
 			<view>
 				<view class="modal-title">
@@ -202,18 +202,18 @@
 	/* 按钮容器 - 更新为水平排列 */
 	.button-container {
 		display: flex;
-		gap: 12px;
-		margin-top: 16px;
+		gap: 24rpx;
+		margin-top: 32rpx;
 	}
 
 	/* 基础按钮样式 */
 	.modal-button {
 		flex: 1;
-		height: 40px;
+		height: 80rpx;
 		text-align: center;
-		font-size: 14px;
+		font-size: 28rpx;
 		font-weight: 500;
-		border-radius: 8px;
+		border-radius: 16rpx;
 		border: none;
 		outline: none;
 	}
@@ -228,7 +228,7 @@
 	.modal-button.confirm {
 		background-color: #07C160;
 		color: white;
-		box-shadow: 0 2px 6px rgba(7, 193, 96, 0.3);
+		box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
 	}
 
 	.screen {
@@ -242,7 +242,7 @@
 	/* 弹窗标题 */
 	.modal-title {
 		text-align: center;
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 500;
 		color: #212121;
 		position: relative;
@@ -251,32 +251,32 @@
 	/* 关闭按钮 */
 	.modal-close {
 		position: absolute;
-		right: 0px;
-		top: 0px;
+		right: 0rpx;
+		top: 0rpx;
 		color: #757575;
-		font-size: 18px;
+		font-size: 36rpx;
 	}
 
 
 	/* 输入框容器 */
 	.input-container {
-		margin-top: 16px;
+		margin-top: 32rpx;
 	}
 
 	/* 字符计数 */
 	.char-count {
 		text-align: right;
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #757575;
-		margin-top: 4px;
+		margin-top: 8rpx;
 	}
 
 	/* 输入框样式 */
 	.modal-input {
-		padding: 12px;
-		border: 1px solid #E0E0E0;
-		border-radius: 8px;
-		font-size: 14px;
+		padding: 24rpx;
+		border: 2rpx solid #E0E0E0;
+		border-radius: 16rpx;
+		font-size: 28rpx;
 		color: #212121;
 	}
 
@@ -285,7 +285,7 @@
 	}
 
 	.profile-bg {
-		height: 180px;
+		height: 360rpx;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		position: relative;
 	}
@@ -293,15 +293,15 @@
 	.avatar-container {
 		overflow: inherit !important;
 		position: absolute;
-		bottom: -40px;
-		left: 16px;
-		width: 80px;
-		height: 80px;
-		border: 4px solid white;
+		bottom: -80rpx;
+		left: 32rpx;
+		width: 160rpx;
+		height: 160rpx;
+		border: 8rpx solid white;
 		border-radius: 50%;
 		background-color: white;
 		z-index: 10;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
 		padding: 0; /* 修复 button 默认 padding */
 		margin: 0; /* 修复 button 默认 margin */
 
@@ -324,15 +324,15 @@
 
 		.camera-icon {
 			position: absolute;
-			bottom: 0px;
-			right: 0px;
+			bottom: 0rpx;
+			right: 0rpx;
 			background: white;
-			padding: 2px;
+			padding: 4rpx;
 			border-radius: 50%;
 
 			.camera-bg {
-				width: 20px;
-				height: 20px;
+				width: 40rpx;
+				height: 40rpx;
 				background: #10b981;
 				border-radius: 50%;
 				display: flex;
@@ -341,7 +341,7 @@
 
 				.fa-camera {
 					color: white;
-					font-size: 10px;
+					font-size: 20rpx;
 				}
 			}
 		}
@@ -357,46 +357,46 @@
 	}
 
 	.content-container {
-		padding: 0 16px;
+		padding: 0 32rpx;
 	}
 
 	.user-info {
-		margin-top: 60px;
+		margin-top: 120rpx;
 
 		.user-name-container {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 16rpx;
 
 			text {
-				font-size: 18px;
+				font-size: 36rpx;
 			}
 		}
 
 		.user-name {
-			font-size: 24px;
+			font-size: 48rpx;
 			font-weight: bold;
 			margin: 0;
 			color: #333; /* 补充颜色 */
 		}
 
 		.vip-badge {
-			padding: 2px 8px;
+			padding: 4rpx 16rpx;
 			background: #fef3c7;
 			color: #d97706;
-			border-radius: 12px;
-			font-size: 12px;
+			border-radius: 24rpx;
+			font-size: 24rpx;
 			
 			/* 修改选择器以匹配 text 标签 */
 			text {
-				margin-right: 4px;
+				margin-right: 8rpx;
 			}
 		}
 
 		.user-id {
-			font-size: 12px;
+			font-size: 24rpx;
 			color: #6b7280;
-			margin-top: 4px;
+			margin-top: 8rpx;
 			display: block; /* 确保 text 换行 */
 		}
 	}
@@ -404,53 +404,53 @@
 	.stats-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 16px;
-		margin-top: 24px;
+		gap: 32rpx;
+		margin-top: 48rpx;
 
 		.stat-item {
 			background: white;
-			border-radius: 8px;
-			padding: 12px;
+			border-radius: 16rpx;
+			padding: 24rpx;
 			text-align: center;
 			display: flex;
 			flex-direction: column;
 
 			.stat-value {
-				font-size: 24px;
+				font-size: 48rpx;
 				font-weight: bold;
 				color: #2563eb;
 			}
 
 			.stat-label {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #6b7280;
-				margin-top: 4px;
+				margin-top: 8rpx;
 			}
 		}
 	}
 
 	.function-list {
-		margin-top: 32px;
+		margin-top: 64rpx;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 32rpx;
 
 		.function-item {
 			background: white;
-			border-radius: 8px;
-			padding: 12px;
+			border-radius: 16rpx;
+			padding: 24rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 
 			.function-icon {
-				width: 32px;
-				height: 32px;
+				width: 64rpx;
+				height: 64rpx;
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-right: 12px;
+				margin-right: 24rpx;
 
 				&.blue {
 					background: #dbeafe;
@@ -475,13 +475,13 @@
 
 			.function-name {
 				flex: 1;
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #374151;
 			}
 
 			.arrow-icon {
 				color: #9ca3af;
-				font-size: 12px;
+				font-size: 24rpx;
 			}
 		}
 	}

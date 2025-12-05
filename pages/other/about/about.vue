@@ -114,13 +114,13 @@
 	.main-content {
 		flex: 1;
 		overflow-y: auto;
-		padding: 16px;
+		padding: 32rpx;
 	}
 
 	/* 应用信息卡片 */
 	.app-card {
-		padding: 24px 16px;
-		margin-bottom: 16px;
+		padding: 48rpx 32rpx;
+		margin-bottom: 32rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -128,27 +128,27 @@
 	}
 
 	.app-logo {
-		width: 80px;
-		height: 80px;
-		border-radius: 16px;
-		margin-bottom: 16px;
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: 32rpx;
+		margin-bottom: 32rpx;
 	}
 
 	.app-name {
-		font-size: 18px;
+		font-size: 36rpx;
 		font-weight: 600;
 		color: #212121;
-		margin-bottom: 4px;
+		margin-bottom: 8rpx;
 	}
 
 	.app-version {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #757575;
-		margin-bottom: 16px;
+		margin-bottom: 32rpx;
 	}
 
 	.app-desc {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #424242;
 		line-height: 1.5;
 		max-width: 80%;
@@ -156,12 +156,12 @@
 
 	/* 信息列表项 */
 	.info-item {
-		padding: 16px;
-		border-bottom: 1px solid #eee;
+		padding: 32rpx;
+		border-bottom: 2rpx solid #eee;
 	}
 
 	.info-title {
-		font-size: 15px;
+		font-size: 30rpx;
 		font-weight: 500;
 		color: #212121;
 		display: flex;
@@ -170,7 +170,7 @@
 	}
 
 	.info-content {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #757575;
 		line-height: 1.5;
 	}
@@ -184,28 +184,28 @@
 	.social-icons {
 		display: flex;
 		justify-content: center;
-		margin-top: 12px;
+		margin-top: 24rpx;
 	}
 
 	.social-icon {
-		width: 36px;
-		height: 36px;
+		width: 72rpx;
+		height: 72rpx;
 		border-radius: 50%;
 		background-color: #f5f5f5;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 0 8px;
+		margin: 0 16rpx;
 		color: #07C160;
-		font-size: 16px;
+		font-size: 32rpx;
 	}
 
 	/* 底部信息 */
 	.footer-info {
 		text-align: center;
-		padding: 16px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-		font-size: 12px;
+		padding: 32rpx;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 32rpx);
+		font-size: 24rpx;
 		color: #9E9E9E;
 		line-height: 1.5;
 	}
@@ -213,6 +213,6 @@
 	/* 箭头图标 */
 	.arrow-icon {
 		color: #9E9E9E;
-		font-size: 12px;
+		font-size: 24rpx;
 	}
 </style>

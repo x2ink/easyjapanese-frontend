@@ -1,7 +1,7 @@
 <template>
 	<view style="height: 100vh;overflow: auto;">
 		<NavbarDefault title="编辑单词"></NavbarDefault>
-		<view style="padding:8px 16px 16px 16px;">
+		<view style="padding:16rpx 32rpx 32rpx 32rpx;">
 			<view class="section-title">
 				<text class="fas fa-book"></text>
 				基本信息
@@ -14,7 +14,7 @@
 					<input v-model="formData.words" type="text" placeholder="请输入单词如：筆跡，筆蹟">
 				</view>
 			</view>
-			<view style="display: flex;align-items: center;gap: 16px;margin-top: 8px;">
+			<view style="display: flex;align-items: center;gap: 32rpx;margin-top: 16rpx;">
 				<view class="input">
 					<view class="title">
 						假名
@@ -32,7 +32,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="input" style="margin-top: 8px;">
+			<view class="input" style="margin-top: 16rpx;">
 				<view class="title">
 					简明释义
 				</view>
@@ -40,7 +40,7 @@
 					<input v-model="formData.description" type="text" placeholder="请输入简明释义">
 				</view>
 			</view>
-			<view class="section-title" style="margin-top: 16px;">
+			<view class="section-title" style="margin-top: 32rpx;">
 				<text class="fas fa-list"></text>
 				详细释义
 			</view>
@@ -72,7 +72,7 @@
 				<text class="fas fa-plus"></text>
 				添加释义
 			</button>
-			<view class="section-title" style="margin-top: 16px;">
+			<view class="section-title" style="margin-top: 32rpx;">
 				<text class="fas fa-list"></text>
 				例句
 			</view>
@@ -91,7 +91,7 @@
 						<input v-model="item.jp" type="text" placeholder="请输入日文">
 					</view>
 				</view>
-				<view class="input" style="margin-top: 8px;">
+				<view class="input" style="margin-top: 16rpx;">
 					<view class="title">
 						中文
 					</view>
@@ -111,7 +111,7 @@
 				<uv-avatar-group :urls="avatarUrls" size="35" gap="0.5"></uv-avatar-group>
 			</view>
 			<button @click="submit" class="submit-btn">提交修订</button>
-			<view :style="{height:getOs()=='ios'?'env(safe-area-inset-bottom)':'16px'}"></view>
+			<view :style="{height:getOs()=='ios'?'env(safe-area-inset-bottom)':'32rpx'}"></view>
 		</view>
 		<wd-toast />
 	</view>
@@ -230,26 +230,26 @@
 </style>
 <style scoped lang="less">
 	.title {
-		font-size: 14px;
+		font-size: 28rpx;
 		font-weight: 600;
 	}
 
 	.section-title {
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
 		color: #212121;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 16rpx;
 	}
 
 	.history {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		font-size: 14px;
-		margin-top: 16px;
+		font-size: 28rpx;
+		margin-top: 32rpx;
 	}
 
 	.section-title text {
@@ -258,13 +258,13 @@
 
 	.meanings {
 		display: flex;
-		gap: 8px;
-		margin-top: 8px;
+		gap: 16rpx;
+		margin-top: 16rpx;
 		flex-direction: column;
 	}
 
 	.examples {
-		margin-top: 8px;
+		margin-top: 16rpx;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -272,16 +272,16 @@
 
 	.input {
 		.card {
-			margin-top: 8px;
-			border: 1px solid #E5E7EB;
-			border-radius: 12px;
-			padding: 12px 16px;
+			margin-top: 16rpx;
+			border: 2rpx solid #E5E7EB;
+			border-radius: 24rpx;
+			padding: 24rpx 32rpx;
 
 			textarea {
 				width: 100%;
 				overflow-y: auto;
-				height: 80px;
-				line-height: 20px;
+				height: 160rpx;
+				line-height: 40rpx;
 			}
 		}
 	}
@@ -289,27 +289,27 @@
 	.add-button {
 		background-color: transparent;
 		color: #07C160;
-		border: 1px dashed #07C160;
-		border-radius: 12px;
-		padding: 12px 16px;
-		font-size: 14px;
+		border: 2rpx dashed #07C160;
+		border-radius: 24rpx;
+		padding: 24rpx 32rpx;
+		font-size: 28rpx;
 		width: 100%;
 		cursor: pointer;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 8px;
-		margin-top: 16px;
+		gap: 16rpx;
+		margin-top: 32rpx;
 	}
 
 	.submit-btn {
-		margin-top: 16px;
-		padding: 12px;
+		margin-top: 32rpx;
+		padding: 24rpx;
 		background-color: #07C160;
 		color: white;
 		border: none;
-		border-radius: 8px;
-		font-size: 16px;
+		border-radius: 16rpx;
+		font-size: 32rpx;
 		font-weight: 500;
 		cursor: pointer;
 	}
@@ -319,6 +319,6 @@
 	}
 
 	.add-button text {
-		font-size: 14px;
+		font-size: 28rpx;
 	}
 </style>

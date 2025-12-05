@@ -3,7 +3,7 @@
 		<NavbarDefault border title="背词设置"></NavbarDefault>
 	</view>
 	<view :style="{
-		paddingBottom:`${getOs()=='ios'?'env(safe-area-inset-bottom)':'16px'}`
+		paddingBottom:`${getOs()=='ios'?'env(safe-area-inset-bottom)':'32rpx'}`
 	}">
 		<view class="cell">
 			<view class="cell-title">
@@ -23,25 +23,25 @@
 			</view>
 			<view class="cell-progress">
 				<text>每组新学{{config.learn_group}}单词</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :min="5" :max="20" v-model="config.learn_group" active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>每组复习{{config.review_group}}单词</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :min="5" :max="50" v-model="config.review_group" active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>每组默写{{config.write_group}}单词</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :min="5" :max="50" v-model="config.write_group" active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>每组听写{{config.sound_group}}单词</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :min="5" :max="50" v-model="config.sound_group" active-color="#42C05C" hide-label />
 				</view>
 			</view>
@@ -53,30 +53,30 @@
 			</view>
 			<view class="cell-progress">
 				<text>遗忘单词权重:{{config.cycle_config.extent.forgotten}}%</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :step="10" :min="10" :max="100" v-model="config.cycle_config.extent.forgotten"
 						active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>模糊记忆权重:{{config.cycle_config.extent.vague}}%</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :step="10" :min="10" :max="100" v-model="config.cycle_config.extent.vague"
 						active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>部分记忆权重:{{config.cycle_config.extent.partial}}%</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<wd-slider :step="10" :min="10" :max="100" v-model="config.cycle_config.extent.partial"
 						active-color="#42C05C" hide-label />
 				</view>
 			</view>
 			<view class="cell-progress">
 				<text>复习周期</text>
-				<view style="margin-top: 8px;">
+				<view style="margin-top: 16rpx;">
 					<input type="text" v-model="tempcycle" placeholder="请注意输入格式例如（1，3，7，14，30）"
-						style="flex:1; padding:12px 16px; border:1px solid #E0E0E0; border-radius:8px; font-size:16px;">
+						style="flex:1; padding:24rpx 32rpx; border:2rpx solid #E0E0E0; border-radius:16rpx; font-size:32rpx;">
 				</view>
 			</view>
 
@@ -224,9 +224,9 @@
 			.custom-shadow {
 				background: #07C160!important;
 				color: white!important;
-				border-radius: 8px!important;
-				font-size: 14px!important;
-				height: 40px!important;
+				border-radius: 16rpx!important;
+				font-size: 28rpx!important;
+				height: 80rpx!important;
 			}
 		}
 	}
@@ -240,17 +240,17 @@
 	.btn {
 		background: #07C160;
 		color: white;
-		border-radius: 8px;
-		font-size: 16px;
-		margin: 16px;
-		height: 45px;
+		border-radius: 16rpx;
+		font-size: 32rpx;
+		margin: 32rpx;
+		height: 90rpx;
 	}
 
 	.cell {
-		padding: 16px;
-		margin: 16px;
+		padding: 32rpx;
+		margin: 32rpx;
 		background-color: white;
-		border-radius: 8px;
+		border-radius: 16rpx;
 
 		.cell-title {
 			display: flex;
@@ -259,25 +259,25 @@
 
 
 			text {
-				font-size: 16px;
+				font-size: 32rpx;
 				font-weight: bold;
 			}
 
 		}
 
 		.cell-progress {
-			margin-top: 16px;
+			margin-top: 32rpx;
 
 		}
 
 		.cell-content {
-			margin-top: 16px;
+			margin-top: 32rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 
 			>text {
-				font-size: 14px;
+				font-size: 28rpx;
 			}
 
 			>view {
@@ -285,22 +285,22 @@
 				align-items: center;
 
 				>text {
-					font-size: 14px;
+					font-size: 28rpx;
 				}
 
 				.fa-angle-right {
-					font-size: 18px;
-					margin-left: 8px;
+					font-size: 36rpx;
+					margin-left: 16rpx;
 				}
 			}
 		}
 
 		.cellitem {
-			height: 40px;
+			height: 80rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			font-size: 16px;
+			font-size: 32rpx;
 
 			text {
 				color: #999;

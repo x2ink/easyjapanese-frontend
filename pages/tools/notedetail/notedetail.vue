@@ -29,7 +29,7 @@
 					</view>
 				</view>
 
-				<view style="height: 100px;"></view>
+				<view style="height: 200rpx;"></view>
 			</scroll-view>
 
 			<view class="footer-action">
@@ -137,35 +137,35 @@
 	}
 
 	.content-wrapper {
-		padding: 20px 16px;
+		padding: 40rpx 32rpx;
 	}
 
 	/* 关联来源 */
 	.origin-box {
 		background-color: #f0f2f5;
-		border-radius: 12px;
-		padding: 16px;
-		margin-bottom: 24px;
+		border-radius: 24rpx;
+		padding: 32rpx;
+		margin-bottom: 48rpx;
 
 		.origin-header {
 			display: flex;
 			align-items: center;
-			margin-bottom: 8px;
+			margin-bottom: 16rpx;
 			color: #666;
 
 			.origin-icon {
-				font-size: 12px;
-				margin-right: 6px;
+				font-size: 24rpx;
+				margin-right: 12rpx;
 			}
 
 			.origin-title {
-				font-size: 13px;
+				font-size: 26rpx;
 				font-weight: 600;
 			}
 		}
 
 		.origin-text {
-			font-size: 15px;
+			font-size: 30rpx;
 			color: #333;
 			line-height: 1.6;
 		}
@@ -177,40 +177,40 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 16px;
-			padding-bottom: 16px;
-			border-bottom: 1px solid #f5f5f5;
+			margin-bottom: 32rpx;
+			padding-bottom: 32rpx;
+			border-bottom: 2rpx solid #f5f5f5;
 
 			.meta-label {
-				font-size: 18px;
+				font-size: 36rpx;
 				font-weight: 700;
 				color: #1a1a1a;
 			}
 
 			.meta-time {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #ccc;
 			}
 		}
 	}
 
 	.content-view {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #333;
 		line-height: 1.8;
 		word-break: break-all;
-		min-height: 200px;
+		min-height: 400rpx;
 
 		img {
 			max-width: 100%;
-			border-radius: 8px;
+			border-radius: 16rpx;
 		}
 	}
 
 	.empty-placeholder {
 		color: #ccc;
-		font-size: 14px;
-		padding-top: 20px;
+		font-size: 28rpx;
+		padding-top: 40rpx;
 		font-style: italic;
 	}
 
@@ -221,25 +221,25 @@
 		left: 0;
 		right: 0;
 		background-color: rgba(255, 255, 255, 0.95);
-		padding: 12px 20px 30px;
-		backdrop-filter: blur(10px);
+		padding: 24rpx 40rpx 60rpx;
+		backdrop-filter: blur(20rpx);
 		z-index: 10;
-		border-top: 1px solid #f9f9f9;
+		border-top: 2rpx solid #f9f9f9;
 	}
 
 	.action-btn {
-		height: 48px;
-		line-height: 48px;
+		height: 96rpx;
+		line-height: 96rpx;
 		background-color: #07C160;
 		/* 使用绿色强调主操作 */
 		color: #ffffff;
-		border-radius: 100px;
-		font-size: 16px;
+		border-radius: 200rpx;
+		font-size: 32rpx;
 		font-weight: 600;
 		border: none;
 		text-align: center;
 		transition: all 0.2s;
-		box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+		box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.2);
 
 		&::after {
 			border: none;

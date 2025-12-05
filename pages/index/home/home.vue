@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view :style="{paddingTop:`calc(${navBarHeight} + 16px)`}" class="search-bar">
+		<view :style="{paddingTop:`calc(${navBarHeight} + 32rpx)`}" class="search-bar">
 			<view @click="goPage('/pages/word/search/search')" class="search-input-container">
 				<text class="icon-search search-icon fas fa-search"></text>
 				<view class="search-input _GCENTER">
@@ -8,15 +8,15 @@
 				</view>
 			</view>
 		</view>
-		<view :style="{height:`calc(${navBarHeight} + 68px)`}">
+		<view :style="{height:`calc(${navBarHeight} + 136rpx)`}">
 		</view>
-		<view style="padding: 16px;">
+		<view style="padding: 32rpx;">
 			<view v-if="infoLoading" style="display: flex;" class="book-card">
-				<wd-skeleton :row-col="[{ type: 'rect',width:'60px',height:'80px' }]" />
-				<wd-skeleton :custom-style="{ width: '100%', marginLeft: '16px'}" :row-col="[
-			   { width: '30%' ,height:'18px'},
-			   { width: '100%' ,height:'14px'},
-			   { width: '100%' ,height:'14px'}]" />
+				<wd-skeleton :row-col="[{ type: 'rect',width:'120rpx',height:'160rpx' }]" />
+				<wd-skeleton :custom-style="{ width: '100%', marginLeft: '32rpx'}" :row-col="[
+			   { width: '30%' ,height:'36rpx'},
+			   { width: '100%' ,height:'28rpx'},
+			   { width: '100%' ,height:'28rpx'}]" />
 			</view>
 			<view v-else class="book-card">
 				<image :src="learnInfo.book_info.icon" mode="aspectFill" class="book-cover"></image>
@@ -288,7 +288,7 @@
 	/* 保持原有的 iconfont, search-bar, book-card 等样式不变 */
 	.iconfont {
 		font-family: "iconfont" !important;
-		font-size: 16px;
+		font-size: 32rpx;
 		font-style: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -299,7 +299,7 @@
 		left: 0;
 		right: 0;
 		z-index: 9;
-		padding: 0 16px 16px;
+		padding: 0 32rpx 32rpx;
 		background-color: #fff;
 		top: 0;
 
@@ -308,19 +308,19 @@
 
 			.search-icon {
 				position: absolute;
-				left: 12px;
+				left: 24rpx;
 				top: 50%;
 				transform: translateY(-50%);
 				color: #999;
-				font-size: 14px;
+				font-size: 28rpx;
 			}
 
 			.search-input {
-				height: 36px;
-				padding: 0 36px;
+				height: 72rpx;
+				padding: 0 72rpx;
 				background-color: #f5f5f5;
-				border-radius: 18px;
-				font-size: 14px;
+				border-radius: 36rpx;
+				font-size: 28rpx;
 				color: #999;
 			}
 		}
@@ -329,16 +329,16 @@
 
 	.book-card {
 		display: flex;
-		padding: 16px;
-		margin-bottom: 12px;
+		padding: 32rpx;
+		margin-bottom: 24rpx;
 		background-color: #fff;
-		border-radius: 8px;
+		border-radius: 16rpx;
 
 		.book-cover {
-			width: 60px;
-			height: 80px;
-			margin-right: 16px;
-			border-radius: 4px;
+			width: 120rpx;
+			height: 160rpx;
+			margin-right: 32rpx;
+			border-radius: 8rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -355,10 +355,10 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 8px;
+			margin-bottom: 16rpx;
 
 			.book-title {
-				font-size: 16px;
+				font-size: 32rpx;
 				font-weight: 500;
 				color: #333;
 			}
@@ -368,13 +368,13 @@
 				align-items: center;
 
 				.switch-text {
-					font-size: 12px;
+					font-size: 24rpx;
 					color: #3B82F6;
 				}
 
 				.switch-icon {
-					margin-left: 2px;
-					font-size: 10px;
+					margin-left: 4rpx;
+					font-size: 20rpx;
 					color: #3B82F6;
 				}
 			}
@@ -382,21 +382,21 @@
 
 		.book-progress-text {
 			display: block;
-			font-size: 12px;
+			font-size: 24rpx;
 			color: #999;
-			margin-bottom: 6px;
+			margin-bottom: 12rpx;
 		}
 
 		.progress-bar {
-			height: 6px;
+			height: 12rpx;
 			background-color: #f0f0f0;
-			border-radius: 3px;
+			border-radius: 6rpx;
 			overflow: hidden;
-			margin-bottom: 8px;
+			margin-bottom: 16rpx;
 
 			.progress-fill {
 				height: 100%;
-				border-radius: 3px;
+				border-radius: 6rpx;
 				background: linear-gradient(to right, #4ADE80, #22C55E);
 			}
 		}
@@ -406,7 +406,7 @@
 			justify-content: space-between;
 
 			.stat-item {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #999;
 			}
 		}
@@ -414,27 +414,27 @@
 
 	.action-buttons {
 		display: flex;
-		margin-bottom: 16px;
+		margin-bottom: 32rpx;
 
 		.action-button {
 			flex: 1;
-			padding: 14px;
-			border-radius: 8px;
+			padding: 28rpx;
+			border-radius: 16rpx;
 			display: flex;
 			align-items: center;
 			position: relative;
 			overflow: hidden;
 
 			.action-icon {
-				width: 40px;
-				height: 40px;
-				border-radius: 10px;
+				width: 80rpx;
+				height: 80rpx;
+				border-radius: 20rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-right: 12px;
+				margin-right: 24rpx;
 				flex-shrink: 0;
-				font-size: 18px;
+				font-size: 36rpx;
 				color: white;
 			}
 
@@ -446,8 +446,8 @@
 			.action-title {
 				display: block;
 				font-weight: 600;
-				font-size: 14px;
-				margin-bottom: 2px;
+				font-size: 28rpx;
+				margin-bottom: 4rpx;
 				color: white;
 				white-space: nowrap;
 				overflow: hidden;
@@ -456,7 +456,7 @@
 
 			.action-subtitle {
 				display: block;
-				font-size: 12px;
+				font-size: 24rpx;
 				opacity: 0.9;
 				color: rgba(255, 255, 255, 0.9);
 				white-space: nowrap;
@@ -467,7 +467,7 @@
 
 		.review-button {
 			background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-			margin-right: 8px;
+			margin-right: 16rpx;
 
 			.action-icon {
 				background: rgba(255, 255, 255, 0.2);
@@ -476,7 +476,7 @@
 
 		.learn-button {
 			background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-			margin-left: 8px;
+			margin-left: 16rpx;
 
 			.action-icon {
 				background: rgba(255, 255, 255, 0.2);
@@ -487,36 +487,36 @@
 	.tool-buttons {
 		display: flex;
 		justify-content: space-between;
-		padding: 12px;
-		margin-bottom: 16px;
+		padding: 24rpx;
+		margin-bottom: 32rpx;
 		background-color: #fff;
-		border-radius: 8px;
+		border-radius: 16rpx;
 
 		.tool-btn {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			width: 22%;
-			padding: 8px 0;
-			border-radius: 8px;
+			padding: 16rpx 0;
+			border-radius: 16rpx;
 
 			&:active {
 				background-color: #f5f5f5;
 			}
 
 			.tool-icon {
-				width: 40px;
-				height: 40px;
+				width: 80rpx;
+				height: 80rpx;
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-bottom: 6px;
-				font-size: 16px;
+				margin-bottom: 12rpx;
+				font-size: 32rpx;
 			}
 
 			.tool-text {
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #666;
 			}
 		}
@@ -546,10 +546,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 
 		.section-title {
-			font-size: 16px;
+			font-size: 32rpx;
 			font-weight: 600;
 			color: #333;
 		}
@@ -559,28 +559,28 @@
 			align-items: center;
 
 			.more-text {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #999;
 			}
 		}
 	}
 
 	.calendar-container {
-		padding: 12px;
-		margin-bottom: 16px;
+		padding: 24rpx;
+		margin-bottom: 32rpx;
 		background-color: #fff;
-		border-radius: 8px;
+		border-radius: 16rpx;
 
 		.weekdays {
 			display: flex;
 			justify-content: space-between;
-			margin-bottom: 8px;
-			margin-top: 16px;
+			margin-bottom: 16rpx;
+			margin-top: 32rpx;
 
 			.weekday {
 				flex: 1;
 				text-align: center;
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #999;
 			}
 		}
@@ -591,13 +591,13 @@
 
 			.calendar-day {
 				flex: 0 0 calc(100% / 7);
-				height: 24px;
+				height: 48rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #333;
-				margin-bottom: 4px;
+				margin-bottom: 8rpx;
 
 				&.inactive {
 					color: #ccc;
@@ -606,14 +606,14 @@
 				&.active {
 					background-color: #F0FDF4;
 					color: #16A34A;
-					border-radius: 4px;
+					border-radius: 8rpx;
 				}
 
 				&.highlight {
 					background-color: #DCFCE7;
 					color: #166534;
 					font-weight: 500;
-					border-radius: 4px;
+					border-radius: 8rpx;
 				}
 			}
 		}
@@ -623,16 +623,16 @@
 	.func-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
+		gap: 24rpx;
 
 		.func-card {
 			position: relative;
 			background-color: white;
-			border-radius: 12px;
-			padding: 12px;
+			border-radius: 24rpx;
+			padding: 24rpx;
 			display: flex;
 			align-items: center;
-			gap: 12px;
+			gap: 24rpx;
 			position: relative;
 
 			&:active {
@@ -640,13 +640,13 @@
 			}
 
 			.func-icon-bg {
-				width: 40px;
-				height: 40px;
-				border-radius: 10px;
+				width: 80rpx;
+				height: 80rpx;
+				border-radius: 20rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 18px;
+				font-size: 36rpx;
 				flex-shrink: 0;
 
 				&.bg-orange {
@@ -674,16 +674,16 @@
 				flex: 1;
 				display: flex;
 				flex-direction: column;
-				gap: 2px;
+				gap: 4rpx;
 
 				.func-title {
-					font-size: 14px;
+					font-size: 28rpx;
 					font-weight: 600;
 					color: #1F2937;
 				}
 
 				.func-desc {
-					font-size: 11px;
+					font-size: 22rpx;
 					color: #9CA3AF;
 				}
 			}

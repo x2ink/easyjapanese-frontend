@@ -302,7 +302,7 @@
 
 	.tabs-container {
 		background-color: white;
-		padding: 8px 0 16px 0;
+		padding: 16rpx 0 32rpx 0;
 	}
 
 	.language-tabs {
@@ -322,92 +322,92 @@
 
 	.popup-container {
 		background-color: white;
-		border-top-left-radius: 16px;
-		border-top-right-radius: 16px;
-		padding: 24px 16px calc(env(safe-area-inset-bottom) + 24px) 16px;
+		border-top-left-radius: 32rpx;
+		border-top-right-radius: 32rpx;
+		padding: 48rpx 32rpx calc(env(safe-area-inset-bottom) + 48rpx) 32rpx;
 	}
 
 	.popup-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 20px;
+		margin-bottom: 40rpx;
 	}
 
 	.popup-title {
-		font-size: 18px;
+		font-size: 36rpx;
 		font-weight: 500;
 	}
 
 	.close-btn {
 		color: #757575;
-		font-size: 20px;
+		font-size: 40rpx;
 	}
 
 	.form-group {
-		margin-bottom: 16px;
+		margin-bottom: 32rpx;
 	}
 
 	.form-label {
 		display: block;
-		font-size: 14px;
-		margin-bottom: 8px;
+		font-size: 28rpx;
+		margin-bottom: 16rpx;
 		color: #616161;
 	}
 
 	.form-input {
-		padding: 12px;
-		border: 1px solid #E0E0E0;
-		border-radius: 8px;
-		font-size: 15px;
+		padding: 24rpx;
+		border: 2rpx solid #E0E0E0;
+		border-radius: 16rpx;
+		font-size: 30rpx;
 	}
 
 	.form-textarea {
 		width: auto;
-		padding: 12px;
-		border: 1px solid #E0E0E0;
-		border-radius: 8px;
-		font-size: 15px;
-		min-height: 80px;
+		padding: 24rpx;
+		border: 2rpx solid #E0E0E0;
+		border-radius: 16rpx;
+		font-size: 30rpx;
+		min-height: 160rpx;
 		resize: none;
 	}
 
 	.submit-btn {
 		width: 100%;
-		padding: 14px;
+		padding: 28rpx;
 		background-color: #07C160;
 		color: white;
 		border: none;
-		border-radius: 8px;
-		font-size: 16px;
+		border-radius: 16rpx;
+		font-size: 32rpx;
 		font-weight: 500;
-		margin-top: 8px;
+		margin-top: 16rpx;
 	}
 
 	.create-btn {
 		position: fixed;
-		bottom: calc(env(safe-area-inset-bottom) + 64px); // 增加底部安全区适配
-		right: 32px;
-		width: 56px;
-		height: 56px;
-		border-radius: 28px;
+		bottom: calc(env(safe-area-inset-bottom) + 128rpx); // 增加底部安全区适配
+		right: 64rpx;
+		width: 112rpx;
+		height: 112rpx;
+		border-radius: 56rpx;
 		background-color: #07C160;
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 24px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		font-size: 48rpx;
+		box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
 		z-index: 10;
 	}
 
 	.search-tab {
 		display: inline-block;
 		width: auto;
-		padding: 6px 12px;
-		border-radius: 16px;
-		font-size: 14px;
-		margin-right: 8px;
+		padding: 12rpx 24rpx;
+		border-radius: 32rpx;
+		font-size: 28rpx;
+		margin-right: 16rpx;
 		border: none;
 		cursor: pointer;
 	}
@@ -424,38 +424,38 @@
 
 	:deep(.book-swipe-action) {
 		background-color: white;
-		border-radius: 8px;
+		border-radius: 16rpx;
 	}
 
 	.list {
 		display: flex;
 		flex-direction: column;
-		padding: 16px;
-		gap: 16px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+		padding: 32rpx;
+		gap: 32rpx;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 32rpx);
 
 		.item {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 12px;
+			padding: 24rpx;
 
 			.book-cover {
-				width: 60px;
-				height: 80px;
-				border-radius: 8px;
+				width: 120rpx;
+				height: 160rpx;
+				border-radius: 16rpx;
 				color: white;
 				font-weight: bold;
 			}
 
 			.switch-btn {
-				padding: 0 12px;
+				padding: 0 24rpx;
 				margin: 0;
-				height: 30px;
-				border-radius: 30px;
-				font-size: 12px;
+				height: 60rpx;
+				border-radius: 60rpx;
+				font-size: 24rpx;
 				font-weight: 500;
-				line-height: 12px;
+				line-height: 24rpx;
 			}
 
 			.inactivebook {
@@ -466,27 +466,27 @@
 			.activebook {
 				background: #FAFAFA;
 				color: #07C160;
-				gap: 4px;
+				gap: 8rpx;
 			}
 
 			.info {
-				margin-left: 12px;
+				margin-left: 24rpx;
 				flex: 1;
 
 				.title {
-					font-size: 16px;
+					font-size: 32rpx;
 					font-weight: bold;
 				}
 
 				.describe {
 					color: #6b7280;
-					font-size: 14px;
-					margin: 4px 0;
+					font-size: 28rpx;
+					margin: 8rpx 0;
 				}
 
 				.learnnum {
 					color: #6b7280;
-					font-size: 12px;
+					font-size: 24rpx;
 				}
 			}
 		}
@@ -494,7 +494,7 @@
 	}
 
 	.tab-item {
-		font-size: 14px;
+		font-size: 28rpx;
 		white-space: nowrap;
 	}
 

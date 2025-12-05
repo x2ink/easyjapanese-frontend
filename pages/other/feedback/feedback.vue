@@ -19,13 +19,13 @@
 
 				<view class="input-block">
 					<textarea v-model="formData.content" class="compact-textarea"
-						placeholder-style="color:#aab2bd;font-size:14px;" placeholder="请描述您的问题或建议..."
+						placeholder-style="color:#aab2bd;font-size:28rpx;" placeholder="请描述您的问题或建议..."
 						:disable-default-padding="true" maxlength="500"></textarea>
 					<view class="word-count">{{ formData.content.length }}/500</view>
 				</view>
 
 				<view v-if="source!=''" class="source-block">
-					<i class="fas fa-info-circle" style="margin-right: 4px;"></i>
+					<i class="fas fa-info-circle" style="margin-right: 8rpx;"></i>
 					<text class="source-text">{{source}}</text>
 				</view>
 
@@ -111,13 +111,13 @@
 	}
 
 	.content-wrapper {
-		padding: 16px;
+		padding: 32rpx;
 		/* 紧凑边距 */
 	}
 
 	/* 标签通用样式 */
 	.section-label {
-		font-size: 13px;
+		font-size: 26rpx;
 		font-weight: 600;
 		color: #1a1a1a;
 		white-space: nowrap;
@@ -128,21 +128,21 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	.type-group {
 		display: flex;
-		gap: 8px;
+		gap: 16rpx;
 	}
 
 	/* 这里的 Chip 做得更小 */
 	.type-chip {
-		font-size: 12px;
-		padding: 4px 12px;
+		font-size: 24rpx;
+		padding: 8rpx 24rpx;
 		background-color: #f7f8fa;
 		color: #5f6368;
-		border-radius: 100px;
+		border-radius: 200rpx;
 		/* 胶囊按钮 */
 		/* 小圆角 */
 		transition: all 0.2s;
@@ -157,17 +157,17 @@
 	/* 输入区域：模仿 breaksentence 的紧凑风格 */
 	.input-block {
 		background-color: #f7f8fa;
-		border-radius: 12px;
-		padding: 12px;
-		margin-bottom: 12px;
+		border-radius: 24rpx;
+		padding: 24rpx;
+		margin-bottom: 24rpx;
 		position: relative;
 	}
 
 	.compact-textarea {
 		width: 100%;
-		height: 140px;
+		height: 280rpx;
 		/* 高度适中 */
-		font-size: 14px;
+		font-size: 28rpx;
 		/* 字号调小 */
 		line-height: 1.5;
 		color: #333;
@@ -177,9 +177,9 @@
 
 	.word-count {
 		text-align: right;
-		font-size: 11px;
+		font-size: 22rpx;
 		color: #ccc;
-		margin-top: 4px;
+		margin-top: 8rpx;
 	}
 
 	/* 来源信息：非常低调 */
@@ -187,13 +187,13 @@
 		display: flex;
 		align-items: center;
 		background-color: #fff;
-		padding: 0 4px;
-		margin-bottom: 20px;
-		font-size: 12px;
+		padding: 0 8rpx;
+		margin-bottom: 40rpx;
+		font-size: 24rpx;
 		color: #9aa0a6;
 
 		.source-text {
-			font-size: 11px;
+			font-size: 22rpx;
 			color: #aab2bd;
 			/* 超出省略 */
 			overflow: hidden;
@@ -202,20 +202,20 @@
 		}
 	}
 
-	/* 按钮：高度 40px，精简 */
+	/* 按钮：高度 80rpx，精简 */
 	.action-area {
-		margin-top: 8px;
+		margin-top: 16rpx;
 	}
 
 	.compact-btn {
-		height: 44px;
+		height: 88rpx;
 		/* 紧凑高度 */
-		line-height: 44px;
+		line-height: 88rpx;
 		background-color: #07C160;
 		color: white;
-		border-radius: 100px;
+		border-radius: 200rpx;
 		/* 胶囊按钮 */
-		font-size: 15px;
+		font-size: 30rpx;
 		font-weight: 600;
 		border: none;
 

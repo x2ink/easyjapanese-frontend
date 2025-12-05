@@ -1,7 +1,7 @@
 <template>
 	<view class="scroll-container">
 		<view class="content-container">
-			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 4px)` }">
+			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 8rpx)` }">
 				<view class="back-btn" @click="back">
 					<text class="fas fa-arrow-left"></text>
 				</view>
@@ -158,7 +158,7 @@
 
 
 	.mb-12 {
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	/* 布局容器 */
@@ -182,18 +182,18 @@
 		top: 0;
 		background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
 		color: #fff;
-		padding: 0 16px 32px;
+		padding: 0 32rpx 64rpx;
 		/* 优化: 增加层级，防止滚动时内容盖过头部 */
 		z-index: 100;
 	}
 
 	.back-btn {
 		color: #fff;
-		font-size: 22px;
+		font-size: 44rpx;
 	}
 
 	.word-header-content {
-		margin-top: 16px;
+		margin-top: 32rpx;
 	}
 
 	.header-row {
@@ -205,68 +205,68 @@
 	.action-buttons {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 16rpx;
 	}
 
 	.word-title {
-		font-size: 28px;
+		font-size: 56rpx;
 		font-weight: bold;
-		margin-bottom: 8px;
+		margin-bottom: 16rpx;
 	}
 
 	.word-reading {
-		font-size: 14px;
+		font-size: 28rpx;
 		opacity: 0.9;
 	}
 
 	.pitch-accent {
-		height: 2px;
+		height: 4rpx;
 		background: #e0e0e0;
-		margin-top: 8px;
+		margin-top: 16rpx;
 		position: relative;
 
 		.pitch-accent-bar {
 			position: absolute;
-			height: 4px;
-			top: -1px;
+			height: 8rpx;
+			top: -2rpx;
 			background: #07c160;
-			border-radius: 2px;
+			border-radius: 4rpx;
 		}
 	}
 
 	.action-btn {
-		width: 40px;
-		height: 40px;
+		width: 80rpx;
+		height: 80rpx;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.2);
 		color: #fff;
-		font-size: 18px;
+		font-size: 36rpx;
 		border: none;
 	}
 
 	/* 主要内容区域 */
 	.main-content {
 		flex: 1;
-		padding: 16px;
+		padding: 32rpx;
 	}
 
 	.card {
-		padding: 8px;
+		padding: 16rpx;
 	}
 
 	.card-header {
 		@extend .flex-between;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	.tag {
 		display: inline-block;
-		padding: 4px 12px;
-		border-radius: 4px;
-		font-size: 14px;
+		padding: 8rpx 24rpx;
+		border-radius: 8rpx;
+		font-size: 28rpx;
 	}
 
 	.tag-blue {
@@ -279,32 +279,32 @@
 	}
 
 	.examples {
-		margin: 10px 0;
+		margin: 20rpx 0;
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 24rpx;
 	}
 
 	.example {
-		border-radius: 8px;
-		padding: 12px;
+		border-radius: 16rpx;
+		padding: 24rpx;
 		background-color: #f8f9fa;
 
 		.ja {
-			font-size: 14px;
+			font-size: 28rpx;
 		}
 
 		.ch {
-			padding-top: 4px;
-			font-size: 14px;
+			padding-top: 8rpx;
+			font-size: 28rpx;
 			color: #6b7280;
 		}
 	}
 
 	.volume-icon {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #07C160;
-		margin-left: 4px;
+		margin-left: 8rpx;
 	}
 
 	.bottom-space {
@@ -314,19 +314,19 @@
 	/* 操作按钮 */
 	.sheet-btn {
 		flex-direction: column;
-		font-size: 12px;
+		font-size: 24rpx;
 		position: fixed;
-		bottom: 40px;
-		right: 20px;
+		bottom: 80rpx;
+		right: 40rpx;
 		background-color: white;
-		width: 60px;
-		height: 60px;
+		width: 120rpx;
+		height: 120rpx;
 		border-radius: 50%;
-		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+		box-shadow: rgba(100, 100, 111, 0.2) 0rpx 14rpx 58rpx 0rpx;
 
 		text {
-			font-size: 18px;
-			margin-bottom: 4px;
+			font-size: 36rpx;
+			margin-bottom: 8rpx;
 		}
 	}
 </style>

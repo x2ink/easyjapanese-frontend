@@ -40,7 +40,7 @@
 					</view>
 				</view>
 				
-				<view style="height: 40px;"></view>
+				<view style="height: 80rpx;"></view>
 			</scroll-view>
 		</view>
 	</page-meta>
@@ -176,15 +176,15 @@
 	}
 
 	.content-wrapper {
-		padding: 16px;
+		padding: 32rpx;
 	}
 
 	/* 列表项 - 极简卡片 */
 	.note-item {
 		background-color: #f7f8fa;
-		border-radius: 12px;
-		padding: 16px;
-		margin-bottom: 12px;
+		border-radius: 24rpx;
+		padding: 32rpx;
+		margin-bottom: 24rpx;
 		transition: opacity 0.2s;
 
 		&:active {
@@ -195,24 +195,24 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 10px;
+			margin-bottom: 20rpx;
 
 			.header-left {
 				display: flex;
 				align-items: center;
-				gap: 8px;
+				gap: 16rpx;
 			}
 
 			.time {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #999;
 				font-family: Arial, sans-serif;
 			}
 			
 			.delete-btn {
-				padding: 4px;
+				padding: 8rpx;
 				color: #ccc;
-				font-size: 14px;
+				font-size: 28rpx;
 				transition: color 0.2s;
 				
 				&:active {
@@ -222,7 +222,7 @@
 		}
 
 		.item-content {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #333;
 			line-height: 1.6;
 			display: -webkit-box;
@@ -235,9 +235,9 @@
 
 	/* 标签样式 */
 	.tag {
-		font-size: 11px;
-		padding: 2px 8px;
-		border-radius: 4px;
+		font-size: 22rpx;
+		padding: 4rpx 16rpx;
+		border-radius: 8rpx;
 		font-weight: 500;
 	}
 	.tag-blue { background-color: rgba(77, 128, 240, 0.1); color: #4D80F0; }
@@ -247,29 +247,29 @@
 
 	/* 空状态 */
 	.empty-box {
-		padding-top: 120px;
+		padding-top: 240rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		color: #ddd;
 		
 		.empty-icon {
-			font-size: 48px;
-			margin-bottom: 16px;
+			font-size: 96rpx;
+			margin-bottom: 32rpx;
 			color: #eee;
 		}
 		
 		.empty-text {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #ccc;
 		}
 	}
 	
 	.load-more {
 		text-align: center;
-		padding: 20px 0;
+		padding: 40rpx 0;
 		.loading-text {
-			font-size: 12px;
+			font-size: 24rpx;
 			color: #ccc;
 		}
 	}

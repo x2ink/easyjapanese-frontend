@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<view :style="{paddingTop:`calc(${navBarHeight} + 5px)`}" class="search-header">
+		<view :style="{paddingTop:`calc(${navBarHeight} + 10rpx)`}" class="search-header">
 			<view class="search-bar-container">
 				<text @click="back()" class="fas fa-chevron-left back-btn"></text>
 				<view class="search-input-container">
@@ -26,7 +26,7 @@
 
 				<view v-if="!isSearching">
 					<view v-if="history.length > 0">
-						<view class="section-title" style="margin-top: 12px;">
+						<view class="section-title" style="margin-top: 24rpx;">
 							<text>搜索历史</text>
 							<view class="clear-btn" @click="clearHistory()">清空</view>
 						</view>
@@ -53,12 +53,12 @@
 				</view>
 
 				<view v-else-if="isSearching && !loading && total === 0" class="empty-state">
-					<wd-status-tip custom-style="margin-top: 40px;" :image-size="{ height: 128, width: 128 }"
+					<wd-status-tip custom-style="margin-top: 80rpx;" :image-size="{ height: 128, width: 128 }"
 						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
 						tip="没有找到相关结果" />
 
 					<view class="feedback-action">
-						<wd-button custom-style="width: 120px;background:#07C160" size="medium"
+						<wd-button custom-style="width: 240rpx;background:#07C160" size="medium"
 							@click="onFeedback">提交反馈</wd-button>
 					</view>
 				</view>
@@ -73,7 +73,7 @@
 								</view>
 							</view>
 							<view class="word-meaning">
-								<wd-text color="#424242" size="14px" :text="item.description"></wd-text>
+								<wd-text color="#424242" size="28rpx" :text="item.description"></wd-text>
 							</view>
 						</view>
 					</view>
@@ -113,7 +113,7 @@
 	// --- 状态变量 ---
 	const toast = useToast()
 	// 移除 scrollTop
-	const navBarHeight = ref('0px')
+	const navBarHeight = ref('0rpx')
 	const current = ref('jc')
 	const value = ref('')
 
@@ -310,11 +310,11 @@
 
 	/* 顶部导航栏 */
 	.search-header {
-		padding-left: 16px;
-		padding-right: 16px;
-		padding-bottom: 12px;
+		padding-left: 32rpx;
+		padding-right: 32rpx;
+		padding-bottom: 24rpx;
 		background-color: white;
-		border-bottom: 1px solid #f0f0f0;
+		border-bottom: 2rpx solid #f0f0f0;
 		/* 移除 fixed 定位，让其在 flex 布局中自然占据顶部 */
 		z-index: 99;
 		flex-shrink: 0; /* 防止头部被压缩 */
@@ -335,12 +335,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-right: 12px;
+		margin-right: 24rpx;
 		background-color: transparent;
 		color: #212121;
-		font-size: 20px;
-		width: 30px;
-		height: 30px;
+		font-size: 40rpx;
+		width: 60rpx;
+		height: 60rpx;
 	}
 
 	.search-input-container {
@@ -349,47 +349,47 @@
 	}
 
 	.search-input {
-		padding: 0 34px;
-		height: 36px;
-		border-radius: 40px;
+		padding: 0 68rpx;
+		height: 72rpx;
+		border-radius: 80rpx;
 		border: none;
 		background-color: #f5f5f5;
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #333;
 	}
 
 	.search-icon {
 		position: absolute;
-		left: 12px;
+		left: 24rpx;
 		top: 50%;
 		transform: translateY(-50%);
 		color: #999;
-		font-size: 14px;
+		font-size: 28rpx;
 	}
 
 	.clear-input-icon {
 		position: absolute;
-		right: 12px;
+		right: 24rpx;
 		top: 50%;
 		transform: translateY(-50%);
 		color: #ccc;
-		font-size: 16px;
+		font-size: 32rpx;
 		z-index: 2;
-		padding: 4px;
+		padding: 8rpx;
 		/* 增加点击区域 */
 	}
 
 	.language-tabs {
 		display: flex;
-		margin-top: 12px;
+		margin-top: 24rpx;
 		align-items: center;
 	}
 
 	.search-tab {
-		padding: 6px 16px;
-		border-radius: 16px;
-		font-size: 13px;
-		margin-right: 12px;
+		padding: 12rpx 32rpx;
+		border-radius: 32rpx;
+		font-size: 26rpx;
+		margin-right: 24rpx;
 		border: none;
 		transition: all 0.2s;
 
@@ -408,7 +408,7 @@
 	/* 主要内容区 */
 	.main-content {
 		/* padding 移到这里或 scroll-view 内部 */
-		padding: 0 16px;
+		padding: 0 32rpx;
 	}
 
 	/* 搜索历史 & 标题通用 */
@@ -416,39 +416,39 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 14px;
+		font-size: 28rpx;
 		font-weight: 600;
 		color: #333;
-		margin-bottom: 10px;
+		margin-bottom: 20rpx;
 	}
 
 	.clear-btn {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #999;
-		padding: 4px;
+		padding: 8rpx;
 	}
 
 	.history-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
-		margin-bottom: 24px;
+		gap: 20rpx;
+		margin-bottom: 48rpx;
 	}
 
 	.history-chip {
 		display: flex;
 		align-items: center;
-		padding: 6px 12px;
+		padding: 12rpx 24rpx;
 		background-color: #f5f5f5;
-		border-radius: 4px;
-		font-size: 13px;
+		border-radius: 8rpx;
+		font-size: 26rpx;
 		color: #555;
 
 		.close-icon {
 			color: #bbb;
-			margin-left: 6px;
-			font-size: 12px;
-			padding: 2px;
+			margin-left: 12rpx;
+			font-size: 24rpx;
+			padding: 4rpx;
 		}
 	}
 
@@ -456,22 +456,22 @@
 	.hot-words-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 20rpx;
 	}
 
 	.hot-word {
-		padding: 6px 12px;
+		padding: 12rpx 24rpx;
 		background-color: #fff;
-		border: 1px solid #e0e0e0;
-		border-radius: 20px;
-		font-size: 13px;
+		border: 2rpx solid #e0e0e0;
+		border-radius: 40rpx;
+		font-size: 26rpx;
 		color: #424242;
 	}
 
 	/* 单词列表项 */
 	.word-item {
-		padding: 16px 0;
-		border-bottom: 1px solid #f5f5f5;
+		padding: 32rpx 0;
+		border-bottom: 2rpx solid #f5f5f5;
 
 		&:active {
 			background-color: #fafafa;
@@ -482,17 +482,17 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 6px;
+		margin-bottom: 12rpx;
 	}
 
 	.word-kanji {
-		font-size: 17px;
+		font-size: 34rpx;
 		font-weight: 600;
 		color: #212121;
 	}
 
 	.word-meaning {
-		margin-top: 4px;
+		margin-top: 8rpx;
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 2;
@@ -505,11 +505,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding-top: 20px;
+		padding-top: 40rpx;
 	}
 
 	.feedback-action {
-		margin-top: 24px;
+		margin-top: 48rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

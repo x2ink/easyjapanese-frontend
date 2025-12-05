@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view :style="{height: `${getOs()=='ios'?'calc(100vh - env(safe-area-inset-bottom) - 53px)':'calc(100vh - 65px)'}`}">
+		<view :style="{height: `${getOs()=='ios'?'calc(100vh - env(safe-area-inset-bottom) - 106rpx)':'calc(100vh - 130rpx)'}`}">
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
@@ -54,21 +54,21 @@
 		height: 100%;
 	}
 	.and-bar{
-		padding: 12px 0;
+		padding: 24rpx 0;
 	}
 	.ios-bar{
-		padding: 12px 0 env(safe-area-inset-bottom);
+		padding: 24rpx 0 env(safe-area-inset-bottom);
 	}
 	.tab-bar {
 		position: fixed;
 		bottom: 0;
-		height: 40px;
+		height: 80rpx;
 		left: 0;
 		right: 0;
 		display: flex;
 		justify-content: space-around;
 		background-color: #fff;
-		border-top: 1px solid #f0f0f0;
+		border-top: 2rpx solid #f0f0f0;
 		.tab-item {
 			flex: 1;
 			display: flex;
@@ -76,14 +76,14 @@
 			align-items: center;
 
 			.tab-icon {
-				font-size: 20px;
+				font-size: 40rpx;
 				color: #999;
 			}
 
 			.tab-text {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: #999;
-				margin-top: 4px;
+				margin-top: 8rpx;
 			}
 
 			&.active {
@@ -98,13 +98,13 @@
 				&::after {
 					content: '';
 					position: absolute;
-					bottom: -7px;
+					bottom: -14rpx;
 					left: 50%;
 					transform: translateX(-50%);
-					width: 18px;
-					height: 3px;
+					width: 36rpx;
+					height: 6rpx;
 					background-color: #07C160;
-					border-radius: 3px;
+					border-radius: 6rpx;
 				}
 			}
 		}

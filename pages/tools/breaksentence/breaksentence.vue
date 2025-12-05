@@ -7,7 +7,7 @@
 				
 				<view class="input-block">
 					<view class="block-header">
-						<i class="fas fa-pen" style="color: #999; font-size: 14px; margin-right: 6px;"></i>
+						<i class="fas fa-pen" style="color: #999; font-size: 28rpx; margin-right: 12rpx;"></i>
 						<text class="block-title">输入句子</text>
 					</view>
 					<textarea 
@@ -21,7 +21,7 @@
 				</view>
 
 				<button @click="handleBreak" class="action-btn" :loading="loading" :disabled="loading">
-					<i class="fas fa-cut" style="margin-right: 8px;"></i> 
+					<i class="fas fa-cut" style="margin-right: 16rpx;"></i> 
 					{{ loading ? '拆分中...' : '拆分句子' }}
 				</button>
 
@@ -29,7 +29,7 @@
 					<view class="result-header">
 						<text class="block-title">拆分结果</text>
 						<view class="copy-action" @click="copyResult">
-							<i class="fas fa-copy" style="margin-right: 4px;"></i> 复制
+							<i class="fas fa-copy" style="margin-right: 8rpx;"></i> 复制
 						</view>
 					</view>
 					
@@ -138,34 +138,34 @@
 	}
 
 	.content-wrapper {
-		padding: 12px 20px 40px; /* 增加内边距，保持通透 */
+		padding: 24rpx 40rpx 80rpx; /* 增加内边距，保持通透 */
 	}
 
 	/* --- 输入色块 --- */
 	.input-block {
 		background-color: #f7f8fa; /* 浅灰背景 */
-		border-radius: 16px; /* 大圆角 */
-		padding: 16px;
-		margin-bottom: 24px;
+		border-radius: 32rpx; /* 大圆角 */
+		padding: 32rpx;
+		margin-bottom: 48rpx;
 		position: relative;
 	}
 	
 	.block-header {
 		display: flex;
 		align-items: center;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	.block-title {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #999;
 		font-weight: 600;
 	}
 
 	.custom-textarea {
 		width: 100%;
-		height: 120px;
-		font-size: 16px;
+		height: 240rpx;
+		font-size: 32rpx;
 		line-height: 1.6;
 		color: #333;
 		border: none;
@@ -175,9 +175,9 @@
 
 	.word-count {
 		text-align: right;
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #ccc;
-		margin-top: 8px;
+		margin-top: 16rpx;
 	}
 
 	/* --- 按钮样式 --- */
@@ -185,15 +185,15 @@
 		background: #07C160; /* 纯色 */
 		color: white;
 		border: none;
-		border-radius: 100px; /* 胶囊按钮 */
-		padding: 12px 0;
-		font-size: 16px;
+		border-radius: 200rpx; /* 胶囊按钮 */
+		padding: 24rpx 0;
+		font-size: 32rpx;
 		font-weight: 600;
 		box-shadow: none; /* 去除阴影 */
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin-bottom: 30px;
+		margin-bottom: 60rpx;
 		
 		/* 点击效果改为透明度 */
 		&:active {
@@ -211,23 +211,23 @@
 	/* --- 结果色块 --- */
 	.result-block {
 		background-color: #f7f8fa;
-		border-radius: 16px;
-		padding: 16px;
+		border-radius: 32rpx;
+		padding: 32rpx;
 		
 		.result-header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 16px;
+			margin-bottom: 32rpx;
 			
 			.copy-action {
-				font-size: 13px;
+				font-size: 26rpx;
 				color: #07C160;
 				font-weight: 500;
 				display: flex;
 				align-items: center;
-				padding: 4px 8px;
-				border-radius: 4px;
+				padding: 8rpx 16rpx;
+				border-radius: 8rpx;
 				transition: background-color 0.2s;
 				
 				&:active {
@@ -240,20 +240,20 @@
 	.token-list {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 20rpx;
 	}
 
 	.token-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 8px 12px;
+		padding: 16rpx 24rpx;
 		/* Token 使用纯白背景，与浅灰底色形成对比 */
 		background-color: #ffffff; 
-		border-radius: 8px;
+		border-radius: 16rpx;
 		/* 去除边框线 */
 		border: none; 
-		min-width: 40px;
+		min-width: 80rpx;
 		transition: transform 0.2s;
 		
 		/* 极轻微的交互反馈 */
@@ -263,25 +263,25 @@
 		}
 
 		.token-reading {
-			font-size: 11px;
+			font-size: 22rpx;
 			color: #999;
-			margin-bottom: 2px;
-			min-height: 14px;
+			margin-bottom: 4rpx;
+			min-height: 28rpx;
 		}
 
 		.token-surface {
-			font-size: 17px;
+			font-size: 34rpx;
 			font-weight: 500;
 			color: #333;
-			margin-bottom: 4px;
+			margin-bottom: 8rpx;
 		}
 
 		.token-pos-tag {
-			font-size: 10px;
+			font-size: 20rpx;
 			color: #07C160;
 			background-color: rgba(7, 193, 96, 0.08); /* 非常淡的绿色背景 */
-			padding: 2px 6px;
-			border-radius: 4px;
+			padding: 4rpx 12rpx;
+			border-radius: 8rpx;
 			font-weight: 500;
 		}
 	}

@@ -77,7 +77,7 @@
 							</view>
 						</view>
 						<wd-skeleton v-else theme="paragraph"
-							:row-col="[[{width: '40px'},{width: '100%', marginLeft: '10px' }], [{width: '40px'},{width: '100%', marginLeft: '10px' }]]"></wd-skeleton>
+							:row-col="[[{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }], [{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }]]"></wd-skeleton>
 					</view>
 				</view>
 
@@ -562,52 +562,52 @@
 	}
 
 	.content-wrapper {
-		padding: 12px 20px 0;
+		padding: 24rpx 40rpx 0;
 	}
 
 	.done-wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: 40px;
+		padding-top: 80rpx;
 	}
 
 	/* --- 通用：内容色块 (Gray Block) --- */
 	.content-block {
 		background-color: #f7f8fa;
-		border-radius: 16px;
-		padding: 20px;
+		border-radius: 32rpx;
+		padding: 40rpx;
 		/* 父容器内边距：决定了底部留白 */
-		margin-bottom: 24px;
+		margin-bottom: 48rpx;
 		position: relative;
 	}
 
 	.block-label {
-		font-size: 13px;
+		font-size: 26rpx;
 		color: #999;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 		font-weight: 600;
 	}
 
 	/* --- 完成状态样式 --- */
 	.completion-icon {
-		font-size: 80px;
+		font-size: 160rpx;
 		color: #07C160;
-		margin-bottom: 24px;
+		margin-bottom: 48rpx;
 	}
 
 	.completion-title {
-		font-size: 24px;
+		font-size: 48rpx;
 		font-weight: 600;
 		color: #333;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 	}
 
 	.completion-desc {
-		font-size: 15px;
+		font-size: 30rpx;
 		color: #888;
 		text-align: center;
-		margin-bottom: 40px;
+		margin-bottom: 80rpx;
 		line-height: 1.6;
 	}
 
@@ -618,9 +618,9 @@
 		justify-content: space-around;
 		background-color: #f7f8fa;
 		width: 100%;
-		padding: 20px 0;
-		border-radius: 16px;
-		margin-bottom: 40px;
+		padding: 40rpx 0;
+		border-radius: 32rpx;
+		margin-bottom: 80rpx;
 	}
 
 	.stat-item {
@@ -630,21 +630,21 @@
 	}
 
 	.stat-divider {
-		width: 1px;
-		height: 30px;
+		width: 2rpx;
+		height: 60rpx;
 		background-color: #e0e0e0;
 	}
 
 	.stat-value {
-		font-size: 24px;
+		font-size: 48rpx;
 		font-weight: 600;
 		color: #07C160;
-		margin-bottom: 4px;
+		margin-bottom: 8rpx;
 		font-family: 'DIN', sans-serif;
 	}
 
 	.stat-label {
-		font-size: 13px;
+		font-size: 26rpx;
 		color: #999;
 	}
 
@@ -652,22 +652,22 @@
 
 	/* 进度条 */
 	.progress-container {
-		margin-bottom: 20px;
+		margin-bottom: 40rpx;
 	}
 
 	.progress-text {
 		display: flex;
 		justify-content: space-between;
-		margin-bottom: 8px;
-		font-size: 13px;
+		margin-bottom: 16rpx;
+		font-size: 26rpx;
 		color: #999;
 		font-weight: 500;
 	}
 
 	.progress-bar {
-		height: 6px;
+		height: 12rpx;
 		background-color: #f0f0f0;
-		border-radius: 6px;
+		border-radius: 12rpx;
 		overflow: hidden;
 	}
 
@@ -678,11 +678,11 @@
 	}
 
 	/* 单词块修改：
-		1. 移除 min-height: 220px，实现高度自适应内容。
-		2. 内容（骨架屏/详情）底部会自然撑开，下方距离由父级 .content-block 的 padding-bottom (20px) 决定。
+		1. 移除 min-height: 440rpx，实现高度自适应内容。
+		2. 内容（骨架屏/详情）底部会自然撑开，下方距离由父级 .content-block 的 padding-bottom (40rpx) 决定。
 	*/
 	.word-block {
-		/* min-height: 220px;  <-- 已移除 */
+		/* min-height: 440rpx;  <-- 已移除 */
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -693,8 +693,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-bottom: 24px;
-		min-height: 80px;
+		margin-bottom: 48rpx;
+		min-height: 160rpx;
 	}
 
 	.word-text-group {
@@ -704,28 +704,28 @@
 	}
 
 	.word-kanji {
-		font-size: 36px;
+		font-size: 72rpx;
 		font-weight: 600;
 		color: #333;
-		margin-bottom: 6px;
+		margin-bottom: 12rpx;
 		line-height: 1.2;
 	}
 
 	.word-furigana {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #888;
-		margin-bottom: 4px;
+		margin-bottom: 8rpx;
 	}
 
 	.word-romaji {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #ccc;
 		font-family: monospace;
 	}
 
 	.pronounce-btn {
-		width: 40px;
-		height: 40px;
+		width: 80rpx;
+		height: 80rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -733,12 +733,12 @@
 		border-radius: 50%;
 		border: none;
 		color: #666;
-		font-size: 16px;
+		font-size: 32rpx;
 		position: absolute;
-		right: 16px;
-		top: 16px;
+		right: 32rpx;
+		top: 32rpx;
 		margin: 0;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
 
 		&:active {
 			background-color: #f0f0f0;
@@ -750,22 +750,22 @@
 		position: relative !important;
 		right: auto !important;
 		top: auto !important;
-		width: 64px !important;
-		height: 64px !important;
-		font-size: 24px !important;
-		margin-top: 10px;
+		width: 128rpx !important;
+		height: 128rpx !important;
+		font-size: 48rpx !important;
+		margin-top: 20rpx;
 	}
 
 	/* 详情区域：骨架屏放在这里 */
 	.word-details {
-		padding-top: 20px;
-		border-top: 1px dashed #e0e0e0;
+		padding-top: 40rpx;
+		border-top: 2rpx dashed #e0e0e0;
 	}
 
 	.detail-list {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 24rpx;
 	}
 
 	.detail-row {
@@ -774,18 +774,18 @@
 	}
 
 	.detail-tag {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #fff;
 		background-color: #b0b0b0;
-		padding: 2px 6px;
-		border-radius: 4px;
-		margin-right: 10px;
+		padding: 4rpx 12rpx;
+		border-radius: 8rpx;
+		margin-right: 20rpx;
 		white-space: nowrap;
 		font-weight: 600;
 	}
 
 	.detail-content {
-		font-size: 15px;
+		font-size: 30rpx;
 		color: #444;
 		line-height: 1.6;
 		font-weight: 500;
@@ -793,9 +793,9 @@
 
 	/* 例句区域 */
 	.example-item {
-		margin-bottom: 16px;
-		padding-bottom: 16px;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+		margin-bottom: 32rpx;
+		padding-bottom: 32rpx;
+		border-bottom: 2rpx solid rgba(0, 0, 0, 0.03);
 
 		&:last-child {
 			margin-bottom: 0;
@@ -805,14 +805,14 @@
 	}
 
 	.example-sentence {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #333;
 		line-height: 1.6;
-		margin-bottom: 4px;
+		margin-bottom: 8rpx;
 	}
 
 	.example-translation {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #888;
 	}
 
@@ -820,31 +820,31 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 10px;
+		padding: 20rpx;
 
 		text {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #07C160;
 			display: flex;
 			align-items: center;
-			gap: 4px;
+			gap: 8rpx;
 		}
 	}
 
 	/* 安全占位块 */
 	.safe-area-spacer {
-		height: calc(env(safe-area-inset-bottom) + 90px);
+		height: calc(env(safe-area-inset-bottom) + 180rpx);
 		width: 100%;
 	}
 
 	/* --- 底部操作栏 (悬浮) --- */
 	.action-bar {
 		position: fixed;
-		left: 20px;
-		right: 20px;
-		bottom: calc(env(safe-area-inset-bottom) + 20px);
+		left: 40rpx;
+		right: 40rpx;
+		bottom: calc(env(safe-area-inset-bottom) + 40rpx);
 		display: flex;
-		gap: 16px;
+		gap: 32rpx;
 		z-index: 99;
 		pointer-events: none;
 	}
@@ -853,24 +853,24 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		margin-bottom: 40px;
+		gap: 32rpx;
+		margin-bottom: 80rpx;
 	}
 
 	.action-btn {
 		pointer-events: auto;
 		flex: 1;
 		min-width: 0;
-		height: 52px;
-		border-radius: 100px;
+		height: 104rpx;
+		border-radius: 200rpx;
 		border: none;
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		transition: all 0.2s;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+		box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05);
 		padding: 0;
 		margin: 0;
 
@@ -888,10 +888,10 @@
 	.secondary-button {
 		flex: none;
 		width: 100%;
-		height: 52px;
-		border-radius: 100px;
+		height: 104rpx;
+		border-radius: 200rpx;
 		border: none;
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
 		display: flex;
 		align-items: center;

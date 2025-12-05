@@ -32,7 +32,7 @@
 					</view>
 					
 					<view v-else class="block-header ai-header">
-						<i class="fas fa-robot" style="margin-right: 6px;"></i>
+						<i class="fas fa-robot" style="margin-right: 12rpx;"></i>
 						<text>AI 智能助手</text>
 					</view>
 
@@ -250,24 +250,24 @@
 	}
 
 	.content-wrapper {
-		padding: 12px 20px 40px; /* 增加左右间距，让页面更透气 */
+		padding: 24rpx 40rpx 80rpx; /* 增加左右间距，让页面更透气 */
 	}
 
 	/* --- 1. 模式切换 (Pill Style) --- */
 	.mode-switch {
 		display: flex;
 		background-color: #f5f5f5; /* 浅灰底 */
-		border-radius: 100px;
-		padding: 4px;
-		margin-bottom: 24px;
+		border-radius: 200rpx;
+		padding: 8rpx;
+		margin-bottom: 48rpx;
 	}
 
 	.mode-item {
 		flex: 1;
 		text-align: center;
-		padding: 8px 0;
-		border-radius: 100px;
-		font-size: 14px;
+		padding: 16rpx 0;
+		border-radius: 200rpx;
+		font-size: 28rpx;
 		color: #888;
 		transition: all 0.3s;
 		
@@ -282,9 +282,9 @@
 	/* --- 2. 输入块 (灰色背景块，无边框) --- */
 	.input-block {
 		background-color: #f7f8fa; /* 极浅的蓝灰/纯灰背景 */
-		border-radius: 16px;
-		padding: 16px;
-		margin-bottom: 20px;
+		border-radius: 32rpx;
+		padding: 32rpx;
+		margin-bottom: 40rpx;
 		position: relative;
 	}
 
@@ -292,17 +292,17 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 12px;
+		margin-bottom: 24rpx;
 		
 		&.ai-header {
 			color: #07C160;
 			font-weight: 600;
-			font-size: 14px;
+			font-size: 28rpx;
 		}
 	}
 
 	.lang-opt {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #999;
 		&.active {
 			color: #333;
@@ -311,19 +311,19 @@
 	}
 
 	.swap-btn {
-		width: 24px;
-		height: 24px;
+		width: 48rpx;
+		height: 48rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		color: #07C160;
-		font-size: 12px;
+		font-size: 24rpx;
 	}
 
 	.custom-textarea {
 		width: 100%;
-		height: 120px;
-		font-size: 16px;
+		height: 240rpx;
+		font-size: 32rpx;
 		line-height: 1.6;
 		color: #333;
 		border: none;
@@ -333,20 +333,20 @@
 
 	.word-count {
 		text-align: right;
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #ccc;
-		margin-top: 4px;
+		margin-top: 8rpx;
 	}
 
 	/* --- 3. 按钮 (扁平纯色) --- */
 	.submit-btn {
 		background-color: #07C160;
 		color: #fff;
-		border-radius: 100px;
-		font-size: 16px;
+		border-radius: 200rpx;
+		font-size: 32rpx;
 		font-weight: 600;
-		padding: 12px 0;
-		margin-bottom: 30px;
+		padding: 24rpx 0;
+		margin-bottom: 60rpx;
 		border: none;
 		
 		&::after { border: none; }
@@ -356,45 +356,45 @@
 	/* --- 4. 结果块 (浅色背景，无边框) --- */
 	.result-block {
 		background-color: #f7f8fa;
-		border-radius: 16px;
-		padding: 16px;
-		min-height: 120px;
+		border-radius: 32rpx;
+		padding: 32rpx;
+		min-height: 240rpx;
 	}
 
 	.block-title {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #999;
 		font-weight: 600;
 	}
 
 	.actions {
 		display: flex;
-		gap: 16px;
+		gap: 32rpx;
 	}
 
 	.icon-btn {
 		color: #999;
-		font-size: 16px;
+		font-size: 32rpx;
 		&:active { color: #07C160; }
 	}
 
 	.result-text {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #333;
 		line-height: 1.8;
 		
 		/* AI 解析内容样式 */
 		::v-deep .ai-box {
-			margin-bottom: 12px;
+			margin-bottom: 24rpx;
 		}
 		::v-deep .ai-h3 {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: #07C160;
-			margin: 8px 0 4px;
+			margin: 16rpx 0 8rpx;
 			font-weight: bold;
 		}
 		::v-deep .ai-p {
-			font-size: 15px;
+			font-size: 30rpx;
 			color: #444;
 		}
 	}
@@ -402,23 +402,23 @@
 	.empty-tip {
 		text-align: center;
 		color: #eee;
-		font-size: 14px;
-		margin-top: 20px;
+		font-size: 28rpx;
+		margin-top: 40rpx;
 	}
 
 	/* Loading 动画 */
 	.loading-wrap {
 		display: flex;
 		justify-content: center;
-		padding: 20px;
+		padding: 40rpx;
 	}
 	.dot-spinner {
 		display: flex;
-		gap: 6px;
+		gap: 12rpx;
 	}
 	.dot {
-		width: 8px;
-		height: 8px;
+		width: 16rpx;
+		height: 16rpx;
 		background-color: #07C160;
 		border-radius: 50%;
 		animation: bounce 1.4s infinite ease-in-out both;

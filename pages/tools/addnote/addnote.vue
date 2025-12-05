@@ -168,29 +168,29 @@
 	/* 新增：笔记来源样式 */
 	.source-bar {
 		background-color: #fff;
-		padding: 14px 16px;
+		padding: 28rpx 32rpx;
 		display: flex;
 		align-items: center;
-		border-bottom: 1px solid #f0f0f0; // 极淡的分割线
+		border-bottom: 2rpx solid #f0f0f0; // 极淡的分割线
 
 		.source-label {
 			display: flex;
 			align-items: center;
-			margin-right: 12px;
+			margin-right: 24rpx;
 			flex-shrink: 0;
 
 			&::before {
 				content: '';
 				display: block;
-				width: 3px;
-				height: 12px;
+				width: 6rpx;
+				height: 24rpx;
 				background-color: #07C160; // 呼应品牌色
-				border-radius: 2px;
-				margin-right: 6px;
+				border-radius: 4rpx;
+				margin-right: 12rpx;
 			}
 
 			text {
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #909399; // 次级文本颜色
 			}
 		}
@@ -200,7 +200,7 @@
 			overflow: hidden; // 防止文字溢出
 
 			.source-title {
-				font-size: 15px;
+				font-size: 30rpx;
 				color: #303133;
 				font-weight: 500;
 				display: block;
@@ -221,19 +221,19 @@
 	:deep(.sv-editor-popup-container .form-button) {
 		background-color: #07C160;
 		color: white;
-		border-radius: 100px !important;
+		border-radius: 200rpx !important;
 	}
 
 	:deep(.sv-editor-popup-container .form-input) {
-		border-radius: 100px !important;
-		padding: 8px 12px !important;
-		font-size: 14px !important;
+		border-radius: 200rpx !important;
+		padding: 16rpx 24rpx !important;
+		font-size: 28rpx !important;
 	}
 
 	.editor-wrapper {
 		flex: 1;
 		background-color: #fff;
-		padding: 16px; // 保持原有内边距
+		padding: 32rpx; // 保持原有内边距
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
@@ -241,7 +241,7 @@
 		:deep(.ql-container) {
 			height: 100%;
 			min-height: 100%;
-			font-size: 16px;
+			font-size: 32rpx;
 			line-height: 1.6;
 		}
 	}
@@ -254,7 +254,7 @@
 		padding-bottom: env(safe-area-inset-bottom);
 
 		.save-btn-box {
-			padding: 0 16px 16px 16px;
+			padding: 0 32rpx 32rpx 32rpx;
 		}
 	}
 </style>

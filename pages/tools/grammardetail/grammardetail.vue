@@ -4,7 +4,7 @@
 			<NavbarDefault border title="语法详情"></NavbarDefault>
 		</view>
 		<div class="info bg-white">
-			<div style="display: flex;flex-direction: column;gap: 8px;align-items: flex-start;">
+			<div style="display: flex;flex-direction: column;gap: 16rpx;align-items: flex-start;">
 				<view class="grammar">{{data.grammar}}</view>
 				<text class="level-tag N3">N{{data.level}}语法</text>
 			</div>
@@ -19,7 +19,7 @@
 		</div>
 		<div class="bg-white">
 			<div class="section-title">详细解释</div>
-			<div style="font-size: 14px;white-space: pre-line">
+			<div style="font-size: 28rpx;white-space: pre-line">
 				{{data.explanation.join("\n")}}
 			</div>
 		</div>
@@ -86,11 +86,11 @@
 	.bottom-actions {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 16px;
-		border-top: 1px solid #e5e7eb;
+		gap: 32rpx;
+		border-top: 2rpx solid #e5e7eb;
 		background: white;
-		padding: 12px 16px 0 16px;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+		padding: 24rpx 32rpx 0 32rpx;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 24rpx);
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -98,8 +98,8 @@
 	}
 
 	.bottom-btn {
-		padding: 8px;
-		border-radius: 8px;
+		padding: 16rpx;
+		border-radius: 16rpx;
 		font-weight: 500;
 		display: flex;
 		align-items: center;
@@ -115,7 +115,7 @@
 	.examples {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 24rpx;
 
 		.example {
 			display: flex;
@@ -123,17 +123,17 @@
 			justify-content: space-between;
 
 			.ch {
-				padding-top: 4px;
+				padding-top: 8rpx;
 				display: flex;
 				align-items: center;
-				gap: 5px;
-				font-size: 14px;
+				gap: 10rpx;
+				font-size: 28rpx;
 				color: $uni-text-color-grey;
-				border-radius: 4px;
+				border-radius: 8rpx;
 			}
 
 			.ja {
-				font-size: 16px;
+				font-size: 32rpx;
 			}
 		}
 	}
@@ -145,14 +145,14 @@
 	}
 
 	.level-tag {
-		font-size: 10px;
-		padding: 2px 6px;
-		border-radius: 4px;
+		font-size: 20rpx;
+		padding: 4rpx 12rpx;
+		border-radius: 8rpx;
 		font-weight: bold;
 	}
 
 	.connect {
-		font-size: 14px;
+		font-size: 28rpx;
 
 		th {
 			white-space: nowrap;
@@ -161,10 +161,10 @@
 
 	.section-title {
 		position: relative;
-		padding-left: 12px;
-		font-size: 16px;
+		padding-left: 24rpx;
+		font-size: 32rpx;
 		font-weight: 600;
-		margin-bottom: 10px;
+		margin-bottom: 20rpx;
 	}
 
 	.section-title:before {
@@ -173,30 +173,30 @@
 		left: 0;
 		top: 50%;
 		transform: translateY(-50%);
-		width: 3px;
-		height: 16px;
+		width: 6rpx;
+		height: 32rpx;
 		background-color: #07C160;
-		border-radius: 3px;
+		border-radius: 6rpx;
 	}
 
 	.bg-white {
-		margin: 16px;
+		margin: 32rpx;
 		background-color: white;
-		border-radius: 8px;
-		padding: 12px;
+		border-radius: 16rpx;
+		padding: 24rpx;
 	}
 
 	.info {
 		.grammar {
-			font-size: 22px;
+			font-size: 44rpx;
 			font-weight: bold;
 		}
 
 		.explain {
 			white-space: pre-line;
 			color: #4b5563;
-			font-size: 14px;
-			margin-top: 8px;
+			font-size: 28rpx;
+			margin-top: 16rpx;
 		}
 	}
 

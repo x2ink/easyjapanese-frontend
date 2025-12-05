@@ -78,7 +78,7 @@
 					</view>
 				</view>
 
-				<view style="height: 60px;"></view>
+				<view style="height: 120rpx;"></view>
 			</view>
 		</scroll-view>
 
@@ -305,7 +305,7 @@
 
 	/* 极简进度条 */
 	.progress-bar {
-		height: 4px;
+		height: 8rpx;
 		background-color: #f0f0f0;
 		width: 100%;
 	}
@@ -313,7 +313,7 @@
 	.progress-fill {
 		height: 100%;
 		background-color: $primary-color;
-		border-radius: 0 4px 4px 0;
+		border-radius: 0 8rpx 8rpx 0;
 		transition: width 0.3s ease;
 	}
 
@@ -506,7 +506,7 @@
 		background-color: $primary-color;
 		color: white;
 		padding: 24rpx 60rpx;
-		border-radius: 999px;
+		border-radius: 1998rpx;
 		/* 胶囊形状 */
 		display: flex;
 		align-items: center;
@@ -570,7 +570,7 @@
 		width: 100%;
 		height: 96rpx;
 		line-height: 96rpx;
-		border-radius: 999px;
+		border-radius: 1998rpx;
 		/* 全圆角 */
 		font-size: 32rpx;
 		font-weight: 500;

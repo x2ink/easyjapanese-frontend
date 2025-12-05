@@ -228,15 +228,15 @@
 	}
 
 	.word-wrap {
-		border-top: 1px solid #eee;
+		border-top: 2rpx solid #eee;
 	}
 
 	.word-item {
 		display: flex;
 		align-items: center;
 		background: white;
-		padding: 12px 16px;
-		border-bottom: 1px solid #eee;
+		padding: 24rpx 32rpx;
+		border-bottom: 2rpx solid #eee;
 	}
 
 	.word-content {
@@ -248,18 +248,18 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 8px;
+		margin-bottom: 16rpx;
 	}
 
 	.word-kanji {
-		font-size: 18px;
+		font-size: 36rpx;
 		font-weight: 600;
 		color: #212121;
 	}
 
 	.meaning-text {
 		color: #424242;
-		font-size: 14px;
+		font-size: 28rpx;
 		line-height: 1.5;
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
@@ -270,21 +270,21 @@
 
 	.batch-actions {
 		position: fixed;
-		bottom: calc(env(safe-area-inset-bottom) + 20px);
+		bottom: calc(env(safe-area-inset-bottom) + 40rpx);
 		left: 50%;
 		transform: translateX(-50%);
 		background: white;
-		border-radius: 24px;
-		padding: 8px 16px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+		border-radius: 48rpx;
+		padding: 16rpx 32rpx;
+		box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05);
 		z-index: 20;
-		gap: 16px;
+		gap: 32rpx;
 		display: flex;
 
 		>view {
 			display: flex;
 			align-items: center;
-			gap: 4px;
+			gap: 8rpx;
 		}
 	}
 
@@ -309,7 +309,7 @@
 	}
 
 	.text-sm {
-		font-size: 14px;
+		font-size: 28rpx;
 	}
 
 	.items-center {
@@ -317,9 +317,9 @@
 	}
 
 	.batch-selector {
-		padding: 0 16px 16px;
+		padding: 0 32rpx 32rpx;
 		background-color: white;
-		border-bottom-width: 1px;
+		border-bottom-width: 2rpx;
 		border-color: #f3f4f6;
 		display: flex;
 		align-items: center;
@@ -333,11 +333,11 @@
 	}
 
 	.checkbox-custom {
-		width: 20px;
-		height: 20px;
-		border: 1px solid #E0E0E0;
-		border-radius: 4px;
-		margin-right: 12px;
+		width: 40rpx;
+		height: 40rpx;
+		border: 2rpx solid #E0E0E0;
+		border-radius: 8rpx;
+		margin-right: 24rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -347,35 +347,35 @@
 
 	.search-bar {
 		background-color: #FAFAFA;
-		border-radius: 8px;
-		padding: 8px 12px;
+		border-radius: 16rpx;
+		padding: 16rpx 24rpx;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 8px;
+		gap: 16rpx;
 
 		input {
 			flex: 1;
 		}
 
 		text {
-			font-size: 18px;
+			font-size: 36rpx;
 			color: #9DA3AF;
 		}
 	}
 
 	.search-bg {
-		padding: 12px 16px;
+		padding: 24rpx 32rpx;
 	}
 
 	.tabs-container {
-		padding: 6px 16px 16px;
+		padding: 12rpx 32rpx 32rpx;
 		display: flex;
-		gap: 12px;
+		gap: 24rpx;
 	}
 
 	.tab-item {
-		font-size: 14px;
+		font-size: 28rpx;
 		white-space: nowrap;
 	}
 

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="logotext" :style="{paddingTop:`calc(${navBarHeight} + 16px)!important`}">
+		<view class="logotext" :style="{paddingTop:`calc(${navBarHeight} + 32rpx)!important`}">
 			<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"></image>
 			<view>
 				<view class="title">轻松日语</view>
@@ -183,26 +183,26 @@
 		display: flex;
 		align-items: center;
 		background-color: white;
-		padding: 0 16px;
-		gap: 8px;
+		padding: 0 32rpx;
+		gap: 16rpx;
 
 		image {
-			width: 40px;
-			height: 40px;
+			width: 80rpx;
+			height: 80rpx;
 		}
 
 		.title {
-			font-size: 16px;
+			font-size: 32rpx;
 			font-weight: bold;
 		}
 
 		.description {
-			font-size: 10px;
+			font-size: 20rpx;
 		}
 	}
 
 	.action-buttons {
-		padding: 12px 16px;
+		padding: 24rpx 32rpx;
 		background: white;
 		display: flex;
 		justify-content: space-between;
@@ -212,20 +212,20 @@
 			text-align: center;
 
 			&:nth-child(2) {
-				margin: 0 8px;
+				margin: 0 16rpx;
 			}
 		}
 
 		.action-button {
 			width: 100%;
-			padding: 8px 0;
-			border-radius: 8px;
-			font-size: 14px;
+			padding: 16rpx 0;
+			border-radius: 16rpx;
+			font-size: 28rpx;
 			font-weight: 500;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 8px;
+			gap: 16rpx;
 
 			&.blue {
 				background-color: #ebf5ff;
@@ -245,17 +245,17 @@
 	}
 
 	.main-content {
-		padding: 16px;
+		padding: 32rpx;
 	}
 
 	/* --- 每日一句卡片样式 (无阴影) --- */
 	.daily-card {
 		position: relative;
 		width: 100%;
-		height: 200px;
-		border-radius: 16px;
+		height: 400rpx;
+		border-radius: 32rpx;
 		overflow: hidden;
-		margin-bottom: 16px;
+		margin-bottom: 32rpx;
 		/* box-shadow 已移除 */
 		background-color: #f0f0f0;
 
@@ -283,7 +283,7 @@
 			position: relative;
 			z-index: 3;
 			height: 100%;
-			padding: 12px;
+			padding: 24rpx;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
@@ -297,17 +297,17 @@
 
 			.tag {
 				background: rgba(255, 255, 255, 0.25);
-				backdrop-filter: blur(4px);
-				padding: 4px 10px;
-				border-radius: 20px;
-				font-size: 10px;
+				backdrop-filter: blur(8rpx);
+				padding: 8rpx 20rpx;
+				border-radius: 40rpx;
+				font-size: 20rpx;
 				color: #fff;
 				font-weight: bold;
-				letter-spacing: 1px;
+				letter-spacing: 2rpx;
 			}
 
 			.date {
-				font-size: 12px;
+				font-size: 24rpx;
 				color: rgba(255, 255, 255, 0.9);
 				font-family: sans-serif;
 				font-weight: 500;
@@ -316,22 +316,22 @@
 
 		.text-group {
 			margin-top: auto;
-			margin-bottom: 8px;
+			margin-bottom: 16rpx;
 
 			.ja-text {
-				font-size: 18px;
+				font-size: 36rpx;
 				font-weight: bold;
 				color: #fff;
 				line-height: 1.5;
-				margin-bottom: 6px;
-				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+				margin-bottom: 12rpx;
+				text-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.4);
 			}
 
 			.ch-text {
-				font-size: 13px;
+				font-size: 26rpx;
 				color: rgba(255, 255, 255, 0.95);
 				line-height: 1.4;
-				text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+				text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.4);
 			}
 		}
 
@@ -339,15 +339,15 @@
 			display: flex;
 			justify-content: flex-end;
 			align-items: center;
-			gap: 6px;
+			gap: 12rpx;
 
 			.quote-icon {
-				font-size: 10px;
+				font-size: 20rpx;
 				color: rgba(255, 255, 255, 0.7);
 			}
 
 			.source-text {
-				font-size: 11px;
+				font-size: 22rpx;
 				color: rgba(255, 255, 255, 0.8);
 				font-style: italic;
 			}
@@ -359,26 +359,26 @@
 	.feature-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
-		margin-bottom: 12px;
+		gap: 24rpx;
+		margin-bottom: 24rpx;
 
 		.feature-card {
 			background: white;
-			border-radius: 8px;
-			padding: 16px;
+			border-radius: 16rpx;
+			padding: 32rpx;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 
 			.feature-icon {
-				width: 48px;
-				height: 48px;
+				width: 96rpx;
+				height: 96rpx;
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-bottom: 8px;
-				font-size: 20px;
+				margin-bottom: 16rpx;
+				font-size: 40rpx;
 
 				&.blue {
 					background: #ebf5ff;
@@ -402,7 +402,7 @@
 			}
 
 			.feature-name {
-				font-size: 14px;
+				font-size: 28rpx;
 			}
 		}
 	}
@@ -419,10 +419,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 8px;
+		margin-bottom: 16rpx;
 
 		.ranking-title {
-			font-size: 14px;
+			font-size: 28rpx;
 			font-weight: 500;
 		}
 	}
@@ -430,24 +430,24 @@
 	.ranking-list {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 16rpx;
 
 		.ranking-item {
 			background: white;
-			border-radius: 8px;
-			padding: 12px;
+			border-radius: 16rpx;
+			padding: 24rpx;
 			display: flex;
 			align-items: center;
 
 			.rank-number {
-				width: 40px;
-				height: 40px;
+				width: 80rpx;
+				height: 80rpx;
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				font-weight: bold;
-				margin-right: 12px;
+				margin-right: 24rpx;
 
 				&.blue {
 					background: #dbeafe;
@@ -474,14 +474,14 @@
 				flex: 1;
 
 				.username {
-					font-size: 14px;
+					font-size: 28rpx;
 					font-weight: 500;
 				}
 
 				.user-stats {
-					font-size: 12px;
+					font-size: 24rpx;
 					color: #666;
-					margin-top: 2px;
+					margin-top: 4rpx;
 				}
 			}
 		}

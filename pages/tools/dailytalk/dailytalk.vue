@@ -189,7 +189,7 @@
 		flex: 1;
 		height: 0;
 		overflow: hidden;
-		padding: 10px 12px;
+		padding: 20rpx 24rpx;
 		/* 给列表外围加一点内边距 */
 		box-sizing: border-box;
 	}
@@ -197,13 +197,13 @@
 	.list {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 24rpx;
 		/* 卡片之间的间距 */
 
 		.item {
 			background-color: #fff;
-			padding: 15px 15px 10px 15px;
-			border-radius: 8px;
+			padding: 30rpx 30rpx 20rpx 30rpx;
+			border-radius: 16rpx;
 			/* 圆角卡片 */
 			display: flex;
 			flex-direction: column;
@@ -213,7 +213,7 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-start;
-				margin-bottom: 8px;
+				margin-bottom: 16rpx;
 			}
 
 			.jp-text-wrapper {
@@ -222,7 +222,7 @@
 				align-items: flex-end;
 				flex: 1;
 				line-height: 1.2;
-				padding-right: 10px;
+				padding-right: 20rpx;
 				/* 防止文字紧贴图标 */
 			}
 
@@ -230,22 +230,22 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				margin-right: 2px;
+				margin-right: 4rpx;
 				/* 缩小单词间距，更连贯 */
 			}
 
 			.ruby-text {
-				font-size: 9px;
+				font-size: 18rpx;
 				/* 字体调小 */
 				color: #999;
-				margin-bottom: 0px;
-				min-height: 12px;
+				margin-bottom: 0rpx;
+				min-height: 24rpx;
 				/* 占位高度 */
 				text-align: center;
 			}
 
 			.base-text {
-				font-size: 17px;
+				font-size: 34rpx;
 				/* 字体调小 */
 				font-weight: 500;
 				/* 字重稍微减轻一点点 */
@@ -254,10 +254,10 @@
 
 			/* 播放按钮 */
 			.sound-btn {
-				padding: 0 0 0 8px;
+				padding: 0 0 0 16rpx;
 				color: #4CAF50;
-				font-size: 16px;
-				height: 24px;
+				font-size: 32rpx;
+				height: 48rpx;
 				display: flex;
 				align-items: flex-end;
 				/* 图标对齐到底部，和文字基线接近 */
@@ -265,20 +265,20 @@
 
 			/* 中文行 */
 			.content-row {
-				margin-bottom: 10px;
+				margin-bottom: 20rpx;
 			}
 
 			.meaning-text {
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #666;
 				line-height: 1.4;
 			}
 
 			/*内部分割线*/
 			.divider {
-				height: 1px;
+				height: 2rpx;
 				background-color: #f0f0f0;
-				margin: 5px 0 8px 0;
+				margin: 10rpx 0 16rpx 0;
 				transform: scaleY(0.5);
 				/* 细线 */
 			}
@@ -288,20 +288,20 @@
 				display: flex;
 				justify-content: flex-end;
 				align-items: center;
-				gap: 20px;
+				gap: 40rpx;
 				/* 按钮之间的间距 */
 
 				.action-item {
 					display: flex;
 					align-items: center;
 					color: #888;
-					font-size: 12px;
-					padding: 4px 0;
+					font-size: 24rpx;
+					padding: 8rpx 0;
 					/* 增加点击区域 */
 
 					i {
-						font-size: 14px;
-						margin-right: 4px;
+						font-size: 28rpx;
+						margin-right: 8rpx;
 					}
 
 					&:active {
@@ -313,6 +313,6 @@
 	}
 
 	.bottom-spacer {
-		height: 30px;
+		height: 60rpx;
 	}
 </style>

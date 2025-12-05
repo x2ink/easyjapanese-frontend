@@ -141,13 +141,13 @@
 	.tags {
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		gap: 8rpx;
 
 		.tag {
-			line-height: 20px;
-			border-radius: 4px;
-			padding: 0 8px;
-			font-size: 12px;
+			line-height: 40rpx;
+			border-radius: 8rpx;
+			padding: 0 16rpx;
+			font-size: 24rpx;
 
 		}
 
@@ -167,25 +167,25 @@
 		height: 0; 
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		margin-top: 16px;
-		padding: 8px 16px 0 16px; 
+		gap: 32rpx;
+		margin-top: 32rpx;
+		padding: 16rpx 32rpx 0 32rpx; 
 		box-sizing: border-box;
 
 		.worditem {
-			border-bottom: 1px solid #f0f0f0;
-			padding-bottom: 15px;
-			margin-bottom: 16px;
+			border-bottom: 2rpx solid #f0f0f0;
+			padding-bottom: 30rpx;
+			margin-bottom: 32rpx;
 
 			.heads {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				margin-bottom: 4px;
+				margin-bottom: 8rpx;
 			}
 			
 			.item-desc {
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #999;
 				line-height: 1.5;
 				overflow: hidden;
@@ -201,11 +201,11 @@
 		background: white;
 
 		.statistics {
-			margin: 8px 16px 8px 16px;
-			padding: 16px;
-			border: 1px solid #bbf7d0;
+			margin: 16rpx 32rpx 16rpx 32rpx;
+			padding: 32rpx;
+			border: 2rpx solid #bbf7d0;
 			background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-			border-radius: 16px;
+			border-radius: 32rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -213,16 +213,16 @@
 			.data {
 				display: flex;
 				align-items: center;
-				gap: 16px;
+				gap: 32rpx;
 
 				>view {
 					flex-direction: column;
 					color: #757575;
-					font-size: 12px;
+					font-size: 24rpx;
 
 					>view {
 						&:first-child {
-							font-size: 22px;
+							font-size: 44rpx;
 							font-weight: 600;
 						}
 

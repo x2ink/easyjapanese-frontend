@@ -181,7 +181,7 @@
 	}
 
 	.search-wrapper {
-		padding: 6px 20px 12px; /* 调整内边距 */
+		padding: 12rpx 40rpx 24rpx; /* 调整内边距 */
 		background: #ffffff;
 	}
 
@@ -189,9 +189,9 @@
 		display: flex;
 		align-items: center;
 		background: #f7f8fa; /* 浅灰搜索块 */
-		border-radius: 100px;
-		padding: 0 16px;
-		height: 44px; /* 稍微加高 */
+		border-radius: 200rpx;
+		padding: 0 32rpx;
+		height: 88rpx; /* 稍微加高 */
 		transition: background-color 0.2s;
 		
 		&:focus-within {
@@ -200,15 +200,15 @@
 	}
 
 	.search-icon {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #999;
-		margin-right: 10px;
+		margin-right: 20rpx;
 	}
 
 	.search-input {
 		flex: 1;
 		height: 100%;
-		font-size: 15px;
+		font-size: 30rpx;
 		color: #333;
 	}
 
@@ -217,11 +217,11 @@
 	}
 
 	.search-btn {
-		font-size: 15px;
+		font-size: 30rpx;
 		color: #07C160;
 		font-weight: 600;
-		padding-left: 12px;
-		margin-left: 8px;
+		padding-left: 24rpx;
+		margin-left: 16rpx;
 		/* 使用伪元素做分割线，比border更灵活 */
 		position: relative;
 		
@@ -231,8 +231,8 @@
 			left: 0;
 			top: 50%;
 			transform: translateY(-50%);
-			height: 14px;
-			width: 1px;
+			height: 28rpx;
+			width: 2rpx;
 			background-color: #e0e0e0;
 		}
 		
@@ -247,24 +247,24 @@
 	}
 
 	.content-wrapper {
-		padding: 12px 20px 40px; /* 增加左右留白 */
+		padding: 24rpx 40rpx 80rpx; /* 增加左右留白 */
 	}
 
 	/* --- 通用结果色块 --- */
 	.result-block {
 		background-color: #f7f8fa; /* 浅灰底色 */
-		border-radius: 16px;
-		padding: 16px;
-		margin-bottom: 20px;
+		border-radius: 32rpx;
+		padding: 32rpx;
+		margin-bottom: 40rpx;
 	}
 
 	.block-header {
-		margin-bottom: 12px;
-		padding-left: 4px;
+		margin-bottom: 24rpx;
+		padding-left: 8rpx;
 	}
 
 	.block-title {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #999;
 		font-weight: 600;
 	}
@@ -275,37 +275,37 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 24px 16px;
+		padding: 48rpx 32rpx;
 		background-color: #f0fdf4; /* 极淡的绿色背景，突出主体 */
 		/* 如果想要纯灰也可改为 #f7f8fa */
 	}
 
 	.main-label {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #07C160;
 		opacity: 0.8;
-		margin-bottom: 6px;
-		letter-spacing: 1px;
+		margin-bottom: 12rpx;
+		letter-spacing: 2rpx;
 	}
 
 	.main-word {
-		font-size: 32px;
+		font-size: 64rpx;
 		font-weight: bold;
 		color: #333;
-		letter-spacing: 1px;
+		letter-spacing: 2rpx;
 	}
 
 	/* --- 网格布局 (基础活用) --- */
 	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
+		gap: 24rpx;
 	}
 
 	.grid-item {
 		background-color: #ffffff; /* 纯白胶囊 */
-		padding: 12px;
-		border-radius: 12px;
+		padding: 24rpx;
+		border-radius: 24rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -313,10 +313,10 @@
 	}
 
 	.tag {
-		font-size: 11px;
-		padding: 2px 8px;
-		border-radius: 6px;
-		margin-bottom: 6px;
+		font-size: 22rpx;
+		padding: 4rpx 16rpx;
+		border-radius: 12rpx;
+		margin-bottom: 12rpx;
 		font-weight: 500;
 	}
 
@@ -327,7 +327,7 @@
 	.tag-orange { background: #fff7e6; color: #fa8c16; }
 
 	.grid-value {
-		font-size: 16px;
+		font-size: 32rpx;
 		font-weight: 600;
 		color: #333;
 	}
@@ -336,25 +336,25 @@
 	.list-container {
 		display: flex;
 		flex-direction: column;
-		gap: 10px; /* 列表项之间的间距 */
+		gap: 20rpx; /* 列表项之间的间距 */
 	}
 
 	.list-item {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 14px 16px;
+		padding: 28rpx 32rpx;
 		background-color: #ffffff; /* 纯白条目 */
-		border-radius: 12px;
+		border-radius: 24rpx;
 	}
 
 	.list-label {
-		font-size: 14px;
+		font-size: 28rpx;
 		color: #666;
 	}
 
 	.list-value {
-		font-size: 16px;
+		font-size: 32rpx;
 		color: #333;
 		font-weight: 500;
 	}
@@ -369,12 +369,12 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding-top: 60px;
+		padding-top: 120rpx;
 	}
 
 	.empty-sub {
-		font-size: 13px;
+		font-size: 26rpx;
 		color: #ccc;
-		margin-top: 8px;
+		margin-top: 16rpx;
 	}
 </style>
