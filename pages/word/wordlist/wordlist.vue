@@ -25,13 +25,8 @@
 				<view class="text-sm text-gray-500">已选 <text class="text-green-500">{{selectCount}}</text> 个</view>
 			</view>
 		</view>
-		
-		<scroll-view 
-			class="scroll-content" 
-			scroll-y="true" 
-			@scrolltolower="loadMore"
-			:scroll-with-animation="true"
-		>
+
+		<scroll-view class="scroll-content" scroll-y="true" @scrolltolower="loadMore" :scroll-with-animation="true">
 			<view class="word-wrap">
 				<view class="word-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
 					v-for="(item,index) in List" :key="item.id">
@@ -50,7 +45,10 @@
 						</view>
 					</view>
 				</view>
-				<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="单词本还没有单词~" />
+				<view v-if="total==0" style="margin-top: 80rpx;">
+					<wd-status-tip image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
+						tip="单词本还没有单词~" />
+				</view>
 			</view>
 		</scroll-view>
 
@@ -89,11 +87,11 @@
 	import $http from "@/api/index.js"
 
 	const currentTab = ref(0)
-	
+
 	const isAllSelect = computed(() => {
 		return List.value.length > 0 && selectCount.value === List.value.length
 	})
-	
+
 	const tabs = ref([{
 		name: "全部",
 		value: 0
@@ -165,7 +163,7 @@
 	watch(currentTab, (newVal, oldVal) => {
 		reList()
 	})
-	
+
 	const getList = async () => {
 		const res = await $http.word.getBookWord({
 			id: id.value,
@@ -178,7 +176,7 @@
 		if (total.value === 0) {
 			return
 		}
-		
+
 		const newData = res.data.map(item => {
 			return {
 				...item,
@@ -186,7 +184,7 @@
 				displayWord: `${formatWordName(item.words,item.kana)}${item.tone || ''}`
 			}
 		})
-		
+
 		List.value = List.value.concat(newData)
 	}
 	const id = ref(null)

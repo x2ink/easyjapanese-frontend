@@ -15,6 +15,11 @@
 					</view>
 				</view>
 			</view>
+
+			<view v-if="total === 0" style="padding-top: 80rpx;">
+				<wd-status-tip :image-size="{ height: 128, width: 128 }"
+					image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="暂无修订历史" />
+			</view>
 		</view>
 	</scroll-view>
 </template>
@@ -31,6 +36,13 @@
 	} from "@dcloudio/uni-app"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
+
+	const total = ref(null) // 初始化为 null，区分加载中和加载完成
+	const page = ref(1)
+	const size = ref(20)
+	const List = ref([])
+	const wordId = ref(null)
+
 	const getList = async () => {
 		const res = await $http.word.getEditHistory({
 			word_id: wordId.value,
@@ -43,11 +55,7 @@
 		}
 		List.value = List.value.concat(res.data)
 	}
-	const total = ref(null)
-	const page = ref(1)
-	const size = ref(20)
-	const List = ref([])
-	const wordId = ref(null)
+
 	const scroll = () => {
 		if (total.value > List.value.length) {
 			++page.value

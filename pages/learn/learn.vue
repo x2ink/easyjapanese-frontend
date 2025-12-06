@@ -96,7 +96,7 @@
 				<view v-if="showAnswer" @click="goPage('/pages/word/worddetail/worddetail',{
 					id:wordinfo.id
 				})" class="search-link">
-					<text>查看完整词典详情 <i class="fas fa-chevron-right"></i></text>
+					查看完整词典详情 <i class="fa-solid fa-chevron-right"></i>
 				</view>
 
 				<view class="safe-area-spacer"></view>
@@ -704,7 +704,8 @@
 	}
 
 	.word-kanji {
-		font-size: 72rpx;
+		text-align: center;
+		font-size: 64rpx;
 		font-weight: 600;
 		color: #333;
 		margin-bottom: 12rpx;
@@ -712,12 +713,14 @@
 	}
 
 	.word-furigana {
+		text-align: center;
 		font-size: 32rpx;
 		color: #888;
 		margin-bottom: 8rpx;
 	}
 
 	.word-romaji {
+		text-align: center;
 		font-size: 28rpx;
 		color: #ccc;
 		font-family: monospace;
@@ -821,14 +824,9 @@
 		align-items: center;
 		justify-content: center;
 		padding: 20rpx;
-
-		text {
-			font-size: 28rpx;
-			color: #07C160;
-			display: flex;
-			align-items: center;
-			gap: 8rpx;
-		}
+		gap: 12rpx;
+		font-size: 28rpx;
+		color: #07C160;
 	}
 
 	/* 安全占位块 */
@@ -861,16 +859,15 @@
 		pointer-events: auto;
 		flex: 1;
 		min-width: 0;
-		height: 104rpx;
+		height: 90rpx;
 		border-radius: 200rpx;
 		border: none;
-		font-size: 32rpx;
+		font-size: 28rpx;
 		font-weight: 600;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		transition: all 0.2s;
-		box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05);
 		padding: 0;
 		margin: 0;
 
@@ -888,10 +885,10 @@
 	.secondary-button {
 		flex: none;
 		width: 100%;
-		height: 104rpx;
+		height: 90rpx;
 		border-radius: 200rpx;
 		border: none;
-		font-size: 32rpx;
+		font-size: 28rpx;
 		font-weight: 600;
 		display: flex;
 		align-items: center;

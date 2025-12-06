@@ -116,6 +116,7 @@
 		useToast,
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	import $http from "@/api/index.js"
 	import {
 		onLoad,
@@ -125,7 +126,7 @@
 		userStore
 	} from "@/stores/index.js"
 
-	const toast = useToast()
+	
 	const navBarHeight = ref(0)
 	const sentence = ref({})
 	const ranks = ref([])

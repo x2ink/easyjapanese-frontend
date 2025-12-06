@@ -1,5 +1,5 @@
 <template>
-	<scroll-view :scroll-left="120" scroll-x="true" class="language-tabs">
+	<scroll-view scroll-x="true" class="language-tabs">
 		<view class="placeholder"></view>
 		<view @click="emits('changeTab', index)" :key="item" v-for="(item,index) in tabList"
 			:class="{active:current==index,inactive:current!=index}" class="search-tab">

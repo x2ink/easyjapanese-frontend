@@ -36,6 +36,12 @@
 				</view>
 			</view>
 		</div>
+		<view @click="goPage('/pages/tools/addnote/addnote', {
+			id: data.id,
+			type: 'grammar'
+		})" class="search-link">
+			记笔记<i class="fa-solid fa-pen-to-square"></i>
+		</view>
 		<view style="height: calc(env(safe-area-inset-bottom));">
 
 		</view>
@@ -82,6 +88,16 @@
 	}
 </style>
 <style lang="scss" scoped>
+	.search-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20rpx;
+		gap: 12rpx;
+		font-size: 28rpx;
+		color: #07C160;
+	}
+
 	/* 底部操作栏 */
 	.bottom-actions {
 		display: grid;

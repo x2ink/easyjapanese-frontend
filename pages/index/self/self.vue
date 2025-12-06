@@ -36,16 +36,19 @@
 						<text class="stat-label">记忆保持率</text>
 					</view>
 				</view>
-				
+
 				<view class="function-list">
-					<view @click="goPage('/pages/other/setplan/setplan')" class="function-item">
-						<view class="function-icon orange">
-							<text class="fas fa-headset"></text>
+					<button hover-class="none" open-type="contact"
+						style="text-align:left!important;transform: none !important;">
+						<view @click="goPage('/pages/other/setplan/setplan')" class="function-item">
+							<view class="function-icon orange">
+								<text class="fas fa-headset"></text>
+							</view>
+							<text class="function-name">联系客服</text>
+							<text class="fas fa-chevron-right arrow-icon"></text>
 						</view>
-						<text class="function-name">联系客服</text>
-						<text class="fas fa-chevron-right arrow-icon"></text>
-					</view>
-					
+					</button>
+
 					<view @click="goPage('/pages/other/feedback/feedback')" class="function-item">
 						<view class="function-icon red">
 							<text class="fas fa-comment-dots"></text>
@@ -53,7 +56,7 @@
 						<text class="function-name">意见反馈</text>
 						<text class="fas fa-chevron-right arrow-icon"></text>
 					</view>
-					
+
 					<view @click="goPage('/pages/other/about/about')" class="function-item">
 						<view class="function-icon gray">
 							<text class="fas fa-info-circle"></text>
@@ -61,7 +64,7 @@
 						<text class="function-name">关于我们</text>
 						<text class="fas fa-chevron-right arrow-icon"></text>
 					</view>
-					
+
 					<view class="function-item">
 						<view class="function-icon blue">
 							<text class="fas fa-share-alt"></text>
@@ -121,11 +124,11 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	
+
 	const toast = useToast()
 	const nicknameShow = ref(false)
 	const nickname = ref("")
-	
+
 	const setnickname = async () => {
 		if (nickname.value.length < 2 || nickname.value.length > 8) {
 			toast.warning(`昵称长度在2-8之间`)
@@ -139,7 +142,7 @@
 		userStore().setUserInfo()
 		nicknameShow.value = false
 	}
-	
+
 	const learnInfo = ref({
 		"book_info": {
 			"name": "",
@@ -159,7 +162,7 @@
 		"review": 0,
 		"wordnum": 100
 	})
-	
+
 	const chooseavatar = (resAvatarUrl) => {
 		uni.getFileSystemManager().readFile({
 			filePath: resAvatarUrl.detail.avatarUrl,
@@ -180,19 +183,19 @@
 			}
 		});
 	}
-	
+
 	const getInfo = async () => {
 		const res = await $http.word.getHomeInfo()
 		learnInfo.value = res.data
 	}
-	
+
 	const login = () => {
 		if (userStore().loginStatus)
 			nicknameShow.value = true
 		else
 			goPage("/pages/login/login")
 	}
-	
+
 	onShow(() => {
 		getInfo()
 	})
@@ -213,7 +216,7 @@
 		text-align: center;
 		font-size: 28rpx;
 		font-weight: 500;
-		border-radius: 16rpx;
+		border-radius: 200rpx;
 		border: none;
 		outline: none;
 	}
@@ -228,7 +231,6 @@
 	.modal-button.confirm {
 		background-color: #07C160;
 		color: white;
-		box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
 	}
 
 	.screen {
@@ -274,8 +276,8 @@
 	/* 输入框样式 */
 	.modal-input {
 		padding: 24rpx;
-		border: 2rpx solid #E0E0E0;
-		border-radius: 16rpx;
+		background-color: #f7f8fa;
+		border-radius: 200rpx;
 		font-size: 28rpx;
 		color: #212121;
 	}
@@ -302,14 +304,16 @@
 		background-color: white;
 		z-index: 10;
 		box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
-		padding: 0; /* 修复 button 默认 padding */
-		margin: 0; /* 修复 button 默认 margin */
+		padding: 0;
+
+		margin: 0;
+
 
 		&:active {
 			transform: scale(1) !important;
 			opacity: 1 !important;
 		}
-		
+
 		/* 修复 button 默认伪元素边框 */
 		&::after {
 			border: none;
@@ -319,7 +323,8 @@
 			width: 100%;
 			height: 100%;
 			border-radius: 50%;
-			display: block; /* 防止图片底部留白 */
+			display: block;
+			/* 防止图片底部留白 */
 		}
 
 		.camera-icon {
@@ -377,7 +382,8 @@
 			font-size: 48rpx;
 			font-weight: bold;
 			margin: 0;
-			color: #333; /* 补充颜色 */
+			color: #333;
+			/* 补充颜色 */
 		}
 
 		.vip-badge {
@@ -386,7 +392,7 @@
 			color: #d97706;
 			border-radius: 24rpx;
 			font-size: 24rpx;
-			
+
 			/* 修改选择器以匹配 text 标签 */
 			text {
 				margin-right: 8rpx;
@@ -397,7 +403,8 @@
 			font-size: 24rpx;
 			color: #6b7280;
 			margin-top: 8rpx;
-			display: block; /* 确保 text 换行 */
+			display: block;
+			/* 确保 text 换行 */
 		}
 	}
 

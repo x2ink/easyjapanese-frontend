@@ -45,7 +45,7 @@
 			</view>
 
 			<view class="bottom-spacer"></view>
-
+			<wd-toast />
 		</scroll-view>
 	</view>
 </template>
@@ -60,6 +60,11 @@
 	import {
 		goPage
 	} from '@/utils/common'
+	import {
+		useToast,
+		useMessage
+	} from '@/uni_modules/wot-design-uni'
+	const toast = useToast()
 	// 分页和列表数据状态
 	const total = ref(0)
 	const page = ref(1)
@@ -114,43 +119,26 @@
 	 */
 	const handleCopy = (item) => {
 		if (!item.ruby || !Array.isArray(item.ruby)) {
-			uni.showToast({
-				title: '暂无内容',
-				icon: 'none'
-			})
+			toast.warning('暂无内容')
 			return
 		}
 
 		// 提取 base 字段拼接
 		const textToCopy = item.ruby.map(r => r.base).join('')
-
 		uni.setClipboardData({
 			data: textToCopy,
 			success: () => {
-				uni.showToast({
-					title: '复制成功',
-					icon: 'none'
-				})
+				// toast.success('复制成功')
 			}
 		})
 	}
-
-	/**
-	 * 收藏 (占位)
-	 */
 	const handleFavorite = (item) => {
-		console.log(item);
 		goPage("/pages/tools/addnote/addnote", {
 			id: item.id,
 			type: 'talk'
 		})
 	}
-
-	/**
-	 * 分享 (占位)
-	 */
 	const handleShare = (item) => {
-		console.log('点击分享', item)
 		uni.showToast({
 			title: '分享功能开发中',
 			icon: 'none'
