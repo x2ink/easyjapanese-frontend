@@ -64,6 +64,7 @@
 		content: "",
 		type: ""
 	})
+	const history = ref('')
 	const source = ref('')
 	const submit = async () => {
 		if (!userStore().loginStatus) {
@@ -74,11 +75,15 @@
 			toast.warning(`内容不可为空`)
 			return
 		}
+		if (history.value == formData.value.content) {
+			toast.warning(`不可重复提交`)
+			return
+		}
 		formData.value.type = current.value
 		formData.value.content += formData.value.content + "\n" + source.value
 		const res = await $http.common.feedback(formData.value)
 		toast.success(`提交成功`)
-		formData.value.content = ''
+		history.value = formData.value.content
 	}
 	onLoad(e => {
 		if (e.type) {
@@ -143,8 +148,6 @@
 		background-color: #f7f8fa;
 		color: #5f6368;
 		border-radius: 200rpx;
-		/* 胶囊按钮 */
-		/* 小圆角 */
 		transition: all 0.2s;
 		font-weight: 500;
 
@@ -154,7 +157,6 @@
 		}
 	}
 
-	/* 输入区域：模仿 breaksentence 的紧凑风格 */
 	.input-block {
 		background-color: #f7f8fa;
 		border-radius: 24rpx;
@@ -166,9 +168,7 @@
 	.compact-textarea {
 		width: 100%;
 		height: 280rpx;
-		/* 高度适中 */
 		font-size: 28rpx;
-		/* 字号调小 */
 		line-height: 1.5;
 		color: #333;
 		background: transparent;

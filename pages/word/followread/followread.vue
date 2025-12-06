@@ -141,6 +141,12 @@
 	innerAudioContext.autoplay = false;
 
 	const playUserRecord = (index, url) => {
+		List.value = List.value.map(item => {
+			return {
+				...item,
+				play: false
+			}
+		})
 		innerAudioContext.src = url;
 		innerAudioContext.play();
 		innerAudioContext.onPlay(() => {
@@ -663,14 +669,10 @@
 		transform: scale(0.95);
 	}
 
-	/* 其他用户录音列表 */
 	.recordings-list {
-		padding: 32rpx;
-		/* 移除 flex: 1，由 scroll-view 接管 */
-		/* flex: 1; overflow-y: auto; */
+		padding: 0 32rpx 32rpx 32rpx;
 		background-color: white;
 		min-height: 100%;
-		/* 确保内容撑开 */
 	}
 
 	.list-title-bar {

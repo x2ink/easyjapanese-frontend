@@ -57,6 +57,7 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	import http from "@/utils/request.js"
 	const toast = useToast()
 	const onToolMoreItem = (e) => {
 		console.log('onToolMoreItem ==>', e)
@@ -67,11 +68,43 @@
 	const editorCtx = ref(null)
 	const noteContent = ref(null)
 	const noteText = ref(null)
-	const moreItemConfirm = (e) => {
-
+	const moreItemConfirm = async (e) => {
+		console.log(e);
+		if (e.name == "link") {
+			addLink({
+				link: e.link,
+				text: e.text
+			}, function() {
+				console.log("写入成公");
+			})
+		} else if (e.name == "image") {
+			toast.loading('图片上传中')
+			let imageUrl;
+			if (e.link) {
+				imageUrl = e.link
+			}
+			if (e.file.length > 0) {
+				const fileRes = await uni.uploadFile({
+					url: `${http.baseUrl}upload`,
+					filePath: e.file[0].tempFilePath,
+					name: 'file',
+					header: {
+						"Authorization": userStore().token
+					},
+					formData: {
+						"file_name": `files/note/${new Date().getTime()}_${userStore().userInfo.id}.jpg`
+					}
+				});
+				imageUrl = JSON.parse(fileRes.data).url
+			}
+			toast.close()
+			addImage({
+				width: "100%"
+			})
+		}
 	}
 	const changeTool = (e) => {
-
+		console.log(e);
 	}
 	const showEditor = ref(false)
 	const onEditorReady = async (ctx) => {
@@ -165,13 +198,12 @@
 		background-color: #f5f5f5;
 	}
 
-	/* 新增：笔记来源样式 */
 	.source-bar {
 		background-color: #fff;
 		padding: 28rpx 32rpx;
 		display: flex;
 		align-items: center;
-		border-bottom: 2rpx solid #f0f0f0; // 极淡的分割线
+		border-bottom: 2rpx solid #f0f0f0;
 
 		.source-label {
 			display: flex;
@@ -227,7 +259,10 @@
 	:deep(.sv-editor-popup-container .form-input) {
 		border-radius: 200rpx !important;
 		padding: 16rpx 24rpx !important;
-		font-size: 28rpx !important;
+		font-size: 24rpx !important;
+		background-color: #f7f8fa;
+		color: #333;
+		border: none !important;
 	}
 
 	.editor-wrapper {

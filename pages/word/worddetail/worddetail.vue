@@ -1,60 +1,58 @@
 <template>
 	<view class="scroll-container">
-		<view class="content-container">
-			<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 8rpx)` }">
-				<view class="back-btn" @click="back">
-					<text class="fas fa-arrow-left"></text>
-				</view>
-				<view class="word-header-content">
-					<view class="header-row">
-						<view>
-							<view class="word-title">{{ jcinfo.words.join('·') }}</view>
-							<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
-							<view class="pitch-accent">
-								<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
-							</view>
+		<view class="word-header" :style="{ paddingTop: `calc(${navBarHeight} + 8rpx)` }">
+			<view class="back-btn" @click="back">
+				<text class="fas fa-arrow-left"></text>
+			</view>
+			<view class="word-header-content">
+				<view class="header-row">
+					<view>
+						<view class="word-title">{{ jcinfo.words.join('·') }}</view>
+						<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
+						<view class="pitch-accent">
+							<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
 						</view>
-						<view class="action-buttons">
-							<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
-								<text class="fas fa-volume-up"></text>
-							</view>
-							<view @click="goPage('/pages/word/followread/followread', {
-								id: id,
-								word: JSON.stringify({id:jcinfo.id, words: jcinfo.words, kana: jcinfo.kana, description: jcinfo.description })
-							})" class="action-btn">
-								<text class="fas fa-microphone"></text>
-							</view>
+					</view>
+					<view class="action-buttons">
+						<view @click="playUserRecord(jcinfo.voice)" class="action-btn">
+							<text class="fas fa-volume-up"></text>
+						</view>
+						<view @click="goPage('/pages/word/followread/followread', {
+							id: id,
+							word: JSON.stringify({id:jcinfo.id, words: jcinfo.words, kana: jcinfo.kana, description: jcinfo.description })
+						})" class="action-btn">
+							<text class="fas fa-microphone"></text>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="main-content">
-				<view v-for="item in jcinfo.detail" :key="item.type" class="card">
-					<view class="card-header">
-						<view><text class="tag tag-blue">{{ item.type }}</text></view>
-					</view>
-					<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
-						<view class="meaning-text">{{ meaning.zh }}</view>
-						<view class="examples">
-							<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
-								<view
-									@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${jcinfo.id}/${e.voice}`)">
-									<view class="ja" v-html="renderRubyHTMLWeb(e.read)"></view>
-									<view class="ch">{{ e.zh }}<i class="volume-icon fas fa-volume-up"></i>
-									</view>
+		</view>
+		<view class="main-content">
+			<view v-for="item in jcinfo.detail" :key="item.type" class="card">
+				<view class="card-header">
+					<view><text class="tag tag-blue">{{ item.type }}</text></view>
+				</view>
+				<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
+					<view class="meaning-text">{{ meaning.zh }}</view>
+					<view class="examples">
+						<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
+							<view
+								@click="playUserRecord(`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/dict/jc/${jcinfo.id}/${e.voice}`)">
+								<view class="ja" v-html="renderRubyHTMLWeb(e.read)"></view>
+								<view class="ch">{{ e.zh }}<i class="volume-icon fas fa-volume-up"></i>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<view class="bottom-space"></view>
 			</view>
-			<view @click="openSheet()" class="sheet-btn _GCENTER">
-				<text class="fa-regular fa-pen-to-square"></text>
-				<view>操作</view>
-			</view>
-			<wd-toast />
+			<view class="bottom-space"></view>
 		</view>
+		<view @click="openSheet()" class="sheet-btn _GCENTER">
+			<text class="fa-regular fa-pen-to-square"></text>
+			<view>操作</view>
+		</view>
+		<wd-toast />
 	</view>
 </template>
 
@@ -164,26 +162,23 @@
 	/* 布局容器 */
 	.scroll-container {
 		height: 100vh;
-		/* 优化核心: 只有内容溢出时才滚动 */
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
+		overflow-y: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.content-container {
 		display: flex;
 		flex-direction: column;
-		/* 优化: 移除 height: 100%，改用 min-height，允许内容自然撑开 */
 		min-height: 100%;
 	}
 
-	/* 头部区域 */
+
 	.word-header {
-		position: sticky;
-		top: 0;
+		flex-shrink: 0;
 		background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
 		color: #fff;
 		padding: 0 32rpx 64rpx;
-		/* 优化: 增加层级，防止滚动时内容盖过头部 */
 		z-index: 100;
 	}
 
@@ -247,10 +242,10 @@
 		border: none;
 	}
 
-	/* 主要内容区域 */
 	.main-content {
 		flex: 1;
 		padding: 32rpx;
+		overflow: auto;
 	}
 
 	.card {

@@ -250,7 +250,7 @@
 	}
 
 	.content-wrapper {
-		padding: 24rpx 40rpx 80rpx; /* 增加左右间距，让页面更透气 */
+		padding: 24rpx 40rpx 80rpx; 
 	}
 
 	/* --- 1. 模式切换 (Pill Style) --- */
@@ -281,7 +281,7 @@
 
 	/* --- 2. 输入块 (灰色背景块，无边框) --- */
 	.input-block {
-		background-color: #f7f8fa; /* 极浅的蓝灰/纯灰背景 */
+		background-color: #f7f8fa;
 		border-radius: 32rpx;
 		padding: 32rpx;
 		margin-bottom: 40rpx;
@@ -324,8 +324,8 @@
 		width: 100%;
 		height: 240rpx;
 		font-size: 32rpx;
-		line-height: 1.6;
 		color: #333;
+		line-height: 1.6;
 		border: none;
 		outline: none;
 		background: transparent;

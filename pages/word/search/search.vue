@@ -69,7 +69,8 @@
 							v-for="(item, index) in List" :key="index">
 							<view class="word-header">
 								<view>
-									<text class="word-kanji">{{formatWordName(item.words, item.kana)}}{{item.tone}}</text>
+									<text
+										class="word-kanji">{{formatWordName(item.words, item.kana)}}{{item.tone}}</text>
 								</view>
 							</view>
 							<view class="word-meaning">
@@ -304,8 +305,10 @@
 	.page-container {
 		display: flex;
 		flex-direction: column;
-		height: 100vh; /* 占满全屏 */
-		overflow: hidden; /* 禁止外层滚动 */
+		height: 100vh;
+		/* 占满全屏 */
+		overflow: hidden;
+		/* 禁止外层滚动 */
 	}
 
 	/* 顶部导航栏 */
@@ -317,12 +320,15 @@
 		border-bottom: 2rpx solid #f0f0f0;
 		/* 移除 fixed 定位，让其在 flex 布局中自然占据顶部 */
 		z-index: 99;
-		flex-shrink: 0; /* 防止头部被压缩 */
+		flex-shrink: 0;
+		/* 防止头部被压缩 */
 	}
 
 	.scroll-content {
-		flex: 1; /* 占据剩余空间 */
-		height: 0; /* 配合 flex:1 使用，确保 scroll-view 能够正确计算高度并滚动 */
+		flex: 1;
+		/* 占据剩余空间 */
+		height: 0;
+		/* 配合 flex:1 使用，确保 scroll-view 能够正确计算高度并滚动 */
 		background-color: white;
 	}
 
@@ -432,7 +438,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 20rpx;
-		margin-bottom: 48rpx;
 	}
 
 	.history-chip {
@@ -453,19 +458,24 @@
 	}
 
 	/* 热门搜索 */
+	.hot-words {
+		margin-top: 16rpx;
+	}
+
 	.hot-words-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 20rpx;
+		gap: 12rpx;
 	}
 
 	.hot-word {
-		padding: 12rpx 24rpx;
+		padding: 0 24rpx;
 		background-color: #fff;
 		border: 2rpx solid #e0e0e0;
-		border-radius: 40rpx;
-		font-size: 26rpx;
+		border-radius: 100rpx;
+		font-size: 24rpx;
 		color: #424242;
+		line-height: 48rpx;
 	}
 
 	/* 单词列表项 */

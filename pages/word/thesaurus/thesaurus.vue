@@ -2,11 +2,15 @@
 	<view class="page-container">
 		<view class="header-section">
 			<NavbarDefault border :title="title"></NavbarDefault>
-			<view class="tabs-container">
+			<view class="tabs-container" v-if="tabList.length>0">
 				<TabSlider @changeTab="changeTab" :current="current" :tabList="tabList"></TabSlider>
 			</view>
 		</view>
-
+		<view v-if="tabList.length === 0 && !loading" style="padding-top: 80rpx;">
+			<wd-status-tip :image-size="{ height: 128, width: 128 }"
+				image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+				tip="点击右下角创建单词本" />
+		</view>
 		<scroll-view class="scroll-content" scroll-y="true">
 			<view class="list">
 				<wd-swipe-action custom-class="book-swipe-action" :key="item.id"
@@ -227,6 +231,7 @@
 		getContainBook(wordId.value)
 		getWordBook()
 	}
+	const loading = ref(true)
 	const getWordBook = async () => {
 		const res = await $http.word.getWordBookList()
 		if (self.value) {
@@ -244,6 +249,7 @@
 			return acc;
 		}, new Map());
 		bookList.value = map
+		loading.value = false
 	}
 	const title = ref("选择单词书")
 	const self = ref(false)
@@ -276,12 +282,11 @@
 </script>
 
 <style lang="scss" scoped>
-	// 1. 页面容器：Flex 列布局，高度占满屏幕
 	.page-container {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		background-color: #f8f8f8; // 给个背景色，防止滚动穿透时看到底部
+		background-color: #f8f8f8;
 		overflow: hidden;
 	}
 
@@ -290,7 +295,6 @@
 		background-color: white;
 		z-index: 10;
 		flex-shrink: 0;
-		// 之前是 .head position: sticky，现在由 flex 布局自动固定在顶部，无需 sticky
 	}
 
 	// 3. 滚动区域：自动占据剩余空间
@@ -357,7 +361,7 @@
 
 	.form-input {
 		padding: 24rpx;
-		border: 2rpx solid #E0E0E0;
+		background-color: #f7f8fa;
 		border-radius: 16rpx;
 		font-size: 30rpx;
 	}
@@ -365,22 +369,22 @@
 	.form-textarea {
 		width: auto;
 		padding: 24rpx;
-		border: 2rpx solid #E0E0E0;
-		border-radius: 16rpx;
-		font-size: 30rpx;
+		background-color: #f7f8fa;
+		border-radius: 32rpx;
+		font-size: 28rpx;
+		color: #333;
 		min-height: 160rpx;
 		resize: none;
 	}
 
 	.submit-btn {
 		width: 100%;
-		padding: 28rpx;
+		line-height: 80rpx;
 		background-color: #07C160;
 		color: white;
-		border: none;
-		border-radius: 16rpx;
-		font-size: 32rpx;
-		font-weight: 500;
+		border-radius: 100rpx;
+		font-size: 28rpx;
+		font-weight: 600;
 		margin-top: 16rpx;
 	}
 
