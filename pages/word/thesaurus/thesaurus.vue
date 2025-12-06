@@ -8,7 +8,7 @@
 		</view>
 		<view v-if="tabList.length === 0 && !loading" style="padding-top: 80rpx;">
 			<wd-status-tip :image-size="{ height: 128, width: 128 }"
-				image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+				image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
 				tip="点击右下角创建单词本" />
 		</view>
 		<scroll-view class="scroll-content" scroll-y="true">

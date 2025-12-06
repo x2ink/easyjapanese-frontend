@@ -50,7 +50,7 @@
 						</view>
 					</view>
 				</view>
-				<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png" tip="单词本还没有单词~" />
+				<wd-status-tip v-if="total==0" image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="单词本还没有单词~" />
 			</view>
 		</scroll-view>
 

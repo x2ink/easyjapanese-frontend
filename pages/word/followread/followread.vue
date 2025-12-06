@@ -62,7 +62,7 @@
 
 				<view v-if="total === 0 && !loading" style="padding-top: 80rpx;">
 					<wd-status-tip :image-size="{ height: 128, width: 128 }"
-						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
+						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
 						tip="还没有用户录音~" />
 				</view>
 				<wd-loadmore v-if="total > 0" :state="loadStatus" />

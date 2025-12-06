@@ -54,8 +54,7 @@
 
 				<view v-else-if="isSearching && !loading && total === 0" class="empty-state">
 					<wd-status-tip custom-style="margin-top: 80rpx;" :image-size="{ height: 128, width: 128 }"
-						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/status/japan_mountain.png"
-						tip="没有找到相关结果" />
+						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="没有找到相关结果" />
 
 					<view class="feedback-action">
 						<wd-button custom-style="width: 240rpx;background:#07C160" size="medium"
