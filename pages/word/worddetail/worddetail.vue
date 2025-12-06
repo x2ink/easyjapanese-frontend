@@ -72,9 +72,6 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-	import {
-		userStore
-	} from '@/stores/index.js'
 	import word from '@/api/word'
 	const toast = useToast()
 	const navBarHeight = ref(0)

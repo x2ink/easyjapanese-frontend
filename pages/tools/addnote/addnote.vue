@@ -43,6 +43,9 @@
 		ref
 	} from 'vue'
 	import {
+		userStore
+	} from '@/stores/index.js'
+	import {
 		onLoad
 	} from '@dcloudio/uni-app'
 	import $http from "@/api/index.js"
@@ -60,7 +63,19 @@
 	import http from "@/utils/request.js"
 	const toast = useToast()
 	const onToolMoreItem = (e) => {
-		console.log('onToolMoreItem ==>', e)
+		if (e.name === 'clear') {
+			uni.showModal({
+				title: '提示',
+				content: '确定要清空编辑器内容吗？',
+				success: (res) => {
+					if (res.confirm) {
+						// 调用编辑器的 clear 方法
+						editorCtx.value.clear()
+						toast.success('已清空')
+					}
+				}
+			})
+		}
 	}
 	const toolbarRef = ref(null)
 
@@ -69,38 +84,101 @@
 	const noteContent = ref(null)
 	const noteText = ref(null)
 	const moreItemConfirm = async (e) => {
-		console.log(e);
 		if (e.name == "link") {
 			addLink({
 				link: e.link,
 				text: e.text
 			}, function() {
-				console.log("写入成公");
+				console.log("写入成功");
 			})
 		} else if (e.name == "image") {
-			toast.loading('图片上传中')
-			let imageUrl;
+			let imageUrl = "";
 			if (e.link) {
-				imageUrl = e.link
+				imageUrl = e.link;
 			}
-			if (e.file.length > 0) {
-				const fileRes = await uni.uploadFile({
-					url: `${http.baseUrl}upload`,
-					filePath: e.file[0].tempFilePath,
-					name: 'file',
-					header: {
-						"Authorization": userStore().token
-					},
-					formData: {
-						"file_name": `files/note/${new Date().getTime()}_${userStore().userInfo.id}.jpg`
-					}
+			if (e.file && e.file.length > 0) {
+				toast.loading('图片上传中');
+				try {
+					const fileRes = await uni.uploadFile({
+						url: `${http.baseUrl}upload`,
+						filePath: e.file[0].tempFilePath,
+						name: 'file',
+						header: {
+							"Authorization": userStore().token
+						},
+						formData: {
+							"file_name": `files/note/${new Date().getTime()}_${userStore().userInfo.id}.jpg`
+						}
+					});
+					imageUrl = JSON.parse(fileRes.data).url;
+				} catch (error) {
+					console.error("上传失败", error);
+					toast.close();
+					return;
+				}
+				toast.close();
+			}
+			if (imageUrl) {
+				addImage(async () => {
+					return [imageUrl];
+				}, {
+					width: "100%",
 				});
-				imageUrl = JSON.parse(fileRes.data).url
 			}
-			toast.close()
-			addImage({
-				width: "100%"
-			})
+		} else if (e.name == "attachment") {
+			const attachmentUploadTask = async () => {
+				if (e.file) {
+					const fileData = e.file
+					const MAX_SIZE = 10 * 1024 * 1024;
+					if (fileData.size > MAX_SIZE) {
+						toast.warning('附件大小不能超过10MB');
+						return null;
+					}
+					toast.loading('附件上传中...');
+					try {
+						// 兼容处理路径 (部分平台是 path，部分是 tempFilePath)
+						const filePath = fileData.path || fileData.tempFilePath;
+
+						const uploadRes = await uni.uploadFile({
+							url: `${http.baseUrl}upload`, // 使用你的上传接口
+							filePath: filePath,
+							name: 'file',
+							header: {
+								"Authorization": userStore().token
+							},
+							formData: {
+								// 保留原文件名后缀，防止文件类型丢失
+								"file_name": `files/note/attachment/${Date.now()}_${userStore().userInfo.id}_${fileData.name}`
+							}
+						});
+
+						// 解析后端返回的地址
+						const serverUrl = JSON.parse(uploadRes.data).url;
+
+						// 3. 返回插件需要的数据格式
+						// 优先使用用户在弹窗输入的描述(e.text)，如果没有输入，则使用原文件名(fileData.name)
+						return {
+							path: serverUrl,
+							text: e.text || fileData.name
+						};
+
+					} catch (error) {
+						console.error("附件上传失败", error);
+						toast.warning('上传失败');
+						return null;
+					} finally {
+						toast.close();
+					}
+				} else if (e.link) {
+					return {
+						path: e.link,
+						text: e.text || '附件链接'
+					};
+				}
+				return null;
+			};
+			console.log(attachmentUploadTask);
+			addAttachment(attachmentUploadTask);
 		}
 	}
 	const changeTool = (e) => {
