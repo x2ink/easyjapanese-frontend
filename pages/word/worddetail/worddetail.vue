@@ -62,7 +62,8 @@
 		onMounted
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onUnload
 	} from '@dcloudio/uni-app'
 	import $http from '@/api/index.js'
 	import {
@@ -108,6 +109,12 @@
 	onLoad(e => {
 		id.value = e.id
 		getJcInfo()
+	})
+	onUnload(() => {
+		if (innerAudioContext) {
+			innerAudioContext.stop()
+			innerAudioContext.destroy()
+		}
 	})
 	const openSheet = () => {
 		wx.showActionSheet({

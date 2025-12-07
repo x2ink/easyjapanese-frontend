@@ -143,9 +143,15 @@
 		localwordsStore
 	} from '@/stores'
 	import {
-		onLoad
+		onLoad,
+		onUnload
 	} from "@dcloudio/uni-app"
-
+	onUnload(() => {
+		if (innerAudioContext) {
+			innerAudioContext.stop()
+			innerAudioContext.destroy()
+		}
+	})
 	// --- 核心配置常量 ---
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4

@@ -96,7 +96,8 @@
 		computed
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onUnload
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import NavbarDefault from "@/components/navbar/default"
@@ -267,7 +268,12 @@
 		playUserRecord(wordinfo.value.voice)
 		getOptions(wordinfo.value.id)
 	}
-
+	onUnload(() => {
+		if (innerAudioContext) {
+			innerAudioContext.stop()
+			innerAudioContext.destroy()
+		}
+	})
 	onLoad(() => {
 		getAllWords()
 	})

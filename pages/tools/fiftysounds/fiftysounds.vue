@@ -12,7 +12,7 @@
 					</view>
 				</view>
 			</view>
-			
+
 			<view style="flex: 1;overflow: scroll;">
 				<div class="table">
 					<div class="section-block">
@@ -48,14 +48,14 @@
 		</view>
 	</page-meta>
 	<wd-toast />
-	
+
 	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="minimal-popup">
 		<view class="_GCENTER" style="flex-direction: column;padding: 48rpx 40rpx;">
 			<view class="detail-header">
 				<view class="detail-title">假名手写板</view>
 				<view class="detail-subtitle">跟随描红练习书写</view>
 			</view>
-			
+
 			<view class="detail-board-area">
 				<image v-if="boardShow" class="kana-write"
 					:src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
@@ -65,17 +65,17 @@
 						:openSmooth="true"></l-signature>
 				</view>
 				<view v-else class="loadingtext">
-					<wd-loading size="80rpx" color="#999"/>
+					<wd-loading size="80rpx" color="#999" />
 					<text>加载中...</text>
 				</view>
 			</view>
-			
+
 			<view class="tools-btns">
 				<view class="left-actions">
-					<button @click="onClick('undo')" class="btn-flat-secondary"> 
+					<button @click="onClick('undo')" class="btn-flat-secondary">
 						<text class="fas fa-reply"></text>
 					</button>
-					<button @click="onClick('clear')" class="btn-flat-secondary"> 
+					<button @click="onClick('clear')" class="btn-flat-secondary">
 						<text class="fas fa-trash"></text>
 					</button>
 				</view>
@@ -92,6 +92,7 @@
 	} from 'vue'
 	import {
 		onLoad,
+		onUnload
 	} from "@dcloudio/uni-app"
 	import {
 		goPage
@@ -101,6 +102,12 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	onUnload(() => {
+		if (innerAudioContext) {
+			innerAudioContext.stop()
+			innerAudioContext.destroy()
+		}
+	})
 	const toast = useToast()
 	const data = ref([])
 	const current = ref('平假名')
