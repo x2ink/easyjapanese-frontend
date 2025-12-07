@@ -126,7 +126,7 @@
 		userStore
 	} from "@/stores/index.js"
 
-	
+
 	const navBarHeight = ref(0)
 	const sentence = ref({})
 	const ranks = ref([])
@@ -253,11 +253,10 @@
 	.daily-card {
 		position: relative;
 		width: 100%;
-		height: 400rpx;
+		aspect-ratio: 16 / 9;
 		border-radius: 32rpx;
 		overflow: hidden;
 		margin-bottom: 32rpx;
-		/* box-shadow 已移除 */
 		background-color: #f0f0f0;
 
 		.card-bg {

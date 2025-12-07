@@ -1,5 +1,3 @@
-// x2ink/easyjapanese-frontend/easyjapanese-frontend-21edab511d56d0d82cd26e61d828adfeda93be14/utils/request.js
-
 var baseUrl;
 const accountInfo = wx.getAccountInfoSync();
 const nowEnv = accountInfo.miniProgram.envVersion;
