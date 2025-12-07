@@ -33,7 +33,7 @@ export default {
 	addBookWord(data) {
 		return http.post(`word/add`, data)
 	},
-	// 新增单词本
+	
 	addBook(data) {
 		return http.post("book/add", data)
 	},

@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-	// 逻辑完全保持不变
+	
 	import {
 		ref,
 	} from 'vue'
@@ -83,7 +83,7 @@
 <style>
 	page {
 		background-color: #ffffff;
-		/* 确保 page 本身没有滚动条，这与你在 pages.json 的设置一致 */
+		
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -114,22 +114,22 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		/* 关键：占满屏幕高度 */
+		
 		background-color: #ffffff;
 	}
 
 	.header-section {
 		flex-shrink: 0;
-		/* 防止头部被压缩 */
+		
 		z-index: 10;
 		background-color: #ffffff;
 	}
 
 	.scroll-box {
 		flex: 1;
-		/* 占据剩余所有空间 */
+		
 		height: 0;
-		/* 关键：必须设置高度（或height:0）配合 flex:1 才能触发内部滚动 */
+		
 		width: 100%;
 	}
 

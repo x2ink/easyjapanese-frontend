@@ -152,13 +152,13 @@
 			innerAudioContext.destroy()
 		}
 	})
-	// --- 核心配置常量 ---
+	
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
 	const MAX_ERROR_TOLERANCE = 3
-	const MAX_SESSION_LEARN = 10 // [新增] 每组最大学习数量限制
+	const MAX_SESSION_LEARN = 10 
 
-	// --- 工具函数 ---
+	
 	const renderRubyHTMLWeb = (rubyList) => {
 		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
 	}
@@ -180,7 +180,7 @@
 		})
 	}
 
-	// --- 核心状态 ---
+	
 	const loading = ref(true)
 	const doneTask = ref(false)
 	const showAnswer = ref(false)
@@ -190,7 +190,7 @@
 	const learnType = ref('learn')
 	const lastWordId = ref(null)
 
-	// --- 单词队列结构 ---
+	
 	const wordList = ref([])
 	const queuePending = ref([])
 	const queueActive = ref([])
@@ -301,8 +301,8 @@
 				}
 			})
 
-			// [修改] 限制每组最多学习 MAX_SESSION_LEARN (10个)，
-			// 但仍保留全部数据在 pending 中作为缓冲
+			
+			
 			total.value = Math.min(wordList.value.length, MAX_SESSION_LEARN)
 			queuePending.value = [...wordList.value]
 
@@ -547,7 +547,7 @@
 </style>
 
 <style scoped lang="scss">
-	/* --- 容器布局 --- */
+	
 	.page-scroll {
 		height: 100vh;
 		background-color: #ffffff;
@@ -578,12 +578,12 @@
 		padding-top: 80rpx;
 	}
 
-	/* --- 通用：内容色块 (Gray Block) --- */
+	
 	.content-block {
 		background-color: #f7f8fa;
 		border-radius: 32rpx;
 		padding: 40rpx;
-		/* 父容器内边距：决定了底部留白 */
+		
 		margin-bottom: 48rpx;
 		position: relative;
 	}
@@ -595,7 +595,7 @@
 		font-weight: 600;
 	}
 
-	/* --- 完成状态样式 --- */
+	
 	.completion-icon {
 		font-size: 160rpx;
 		color: #07C160;
@@ -617,7 +617,7 @@
 		line-height: 1.6;
 	}
 
-	/* 统计数据块 */
+	
 	.stats-block {
 		display: flex;
 		align-items: center;
@@ -654,9 +654,9 @@
 		color: #999;
 	}
 
-	/* --- 学习页样式 --- */
+	
 
-	/* 进度条 */
+	
 	.progress-container {
 		margin-bottom: 40rpx;
 	}
@@ -683,12 +683,9 @@
 		transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	/* 单词块修改：
-		1. 移除 min-height: 440rpx，实现高度自适应内容。
-		2. 内容（骨架屏/详情）底部会自然撑开，下方距离由父级 .content-block 的 padding-bottom (40rpx) 决定。
-	*/
+	
 	.word-block {
-		/* min-height: 440rpx;  <-- 已移除 */
+		
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -765,7 +762,7 @@
 		margin-top: 20rpx;
 	}
 
-	/* 详情区域：骨架屏放在这里 */
+	
 	.word-details {
 		padding-top: 40rpx;
 		border-top: 2rpx dashed #e0e0e0;
@@ -800,7 +797,7 @@
 		font-weight: 500;
 	}
 
-	/* 例句区域 */
+	
 	.example-item {
 		margin-bottom: 32rpx;
 		padding-bottom: 32rpx;
@@ -835,13 +832,13 @@
 		color: #07C160;
 	}
 
-	/* 安全占位块 */
+	
 	.safe-area-spacer {
 		height: calc(env(safe-area-inset-bottom) + 180rpx);
 		width: 100%;
 	}
 
-	/* --- 底部操作栏 (悬浮) --- */
+	
 	.action-bar {
 		position: fixed;
 		left: 40rpx;

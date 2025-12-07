@@ -3,9 +3,9 @@
 		<view class="head">
 			<NavbarDefault border title="关于我们"></NavbarDefault>
 		</view>
-		<!-- 主要内容 -->
+		
 		<div class="main-content">
-			<!-- 应用信息卡片 -->
+			
 			<div class="app-card">
 				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
 					class="app-logo"></image>
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 
-			<!-- 官方网站 -->
+			
 			<div class="info-item">
 				<div class="info-title">
 					<span>官方网站</span>
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 
-			<!-- 社交账号 -->
+			
 			<div class="info-item">
 				<div class="info-title">
 					<span>关注公众号</span>
@@ -34,15 +34,10 @@
 				<div class="info-content">
 					获取最新学习资源和活动信息
 				</div>
-				<!-- 	<div class="social-icons">
-					<a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
-					<a href="#" class="social-icon"><i class="fab fa-qq"></i></a>
-					<a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
-					<a href="#" class="social-icon"><i class="fab fa-bilibili"></i></a>
-				</div> -->
+				
 			</div>
 
-			<!-- 法律条款 -->
+			
 			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
 					src:`${http.baseUrl}html/user_agreement.html`
 				})">
@@ -51,7 +46,7 @@
 					<i class="fas fa-chevron-right arrow-icon"></i>
 				</div>
 			</div>
-			<!-- 更新日志 -->
+			
 			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
 					src:`${http.baseUrl}html/update_log.html`
 				})">
@@ -61,7 +56,7 @@
 				</div>
 			</div>
 
-			<!-- 备案信息 -->
+			
 			<div class="info-item">
 				<div class="info-title">
 					<span>备案信息</span>
@@ -72,7 +67,7 @@
 			</div>
 		</div>
 
-		<!-- 底部版权信息 -->
+		
 		<div class="footer-info">
 			Copyright © 2023-2025 小二网络.All Rights Reserved
 		</div>
@@ -110,14 +105,14 @@
 		z-index: 9;
 	}
 
-	/* 主要内容区 */
+	
 	.main-content {
 		flex: 1;
 		overflow-y: auto;
 		padding: 32rpx;
 	}
 
-	/* 应用信息卡片 */
+	
 	.app-card {
 		padding: 48rpx 32rpx;
 		margin-bottom: 32rpx;
@@ -154,7 +149,7 @@
 		max-width: 80%;
 	}
 
-	/* 信息列表项 */
+	
 	.info-item {
 		padding: 32rpx;
 		border-bottom: 2rpx solid #eee;
@@ -180,7 +175,7 @@
 		text-decoration: none;
 	}
 
-	/* 社交账号 */
+	
 	.social-icons {
 		display: flex;
 		justify-content: center;
@@ -200,7 +195,7 @@
 		font-size: 32rpx;
 	}
 
-	/* 底部信息 */
+	
 	.footer-info {
 		text-align: center;
 		padding: 32rpx;
@@ -210,7 +205,7 @@
 		line-height: 1.5;
 	}
 
-	/* 箭头图标 */
+	
 	.arrow-icon {
 		color: #9E9E9E;
 		font-size: 24rpx;

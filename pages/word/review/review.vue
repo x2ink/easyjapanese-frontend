@@ -67,11 +67,11 @@
 	} from "@/utils/common.js"
 	import $http from "@/api/index.js"
 
-	// --- 状态管理 ---
+	
 	const wordList = ref([])
 	const page = ref(1)
 	const pageSize = ref(10)
-	// 这里的 loading 和 finished 仅用于内部逻辑控制（防抖、判断结束），不再用于 UI 展示
+	
 	const loading = ref(false)
 	const finished = ref(false)
 	const total = ref(0)
@@ -96,7 +96,7 @@
 			
 			total.value = totalCount
 			
-			// 增量更新统计
+			
 			newItems.forEach(item => {
 				if(item.write) stats.write++
 				if(item.listen) stats.listen++

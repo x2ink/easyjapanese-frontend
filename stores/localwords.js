@@ -2,7 +2,6 @@ import {
 	defineStore
 } from 'pinia'
 
-// 默认空状态
 const defaultCacheState = {
 	wordinfo: {},
 	doneTask: false,
@@ -23,7 +22,7 @@ export const localwordsModule = defineStore('localwords', {
 	state: () => {
 		return {
 			writeWordList: [],
-			// 确保缓存字段结构完整，避免 undefined 错误
+			
 			reviewCache: JSON.parse(JSON.stringify(defaultCacheState)),
 			reviewTime: 0,
 			learnCache: JSON.parse(JSON.stringify(defaultCacheState)),

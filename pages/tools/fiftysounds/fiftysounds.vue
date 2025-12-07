@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-	// 逻辑部分完全保持不变，原样保留
+	
 	import {
 		ref,
 	} from 'vue'
@@ -745,7 +745,7 @@
 </script>
 
 <style lang="scss">
-	/* 全局工具类与基础样式 */
+	
 	._GCENTER {
 		display: flex;
 		align-items: center;
@@ -754,11 +754,11 @@
 
 	.header-section {
 		background: #fff;
-		/* 确保头部背景纯白 */
+		
 		padding-bottom: 16rpx;
 	}
 
-	/* Tab样式 - 改为灰色底色，选中项为纯色按钮 */
+	
 	.tab-container {
 		background-color: #f7f8fa;
 		border-radius: 200rpx;
@@ -781,12 +781,12 @@
 
 	.kana-tab.active {
 		background-color: #07C160;
-		/* 主色调填充 */
+		
 		color: white;
 		font-weight: 600;
 	}
 
-	/* 列表区域 */
+	
 	.table {
 		margin: 0 40rpx;
 		padding-bottom: calc(env(safe-area-inset-bottom) + 64rpx);
@@ -800,7 +800,7 @@
 		font-size: 40rpx;
 		font-weight: 700;
 		color: #1a1a1a;
-		/* 深黑字体 */
+		
 		background-color: transparent;
 		padding: 32rpx 8rpx 24rpx 8rpx;
 		margin: 0;
@@ -808,7 +808,7 @@
 		align-items: center;
 	}
 
-	/* 装饰性小圆点，替代大背景块 */
+	
 	.kana-row-header::before {
 		content: '';
 		display: block;
@@ -823,29 +823,29 @@
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		gap: 24rpx;
-		/* 增加间距 */
+		
 	}
 
-	/* 卡片样式 - 极简色块 */
+	
 	.kana-card {
 		aspect-ratio: 1;
 		border-radius: 32rpx;
-		/* 更圆润的角 */
+		
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		background-color: #f7f8fa;
-		/* 浅灰色块 */
+		
 		transition: all 0.2s ease;
 		box-shadow: none;
-		/* 去除阴影 */
+		
 	}
 
 	.kana-card:active {
 		transform: scale(0.96);
 		background-color: #ebedf0;
-		/* 点击时稍微变深 */
+		
 	}
 
 	.kana-character {
@@ -861,7 +861,7 @@
 		font-weight: 500;
 	}
 
-	/* 弹窗样式重构 */
+	
 	.minimal-popup {
 		border-radius: 48rpx 48rpx 0 0 !important;
 		background-color: #ffffff !important;
@@ -891,9 +891,9 @@
 		aspect-ratio: 880/739;
 		position: relative;
 		background-color: #f7f8fa;
-		/* 手写板改为灰色背景 */
+		
 		border: none;
-		/* 去除虚线边框 */
+		
 		overflow: hidden;
 	}
 
@@ -904,7 +904,7 @@
 		top: 0;
 		left: 0;
 		opacity: 0.3;
-		/* 降低透明度使背景更柔和 */
+		
 	}
 
 	.drawingboard {
@@ -933,7 +933,7 @@
 		}
 	}
 
-	/* 按钮区域 */
+	
 	.tools-btns {
 		margin-top: 48rpx;
 		width: 100%;
@@ -949,7 +949,7 @@
 		flex: 1;
 	}
 
-	/* 扁平化按钮样式 */
+	
 	button::after {
 		border: none;
 	}
@@ -982,7 +982,7 @@
 		line-height: 96rpx;
 		margin: 0;
 		flex: 1.5;
-		/* 保存按钮稍微宽一点 */
+		
 		display: flex;
 		align-items: center;
 		justify-content: center;

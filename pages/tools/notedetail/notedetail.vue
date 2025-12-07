@@ -67,7 +67,7 @@
 		}
 	});
 
-	// 从 addnote 返回时可能修改了内容，需要刷新
+	
 	onShow(() => {
 		if (id.value) {
 			getDetail();
@@ -111,7 +111,7 @@
 		}
 	};
 
-	// 跳转到编辑页面
+	
 	const goToEdit = () => {
 		goPage("/pages/tools/addnote/addnote", {
 			noteId: id.value,
@@ -140,7 +140,7 @@
 		padding: 40rpx 32rpx;
 	}
 
-	/* 关联来源 */
+	
 	.origin-box {
 		background-color: #f0f2f5;
 		border-radius: 24rpx;
@@ -171,7 +171,7 @@
 		}
 	}
 
-	/* 笔记主体 */
+	
 	.note-container {
 		.meta-info {
 			display: flex;
@@ -214,7 +214,7 @@
 		font-style: italic;
 	}
 
-	/* 底部操作区 */
+	
 	.footer-action {
 		position: fixed;
 		bottom: 0;
@@ -231,7 +231,7 @@
 		height: 96rpx;
 		line-height: 96rpx;
 		background-color: #07C160;
-		/* 使用绿色强调主操作 */
+		
 		color: #ffffff;
 		border-radius: 200rpx;
 		font-size: 32rpx;

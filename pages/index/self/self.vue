@@ -202,14 +202,14 @@
 </script>
 
 <style lang="scss" scoped>
-	/* 按钮容器 - 更新为水平排列 */
+	
 	.button-container {
 		display: flex;
 		gap: 24rpx;
 		margin-top: 32rpx;
 	}
 
-	/* 基础按钮样式 */
+	
 	.modal-button {
 		flex: 1;
 		height: 80rpx;
@@ -221,13 +221,13 @@
 		outline: none;
 	}
 
-	/* 取消按钮 - 使用中性色 */
+	
 	.modal-button.cancel {
 		background-color: #F5F5F5;
 		color: #757575;
 	}
 
-	/* 确认按钮 - 使用微信绿 */
+	
 	.modal-button.confirm {
 		background-color: #07C160;
 		color: white;
@@ -241,7 +241,7 @@
 		position: relative;
 	}
 
-	/* 弹窗标题 */
+	
 	.modal-title {
 		text-align: center;
 		font-size: 32rpx;
@@ -250,7 +250,7 @@
 		position: relative;
 	}
 
-	/* 关闭按钮 */
+	
 	.modal-close {
 		position: absolute;
 		right: 0rpx;
@@ -260,12 +260,12 @@
 	}
 
 
-	/* 输入框容器 */
+	
 	.input-container {
 		margin-top: 32rpx;
 	}
 
-	/* 字符计数 */
+	
 	.char-count {
 		text-align: right;
 		font-size: 24rpx;
@@ -273,7 +273,7 @@
 		margin-top: 8rpx;
 	}
 
-	/* 输入框样式 */
+	
 	.modal-input {
 		padding: 24rpx;
 		background-color: #f7f8fa;
@@ -314,7 +314,7 @@
 			opacity: 1 !important;
 		}
 
-		/* 修复 button 默认伪元素边框 */
+		
 		&::after {
 			border: none;
 		}
@@ -324,7 +324,7 @@
 			height: 100%;
 			border-radius: 50%;
 			display: block;
-			/* 防止图片底部留白 */
+			
 		}
 
 		.camera-icon {
@@ -383,7 +383,7 @@
 			font-weight: bold;
 			margin: 0;
 			color: #333;
-			/* 补充颜色 */
+			
 		}
 
 		.vip-badge {
@@ -393,7 +393,7 @@
 			border-radius: 24rpx;
 			font-size: 24rpx;
 
-			/* 修改选择器以匹配 text 标签 */
+			
 			text {
 				margin-right: 8rpx;
 			}
@@ -404,7 +404,7 @@
 			color: #6b7280;
 			margin-top: 8rpx;
 			display: block;
-			/* 确保 text 换行 */
+			
 		}
 	}
 

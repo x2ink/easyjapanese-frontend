@@ -151,7 +151,7 @@
 	}
 </style>
 <style lang="scss" scoped>
-	/* 通用样式 */
+	
 	.flex-between {
 		display: flex;
 		justify-content: space-between;
@@ -163,7 +163,7 @@
 		margin-bottom: 24rpx;
 	}
 
-	/* 布局容器 */
+	
 	.scroll-container {
 		height: 100vh;
 		overflow-y: hidden;
@@ -310,7 +310,7 @@
 		height: env(safe-area-inset-bottom);
 	}
 
-	/* 操作按钮 */
+	
 	.sheet-btn {
 		flex-direction: column;
 		font-size: 24rpx;

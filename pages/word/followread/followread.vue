@@ -115,7 +115,7 @@
 		onLoad,
 		onUnload,
 		onShow
-		// 移除 onReachBottom
+		
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -159,7 +159,7 @@
 		})
 	}
 
-	// 开始录音
+	
 	const recording = ref(false)
 	const playing = ref(false)
 	const playRecord = () => {
@@ -214,7 +214,7 @@
 		recording.value = false
 	}
 
-	// 加载用户发音
+	
 	const id = ref(null)
 	const word = ref({
 		id: null,
@@ -228,7 +228,7 @@
 	const size = ref(10)
 	const List = ref([])
 	const loading = ref(false)
-	const loadStatus = ref('more') // more, loading, noMore
+	const loadStatus = ref('more') 
 
 	const getList = async () => {
 		loading.value = true
@@ -574,11 +574,11 @@
 	}
 
 	.head {
-		/* 移除原有 sticky，改为 Flex 布局控制 */
-		/* position: sticky; top: 0; z-index: 9; */
+		
+		
 	}
 
-	/* 单词展示区 */
+	
 	.word-display {
 		position: relative;
 		padding: 48rpx 32rpx;
@@ -612,7 +612,7 @@
 		margin-top: 24rpx;
 	}
 
-	/* 录音控制区 */
+	
 	.recording-control {
 		padding: 48rpx 32rpx;
 		display: flex;
@@ -645,7 +645,7 @@
 		margin-top: 24rpx;
 	}
 
-	/* 录音操作按钮组 */
+	
 	.recording-actions {
 		display: flex;
 		justify-content: center;
@@ -691,7 +691,7 @@
 		border-bottom: 2rpx solid #f0f0f0;
 	}
 
-	/* 录音项 */
+	
 	.recording-item {
 		background-color: white;
 		padding: 24rpx;

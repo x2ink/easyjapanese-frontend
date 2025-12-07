@@ -109,9 +109,9 @@
 </template>
 
 <script setup>
-	// ----------------------------------------------------------------
-	// 逻辑部分完全保持你提供的原样，未做任何修改
-	// ----------------------------------------------------------------
+	
+	
+	
 	import {
 		ref,
 		computed
@@ -141,16 +141,16 @@
 	const doneList = ref([])
 	const value = ref('')
 
-	// 状态控制
+	
 	const isBatchComplete = ref(false)
 	const showAnwser = ref(false)
 	const isError = ref(false)
 
-	// 软键盘相关
+	
 	const showSoftKeyboard = ref(false)
-	const kbTab = ref('hira') // hira | kata
+	const kbTab = ref('hira') 
 
-	// 基础五十音数据
+	
 	const hiragana = [
 		'あ', 'い', 'う', 'え', 'お',
 		'か', 'き', 'く', 'け', 'こ',
@@ -180,7 +180,7 @@
 
 	const currentKeys = computed(() => kbTab.value === 'hira' ? hiragana : katakana)
 
-	// 统计
+	
 	const batchTotal = ref(0)
 	const serverTotal = ref(0)
 
@@ -250,7 +250,7 @@
 		value.value = ""
 		showAnwser.value = false
 		isError.value = false
-		// 关闭键盘以免遮挡
+		
 		showSoftKeyboard.value = false
 		wordinfo.value = wordList.value[0]
 	}
@@ -264,7 +264,7 @@
 		const inputVal = value.value.trim()
 		const targetWord = wordinfo.value
 
-		// 核心判定逻辑优化：兼容 汉字、假名、罗马音(不区分大小写)
+		
 		const isKanji = targetWord.words.includes(inputVal)
 		const isKana = inputVal == targetWord.kana
 		const isRome = targetWord.rome && (inputVal.toLowerCase() == targetWord.rome.toLowerCase())
@@ -272,7 +272,7 @@
 		const isCorrect = isKanji || isKana || isRome
 
 		if (isCorrect) {
-			// --- 答对 ---
+			
 			$http.word.setLearnt({
 				type: "write",
 				word_id: targetWord.id
@@ -290,11 +290,11 @@
 			}, 500)
 
 		} else {
-			// --- 答错 ---
+			
 			isError.value = true
 			showAnwser.value = true
 			playUserRecord(targetWord.voice)
-			showSoftKeyboard.value = false // 答错后收起键盘看答案
+			showSoftKeyboard.value = false 
 
 			const current = wordList.value.shift()
 			wordList.value.push(current)
@@ -311,16 +311,16 @@
 		wordList.value.push(current)
 	}
 
-	// --- 软键盘逻辑 ---
+	
 	const toggleKeyboard = () => {
 		showSoftKeyboard.value = !showSoftKeyboard.value
 	}
 
 	const onKeyClick = (char) => {
-		// 简单的浊音处理逻辑可以在这里扩展，目前简化为直接追加字符
+		
 		if (char === '゛' || char === '゜') {
-			// 简单的浊音附加逻辑（可选，为了简化代码这里仅作为字符输入）
-			// 如果需要复杂的浊音转换，建议引入 wanakana 库
+			
+			
 		}
 		value.value += char
 	}
@@ -349,7 +349,7 @@
 </script>
 
 <style lang="scss">
-	/* 基础变量定义 */
+	
 	$bg-color: #ffffff;
 	$block-bg: #f7f8fa;
 	$primary-color: #07C160;
@@ -380,7 +380,7 @@
 		height: 0;
 	}
 
-	/* 极简进度条 */
+	
 	.progress-bar {
 		height: 8rpx;
 		background-color: #f0f0f0;
@@ -397,7 +397,7 @@
 		padding: 40rpx;
 	}
 
-	/* 单词展示块 - 色块化 */
+	
 	.word-block {
 		background-color: $block-bg;
 		border-radius: $border-radius;
@@ -422,7 +422,7 @@
 			gap: 12rpx;
 			padding: 16rpx 32rpx;
 			background-color: #ffffff;
-			/* 白色子块 */
+			
 			border-radius: 1998rpx;
 			transition: opacity 0.2s;
 
@@ -442,14 +442,14 @@
 		}
 	}
 
-	/* 输入区域 */
+	
 	.input-section {
 		display: flex;
 		flex-direction: column;
 		gap: 30rpx;
 	}
 
-	/* 输入块 - 无框设计 */
+	
 	.input-block {
 		background-color: $block-bg;
 		border-radius: $border-radius;
@@ -462,7 +462,7 @@
 		&.is-error {
 			background-color: $error-bg;
 
-			/* 错误时可以使用红色文字提示，但尽量不加边框 */
+			
 			.main-input {
 				color: #e53e3e;
 			}
@@ -512,7 +512,7 @@
 		}
 	}
 
-	/* 通用按钮样式 */
+	
 	.action-btn {
 		width: 100%;
 		height: 100rpx;
@@ -523,7 +523,7 @@
 		text-align: center;
 		border: none;
 		box-shadow: none;
-		/* 去除阴影 */
+		
 
 		&::after {
 			border: none;
@@ -566,12 +566,12 @@
 		}
 	}
 
-	/* 答案展示块 - 扁平化 */
+	
 	.answer-block {
 		margin-top: 40rpx;
 		padding: 30rpx 40rpx;
 		background-color: $block-bg;
-		/* 融入背景 */
+		
 		border-radius: 24rpx;
 		transition: opacity 0.2s;
 
@@ -603,7 +603,7 @@
 		}
 	}
 
-	/* 完成页面 */
+	
 	.container {
 		padding: 100rpx 40rpx;
 		display: flex;
@@ -645,7 +645,7 @@
 		gap: 30rpx;
 	}
 
-	/* 软键盘样式重构 - 扁平化 */
+	
 	.keyboard-container {
 		background-color: #f0f2f5;
 	}
@@ -656,7 +656,7 @@
 		align-items: center;
 		padding: 20rpx 30rpx;
 		background: #ffffff;
-		/* 移除边框线，用极淡的阴影区分，或者完全去掉 */
+		
 
 		.keyboard-tabs {
 			display: flex;
@@ -692,7 +692,7 @@
 
 	.keyboard-body {
 		height: 540rpx;
-		/* 增加高度适应 */
+		
 		padding: 20rpx 10rpx;
 	}
 
@@ -705,7 +705,7 @@
 
 	.key-btn {
 		width: calc(20% - 12rpx);
-		/* 5列布局 */
+		
 		height: 90rpx;
 		background: #ffffff;
 		border-radius: 12rpx;
@@ -714,7 +714,7 @@
 		justify-content: center;
 		font-size: 36rpx;
 		color: $text-main;
-		/* 去除阴影，纯平 */
+		
 		box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.05);
 
 		&:active {
@@ -723,7 +723,7 @@
 
 		&.action-key {
 			background-color: #e1e4e9;
-			/* 功能键深一点 */
+			
 			color: #555;
 			font-size: 32rpx;
 			box-shadow: none;

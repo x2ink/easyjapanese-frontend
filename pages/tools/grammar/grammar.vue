@@ -143,7 +143,7 @@
 		background-color: #ffffff;
 		z-index: 10;
 		flex-shrink: 0;
-		/* 移除底部阴影，保持极简 */
+		
 	}
 
 	.scroll-content {
@@ -152,15 +152,15 @@
 		overflow: hidden;
 	}
 
-	/* 搜索栏样式优化 */
+	
 	.search-bg {
 		padding: 16rpx 32rpx 8rpx;
 		background-color: #ffffff;
 	}
 
 	.search-bar {
-		background-color: #f5f7fa; /* 更淡的背景色 */
-		border-radius: 200rpx; /* 全圆角胶囊样式 */
+		background-color: #f5f7fa; 
+		border-radius: 200rpx; 
 		height: 80rpx;
 		padding: 0 32rpx;
 		display: flex;
@@ -184,7 +184,7 @@
 		}
 	}
 	
-	/* 深度选择器修改 placeholder 颜色 */
+	
 	:deep(.placeholder-text) {
 		color: #aeb4c0;
 	}
@@ -194,13 +194,13 @@
 		padding: 8rpx 0 16rpx 0;
 	}
 
-	/* 列表样式优化 */
+	
 	.list {
 		padding-top: 8rpx;
 		
 		.item {
-			padding: 32rpx 40rpx; /* 增加内边距 */
-			border-bottom: 2rpx solid #f7f8fa; /* 极淡的分割线 */
+			padding: 32rpx 40rpx; 
+			border-bottom: 2rpx solid #f7f8fa; 
 			display: flex;
 			flex-direction: column;
 			gap: 12rpx;
@@ -232,13 +232,13 @@
 				line-height: 1.5;
 				display: -webkit-box;
 				-webkit-box-orient: vertical;
-				-webkit-line-clamp: 2; /* 最多显示2行 */
+				-webkit-line-clamp: 2; 
 				overflow: hidden;
 			}
 		}
 	}
 
-	/* 标签样式优化 */
+	
 	.level-tag {
 		font-size: 22rpx;
 		padding: 4rpx 16rpx;

@@ -96,7 +96,7 @@
 	import {
 		onLoad,
 		onShow
-		// 移除 onReachBottom 和 onPageScroll 引用
+		
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -110,30 +110,30 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 
-	// --- 状态变量 ---
+	
 	const toast = useToast()
-	// 移除 scrollTop
+	
 	const navBarHeight = ref('0rpx')
 	const current = ref('jc')
 	const value = ref('')
 
-	// 列表相关
+	
 	const List = ref([])
 	const page = ref(1)
 	const size = ref(20)
 	const total = ref(0)
 
-	// 状态控制
-	const loadStatus = ref('more') // 'more' | 'loading' | 'noMore'
-	const isSearching = ref(false) // 是否进入了搜索模式
-	const loading = ref(false) // 接口是否请求中(用于控制缺省页显隐)
+	
+	const loadStatus = ref('more') 
+	const isSearching = ref(false) 
+	const loading = ref(false) 
 
-	// 历史与推荐
+	
 	const recommendWord = ref([])
 	const history = ref([])
 	const historyStore = historyrecordStore()
 
-	// --- 生命周期 ---
+	
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync();
 		navBarHeight.value = (systemInfo.statusBarHeight || 0) + 'px'
@@ -142,13 +142,13 @@
 		loadHistory()
 	})
 
-	// 移除 onPageScroll
+	
 
-	// --- 方法 ---
+	
 
-	// 改为 scroll-view 的触底事件处理
+	
 	const loadMore = () => {
-		// 如果没在搜索模式，或者没有更多数据，或者正在加载中，则不执行
+		
 		if (!isSearching.value || loadStatus.value === 'noMore' || loadStatus.value === 'loading') return;
 
 		page.value++
@@ -163,7 +163,7 @@
 
 	const clearInput = () => {
 		value.value = ''
-		// 清空输入框后，回到初始历史记录状态
+		
 		isSearching.value = false
 		List.value = []
 	}
@@ -179,7 +179,7 @@
 		}
 	}
 
-	// 历史记录相关
+	
 	const loadHistory = () => {
 		let record = historyStore.wordlist || []
 		history.value = record.slice(0, 10)
@@ -218,7 +218,7 @@
 			return
 		}
 
-		// 存历史
+		
 		if (!historyStore.wordlist.includes(val)) {
 			historyStore.push(val, 'word')
 			history.value.unshift(val)
@@ -229,7 +229,7 @@
 		search()
 	}
 
-	// 初始化搜索
+	
 	const search = () => {
 		isSearching.value = true
 		toast.loading('正在查询中...')
@@ -255,7 +255,7 @@
 					val: value.value
 				})
 			} else {
-				// 中日词典逻辑预留
+				
 			}
 
 			toast.close()
@@ -263,12 +263,12 @@
 			const newData = res.data || []
 			total.value = res.total || 0
 
-			// 只有当有数据时才拼接列表
+			
 			if (newData.length > 0) {
 				List.value = List.value.concat(newData)
 			}
 
-			// 判断分页状态
+			
 			if (List.value.length >= total.value) {
 				loadStatus.value = 'noMore'
 			} else {
@@ -294,7 +294,7 @@
 <style>
 	page {
 		background-color: white;
-		/* 确保 page 高度填满，方便内部 flex 布局生效 */
+		
 		height: 100%;
 		overflow: hidden;
 	}
@@ -305,29 +305,29 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		/* 占满全屏 */
+		
 		overflow: hidden;
-		/* 禁止外层滚动 */
+		
 	}
 
-	/* 顶部导航栏 */
+	
 	.search-header {
 		padding-left: 32rpx;
 		padding-right: 32rpx;
 		padding-bottom: 24rpx;
 		background-color: white;
 		border-bottom: 2rpx solid #f0f0f0;
-		/* 移除 fixed 定位，让其在 flex 布局中自然占据顶部 */
+		
 		z-index: 99;
 		flex-shrink: 0;
-		/* 防止头部被压缩 */
+		
 	}
 
 	.scroll-content {
 		flex: 1;
-		/* 占据剩余空间 */
+		
 		height: 0;
-		/* 配合 flex:1 使用，确保 scroll-view 能够正确计算高度并滚动 */
+		
 		background-color: white;
 	}
 
@@ -381,7 +381,7 @@
 		font-size: 32rpx;
 		z-index: 2;
 		padding: 8rpx;
-		/* 增加点击区域 */
+		
 	}
 
 	.language-tabs {
@@ -410,13 +410,13 @@
 		}
 	}
 
-	/* 主要内容区 */
+	
 	.main-content {
-		/* padding 移到这里或 scroll-view 内部 */
+		
 		padding: 0 32rpx;
 	}
 
-	/* 搜索历史 & 标题通用 */
+	
 	.section-title {
 		display: flex;
 		justify-content: space-between;
@@ -456,7 +456,7 @@
 		}
 	}
 
-	/* 热门搜索 */
+	
 	.hot-words {
 		margin-top: 16rpx;
 	}
@@ -477,7 +477,7 @@
 		line-height: 48rpx;
 	}
 
-	/* 单词列表项 */
+	
 	.word-item {
 		padding: 32rpx 0;
 		border-bottom: 2rpx solid #f5f5f5;
@@ -508,7 +508,7 @@
 		overflow: hidden;
 	}
 
-	/* 缺省页样式 */
+	
 	.empty-state {
 		display: flex;
 		flex-direction: column;

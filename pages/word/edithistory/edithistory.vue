@@ -37,7 +37,7 @@
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 
-	const total = ref(null) // 初始化为 null，区分加载中和加载完成
+	const total = ref(null) 
 	const page = ref(1)
 	const size = ref(20)
 	const List = ref([])

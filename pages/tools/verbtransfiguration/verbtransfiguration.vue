@@ -157,7 +157,7 @@
 </script>
 
 <style>
-	/* 全局背景纯白 */
+	
 	page {
 		background-color: #ffffff;
 		height: 100%;
@@ -174,28 +174,28 @@
 	}
 
 	.head {
-		/* 去除阴影，保持纯净 */
+		
 		background: #ffffff;
 		flex-shrink: 0;
 		z-index: 10;
 	}
 
 	.search-wrapper {
-		padding: 12rpx 40rpx 24rpx; /* 调整内边距 */
+		padding: 12rpx 40rpx 24rpx; 
 		background: #ffffff;
 	}
 
 	.search-box {
 		display: flex;
 		align-items: center;
-		background: #f7f8fa; /* 浅灰搜索块 */
+		background: #f7f8fa; 
 		border-radius: 200rpx;
 		padding: 0 32rpx;
-		height: 88rpx; /* 稍微加高 */
+		height: 88rpx; 
 		transition: background-color 0.2s;
 		
 		&:focus-within {
-			background: #f0f2f5; /* 聚焦时稍微加深 */
+			background: #f0f2f5; 
 		}
 	}
 
@@ -222,7 +222,7 @@
 		font-weight: 600;
 		padding-left: 24rpx;
 		margin-left: 16rpx;
-		/* 使用伪元素做分割线，比border更灵活 */
+		
 		position: relative;
 		
 		&::before {
@@ -247,12 +247,12 @@
 	}
 
 	.content-wrapper {
-		padding: 24rpx 40rpx 80rpx; /* 增加左右留白 */
+		padding: 24rpx 40rpx 80rpx; 
 	}
 
-	/* --- 通用结果色块 --- */
+	
 	.result-block {
-		background-color: #f7f8fa; /* 浅灰底色 */
+		background-color: #f7f8fa; 
 		border-radius: 32rpx;
 		padding: 32rpx;
 		margin-bottom: 40rpx;
@@ -269,15 +269,15 @@
 		font-weight: 600;
 	}
 
-	/* --- 核心词块 --- */
+	
 	.main-block {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		padding: 48rpx 32rpx;
-		background-color: #f0fdf4; /* 极淡的绿色背景，突出主体 */
-		/* 如果想要纯灰也可改为 #f7f8fa */
+		background-color: #f0fdf4; 
+		
 	}
 
 	.main-label {
@@ -295,7 +295,7 @@
 		letter-spacing: 2rpx;
 	}
 
-	/* --- 网格布局 (基础活用) --- */
+	
 	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -303,13 +303,13 @@
 	}
 
 	.grid-item {
-		background-color: #ffffff; /* 纯白胶囊 */
+		background-color: #ffffff; 
 		padding: 24rpx;
 		border-radius: 24rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* 无边框，无阴影 */
+		
 	}
 
 	.tag {
@@ -320,7 +320,7 @@
 		font-weight: 500;
 	}
 
-	/* 扁平化标签颜色 */
+	
 	.tag-blue { background: #e6f7ff; color: #0099ff; }
 	.tag-red { background: #fff1f0; color: #ff4d4f; }
 	.tag-green { background: #f6ffed; color: #52c41a; }
@@ -332,11 +332,11 @@
 		color: #333;
 	}
 
-	/* --- 列表布局 (其他变形) --- */
+	
 	.list-container {
 		display: flex;
 		flex-direction: column;
-		gap: 20rpx; /* 列表项之间的间距 */
+		gap: 20rpx; 
 	}
 
 	.list-item {
@@ -344,7 +344,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 28rpx 32rpx;
-		background-color: #ffffff; /* 纯白条目 */
+		background-color: #ffffff; 
 		border-radius: 24rpx;
 	}
 
@@ -363,7 +363,7 @@
 		color: #ff4d4f;
 	}
 
-	/* 空状态 */
+	
 	.empty-state {
 		display: flex;
 		flex-direction: column;

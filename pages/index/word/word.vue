@@ -107,7 +107,7 @@
 	import {
 		ref,
 		onMounted,
-		computed // 引入 computed
+		computed
 	} from 'vue'
 	import {
 		goPage
@@ -132,7 +132,7 @@
 	const ranks = ref([])
 	const todayWordCount = ref(0)
 
-	// 获取今天的日期，增强卡片展示效果
+
 	const todayDate = computed(() => {
 		const date = new Date();
 		const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -249,7 +249,7 @@
 		padding: 32rpx;
 	}
 
-	/* --- 每日一句卡片样式 (无阴影) --- */
+
 	.daily-card {
 		position: relative;
 		width: 100%;
@@ -275,7 +275,7 @@
 			width: 100%;
 			height: 100%;
 			z-index: 2;
-			/* 黑色渐变，底部较深以衬托文字 */
+
 			background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.7) 100%);
 		}
 
@@ -354,7 +354,7 @@
 		}
 	}
 
-	/* --- 每日一句样式结束 --- */
+
 
 	.feature-grid {
 		display: grid;

@@ -65,7 +65,7 @@
 	const resultList = ref([])
 	const searched = ref(false)
 
-	// 片假名转平假名函数
+	
 	const katakanaToHiragana = (str) => {
 		if (!str) return '';
 		return str.replace(/[\u30a1-\u30f6]/g, function(match) {
@@ -90,7 +90,7 @@
 			})
 
 			if (res.data && Array.isArray(res.data)) {
-				// 处理返回的数据，添加平假名转换
+				
 				resultList.value = res.data.map(item => {
 					return {
 						...item,
@@ -114,7 +114,7 @@
 </script>
 
 <style>
-	/* 页面整体纯白背景 */
+	
 	page {
 		background-color: #ffffff;
 		height: 100%;
@@ -139,15 +139,15 @@
 
 	.content-wrapper {
 		padding: 24rpx 40rpx 80rpx;
-		/* 增加内边距，保持通透 */
+		
 	}
 
-	/* --- 输入色块 --- */
+	
 	.input-block {
 		background-color: #f7f8fa;
-		/* 浅灰背景 */
+		
 		border-radius: 32rpx;
-		/* 大圆角 */
+		
 		padding: 32rpx;
 		margin-bottom: 48rpx;
 		position: relative;
@@ -174,7 +174,7 @@
 		border: none;
 		outline: none;
 		background: transparent;
-		/* 透明背景，透出父级色块 */
+		
 	}
 
 	.word-count {
@@ -184,7 +184,7 @@
 		margin-top: 16rpx;
 	}
 
-	/* --- 按钮样式 --- */
+	
 	.action-btn {
 		background: #07C160;
 		color: white;
@@ -210,7 +210,7 @@
 		}
 	}
 
-	/* --- 结果色块 --- */
+	
 	.result-block {
 		background-color: #f7f8fa;
 		border-radius: 32rpx;
@@ -250,15 +250,15 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 16rpx 24rpx;
-		/* Token 使用纯白背景，与浅灰底色形成对比 */
+		
 		background-color: #ffffff;
 		border-radius: 16rpx;
-		/* 去除边框线 */
+		
 		border: none;
 		min-width: 80rpx;
 		transition: transform 0.2s;
 
-		/* 极轻微的交互反馈 */
+		
 		&:active {
 			transform: scale(0.98);
 			background-color: #fafafa;
@@ -282,7 +282,7 @@
 			font-size: 20rpx;
 			color: #07C160;
 			background-color: rgba(7, 193, 96, 0.08);
-			/* 非常淡的绿色背景 */
+			
 			padding: 4rpx 12rpx;
 			border-radius: 8rpx;
 			font-weight: 500;

@@ -9,12 +9,12 @@
 		methods: {
 			globalShare() {
 				uni.onAppRoute((res) => {
-					//获取加载的页面
+					
 					const pages = getCurrentPages();
-					//获取当前页面的对象
+					
 					const view = pages[pages.length - 1];
 					if (view) {
-						//全局触发 显示出分享具栏
+						
 						uni.showShareMenu({
 							withShareTicket: true,
 							menus: ["shareAppMessage", "shareTimeline"]
@@ -34,7 +34,7 @@
 			}
 		},
 		onLaunch: function() {
-			// this.globalShare()
+			
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -96,14 +96,14 @@
 	}
 
 	.jpfont {
-		/* font-family: 'jp'; */
+		
 	}
 
 	::-webkit-scrollbar {
 		display: none !important;
 	}
 
-	/*每个页面公共css */
+	
 	._GCENTER {
 		display: flex;
 		justify-content: center;

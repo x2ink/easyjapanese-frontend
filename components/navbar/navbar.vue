@@ -72,7 +72,6 @@
 			justify-content: space-between;
 			position: relative;
 
-
 			.left {
 				position: absolute;
 				top: 50%;

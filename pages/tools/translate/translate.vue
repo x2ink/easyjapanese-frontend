@@ -105,7 +105,7 @@
 	const pattern = ref('cj')
 	const chatSSEClientRef = ref(null)
 
-	// AI 提示词配置 (保持简洁，不展示复杂代码)
+	
 	const content = ref(
 		`你是一个中日翻译，我会给你中文或者日文，然后你翻译为日文或者中文，并且我还要你对翻译进行讲解，为什么这么翻译，这句话用了哪些语法点，返回html格式如下<div class="ai-box"><h3 class="ai-h3">翻译：</h3><p class="ai-p">这里是翻译内容。</p></div><div class="ai-box"><h3 class="ai-h3">解析：</h3><p class="ai-p">这里是解析内容。</p></div>`
 	)
@@ -228,7 +228,7 @@
 </script>
 
 <style>
-	/* 全局背景设为纯白 */
+	
 	page {
 		background-color: #ffffff;
 		height: 100%;
@@ -253,10 +253,10 @@
 		padding: 24rpx 40rpx 80rpx; 
 	}
 
-	/* --- 1. 模式切换 (Pill Style) --- */
+	
 	.mode-switch {
 		display: flex;
-		background-color: #f5f5f5; /* 浅灰底 */
+		background-color: #f5f5f5; 
 		border-radius: 200rpx;
 		padding: 8rpx;
 		margin-bottom: 48rpx;
@@ -272,14 +272,14 @@
 		transition: all 0.3s;
 		
 		&.active {
-			background-color: #fff; /* 激活变为白色 */
+			background-color: #fff; 
 			color: #333;
 			font-weight: 600;
-			/* 极轻微的视觉凸起，不算卡片 */
+			
 		}
 	}
 
-	/* --- 2. 输入块 (灰色背景块，无边框) --- */
+	
 	.input-block {
 		background-color: #f7f8fa;
 		border-radius: 32rpx;
@@ -338,7 +338,7 @@
 		margin-top: 8rpx;
 	}
 
-	/* --- 3. 按钮 (扁平纯色) --- */
+	
 	.submit-btn {
 		background-color: #07C160;
 		color: #fff;
@@ -353,7 +353,7 @@
 		&:active { opacity: 0.85; }
 	}
 
-	/* --- 4. 结果块 (浅色背景，无边框) --- */
+	
 	.result-block {
 		background-color: #f7f8fa;
 		border-radius: 32rpx;
@@ -383,7 +383,7 @@
 		color: #333;
 		line-height: 1.8;
 		
-		/* AI 解析内容样式 */
+		
 		::v-deep .ai-box {
 			margin-bottom: 24rpx;
 		}
@@ -406,7 +406,7 @@
 		margin-top: 40rpx;
 	}
 
-	/* Loading 动画 */
+	
 	.loading-wrap {
 		display: flex;
 		justify-content: center;

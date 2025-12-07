@@ -1,7 +1,7 @@
 import http from '@/utils/request.js'
 
 export default {
-	// ---原有其他接口保留---
+	
 	uploadbase64(data) {
 		return http.post(`base64`, data)
 	},

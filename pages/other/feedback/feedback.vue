@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-	// 逻辑完全保持不变
+	
 	import {
 		ref,
 	} from 'vue'
@@ -117,10 +117,10 @@
 
 	.content-wrapper {
 		padding: 32rpx;
-		/* 紧凑边距 */
+		
 	}
 
-	/* 标签通用样式 */
+	
 	.section-label {
 		font-size: 26rpx;
 		font-weight: 600;
@@ -128,7 +128,7 @@
 		white-space: nowrap;
 	}
 
-	/* 第一行：类型选择 */
+	
 	.section-row {
 		display: flex;
 		align-items: center;
@@ -141,7 +141,7 @@
 		gap: 16rpx;
 	}
 
-	/* 这里的 Chip 做得更小 */
+	
 	.type-chip {
 		font-size: 24rpx;
 		padding: 8rpx 24rpx;
@@ -182,7 +182,7 @@
 		margin-top: 8rpx;
 	}
 
-	/* 来源信息：非常低调 */
+	
 	.source-block {
 		display: flex;
 		align-items: center;
@@ -195,26 +195,26 @@
 		.source-text {
 			font-size: 22rpx;
 			color: #aab2bd;
-			/* 超出省略 */
+			
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
 	}
 
-	/* 按钮：高度 80rpx，精简 */
+	
 	.action-area {
 		margin-top: 16rpx;
 	}
 
 	.compact-btn {
 		height: 88rpx;
-		/* 紧凑高度 */
+		
 		line-height: 88rpx;
 		background-color: #07C160;
 		color: white;
 		border-radius: 200rpx;
-		/* 胶囊按钮 */
+		
 		font-size: 30rpx;
 		font-weight: 600;
 		border: none;

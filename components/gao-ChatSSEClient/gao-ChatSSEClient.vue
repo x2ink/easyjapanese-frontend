@@ -16,12 +16,7 @@ export default {
     stopChat() {
       this.stopCount += 1
     },
-    /**
-     * 开始chat对话
-     * @param body
-     * @param url
-     * @param headers
-     */
+    
     startChat({body, url, headers = {}}) {
       this.renderjsData = Object.assign({}, this.renderjsData, {
         key: this.renderjsData.key + 1,

@@ -136,7 +136,7 @@
 	const submitted = ref(false)
 	const submitting = ref(false)
 
-	// 表单数据
+	
 	const formData = ref({
 		words: "",
 		kana: "",
@@ -331,7 +331,7 @@
 		}
 	}
 
-	/* 极简输入块：浅灰底，无边框 */
+	
 	.input-block {
 		background-color: #f7f8fa;
 		border-radius: 24rpx;
@@ -390,12 +390,12 @@
 		font-weight: 400;
 	}
 
-	/* --- 释义块 (移除卡片阴影，改为纯净风格) --- */
+	
 	.meaning-wrapper {
 		padding: 0 0 48rpx 0;
 		margin-bottom: 48rpx;
 		border-bottom: 2rpx solid #f5f5f5;
-		/* 仅用底边框分隔 */
+		
 
 		.card-header {
 			display: flex;
@@ -457,7 +457,7 @@
 		}
 	}
 
-	/* --- 例句区域 --- */
+	
 	.example-area {
 		margin-top: 32rpx;
 
@@ -477,7 +477,7 @@
 			.example-content {
 				flex: 1;
 				background-color: #fcfcfc;
-				/* 极淡的灰白，近乎透明 */
+				
 				border: 2rpx solid #f5f5f5;
 				border-radius: 20rpx;
 				padding: 20rpx;

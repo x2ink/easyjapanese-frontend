@@ -1,20 +1,20 @@
 <template>
 	<view class="login-container">
-		<!-- 主要内容 -->
+		
 		<view class="main-content">
-			<!-- APP Logo -->
+			
 			<view class="_GCENTER" style="flex-direction: column;margin-bottom: 80rpx;">
 				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
 					class="app-logo"></image>
 				<view class="text-2xl font-medium text-gray-800">轻松日语</view>
 				<view class="text-gray-500 text-sm mt-1">单词学习小助手</view>
 			</view>
-			<!-- 登录按钮 -->
+			
 			<button class="login-btn w-full mb-6 wave-effect" @click="wxLogin()">
 				<text>微信一键登录</text>
 			</button>
 
-			<!-- 用户协议 -->
+			
 			<view class="flex text-xs text-gray-500">
 				<checkbox-group @change="change">
 					<label>

@@ -11,7 +11,7 @@
 				<Self></Self>
 			</scroll-view>
 		</view>
-		<!-- 底部导航 -->
+		
 		<view :class="`${getOs()=='ios'?'ios-bar':'and-bar'}`" class="tab-bar">
 			<view @click="tabbar=0" :class="{active:tabbar==0}" class="tab-item">
 				<text class="icon-home tab-icon fas fa-home"></text>

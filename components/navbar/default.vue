@@ -1,5 +1,5 @@
 <template>
-	<!-- 顶部导航栏 -->
+	
 	<view>
 		<view class="navbar" :style="{paddingTop:navBarHeight}">
 			<view @click="back()" class="nav-btn">
@@ -7,7 +7,7 @@
 			</view>
 			<view class="navbar-title">{{title}}</view>
 		</view>
-		<!-- 占位 -->
+		
 		<view :style="{height:`calc(${navBarHeight} + 45px)`}">
 		</view>
 	</view>

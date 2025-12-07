@@ -70,7 +70,7 @@
 		ref,
 		computed,
 		watch
-		// 移除了 nextTick
+		
 	} from 'vue'
 	import {
 		onLoad
@@ -106,7 +106,7 @@
 		value: 3
 	}])
 
-	// 移除了 scrollTop, scrollTopValue, throttle, onScroll, handleBackTop
+	
 
 	const delWords = async () => {
 		const res = await $http.word.removeBookWords(id.value, {

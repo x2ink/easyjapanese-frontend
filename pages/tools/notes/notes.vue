@@ -135,7 +135,7 @@
 		});
 	};
 
-	// --- Helpers ---
+	
 	const formatDate = (str) => dayjs(str).format('MM-DD HH:mm');
 	
 	const getTypeLabel = (type) => {
@@ -179,7 +179,7 @@
 		padding: 32rpx;
 	}
 
-	/* 列表项 - 极简卡片 */
+	
 	.note-item {
 		background-color: #f7f8fa;
 		border-radius: 24rpx;
@@ -233,7 +233,7 @@
 		}
 	}
 
-	/* 标签样式 */
+	
 	.tag {
 		font-size: 22rpx;
 		padding: 4rpx 16rpx;
@@ -245,7 +245,7 @@
 	.tag-green { background-color: rgba(7, 193, 96, 0.1); color: #07C160; }
 	.tag-gray { background-color: #eaeaea; color: #666; }
 
-	/* 空状态 */
+	
 	.empty-box {
 		padding-top: 240rpx;
 		display: flex;

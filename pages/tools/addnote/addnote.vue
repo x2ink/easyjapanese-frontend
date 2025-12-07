@@ -69,7 +69,7 @@
 				content: '确定要清空编辑器内容吗？',
 				success: (res) => {
 					if (res.confirm) {
-						// 调用编辑器的 clear 方法
+						
 						editorCtx.value.clear()
 						toast.success('已清空')
 					}
@@ -79,7 +79,7 @@
 	}
 	const toolbarRef = ref(null)
 
-	// 编辑器相关
+	
 	const editorCtx = ref(null)
 	const noteContent = ref(null)
 	const noteText = ref(null)
@@ -136,27 +136,27 @@
 					}
 					toast.loading('附件上传中...');
 					try {
-						// 兼容处理路径 (部分平台是 path，部分是 tempFilePath)
+						
 						const filePath = fileData.path || fileData.tempFilePath;
 
 						const uploadRes = await uni.uploadFile({
-							url: `${http.baseUrl}upload`, // 使用你的上传接口
+							url: `${http.baseUrl}upload`, 
 							filePath: filePath,
 							name: 'file',
 							header: {
 								"Authorization": userStore().token
 							},
 							formData: {
-								// 保留原文件名后缀，防止文件类型丢失
+								
 								"file_name": `files/note/attachment/${Date.now()}_${userStore().userInfo.id}_${fileData.name}`
 							}
 						});
 
-						// 解析后端返回的地址
+						
 						const serverUrl = JSON.parse(uploadRes.data).url;
 
-						// 3. 返回插件需要的数据格式
-						// 优先使用用户在弹窗输入的描述(e.text)，如果没有输入，则使用原文件名(fileData.name)
+						
+						
 						return {
 							path: serverUrl,
 							text: e.text || fileData.name
@@ -294,27 +294,27 @@
 				display: block;
 				width: 6rpx;
 				height: 24rpx;
-				background-color: #07C160; // 呼应品牌色
+				background-color: #07C160; 
 				border-radius: 4rpx;
 				margin-right: 12rpx;
 			}
 
 			text {
 				font-size: 28rpx;
-				color: #909399; // 次级文本颜色
+				color: #909399; 
 			}
 		}
 
 		.source-content {
 			flex: 1;
-			overflow: hidden; // 防止文字溢出
+			overflow: hidden; 
 
 			.source-title {
 				font-size: 30rpx;
 				color: #303133;
 				font-weight: 500;
 				display: block;
-				// 单行文本溢出省略
+				
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -346,7 +346,7 @@
 	.editor-wrapper {
 		flex: 1;
 		background-color: #fff;
-		padding: 32rpx; // 保持原有内边距
+		padding: 32rpx; 
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;

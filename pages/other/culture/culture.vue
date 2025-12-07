@@ -50,16 +50,14 @@
 	import {
 		goPage
 	} from "@/utils/common"
-	// 状态管理
+	
 	const list = ref([])
 	const total = ref(0)
 	const page = ref(1)
 	const size = ref(10)
 	const isLoading = ref(false)
 
-	/**
-	 * 获取数据
-	 */
+	
 	const getList = async () => {
 		if (list.value.length >= total.value && total.value !== 0) {
 			return
@@ -87,9 +85,7 @@
 		}
 	}
 
-	/**
-	 * 触底加载
-	 */
+	
 	const reachBottom = () => {
 		if (!isLoading.value && list.value.length < total.value) {
 			page.value++
@@ -97,9 +93,7 @@
 		}
 	}
 
-	/**
-	 * 跳转详情
-	 */
+	
 	const goDetail = (item) => {
 		console.log(item);
 		goPage('/pages/other/markdown/markdown', {
@@ -110,9 +104,7 @@
 		})
 	}
 
-	/**
-	 * 格式化时间
-	 */
+	
 	const formatDate = (dateStr) => {
 		if (!dateStr) return ''
 		return dayjs(dateStr).format('YYYY-MM-DD HH:mm')
@@ -149,18 +141,18 @@
 		display: flex;
 		flex-direction: column;
 		gap: 30rpx;
-		/* 增加卡片间距 */
+		
 	}
 
-	/* 卡片样式调整 */
+	
 	.card {
 		background-color: #ffffff;
 		border-radius: 16rpx;
 		overflow: hidden;
-		/* 确保图片圆角跟随 */
+		
 		display: flex;
 		flex-direction: column;
-		/* 垂直排列 */
+		
 
 		.cover {
 			width: auto;
@@ -180,7 +172,7 @@
 					font-weight: 500;
 					color: #333;
 					line-height: 1.5;
-					/* 标题最多显示两行 */
+					
 					display: -webkit-box;
 					-webkit-box-orient: vertical;
 					-webkit-line-clamp: 2;
@@ -188,11 +180,11 @@
 				}
 			}
 
-			/* 底部元数据行 */
+			
 			.meta-row {
 				display: flex;
 				justify-content: space-between;
-				/* 两端对齐：时间在左，浏览量在右 */
+				
 				align-items: center;
 
 				.date {

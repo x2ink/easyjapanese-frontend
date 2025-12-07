@@ -2,7 +2,7 @@ import {
 	defineStore
 } from 'pinia'
 export const historyrecordModule = defineStore('historyrecord', {
-	unistorage: true, // 是否持久化
+	unistorage: true, 
 	state: () => {
 		return {
 			wordlist: [],

@@ -88,9 +88,9 @@
 </template>
 
 <script setup>
-	// ----------------------------------------------------------------
-	// 逻辑部分完全保持你提供的原样，未做任何修改
-	// ----------------------------------------------------------------
+	
+	
+	
 	import {
 		ref,
 		computed
@@ -124,23 +124,23 @@
 	const doneList = ref([])
 	const options = ref([])
 
-	// 状态控制
-	const isBatchComplete = ref(false) // 本组是否完成
-	const showManualContinue = ref(false) // 是否显示手动继续按钮（答错时）
-	const showDetailCard = ref(false) // 是否显示单词详情
-	const isSelecting = ref(false) // 防抖锁
+	
+	const isBatchComplete = ref(false) 
+	const showManualContinue = ref(false) 
+	const showDetailCard = ref(false) 
+	const isSelecting = ref(false) 
 
-	// 统计数据
-	const batchTotal = ref(0) // 本组总数 (固定值，用于进度条)
-	const serverTotal = ref(0) // 服务器总剩余 (动态)
+	
+	const batchTotal = ref(0) 
+	const serverTotal = ref(0) 
 
-	// 进度条计算
+	
 	const progress = computed(() => {
 		if (batchTotal.value === 0) return 0
 		return (doneList.value.length / batchTotal.value) * 100
 	})
 
-	// 计算服务器剩余量 (估算)
+	
 	const serverRemaining = computed(() => {
 		let left = serverTotal.value - doneList.value.length
 		return left < 0 ? 0 : left
@@ -163,45 +163,45 @@
 	}
 
 	const select = async (index, item) => {
-		// 1. 防重复点击
+		
 		if (isSelecting.value || options.value.some(it => it.class)) return
 		isSelecting.value = true
 
 		if (item.anwser) {
-			// --- 答对逻辑 ---
+			
 			options.value[index].class = "success"
 			showDetailCard.value = true
 
-			// 2. 数据处理
+			
 			doneList.value.push(wordinfo.value)
-			wordList.value.shift() // 移除当前词
+			wordList.value.shift() 
 
-			// 3. 提交服务器
+			
 			$http.word.setLearnt({
 				type: "listen",
 				word_id: wordinfo.value.id
 			})
 
-			// 4. 自动跳转 (延迟1000ms)
+			
 			setTimeout(() => {
 				getNext()
 			}, 1000)
 
 		} else {
-			// --- 答错逻辑 ---
+			
 			options.value[index].class = "fail"
-			// 标出正确答案
+			
 			let correctIndex = options.value.findIndex(it => it.anwser)
 			if (correctIndex !== -1) options.value[correctIndex].class = "success"
 
-			// 2. 逻辑处理：错题后置
+			
 			const currentWord = wordList.value.shift()
-			wordList.value.push(currentWord) // 放到队尾，稍后重试
+			wordList.value.push(currentWord) 
 
-			// 3. 交互变更：答错不自动跳，展示“继续”按钮和单词卡片
+			
 			showManualContinue.value = true
 			showDetailCard.value = true
-			isSelecting.value = false // 答错时解锁，允许点击继续
+			isSelecting.value = false 
 		}
 	}
 
@@ -234,7 +234,7 @@
 				return
 			}
 
-			// 重置状态，开始新的一组
+			
 			wordList.value = list
 			doneList.value = []
 			batchTotal.value = list.length
@@ -255,16 +255,16 @@
 			return
 		}
 
-		// 重置UI状态
+		
 		isSelecting.value = false
 		options.value = []
 		showManualContinue.value = false
 		showDetailCard.value = false
 
-		// 取出下一个词
+		
 		wordinfo.value = wordList.value[0]
 
-		// 播放音频 & 获取选项
+		
 		playUserRecord(wordinfo.value.voice)
 		getOptions(wordinfo.value.id)
 	}
@@ -280,10 +280,10 @@
 </script>
 
 <style lang="scss">
-	/* 基础变量 */
+	
 	$bg-color: #ffffff;
-	$block-bg: #f7f8fa; // 通用浅灰背景
-	$primary-color: #07C160; // 主色调
+	$block-bg: #f7f8fa; 
+	$primary-color: #07C160; 
 	$text-main: #333333;
 	$text-sub: #999999;
 
@@ -309,7 +309,7 @@
 		background-color: $bg-color;
 	}
 
-	/* 极简进度条 */
+	
 	.progress-bar {
 		height: 8rpx;
 		background-color: #f0f0f0;
@@ -327,7 +327,7 @@
 		padding: 40rpx;
 	}
 
-	/* 音频播放块 - 色块化设计 */
+	
 	.audio-block {
 		background-color: $block-bg;
 		border-radius: 32rpx;
@@ -353,8 +353,8 @@
 			color: $primary-color;
 			font-size: 40rpx;
 			margin-bottom: 20rpx;
-			/* 极淡的阴影，几乎不可见，仅增加层次 */
-			// box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.02);
+			
+			
 		}
 
 		.audio-hint {
@@ -367,7 +367,7 @@
 		margin: 40rpx 0 20rpx;
 	}
 
-	/* 选项列表 - 无框扁平化 */
+	
 	.options {
 		display: flex;
 		flex-direction: column;
@@ -376,14 +376,14 @@
 		.option-item {
 			background-color: $block-bg;
 			border-radius: 24rpx;
-			/* 大圆角 */
+			
 			padding: 30rpx 32rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			transition: background-color 0.2s;
 			border: none;
-			/* 去除边框 */
+			
 			position: relative;
 
 			&:active {
@@ -424,11 +424,11 @@
 				font-size: 20rpx;
 			}
 
-			/* 状态样式 - 改变背景色而非边框 */
+			
 			&.success {
 				background-color: #e8fff3;
 
-				/* 浅绿背景 */
+				
 				.index-tag {
 					background-color: #c6f6d5;
 					color: #065f46;
@@ -447,7 +447,7 @@
 			&.fail {
 				background-color: #ffeef0;
 
-				/* 浅红背景 */
+				
 				.index-tag {
 					background-color: #fed7d7;
 					color: #9b2c2c;
@@ -464,14 +464,14 @@
 		}
 	}
 
-	/* 详情块 - 替代原来的Card */
+	
 	.detail-block {
 		margin-top: 40rpx;
 		padding: 30rpx 40rpx;
 		background-color: $block-bg;
-		/* 融入背景的色块 */
+		
 		border-radius: 24rpx;
-		/* 去除 box-shadow 和 border */
+		
 
 		&:active {
 			opacity: 0.8;
@@ -501,7 +501,7 @@
 		}
 	}
 
-	/* 底部继续按钮 */
+	
 	.continue-wrap {
 		display: flex;
 		justify-content: center;
@@ -513,13 +513,13 @@
 		color: white;
 		padding: 24rpx 60rpx;
 		border-radius: 1998rpx;
-		/* 胶囊形状 */
+		
 		display: flex;
 		align-items: center;
 		gap: 12rpx;
 		font-size: 30rpx;
 		font-weight: 500;
-		/* 去除阴影，仅保留纯色填充 */
+		
 
 		&:active {
 			opacity: 0.8;
@@ -530,7 +530,7 @@
 		}
 	}
 
-	/* 完成页样式优化 */
+	
 	.container {
 		padding: 100rpx 40rpx;
 		display: flex;
@@ -577,7 +577,7 @@
 		height: 96rpx;
 		line-height: 96rpx;
 		border-radius: 1998rpx;
-		/* 全圆角 */
+		
 		font-size: 32rpx;
 		font-weight: 500;
 		text-align: center;
@@ -599,8 +599,8 @@
 
 	.secondary-btn {
 		background-color: $block-bg;
-		/* 浅灰背景代替描边按钮 */
+		
 		color: $text-main;
-		/* 如果想强调可以用主色调文字： color: $primary-color; */
+		
 	}
 </style>

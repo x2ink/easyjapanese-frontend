@@ -213,7 +213,7 @@
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 	})
-	// 移除多余的 navigateTo 函数，统一使用 goPage
+	
 
 	const learnInfo = ref({
 		"book_info": {
@@ -257,7 +257,7 @@
 				currentMonth = month === 12 ? 1 : month + 1;
 			}
 			daysArray.push({
-				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`, // "04-15"
+				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`, 
 				day: currentDay,
 				year: currentYear,
 				month: currentMonth,
@@ -285,7 +285,7 @@
 </script>
 
 <style lang="scss">
-	/* 保持原有的 iconfont, search-bar, book-card 等样式不变 */
+	
 	.iconfont {
 		font-family: "iconfont" !important;
 		font-size: 32rpx;
@@ -619,7 +619,7 @@
 		}
 	}
 
-	/* 新增：更多功能网格样式 */
+	
 	.func-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);

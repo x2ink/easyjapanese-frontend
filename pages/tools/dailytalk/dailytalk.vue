@@ -65,15 +65,13 @@
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	// 分页和列表数据状态
+	
 	const total = ref(0)
 	const page = ref(1)
 	const size = ref(10)
 	const List = ref([])
 
-	/**
-	 * 获取每日会话列表数据
-	 */
+	
 	const getList = async () => {
 		if (List.value.length >= total.value && total.value !== 0) {
 			return
@@ -96,9 +94,7 @@
 		}
 	}
 
-	/**
-	 * 触底加载更多
-	 */
+	
 	const reachBottom = () => {
 		if (total.value > List.value.length) {
 			++page.value
@@ -106,29 +102,25 @@
 		}
 	}
 
-	/**
-	 * 播放音频 (占位)
-	 */
+	
 	const playAudio = (item) => {
 		console.log('播放音频', item)
-		// 这里实现你的播放逻辑
+		
 	}
 
-	/**
-	 * 复制功能：将 Ruby 格式转为纯文本
-	 */
+	
 	const handleCopy = (item) => {
 		if (!item.ruby || !Array.isArray(item.ruby)) {
 			toast.warning('暂无内容')
 			return
 		}
 
-		// 提取 base 字段拼接
+		
 		const textToCopy = item.ruby.map(r => r.base).join('')
 		uni.setClipboardData({
 			data: textToCopy,
 			success: () => {
-				// toast.success('复制成功')
+				
 			}
 		})
 	}
@@ -153,7 +145,7 @@
 <style>
 	page {
 		background-color: #f5f7fa;
-		/* 稍微深一点的背景色，突出卡片 */
+		
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -178,7 +170,7 @@
 		height: 0;
 		overflow: hidden;
 		padding: 20rpx 24rpx;
-		/* 给列表外围加一点内边距 */
+		
 		box-sizing: border-box;
 	}
 
@@ -186,17 +178,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 24rpx;
-		/* 卡片之间的间距 */
+		
 
 		.item {
 			background-color: #fff;
 			padding: 30rpx 30rpx 20rpx 30rpx;
 			border-radius: 16rpx;
-			/* 圆角卡片 */
+			
 			display: flex;
 			flex-direction: column;
 
-			/* 日文行 */
+			
 			.jp-row {
 				display: flex;
 				justify-content: space-between;
@@ -211,7 +203,7 @@
 				flex: 1;
 				line-height: 1.2;
 				padding-right: 20rpx;
-				/* 防止文字紧贴图标 */
+				
 			}
 
 			.jp-ruby {
@@ -219,28 +211,28 @@
 				flex-direction: column;
 				align-items: center;
 				margin-right: 4rpx;
-				/* 缩小单词间距，更连贯 */
+				
 			}
 
 			.ruby-text {
 				font-size: 18rpx;
-				/* 字体调小 */
+				
 				color: #999;
 				margin-bottom: 0rpx;
 				min-height: 24rpx;
-				/* 占位高度 */
+				
 				text-align: center;
 			}
 
 			.base-text {
 				font-size: 34rpx;
-				/* 字体调小 */
+				
 				font-weight: 500;
-				/* 字重稍微减轻一点点 */
+				
 				color: #333;
 			}
 
-			/* 播放按钮 */
+			
 			.sound-btn {
 				padding: 0 0 0 16rpx;
 				color: #4CAF50;
@@ -248,10 +240,10 @@
 				height: 48rpx;
 				display: flex;
 				align-items: flex-end;
-				/* 图标对齐到底部，和文字基线接近 */
+				
 			}
 
-			/* 中文行 */
+			
 			.content-row {
 				margin-bottom: 20rpx;
 			}
@@ -262,22 +254,22 @@
 				line-height: 1.4;
 			}
 
-			/*内部分割线*/
+			
 			.divider {
 				height: 2rpx;
 				background-color: #f0f0f0;
 				margin: 10rpx 0 16rpx 0;
 				transform: scaleY(0.5);
-				/* 细线 */
+				
 			}
 
-			/* 底部操作栏 */
+			
 			.action-row {
 				display: flex;
 				justify-content: flex-end;
 				align-items: center;
 				gap: 40rpx;
-				/* 按钮之间的间距 */
+				
 
 				.action-item {
 					display: flex;
@@ -285,7 +277,7 @@
 					color: #888;
 					font-size: 24rpx;
 					padding: 8rpx 0;
-					/* 增加点击区域 */
+					
 
 					i {
 						font-size: 28rpx;

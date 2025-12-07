@@ -108,7 +108,7 @@
 		current.value = e
 	}
 	const delComfirm = (item) => {
-		// 权限判断：如果不是当前用户的书，提示无权限
+		
 		if (item.user_id != userStore().userInfo.id) {
 			toast.warning("您没有权限删除此单词本")
 			return
@@ -144,7 +144,7 @@
 		describe: ""
 	})
 	const openPopup = (type, data) => {
-		// 权限判断：如果是修改操作，且不是当前用户的书，提示无权限
+		
 		if (type == "update") {
 			if (data.user_id != userStore().userInfo.id) {
 				toast.warning("您没有权限修改此单词本")
@@ -261,7 +261,7 @@
 			})
 			containBooks.value = res.data
 		} catch (error) {
-			//TODO handle the exception
+			
 		}
 	}
 	const wordId = ref(null)
@@ -290,17 +290,17 @@
 		overflow: hidden;
 	}
 
-	// 2. 头部区域：背景白色，防止被压缩
+	
 	.header-section {
 		background-color: white;
 		z-index: 10;
 		flex-shrink: 0;
 	}
 
-	// 3. 滚动区域：自动占据剩余空间
+	
 	.scroll-content {
 		flex: 1;
-		height: 0; // 配合 flex: 1
+		height: 0; 
 		overflow: hidden;
 	}
 
@@ -390,7 +390,7 @@
 
 	.create-btn {
 		position: fixed;
-		bottom: calc(env(safe-area-inset-bottom) + 128rpx); // 增加底部安全区适配
+		bottom: calc(env(safe-area-inset-bottom) + 128rpx); 
 		right: 64rpx;
 		width: 112rpx;
 		height: 112rpx;
