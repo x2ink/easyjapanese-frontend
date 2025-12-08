@@ -61,17 +61,26 @@
 		goPage
 	} from '@/utils/common'
 	import {
+		onUnload
+	} from "@dcloudio/uni-app"
+	import {
 		useToast,
 		useMessage
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
-	
+	onUnload(() => {
+		if (innerAudioContext) {
+			innerAudioContext.stop()
+			innerAudioContext.destroy()
+		}
+	})
+	const innerAudioContext = uni.createInnerAudioContext();
 	const total = ref(0)
 	const page = ref(1)
 	const size = ref(10)
 	const List = ref([])
 
-	
+
 	const getList = async () => {
 		if (List.value.length >= total.value && total.value !== 0) {
 			return
@@ -94,7 +103,7 @@
 		}
 	}
 
-	
+
 	const reachBottom = () => {
 		if (total.value > List.value.length) {
 			++page.value
@@ -102,25 +111,25 @@
 		}
 	}
 
-	
+
 	const playAudio = (item) => {
-		console.log('播放音频', item)
-		
+		innerAudioContext.src = item.voice;
+		innerAudioContext.play()
 	}
 
-	
+
 	const handleCopy = (item) => {
 		if (!item.ruby || !Array.isArray(item.ruby)) {
 			toast.warning('暂无内容')
 			return
 		}
 
-		
+
 		const textToCopy = item.ruby.map(r => r.base).join('')
 		uni.setClipboardData({
 			data: textToCopy,
 			success: () => {
-				
+
 			}
 		})
 	}
@@ -145,7 +154,7 @@
 <style>
 	page {
 		background-color: #f5f7fa;
-		
+
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -170,7 +179,7 @@
 		height: 0;
 		overflow: hidden;
 		padding: 20rpx 24rpx;
-		
+
 		box-sizing: border-box;
 	}
 
@@ -178,17 +187,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 24rpx;
-		
+
 
 		.item {
 			background-color: #fff;
 			padding: 30rpx 30rpx 20rpx 30rpx;
 			border-radius: 16rpx;
-			
+
 			display: flex;
 			flex-direction: column;
 
-			
+
 			.jp-row {
 				display: flex;
 				justify-content: space-between;
@@ -203,7 +212,7 @@
 				flex: 1;
 				line-height: 1.2;
 				padding-right: 20rpx;
-				
+
 			}
 
 			.jp-ruby {
@@ -211,28 +220,28 @@
 				flex-direction: column;
 				align-items: center;
 				margin-right: 4rpx;
-				
+
 			}
 
 			.ruby-text {
 				font-size: 18rpx;
-				
+
 				color: #999;
 				margin-bottom: 0rpx;
 				min-height: 24rpx;
-				
+
 				text-align: center;
 			}
 
 			.base-text {
 				font-size: 34rpx;
-				
+
 				font-weight: 500;
-				
+
 				color: #333;
 			}
 
-			
+
 			.sound-btn {
 				padding: 0 0 0 16rpx;
 				color: #4CAF50;
@@ -240,10 +249,10 @@
 				height: 48rpx;
 				display: flex;
 				align-items: flex-end;
-				
+
 			}
 
-			
+
 			.content-row {
 				margin-bottom: 20rpx;
 			}
@@ -254,22 +263,22 @@
 				line-height: 1.4;
 			}
 
-			
+
 			.divider {
 				height: 2rpx;
 				background-color: #f0f0f0;
 				margin: 10rpx 0 16rpx 0;
 				transform: scaleY(0.5);
-				
+
 			}
 
-			
+
 			.action-row {
 				display: flex;
 				justify-content: flex-end;
 				align-items: center;
 				gap: 40rpx;
-				
+
 
 				.action-item {
 					display: flex;
@@ -277,7 +286,7 @@
 					color: #888;
 					font-size: 24rpx;
 					padding: 8rpx 0;
-					
+
 
 					i {
 						font-size: 28rpx;
