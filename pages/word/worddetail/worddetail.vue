@@ -7,8 +7,9 @@
 			<view class="word-header-content">
 				<view class="header-row">
 					<view>
-						<view class="word-title">{{ jcinfo.words.join('·') }}</view>
-						<view class="word-reading">{{ jcinfo.kana }} · {{ jcinfo.rome }}</view>
+						<view class="word-title"><text :selectable="true">{{ jcinfo.words.join('·') }}</text></view>
+						<view class="word-reading"><text :selectable="true">{{ jcinfo.kana }} · {{ jcinfo.rome }}</text>
+						</view>
 						<view class="pitch-accent">
 							<view class="pitch-accent-bar" style="width: 40%; left: 30%;"></view>
 						</view>
@@ -33,7 +34,7 @@
 					<view><text class="tag tag-blue">{{ item.type }}</text></view>
 				</view>
 				<view v-for="(meaning, index) in item.meanings" :key="`meaning-${index}`">
-					<view class="meaning-text">{{ meaning.zh }}</view>
+					<view class="meaning-text"><text :selectable="true">{{ meaning.zh }}</text></view>
 					<view class="examples">
 						<view class="example" v-for="(e, i) in meaning.examples" :key="`example-${i}`">
 							<view
@@ -151,7 +152,6 @@
 	}
 </style>
 <style lang="scss" scoped>
-	
 	.flex-between {
 		display: flex;
 		justify-content: space-between;
@@ -163,7 +163,7 @@
 		margin-bottom: 24rpx;
 	}
 
-	
+
 	.scroll-container {
 		height: 100vh;
 		overflow-y: hidden;
@@ -310,7 +310,7 @@
 		height: env(safe-area-inset-bottom);
 	}
 
-	
+
 	.sheet-btn {
 		flex-direction: column;
 		font-size: 24rpx;

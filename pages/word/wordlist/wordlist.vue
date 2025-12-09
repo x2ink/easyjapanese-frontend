@@ -54,10 +54,10 @@
 
 		<view class="batch-actions _GCENTER" v-if="selectCount>0">
 			<view class="text-green-500">
-				<text class="fas fa-check-circle"></text>标记为已学
+				<text class="fas fa-check-circle"></text>已掌握
 			</view>
 			<view @click="delWords()" class="text-red-500">
-				<text class="fas fa-trash-alt"></text>删除
+				<text class="fas fa-trash-alt"></text>移除
 			</view>
 		</view>
 
@@ -70,7 +70,7 @@
 		ref,
 		computed,
 		watch
-		
+
 	} from 'vue'
 	import {
 		onLoad
@@ -106,10 +106,11 @@
 		value: 3
 	}])
 
-	
+
 
 	const delWords = async () => {
-		const res = await $http.word.removeBookWords(id.value, {
+		const res = await $http.word.removeBookWords({
+			book_id: Number(id.value),
 			ids: List.value.filter(item => item.select).map(item => item.id)
 		})
 		toast.success('删除成功')

@@ -36,9 +36,6 @@
 						<view class="action-item" @click.stop="handleFavorite(item)">
 							<text>笔记</text>
 						</view>
-						<view class="action-item" @click.stop="handleShare(item)">
-							<text>分享</text>
-						</view>
 					</view>
 
 				</view>
@@ -139,13 +136,6 @@
 			type: 'talk'
 		})
 	}
-	const handleShare = (item) => {
-		uni.showToast({
-			title: '分享功能开发中',
-			icon: 'none'
-		})
-	}
-
 	onMounted(() => {
 		getList()
 	})
