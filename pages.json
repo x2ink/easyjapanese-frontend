@@ -6,7 +6,8 @@
 			"^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
 		}
 	},
-	"pages": [{
+	"pages": [
+		{
 			"path": "pages/index/index/index",
 			"style": {
 				"disableScroll": true,
@@ -21,199 +22,232 @@
 			}
 		},
 		{
-			"path": "pages/word/thesaurus/thesaurus",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/search/search",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/learn/learn",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/worddetail/worddetail",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/writefrommemory/writefrommemory",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/verbtransfiguration/verbtransfiguration",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/fiftysounds/fiftysounds",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/grammar/grammar",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/grammardetail/grammardetail",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/dailytalk/dailytalk",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/wordlist/wordlist",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/translate/translate",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/followread/followread",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/other/feedback/feedback",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/other/about/about",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/notedetail/notedetail",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/notes/notes",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/other/browse/browse",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "default"
-			}
-		},
-		{
-			"path": "pages/other/setplan/setplan",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/review/review",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/dictation/dictation",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/editword/editword",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/word/edithistory/edithistory",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/breaksentence/breaksentence",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/other/markdown/markdown",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/other/culture/culture",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/tools/addnote/addnote",
-			"style": {
-				"disableScroll": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "components/avatar/avatar",
 			"style": {
 				"navigationBarTitleText": ""
 			}
 		}
 	],
+	"subPackages": [
+		{
+			"root": "pages/word",
+			"name": "word",
+			"pages": [
+				{
+					"path": "thesaurus/thesaurus",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "search/search",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "worddetail/worddetail",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "writefrommemory/writefrommemory",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "wordlist/wordlist",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "followread/followread",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "review/review",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "dictation/dictation",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "editword/editword",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "edithistory/edithistory",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/tools",
+			"name": "tools",
+			"pages": [
+				{
+					"path": "verbtransfiguration/verbtransfiguration",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "fiftysounds/fiftysounds",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "grammar/grammar",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "grammardetail/grammardetail",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "dailytalk/dailytalk",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "translate/translate",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "notedetail/notedetail",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "notes/notes",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "breaksentence/breaksentence",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "addnote/addnote",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/other",
+			"name": "other",
+			"pages": [
+				{
+					"path": "feedback/feedback",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "about/about",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "browse/browse",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "default"
+					}
+				},
+				{
+					"path": "setplan/setplan",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "markdown/markdown",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "culture/culture",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/learn",
+			"name": "learn",
+			"pages": [
+				{
+					"path": "learn",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		}
+	],
+	"preloadRule": {
+		"pages/index/index/index": {
+			"network": "all",
+			"packages": ["word"]
+		}
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "轻松日语",
