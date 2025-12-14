@@ -13,7 +13,7 @@
 				<text>当前词书</text>
 				<view>
 					<text>{{config.book.name}}</text>
-					<i class="fa-solid fa-angle-right"></i>
+					<i class="fas fa-angle-right"></i>
 				</view>
 			</view>
 		</view>
@@ -49,7 +49,7 @@
 		<view class="cell">
 			<view class="cell-title">
 				<text>记忆周期设置</text>
-				<i @click="help()" style="color: #999;" class="fa-solid fa-circle-question"></i>
+				<i @click="help()" style="color: #999;" class="fas fa-circle-question"></i>
 			</view>
 			<view class="cell-progress">
 				<text>遗忘单词权重:{{config.cycle_config.extent.forgotten}}%</text>

@@ -10,7 +10,7 @@
 		<scroll-view scroll-y class="scroll-content">
 			<div v-if="isBatchComplete" class="container">
 				<view class="result-icon-box">
-					<i class="fa-solid fa-circle-check"></i>
+					<i class="fas fa-circle-check"></i>
 				</view>
 				<h1 class="completion-title">默写完成</h1>
 				<view class="completion-desc">
@@ -44,10 +44,10 @@
 
 						<view class="input-actions">
 							<view class="action-icon" @click="value=''" v-if="value">
-								<i class="fa-solid fa-circle-xmark clear-icon"></i>
+								<i class="fas fa-circle-xmark clear-icon"></i>
 							</view>
 							<view class="action-icon keyboard-trigger" @click.stop="toggleKeyboard">
-								<i class="fa-solid fa-keyboard"></i>
+								<i class="fas fa-keyboard"></i>
 							</view>
 						</view>
 					</div>
@@ -55,7 +55,7 @@
 					<button v-if="!showAnwser" class="action-btn primary-btn submit-btn" @click="submit()">确认提交</button>
 
 					<button v-else class="action-btn primary-btn continue-btn" @click="getNext()">
-						继续下一个 <i class="fa-solid fa-arrow-right icon-right"></i>
+						继续下一个 <i class="fas fa-arrow-right icon-right"></i>
 					</button>
 
 					<view v-if="!showAnwser" @click="giveUp()" class="link-btn">
@@ -71,7 +71,7 @@
 							<div class="rome-text">{{wordinfo.rome}}</div>
 						</div>
 						<view class="arrow-icon">
-							<i class="fa-solid fa-chevron-right"></i>
+							<i class="fas fa-chevron-right"></i>
 						</view>
 					</div>
 				</div>
@@ -96,7 +96,7 @@
 							{{char}}
 						</view>
 						<view class="key-btn action-key" @click="onKeyBackspace">
-							<i class="fa-solid fa-delete-left"></i>
+							<i class="fas fa-delete-left"></i>
 						</view>
 					</view>
 				</scroll-view>
@@ -109,9 +109,6 @@
 </template>
 
 <script setup>
-	
-	
-	
 	import {
 		ref,
 		computed
@@ -141,16 +138,16 @@
 	const doneList = ref([])
 	const value = ref('')
 
-	
+
 	const isBatchComplete = ref(false)
 	const showAnwser = ref(false)
 	const isError = ref(false)
 
-	
-	const showSoftKeyboard = ref(false)
-	const kbTab = ref('hira') 
 
-	
+	const showSoftKeyboard = ref(false)
+	const kbTab = ref('hira')
+
+
 	const hiragana = [
 		'あ', 'い', 'う', 'え', 'お',
 		'か', 'き', 'く', 'け', 'こ',
@@ -180,7 +177,7 @@
 
 	const currentKeys = computed(() => kbTab.value === 'hira' ? hiragana : katakana)
 
-	
+
 	const batchTotal = ref(0)
 	const serverTotal = ref(0)
 
@@ -250,7 +247,7 @@
 		value.value = ""
 		showAnwser.value = false
 		isError.value = false
-		
+
 		showSoftKeyboard.value = false
 		wordinfo.value = wordList.value[0]
 	}
@@ -264,7 +261,7 @@
 		const inputVal = value.value.trim()
 		const targetWord = wordinfo.value
 
-		
+
 		const isKanji = targetWord.words.includes(inputVal)
 		const isKana = inputVal == targetWord.kana
 		const isRome = targetWord.rome && (inputVal.toLowerCase() == targetWord.rome.toLowerCase())
@@ -272,7 +269,7 @@
 		const isCorrect = isKanji || isKana || isRome
 
 		if (isCorrect) {
-			
+
 			$http.word.setLearnt({
 				type: "write",
 				word_id: targetWord.id
@@ -290,11 +287,11 @@
 			}, 500)
 
 		} else {
-			
+
 			isError.value = true
 			showAnwser.value = true
 			playUserRecord(targetWord.voice)
-			showSoftKeyboard.value = false 
+			showSoftKeyboard.value = false
 
 			const current = wordList.value.shift()
 			wordList.value.push(current)
@@ -311,16 +308,16 @@
 		wordList.value.push(current)
 	}
 
-	
+
 	const toggleKeyboard = () => {
 		showSoftKeyboard.value = !showSoftKeyboard.value
 	}
 
 	const onKeyClick = (char) => {
-		
+
 		if (char === '゛' || char === '゜') {
-			
-			
+
+
 		}
 		value.value += char
 	}
@@ -349,7 +346,6 @@
 </script>
 
 <style lang="scss">
-	
 	$bg-color: #ffffff;
 	$block-bg: #f7f8fa;
 	$primary-color: #07C160;
@@ -380,7 +376,7 @@
 		height: 0;
 	}
 
-	
+
 	.progress-bar {
 		height: 8rpx;
 		background-color: #f0f0f0;
@@ -397,7 +393,7 @@
 		padding: 40rpx;
 	}
 
-	
+
 	.word-block {
 		background-color: $block-bg;
 		border-radius: $border-radius;
@@ -422,7 +418,7 @@
 			gap: 12rpx;
 			padding: 16rpx 32rpx;
 			background-color: #ffffff;
-			
+
 			border-radius: 1998rpx;
 			transition: opacity 0.2s;
 
@@ -442,14 +438,14 @@
 		}
 	}
 
-	
+
 	.input-section {
 		display: flex;
 		flex-direction: column;
 		gap: 30rpx;
 	}
 
-	
+
 	.input-block {
 		background-color: $block-bg;
 		border-radius: $border-radius;
@@ -462,7 +458,7 @@
 		&.is-error {
 			background-color: $error-bg;
 
-			
+
 			.main-input {
 				color: #e53e3e;
 			}
@@ -512,7 +508,7 @@
 		}
 	}
 
-	
+
 	.action-btn {
 		width: 100%;
 		height: 100rpx;
@@ -523,7 +519,7 @@
 		text-align: center;
 		border: none;
 		box-shadow: none;
-		
+
 
 		&::after {
 			border: none;
@@ -566,12 +562,12 @@
 		}
 	}
 
-	
+
 	.answer-block {
 		margin-top: 40rpx;
 		padding: 30rpx 40rpx;
 		background-color: $block-bg;
-		
+
 		border-radius: 24rpx;
 		transition: opacity 0.2s;
 
@@ -603,7 +599,7 @@
 		}
 	}
 
-	
+
 	.container {
 		padding: 100rpx 40rpx;
 		display: flex;
@@ -645,7 +641,7 @@
 		gap: 30rpx;
 	}
 
-	
+
 	.keyboard-container {
 		background-color: #f0f2f5;
 	}
@@ -656,7 +652,7 @@
 		align-items: center;
 		padding: 20rpx 30rpx;
 		background: #ffffff;
-		
+
 
 		.keyboard-tabs {
 			display: flex;
@@ -692,7 +688,7 @@
 
 	.keyboard-body {
 		height: 540rpx;
-		
+
 		padding: 20rpx 10rpx;
 	}
 
@@ -705,7 +701,7 @@
 
 	.key-btn {
 		width: calc(20% - 12rpx);
-		
+
 		height: 90rpx;
 		background: #ffffff;
 		border-radius: 12rpx;
@@ -714,7 +710,7 @@
 		justify-content: center;
 		font-size: 36rpx;
 		color: $text-main;
-		
+
 		box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.05);
 
 		&:active {
@@ -723,7 +719,7 @@
 
 		&.action-key {
 			background-color: #e1e4e9;
-			
+
 			color: #555;
 			font-size: 32rpx;
 			box-shadow: none;

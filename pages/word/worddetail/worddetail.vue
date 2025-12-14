@@ -50,7 +50,7 @@
 			<view class="bottom-space"></view>
 		</view>
 		<view @click="openSheet()" class="sheet-btn _GCENTER">
-			<text class="fa-regular fa-pen-to-square"></text>
+			<text class="fas fa-pen-to-square"></text>
 			<view>操作</view>
 		</view>
 		<wd-toast />

@@ -10,7 +10,7 @@
 		<scroll-view scroll-y class="scroll-content">
 			<div v-if="isBatchComplete" class="container">
 				<view class="result-icon-box">
-					<i class="fa-solid fa-circle-check"></i>
+					<i class="fas fa-circle-check"></i>
 				</view>
 				<h1 class="completion-title">本组听写完成</h1>
 				<p class="completion-desc">
@@ -50,10 +50,10 @@
 						</view>
 
 						<view v-if="item.class=='fail'" class="status-icon fail">
-							<text class="fa-solid fa-xmark"></text>
+							<text class="fas fa-xmark"></text>
 						</view>
 						<view v-if="item.class=='success'" class="status-icon success">
-							<text class="fa-solid fa-check"></text>
+							<text class="fas fa-check"></text>
 						</view>
 					</view>
 				</view>
@@ -66,7 +66,7 @@
 							<view class="word-rome">{{wordinfo.rome}}</view>
 						</view>
 						<view class="detail-arrow">
-							<i class="fa-solid fa-chevron-right"></i>
+							<i class="fas fa-chevron-right"></i>
 						</view>
 					</view>
 				</view>
@@ -74,7 +74,7 @@
 				<view class="continue-wrap" v-if="showManualContinue">
 					<view class="continue-btn" @click="getNext()">
 						<text>继续下一个</text>
-						<i class="fa-solid fa-arrow-right icon-right"></i>
+						<i class="fas fa-arrow-right icon-right"></i>
 					</view>
 				</view>
 
@@ -88,9 +88,6 @@
 </template>
 
 <script setup>
-	
-	
-	
 	import {
 		ref,
 		computed
@@ -124,23 +121,23 @@
 	const doneList = ref([])
 	const options = ref([])
 
-	
-	const isBatchComplete = ref(false) 
-	const showManualContinue = ref(false) 
-	const showDetailCard = ref(false) 
-	const isSelecting = ref(false) 
 
-	
-	const batchTotal = ref(0) 
-	const serverTotal = ref(0) 
+	const isBatchComplete = ref(false)
+	const showManualContinue = ref(false)
+	const showDetailCard = ref(false)
+	const isSelecting = ref(false)
 
-	
+
+	const batchTotal = ref(0)
+	const serverTotal = ref(0)
+
+
 	const progress = computed(() => {
 		if (batchTotal.value === 0) return 0
 		return (doneList.value.length / batchTotal.value) * 100
 	})
 
-	
+
 	const serverRemaining = computed(() => {
 		let left = serverTotal.value - doneList.value.length
 		return left < 0 ? 0 : left
@@ -163,45 +160,45 @@
 	}
 
 	const select = async (index, item) => {
-		
+
 		if (isSelecting.value || options.value.some(it => it.class)) return
 		isSelecting.value = true
 
 		if (item.anwser) {
-			
+
 			options.value[index].class = "success"
 			showDetailCard.value = true
 
-			
-			doneList.value.push(wordinfo.value)
-			wordList.value.shift() 
 
-			
+			doneList.value.push(wordinfo.value)
+			wordList.value.shift()
+
+
 			$http.word.setLearnt({
 				type: "listen",
 				word_id: wordinfo.value.id
 			})
 
-			
+
 			setTimeout(() => {
 				getNext()
 			}, 1000)
 
 		} else {
-			
+
 			options.value[index].class = "fail"
-			
+
 			let correctIndex = options.value.findIndex(it => it.anwser)
 			if (correctIndex !== -1) options.value[correctIndex].class = "success"
 
-			
-			const currentWord = wordList.value.shift()
-			wordList.value.push(currentWord) 
 
-			
+			const currentWord = wordList.value.shift()
+			wordList.value.push(currentWord)
+
+
 			showManualContinue.value = true
 			showDetailCard.value = true
-			isSelecting.value = false 
+			isSelecting.value = false
 		}
 	}
 
@@ -234,7 +231,7 @@
 				return
 			}
 
-			
+
 			wordList.value = list
 			doneList.value = []
 			batchTotal.value = list.length
@@ -255,16 +252,16 @@
 			return
 		}
 
-		
+
 		isSelecting.value = false
 		options.value = []
 		showManualContinue.value = false
 		showDetailCard.value = false
 
-		
+
 		wordinfo.value = wordList.value[0]
 
-		
+
 		playUserRecord(wordinfo.value.voice)
 		getOptions(wordinfo.value.id)
 	}
@@ -280,10 +277,9 @@
 </script>
 
 <style lang="scss">
-	
 	$bg-color: #ffffff;
-	$block-bg: #f7f8fa; 
-	$primary-color: #07C160; 
+	$block-bg: #f7f8fa;
+	$primary-color: #07C160;
 	$text-main: #333333;
 	$text-sub: #999999;
 
@@ -309,7 +305,7 @@
 		background-color: $bg-color;
 	}
 
-	
+
 	.progress-bar {
 		height: 8rpx;
 		background-color: #f0f0f0;
@@ -327,7 +323,7 @@
 		padding: 40rpx;
 	}
 
-	
+
 	.audio-block {
 		background-color: $block-bg;
 		border-radius: 32rpx;
@@ -353,8 +349,8 @@
 			color: $primary-color;
 			font-size: 40rpx;
 			margin-bottom: 20rpx;
-			
-			
+
+
 		}
 
 		.audio-hint {
@@ -367,7 +363,7 @@
 		margin: 40rpx 0 20rpx;
 	}
 
-	
+
 	.options {
 		display: flex;
 		flex-direction: column;
@@ -376,14 +372,14 @@
 		.option-item {
 			background-color: $block-bg;
 			border-radius: 24rpx;
-			
+
 			padding: 30rpx 32rpx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			transition: background-color 0.2s;
 			border: none;
-			
+
 			position: relative;
 
 			&:active {
@@ -424,11 +420,11 @@
 				font-size: 20rpx;
 			}
 
-			
+
 			&.success {
 				background-color: #e8fff3;
 
-				
+
 				.index-tag {
 					background-color: #c6f6d5;
 					color: #065f46;
@@ -447,7 +443,7 @@
 			&.fail {
 				background-color: #ffeef0;
 
-				
+
 				.index-tag {
 					background-color: #fed7d7;
 					color: #9b2c2c;
@@ -464,14 +460,14 @@
 		}
 	}
 
-	
+
 	.detail-block {
 		margin-top: 40rpx;
 		padding: 30rpx 40rpx;
 		background-color: $block-bg;
-		
+
 		border-radius: 24rpx;
-		
+
 
 		&:active {
 			opacity: 0.8;
@@ -501,7 +497,7 @@
 		}
 	}
 
-	
+
 	.continue-wrap {
 		display: flex;
 		justify-content: center;
@@ -513,13 +509,13 @@
 		color: white;
 		padding: 24rpx 60rpx;
 		border-radius: 1998rpx;
-		
+
 		display: flex;
 		align-items: center;
 		gap: 12rpx;
 		font-size: 30rpx;
 		font-weight: 500;
-		
+
 
 		&:active {
 			opacity: 0.8;
@@ -530,7 +526,7 @@
 		}
 	}
 
-	
+
 	.container {
 		padding: 100rpx 40rpx;
 		display: flex;
@@ -577,7 +573,7 @@
 		height: 96rpx;
 		line-height: 96rpx;
 		border-radius: 1998rpx;
-		
+
 		font-size: 32rpx;
 		font-weight: 500;
 		text-align: center;
@@ -599,8 +595,8 @@
 
 	.secondary-btn {
 		background-color: $block-bg;
-		
+
 		color: $text-main;
-		
+
 	}
 </style>

@@ -18,7 +18,7 @@
 				<view class="user-info">
 					<view @click="login()" class="user-name-container">
 						<view class="user-name">{{userStore().userInfo.nickname}}</view>
-						<text v-if="userStore().loginStatus" class="fa-solid fa-pen-to-square"></text>
+						<text v-if="userStore().loginStatus" class="fas fa-pen-to-square"></text>
 					</view>
 					<text class="user-id">{{userStore().userInfo.email}}</text>
 				</view>

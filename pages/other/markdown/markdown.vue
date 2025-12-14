@@ -12,7 +12,7 @@
 				<view style="height: calc(env(safe-area-inset-bottom) + 40rpx);"></view>
 			</scroll-view>
 			<view v-if="id" @click="openSheet()" class="sheet-btn _GCENTER">
-				<text class="fa-regular fa-pen-to-square"></text>
+				<text class="fas fa-pen-to-square"></text>
 				<view>操作</view>
 			</view>
 		</view>
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-	
 	import {
 		ref,
 	} from 'vue'
@@ -83,7 +82,7 @@
 <style>
 	page {
 		background-color: #ffffff;
-		
+
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -114,22 +113,22 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		
+
 		background-color: #ffffff;
 	}
 
 	.header-section {
 		flex-shrink: 0;
-		
+
 		z-index: 10;
 		background-color: #ffffff;
 	}
 
 	.scroll-box {
 		flex: 1;
-		
+
 		height: 0;
-		
+
 		width: 100%;
 	}
 

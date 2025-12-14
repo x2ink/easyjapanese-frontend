@@ -8,7 +8,7 @@
 
 			<view v-if="doneTask" class="content-wrapper done-wrapper">
 				<view class="completion-icon">
-					<i class="fa-solid fa-circle-check"></i>
+					<i class="fas fa-circle-check"></i>
 				</view>
 				<h1 class="completion-title">{{typeTitle}}完成！</h1>
 				<p class="completion-desc">
@@ -96,7 +96,7 @@
 				<view v-if="showAnswer" @click="goPage('/pages/word/worddetail/worddetail',{
 					id:wordinfo.id
 				})" class="search-link">
-					查看完整词典详情 <i class="fa-solid fa-chevron-right"></i>
+					查看完整词典详情 <i class="fas fa-chevron-right"></i>
 				</view>
 
 				<view class="safe-area-spacer"></view>

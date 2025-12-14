@@ -16,7 +16,7 @@
 			</view>
 			<view class="button-item" @click="goToolPage('/pages/word/dictation/dictation')">
 				<button class="action-button green">
-					<text class="fa-solid fa-headphones mr-1"></text> 听写
+					<text class="fas fa-headphones mr-1"></text> 听写
 				</button>
 			</view>
 			<view class="button-item" @click="goToolPage('/pages/word/writefrommemory/writefrommemory')">
@@ -71,7 +71,7 @@
 
 				<view class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
 					<view class="feature-icon green">
-						<text class="fa-solid fa-message"></text>
+						<text class="fas fa-message"></text>
 					</view>
 					<view class="feature-name">常用词汇</view>
 				</view>

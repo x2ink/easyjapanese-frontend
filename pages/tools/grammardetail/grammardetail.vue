@@ -40,7 +40,7 @@
 			id: data.id,
 			type: 'grammar'
 		})" class="search-link">
-			记笔记<i class="fa-solid fa-pen-to-square"></i>
+			记笔记<i class="fas fa-pen-to-square"></i>
 		</view>
 		<view style="height: calc(env(safe-area-inset-bottom));">
 
