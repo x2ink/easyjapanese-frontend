@@ -5,7 +5,7 @@
 			<view class="content">
 				<view :key="item.id" v-for="item in List" class="revision-item">
 					<view class="revision-header">
-						<uv-avatar size="40" :src="item.user.avatar"></uv-avatar>
+						<Avatar :size="80" :src="item.user.avatar"></Avatar>
 						<view class="user-info">
 							<view class="user-name">{{item.user.nickname}}</view>
 							<view class="revision-time">{{dayjs(item.created_at).format("YYYY-MM-DD HH:ss")}}</view>
@@ -26,6 +26,7 @@
 
 <script setup>
 	import dayjs from 'dayjs'
+	import Avatar from "@/components/avatar/avatar.vue"
 	import {
 		ref,
 		onMounted
@@ -37,7 +38,7 @@
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 
-	const total = ref(null) 
+	const total = ref(null)
 	const page = ref(1)
 	const size = ref(20)
 	const List = ref([])

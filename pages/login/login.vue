@@ -185,28 +185,11 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			box-shadow: 0 4rpx 20rpx rgba(7, 193, 96, 0.2);
-			border: none;
+
 			gap: 20rpx;
 			position: relative;
 			overflow: hidden;
 
-			&::after {
-				content: '';
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				width: 10rpx;
-				height: 10rpx;
-				background: rgba(7, 193, 96, 0.2);
-				opacity: 0;
-				border-radius: 100%;
-				transform: scale(1) translate(-50%, -50%);
-			}
-
-			&:active::after {
-				animation: wave 0.4s ease-out;
-			}
 		}
 
 		.agreement-checkbox {

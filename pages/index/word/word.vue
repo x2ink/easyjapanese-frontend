@@ -95,7 +95,7 @@
 						<view class="username">{{item.user.nickname}}</view>
 						<view class="user-stats">已背 {{item.word_count}} 个单词</view>
 					</view>
-					<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
+					<Avatar :size="70" :src="item.user.avatar"></Avatar>
 				</view>
 			</view>
 		</view>
@@ -109,6 +109,7 @@
 		onMounted,
 		computed
 	} from 'vue'
+	import Avatar from "@/components/avatar/avatar.vue"
 	import {
 		goPage
 	} from "@/utils/common.js"

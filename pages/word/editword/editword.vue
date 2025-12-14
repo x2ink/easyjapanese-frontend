@@ -91,16 +91,14 @@
 				<button @click="addMeaning" class="add-block-btn">
 					<i class="fas fa-plus"></i> 继续添加新释义
 				</button>
-
 				<view class="footer-area">
 					<view class="history-link" @click="goPage('/pages/word/edithistory/edithistory',{wordId})">
 						<text>查看修订历史</text>
 						<view class="avatars">
-							<uv-avatar-group :urls="avatarUrls" size="24" gap="0.4"></uv-avatar-group>
+							<AvatarGroup :urls="avatarUrls" size="60" gap="10"></AvatarGroup>
 							<i class="fas fa-angle-right"></i>
 						</view>
 					</view>
-
 					<button @click="submit" class="submit-btn" :loading="submitting"
 						:disabled="submitted || submitting">
 						{{ submitted ? '已提交' : (submitting ? '提交中...' : '提交修订') }}
@@ -129,14 +127,14 @@
 	} from '@/uni_modules/wot-design-uni'
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from '@/api/index.js'
-
+	import AvatarGroup from "@/components/avatar/group.vue"
 	const toast = useToast()
 	const avatarUrls = ref([])
 	const wordId = ref(null)
 	const submitted = ref(false)
 	const submitting = ref(false)
 
-	
+
 	const formData = ref({
 		words: "",
 		kana: "",
@@ -331,7 +329,7 @@
 		}
 	}
 
-	
+
 	.input-block {
 		background-color: #f7f8fa;
 		border-radius: 24rpx;
@@ -390,12 +388,12 @@
 		font-weight: 400;
 	}
 
-	
+
 	.meaning-wrapper {
 		padding: 0 0 48rpx 0;
 		margin-bottom: 48rpx;
 		border-bottom: 2rpx solid #f5f5f5;
-		
+
 
 		.card-header {
 			display: flex;
@@ -457,7 +455,7 @@
 		}
 	}
 
-	
+
 	.example-area {
 		margin-top: 32rpx;
 
@@ -477,7 +475,7 @@
 			.example-content {
 				flex: 1;
 				background-color: #fcfcfc;
-				
+
 				border: 2rpx solid #f5f5f5;
 				border-radius: 20rpx;
 				padding: 20rpx;
@@ -579,7 +577,7 @@
 			align-items: center;
 			gap: 16rpx;
 			color: #ddd;
-			font-size: 24rpx;
+			font-size: 32rpx;
 		}
 	}
 

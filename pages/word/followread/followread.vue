@@ -36,7 +36,7 @@
 			<view class="recordings-list">
 				<view class="recording-item" v-for="(item,index) in List" :key="item.id">
 					<view class="user-info">
-						<uv-avatar size="35" :src="item.user.avatar"></uv-avatar>
+						<Avatar :size="70" :src="item.user.avatar"></Avatar>
 						<view class="user-name">
 							<view>{{item.user.nickname}}</view>
 							<view class="recording-meta">{{dayjs().to(dayjs(item.time))}}</view>
@@ -115,7 +115,6 @@
 		onLoad,
 		onUnload,
 		onShow
-		
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -134,7 +133,7 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
-
+	import Avatar from "@/components/avatar/avatar.vue"
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;
@@ -159,7 +158,7 @@
 		})
 	}
 
-	
+
 	const recording = ref(false)
 	const playing = ref(false)
 	const playRecord = () => {
@@ -214,7 +213,7 @@
 		recording.value = false
 	}
 
-	
+
 	const id = ref(null)
 	const word = ref({
 		id: null,
@@ -228,7 +227,7 @@
 	const size = ref(10)
 	const List = ref([])
 	const loading = ref(false)
-	const loadStatus = ref('more') 
+	const loadStatus = ref('more')
 
 	const getList = async () => {
 		loading.value = true
@@ -573,12 +572,9 @@
 		}
 	}
 
-	.head {
-		
-		
-	}
+	.head {}
 
-	
+
 	.word-display {
 		position: relative;
 		padding: 48rpx 32rpx;
@@ -612,7 +608,7 @@
 		margin-top: 24rpx;
 	}
 
-	
+
 	.recording-control {
 		padding: 48rpx 32rpx;
 		display: flex;
@@ -645,7 +641,7 @@
 		margin-top: 24rpx;
 	}
 
-	
+
 	.recording-actions {
 		display: flex;
 		justify-content: center;
@@ -691,7 +687,7 @@
 		border-bottom: 2rpx solid #f0f0f0;
 	}
 
-	
+
 	.recording-item {
 		background-color: white;
 		padding: 24rpx;

@@ -2,10 +2,8 @@
 	<page-meta page-style="background-color:#ffffff;">
 		<view class="container">
 			<NavbarDefault border title="笔记详情"></NavbarDefault>
-
 			<scroll-view scroll-y class="scroll-box">
 				<view class="content-wrapper">
-
 					<view class="origin-box" v-if="originContent">
 						<view class="origin-header">
 							<text class="fas fa-link origin-icon"></text>
@@ -50,7 +48,7 @@
 		onShow
 	} from '@dcloudio/uni-app';
 	import api from '@/api/index.js';
-	import dayjs from '@/uni_modules/uv-ui-tools/libs/util/dayjs.js';
+	import dayjs from 'dayjs';
 	import NavbarDefault from "@/components/navbar/default.vue";
 	import {
 		goPage
@@ -67,7 +65,7 @@
 		}
 	});
 
-	
+
 	onShow(() => {
 		if (id.value) {
 			getDetail();
@@ -111,7 +109,7 @@
 		}
 	};
 
-	
+
 	const goToEdit = () => {
 		goPage("/pages/tools/addnote/addnote", {
 			noteId: id.value,
@@ -140,7 +138,7 @@
 		padding: 40rpx 32rpx;
 	}
 
-	
+
 	.origin-box {
 		background-color: #f0f2f5;
 		border-radius: 24rpx;
@@ -171,7 +169,7 @@
 		}
 	}
 
-	
+
 	.note-container {
 		.meta-info {
 			display: flex;
@@ -214,7 +212,7 @@
 		font-style: italic;
 	}
 
-	
+
 	.footer-action {
 		position: fixed;
 		bottom: 0;
@@ -231,7 +229,7 @@
 		height: 96rpx;
 		line-height: 96rpx;
 		background-color: #07C160;
-		
+
 		color: #ffffff;
 		border-radius: 200rpx;
 		font-size: 32rpx;

@@ -206,6 +206,12 @@
 				"disableScroll": true,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "components/avatar/avatar",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"globalStyle": {

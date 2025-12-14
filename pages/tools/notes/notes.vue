@@ -50,7 +50,7 @@
 	import { ref } from 'vue';
 	import { onShow } from '@dcloudio/uni-app';
 	import api from '@/api/index.js';
-	import dayjs from '@/uni_modules/uv-ui-tools/libs/util/dayjs.js';
+	import dayjs from 'dayjs';
 	import NavbarDefault from "@/components/navbar/default.vue";
 
 	const list = ref([]);

@@ -75,7 +75,6 @@
 				</view>
 			</view>
 		</view>
-
 		<wd-popup v-model="nicknameShow" custom-style="border-radius:32rpx;width:560rpx;padding:32rpx"
 			@close="nicknameShow=false">
 			<view>

@@ -40,7 +40,6 @@
 </template>
 
 <script setup>
-	
 	import {
 		ref,
 	} from 'vue'
@@ -117,10 +116,10 @@
 
 	.content-wrapper {
 		padding: 32rpx;
-		
+
 	}
 
-	
+
 	.section-label {
 		font-size: 26rpx;
 		font-weight: 600;
@@ -128,7 +127,7 @@
 		white-space: nowrap;
 	}
 
-	
+
 	.section-row {
 		display: flex;
 		align-items: center;
@@ -141,7 +140,7 @@
 		gap: 16rpx;
 	}
 
-	
+
 	.type-chip {
 		font-size: 24rpx;
 		padding: 8rpx 24rpx;
@@ -182,7 +181,7 @@
 		margin-top: 8rpx;
 	}
 
-	
+
 	.source-block {
 		display: flex;
 		align-items: center;
@@ -195,36 +194,26 @@
 		.source-text {
 			font-size: 22rpx;
 			color: #aab2bd;
-			
+
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
 	}
 
-	
+
 	.action-area {
 		margin-top: 16rpx;
 	}
 
 	.compact-btn {
 		height: 88rpx;
-		
 		line-height: 88rpx;
 		background-color: #07C160;
 		color: white;
 		border-radius: 200rpx;
-		
 		font-size: 30rpx;
 		font-weight: 600;
 		border: none;
-
-		&:active {
-			opacity: 0.85;
-		}
-
-		&::after {
-			border: none;
-		}
 	}
 </style>

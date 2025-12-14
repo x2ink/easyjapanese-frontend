@@ -9,12 +9,9 @@
 		methods: {
 			globalShare() {
 				uni.onAppRoute((res) => {
-					
 					const pages = getCurrentPages();
-					
 					const view = pages[pages.length - 1];
 					if (view) {
-						
 						uni.showShareMenu({
 							withShareTicket: true,
 							menus: ["shareAppMessage", "shareTimeline"]
@@ -34,7 +31,7 @@
 			}
 		},
 		onLaunch: function() {
-			
+
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -53,7 +50,7 @@
 	}
 
 	button:active {
-		transform: scale(0.98);
+		transform: none;
 	}
 
 	button {
@@ -78,32 +75,16 @@
 		align-items: center;
 	}
 
-	.btn-info {
-		gap: 4px;
-		background: #f0f0f0;
-		border-radius: 8px;
-		padding: 0 16px;
-		font-size: 14px;
-		height: 40px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
 	page {
 		background: #f8f9fa;
 		background-attachment: fixed;
-	}
-
-	.jpfont {
-		
 	}
 
 	::-webkit-scrollbar {
 		display: none !important;
 	}
 
-	
+
 	._GCENTER {
 		display: flex;
 		justify-content: center;
