@@ -53,11 +53,14 @@
 		</scroll-view>
 
 		<view class="batch-actions _GCENTER" v-if="selectCount>0">
-			<view class="text-green-500">
-				<text class="fas fa-check-circle"></text>已掌握
+			<view @click="setDone('mark')" v-if="currentTab==1||currentTab==3" class="text-green-500">
+				<text class="fas fa-check-circle"></text>标记已掌握
+			</view>
+			<view @click="setDone('redo')" v-if="currentTab==2" class="text-green-500">
+				<text class="fas fa-redo"></text>重新学习
 			</view>
 			<view @click="delWords()" class="text-red-500">
-				<text class="fas fa-trash-alt"></text>移除
+				<text class="fas fa-trash-alt"></text>移除单词本
 			</view>
 		</view>
 
@@ -87,7 +90,29 @@
 	import $http from "@/api/index.js"
 
 	const currentTab = ref(0)
+	const setDone = async (type) => {
+		let content;
+		if (type == "mark") {
+			content = ""
+		} else {
 
+		}
+
+
+
+		try {
+			await $http.word.setDone({
+				word_ids: List.value.filter(item => item.select).map(item => item.id),
+				type
+			})
+			toast.success("操作成功")
+			List.value = []
+			page.value = 1
+			getList()
+		} catch (err) {
+			toast.error("操作失败")
+		}
+	}
 	const isAllSelect = computed(() => {
 		return List.value.length > 0 && selectCount.value === List.value.length
 	})

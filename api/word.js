@@ -33,7 +33,7 @@ export default {
 	addBookWord(data) {
 		return http.post(`word/add`, data)
 	},
-	
+
 	addBook(data) {
 		return http.post("book/add", data)
 	},
@@ -66,5 +66,8 @@ export default {
 	},
 	getEditHistory(data) {
 		return http.get("edit/history", data)
+	},
+	setDone(data) {
+		return http.post("word/done", data)
 	}
 }
