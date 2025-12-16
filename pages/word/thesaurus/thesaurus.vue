@@ -8,8 +8,7 @@
 		</view>
 		<view v-if="tabList.length === 0 && !loading" style="padding-top: 80rpx;">
 			<wd-status-tip :image-size="{ height: 128, width: 128 }"
-				image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
-				tip="点击右下角创建单词本" />
+				image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="点击右下角创建单词本" />
 		</view>
 		<scroll-view class="scroll-content" scroll-y="true">
 			<view class="list">
@@ -36,7 +35,7 @@
 						<view class="actions">
 							<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">修改
 							</view>
-							<view class="_GCENTER" style="background: #E2231A;" @click="delComfirm(item)">删除</view>
+							<view class="_GCENTER" style="background: #f5222d;" @click="delComfirm(item)">删除</view>
 						</view>
 					</template>
 				</wd-swipe-action>
@@ -108,7 +107,7 @@
 		current.value = e
 	}
 	const delComfirm = (item) => {
-		
+
 		if (item.user_id != userStore().userInfo.id) {
 			toast.warning("您没有权限删除此单词本")
 			return
@@ -119,11 +118,19 @@
 			content: '单词本删除之后，所属单词也会全部被删除！',
 			success: async function(res) {
 				if (res.confirm) {
-					await $http.word.deleteBook({
-						id: item.id
-					})
-					toast.success("删除成功")
-					getWordBook()
+					try {
+						await $http.word.deleteBook({
+							id: item.id
+						})
+						toast.success("删除成功")
+						getWordBook()
+					} catch (err) {
+						if (err.code == 4001) {
+							toast.warning("发布中的单词书禁止删除")
+						} else {
+							toast.error("删除失败")
+						}
+					}
 				}
 			}
 		});
@@ -131,7 +138,8 @@
 	const goDetail = (item) => {
 		if (!self.value) {
 			goPage('/pages/word/wordlist/wordlist', {
-				id: item.id
+				id: item.id,
+				userId: item.user_id
 			})
 		}
 	}
@@ -144,7 +152,7 @@
 		describe: ""
 	})
 	const openPopup = (type, data) => {
-		
+
 		if (type == "update") {
 			if (data.user_id != userStore().userInfo.id) {
 				toast.warning("您没有权限修改此单词本")
@@ -261,7 +269,7 @@
 			})
 			containBooks.value = res.data
 		} catch (error) {
-			
+
 		}
 	}
 	const wordId = ref(null)
@@ -290,17 +298,17 @@
 		overflow: hidden;
 	}
 
-	
+
 	.header-section {
 		background-color: white;
 		z-index: 10;
 		flex-shrink: 0;
 	}
 
-	
+
 	.scroll-content {
 		flex: 1;
-		height: 0; 
+		height: 0;
 		overflow: hidden;
 	}
 
@@ -390,7 +398,7 @@
 
 	.create-btn {
 		position: fixed;
-		bottom: calc(env(safe-area-inset-bottom) + 128rpx); 
+		bottom: calc(env(safe-area-inset-bottom) + 128rpx);
 		right: 64rpx;
 		width: 112rpx;
 		height: 112rpx;

@@ -213,13 +213,6 @@
 					}
 				},
 				{
-					"path": "markdown/markdown",
-					"style": {
-						"disableScroll": true,
-						"navigationStyle": "custom"
-					}
-				},
-				{
 					"path": "culture/culture",
 					"style": {
 						"disableScroll": true,

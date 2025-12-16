@@ -92,7 +92,7 @@
 					</view>
 					<view class="agreement-text">
 						我已阅读并同意<text @click="goPage('/pages/other/browse/browse',{
-							src:`${http.baseUrl}html/tts_agreement.html`
+							src:`https://www.yuque.com/xiaoerwangluo/pteeim/oymk24boaskpsxh4`
 						})" class="agreement-link">《轻松日语用户发音功能使用协议》</text>
 					</view>
 				</view>

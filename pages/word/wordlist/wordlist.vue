@@ -28,24 +28,37 @@
 
 		<scroll-view class="scroll-content" scroll-y="true" @scrolltolower="loadMore" :scroll-with-animation="true">
 			<view class="word-wrap">
-				<view class="word-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})"
-					v-for="(item,index) in List" :key="item.id">
-					<view @click.stop="selectWord(index)" :class="{checkboxactive:item.select}" class="checkbox-custom"
-						v-if="allSelect">
-						<view class="fas fa-check text-xs" v-if="item.select"></view>
-					</view>
-					<view class="word-content">
-						<view class="word-header">
-							<view>
-								<text class="word-kanji">{{item.displayWord}}</text>
+				<wd-swipe-action v-for="(item,index) in List" :key="item.id">
+					<view class="word-item" @click="goPage('/pages/word/worddetail/worddetail',{id:item.id})">
+						<view @click.stop="selectWord(index)" :class="{checkboxactive:item.select}"
+							class="checkbox-custom" v-if="allSelect">
+							<view class="fas fa-check text-xs" v-if="item.select"></view>
+						</view>
+						<view class="word-content">
+							<view class="word-header">
+								<view>
+									<text class="word-kanji">{{item.displayWord}}</text>
+								</view>
+							</view>
+							<view class="word-meaning">
+								<text class="meaning-text">{{item.description}}</text>
 							</view>
 						</view>
-						<view class="word-meaning">
-							<text class="meaning-text">{{item.description}}</text>
-						</view>
 					</view>
-				</view>
-				<view v-if="total==0" style="margin-top: 80rpx;">
+					<template #right>
+						<view class="actions">
+							<view v-if="currentTab==2||currentTab==3" class="_GCENTER" style="background: #FFB300;"
+								@click="actionClick('redo',item)">重学
+							</view>
+							<view v-if="currentTab==1||currentTab==3" class="_GCENTER" style="background: #07C160;"
+								@click="actionClick('mark',item)">标熟
+							</view>
+							<view v-if="userId==userStore().userInfo.id" class="_GCENTER" style="background: #f5222d;"
+								@click="actionClick('del',item)">移除</view>
+						</view>
+					</template>
+				</wd-swipe-action>
+				<view v-if="total==0&&loading==false" style="margin-top: 80rpx;">
 					<wd-status-tip image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
 						tip="单词本还没有单词~" />
 				</view>
@@ -56,10 +69,10 @@
 			<view @click="setDone('mark')" v-if="currentTab==1||currentTab==3" class="text-green-500">
 				<text class="fas fa-check-circle"></text>标记已掌握
 			</view>
-			<view @click="setDone('redo')" v-if="currentTab==2" class="text-green-500">
+			<view @click="setDone('redo')" v-if="currentTab==2||currentTab==3" class="text-green-500">
 				<text class="fas fa-redo"></text>重新学习
 			</view>
-			<view @click="delWords()" class="text-red-500">
+			<view v-if="userId==userStore().userInfo.id" @click="delWords()" class="text-red-500">
 				<text class="fas fa-trash-alt"></text>移除单词本
 			</view>
 		</view>
@@ -86,20 +99,47 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 	const toast = useToast()
+	import {
+		userStore
+	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
 
 	const currentTab = ref(0)
-	const setDone = async (type) => {
-		let content;
-		if (type == "mark") {
-			content = ""
+	const actionClick = async (type, item) => {
+		if (type == "redo" || type == "mark") {
+			try {
+				await $http.word.setDone({
+					word_ids: [item.id],
+					type
+				})
+				toast.success("操作成功")
+				List.value = []
+				page.value = 1
+				getList()
+			} catch (err) {
+				toast.error("操作失败")
+			}
 		} else {
-
+			uni.showModal({
+				title: '温馨提示',
+				content: `确定要将单词“${item.words.join(",")}”移除单词本？`,
+				success: async function(res) {
+					if (res.confirm) {
+						const res = await $http.word.removeBookWords({
+							book_id: Number(id.value),
+							ids: [item.id]
+						})
+						toast.success('移除成功')
+						List.value = []
+						page.value = 1
+						getList()
+					}
+				}
+			});
 		}
-
-
-
+	}
+	const setDone = async (type) => {
 		try {
 			await $http.word.setDone({
 				word_ids: List.value.filter(item => item.select).map(item => item.id),
@@ -130,18 +170,24 @@
 		name: "待复习",
 		value: 3
 	}])
-
-
-
+	const loading = ref(true)
 	const delWords = async () => {
-		const res = await $http.word.removeBookWords({
-			book_id: Number(id.value),
-			ids: List.value.filter(item => item.select).map(item => item.id)
-		})
-		toast.success('删除成功')
-		List.value = []
-		page.value = 1
-		getList()
+		uni.showModal({
+			title: '温馨提示',
+			content: '确定要将所选单词移除单词本？',
+			success: async function(res) {
+				if (res.confirm) {
+					const res = await $http.word.removeBookWords({
+						book_id: Number(id.value),
+						ids: List.value.filter(item => item.select).map(item => item.id)
+					})
+					toast.success('移除成功')
+					List.value = []
+					page.value = 1
+					getList()
+				}
+			}
+		});
 	}
 
 	const allSelectWord = () => {
@@ -171,6 +217,11 @@
 		getList()
 	}
 	const allSelect = ref(false)
+	watch(allSelect, (newVal, oldVal) => {
+		if (newVal == false) {
+			List.value.forEach(item => item.select = false)
+		}
+	})
 	const total = ref(null)
 	const page = ref(1)
 	const size = ref(20)
@@ -191,6 +242,7 @@
 	})
 
 	const getList = async () => {
+		loading.value = true
 		const res = await $http.word.getBookWord({
 			id: id.value,
 			page: page.value,
@@ -199,10 +251,10 @@
 			tab: currentTab.value
 		})
 		total.value = res.total
+		loading.value = false
 		if (total.value === 0) {
 			return
 		}
-
 		const newData = res.data.map(item => {
 			return {
 				...item,
@@ -210,7 +262,6 @@
 				displayWord: `${formatWordName(item.words,item.kana)}${item.tone || ''}`
 			}
 		})
-
 		List.value = List.value.concat(newData)
 	}
 	const id = ref(null)
@@ -221,10 +272,13 @@
 			getList()
 		}
 	}
-
+	const userId = ref(null)
 	onLoad((e) => {
 		if (e.id) {
 			id.value = e.id
+		}
+		if (e.userId) {
+			userId.value = e.userId
 		}
 		getList()
 	})
@@ -249,6 +303,16 @@
 		flex: 1;
 		height: 0;
 		overflow: hidden;
+	}
+
+	.actions {
+		height: 100%;
+		display: flex;
+
+		>view {
+			color: white;
+			padding: 20rpx;
+		}
 	}
 
 	.word-wrap {
@@ -306,6 +370,7 @@
 		display: flex;
 
 		>view {
+			white-space: nowrap;
 			display: flex;
 			align-items: center;
 			gap: 8rpx;

@@ -18,12 +18,12 @@
 			   { width: '100%' ,height:'28rpx'},
 			   { width: '100%' ,height:'28rpx'}]" />
 			</view>
-			<view v-else class="book-card">
+			<view @click="openBookDetail(learnInfo.book_info)" v-else class="book-card">
 				<image :src="learnInfo.book_info.icon" mode="aspectFill" class="book-cover"></image>
 				<view class="book-info">
 					<view class="book-header">
 						<text class="book-title">{{learnInfo.book_info.name}}</text>
-						<view class="book-switch" @click="goPage('/pages/word/thesaurus/thesaurus')">
+						<view class="book-switch" @click.stop="goPage('/pages/word/thesaurus/thesaurus')">
 							<text class="switch-text">切换</text>
 							<text class="iconfont icon-arrow-right switch-icon"></text>
 						</view>
@@ -138,15 +138,14 @@
 					</view>
 				</view>
 
-				<view class="func-card" @click="goPage('/pages/other/markdown/markdown',{
-					url:http.baseUrl + `md/other/introduction.md`,
-					title:'入门知识' })">
+				<view class="func-card" @click="goPage('/pages/other/browse/browse',{
+					src:'https://www.yuque.com/xiaoerwangluo/pteeim/fawwk19qnv8f0nwn'})">
 					<view class="func-icon-bg bg-blue">
 						<text class="fas fa-seedling"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">入门知识</text>
-						<text class="func-desc">夯实基础 轻松起步</text>
+						<text class="func-title">使用攻略</text>
+						<text class="func-desc">新手必读 快速上手</text>
 					</view>
 				</view>
 
@@ -208,12 +207,18 @@
 			type
 		})
 	}
+	const openBookDetail = (data) => {
+		goPage('/pages/word/wordlist/wordlist', {
+			id: data.id,
+			userId: data.user_id
+		})
+	}
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 	})
-	
+
 
 	const learnInfo = ref({
 		"book_info": {
@@ -257,7 +262,7 @@
 				currentMonth = month === 12 ? 1 : month + 1;
 			}
 			daysArray.push({
-				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`, 
+				key: `${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`,
 				day: currentDay,
 				year: currentYear,
 				month: currentMonth,
@@ -285,7 +290,6 @@
 </script>
 
 <style lang="scss">
-	
 	.iconfont {
 		font-family: "iconfont" !important;
 		font-size: 32rpx;
@@ -619,7 +623,7 @@
 		}
 	}
 
-	
+
 	.func-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);

@@ -3,9 +3,9 @@
 		<view class="head">
 			<NavbarDefault border title="关于我们"></NavbarDefault>
 		</view>
-		
+
 		<div class="main-content">
-			
+
 			<div class="app-card">
 				<image src="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/logo.png" mode="aspectFit"
 					class="app-logo"></image>
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 
-			
+
 			<div class="info-item">
 				<div class="info-title">
 					<span>官方网站</span>
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 
-			
+
 			<div class="info-item">
 				<div class="info-title">
 					<span>关注公众号</span>
@@ -34,19 +34,19 @@
 				<div class="info-content">
 					获取最新学习资源和活动信息
 				</div>
-				
+
 			</div>
 
-			
+
 			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
-					src:`${http.baseUrl}html/user_agreement.html`
+					src:`https://www.yuque.com/xiaoerwangluo/pteeim/ytpb2f5gtwhwzfxo`
 				})">
 				<div class="info-title">
 					<span>用户服务条款&隐私协议</span>
 					<i class="fas fa-chevron-right arrow-icon"></i>
 				</div>
 			</div>
-			
+
 			<div class="info-item" @click="goPage('/pages/other/browse/browse',{
 					src:`${http.baseUrl}html/update_log.html`
 				})">
@@ -56,18 +56,18 @@
 				</div>
 			</div>
 
-			
+
 			<div class="info-item">
 				<div class="info-title">
 					<span>备案信息</span>
 				</div>
 				<div class="info-content">
-					京ICP备2023000000号-1
+					皖ICP备2024032367号-3X
 				</div>
 			</div>
 		</div>
 
-		
+
 		<div class="footer-info">
 			Copyright © 2023-2025 小二网络.All Rights Reserved
 		</div>
@@ -105,14 +105,14 @@
 		z-index: 9;
 	}
 
-	
+
 	.main-content {
 		flex: 1;
 		overflow-y: auto;
 		padding: 32rpx;
 	}
 
-	
+
 	.app-card {
 		padding: 48rpx 32rpx;
 		margin-bottom: 32rpx;
@@ -149,7 +149,7 @@
 		max-width: 80%;
 	}
 
-	
+
 	.info-item {
 		padding: 32rpx;
 		border-bottom: 2rpx solid #eee;
@@ -175,7 +175,7 @@
 		text-decoration: none;
 	}
 
-	
+
 	.social-icons {
 		display: flex;
 		justify-content: center;
@@ -195,7 +195,7 @@
 		font-size: 32rpx;
 	}
 
-	
+
 	.footer-info {
 		text-align: center;
 		padding: 32rpx;
@@ -205,7 +205,7 @@
 		line-height: 1.5;
 	}
 
-	
+
 	.arrow-icon {
 		color: #9E9E9E;
 		font-size: 24rpx;
