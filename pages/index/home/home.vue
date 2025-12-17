@@ -213,12 +213,24 @@
 			userId: data.user_id
 		})
 	}
-	onMounted(() => {
+	const isLoaded = ref(false)
+	const initData = () => {
 		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
+		getConfig()
+		getInfo()
+		calendar.value = getCalendarMatrix(currentYear, currentMonth);
+	}
+	onMounted(() => {
+		initData()
+		isLoaded.value = true
 	})
-
+	onShow(() => {
+		if (isLoaded.value) {
+			initData()
+		}
+	})
 
 	const learnInfo = ref({
 		"book_info": {
@@ -282,11 +294,6 @@
 		const res = await $http.user.getConfig()
 		config.value = res.data
 	}
-	onShow(() => {
-		getConfig()
-		getInfo()
-		calendar.value = getCalendarMatrix(currentYear, currentMonth);
-	})
 </script>
 
 <style lang="scss">

@@ -1,4 +1,9 @@
 <script>
+	// 1. 引入 store 和 api
+	import {
+		userStore
+	} from '@/stores'
+	import $http from "@/api/index.js"
 	export default {
 		onShareAppMessage() {
 			return {
@@ -7,6 +12,31 @@
 			}
 		},
 		methods: {
+			// 定义无感登录方法
+			async autoLogin() {
+				if (userStore().loginStatus) {
+					userStore().setUserInfo()
+					return
+				}
+				try {
+					const sysInfo = uni.getSystemInfoSync()
+					uni.login({
+						provider: 'weixin',
+						success: async function(loginRes) {
+							let data = {
+								code: loginRes.code,
+								os: sysInfo.osName || 'unknown',
+								device: sysInfo.deviceBrand || 'unknown'
+							}
+							const loginResult = await $http.user.wxLogin(data)
+							userStore().setToken(loginResult.data)
+							userStore().setUserInfo()
+						}
+					});
+				} catch (e) {
+					console.error('Silent login error:', e)
+				}
+			},
 			globalShare() {
 				uni.onAppRoute((res) => {
 					const pages = getCurrentPages();
@@ -31,13 +61,7 @@
 			}
 		},
 		onLaunch: function() {
-
-		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
+			this.autoLogin()
 		}
 	}
 </script>

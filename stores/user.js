@@ -8,7 +8,7 @@ export const userModule = defineStore('user', {
 		return {
 			token: '',
 			userInfo: {
-				id:null,
+				id: null,
 				address: "",
 				avatar: '',
 				nickname: '登录/注册',
@@ -34,7 +34,7 @@ export const userModule = defineStore('user', {
 		},
 		clearTokenInfo() {
 			this.token === ''
-			uni.removeStorageSync('test_user')
+			uni.removeStorageSync('user')
 		}
 	}
 })

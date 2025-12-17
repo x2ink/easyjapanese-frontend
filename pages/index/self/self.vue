@@ -194,21 +194,26 @@
 		else
 			goPage("/pages/login/login")
 	}
-
+	const isLoaded = ref(false)
 	onShow(() => {
+		if (isLoaded.value) {
+			getInfo()
+		}
+	})
+	onMounted(() => {
 		getInfo()
+		isLoaded.value = true
 	})
 </script>
 
 <style lang="scss" scoped>
-	
 	.button-container {
 		display: flex;
 		gap: 24rpx;
 		margin-top: 32rpx;
 	}
 
-	
+
 	.modal-button {
 		flex: 1;
 		height: 80rpx;
@@ -220,13 +225,13 @@
 		outline: none;
 	}
 
-	
+
 	.modal-button.cancel {
 		background-color: #F5F5F5;
 		color: #757575;
 	}
 
-	
+
 	.modal-button.confirm {
 		background-color: #07C160;
 		color: white;
@@ -240,7 +245,7 @@
 		position: relative;
 	}
 
-	
+
 	.modal-title {
 		text-align: center;
 		font-size: 32rpx;
@@ -249,7 +254,7 @@
 		position: relative;
 	}
 
-	
+
 	.modal-close {
 		position: absolute;
 		right: 0rpx;
@@ -259,12 +264,12 @@
 	}
 
 
-	
+
 	.input-container {
 		margin-top: 32rpx;
 	}
 
-	
+
 	.char-count {
 		text-align: right;
 		font-size: 24rpx;
@@ -272,7 +277,7 @@
 		margin-top: 8rpx;
 	}
 
-	
+
 	.modal-input {
 		padding: 24rpx;
 		background-color: #f7f8fa;
@@ -313,7 +318,7 @@
 			opacity: 1 !important;
 		}
 
-		
+
 		&::after {
 			border: none;
 		}
@@ -323,7 +328,7 @@
 			height: 100%;
 			border-radius: 50%;
 			display: block;
-			
+
 		}
 
 		.camera-icon {
@@ -382,7 +387,7 @@
 			font-weight: bold;
 			margin: 0;
 			color: #333;
-			
+
 		}
 
 		.vip-badge {
@@ -392,7 +397,7 @@
 			border-radius: 24rpx;
 			font-size: 24rpx;
 
-			
+
 			text {
 				margin-right: 8rpx;
 			}
@@ -403,7 +408,7 @@
 			color: #6b7280;
 			margin-top: 8rpx;
 			display: block;
-			
+
 		}
 	}
 

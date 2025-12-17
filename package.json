@@ -1,8 +1,16 @@
 {
-  "dependencies": {
-    "@microsoft/fetch-event-source": "^2.0.1",
-    "crypto-js": "^4.2.0",
-    "dayjs": "^1.11.13",
-    "pinia": "^2.2.6"
-  }
+	"dependencies": {
+		"@microsoft/fetch-event-source": "^2.0.1",
+		"crypto-js": "^4.2.0",
+		"dayjs": "^1.11.13",
+		"pinia": "^2.2.6"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^20.2.0",
+		"@commitlint/config-conventional": "^20.2.0",
+		"husky": "^9.1.7"
+	},
+	"scripts": {
+		"prepare": "husky install"
+	}
 }

@@ -166,17 +166,23 @@
 		const res = await $http.word.getLearnt()
 		todayWordCount.value = res.data.length
 	}
-
-	onShow(() => {
-		getTodayWords()
-	})
-
-	onMounted(() => {
+	const initData = () => {
 		const systemInfo = uni.getSystemInfoSync();
 		const statusBarHeight = systemInfo.statusBarHeight;
 		navBarHeight.value = statusBarHeight + 'px'
 		getSentence()
 		getRanking()
+		getTodayWords()
+	}
+	onShow(() => {
+		if (isLoaded.value) {
+			initData()
+		}
+	})
+	const isLoaded = ref(false)
+	onMounted(() => {
+		initData()
+		isLoaded.value = true
 	})
 </script>
 

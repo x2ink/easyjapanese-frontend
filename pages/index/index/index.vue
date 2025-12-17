@@ -1,6 +1,7 @@
 <template>
-	<view>
-		<view :style="{height: `${getOs()=='ios'?'calc(100vh - env(safe-area-inset-bottom) - 106rpx)':'calc(100vh - 130rpx)'}`}">
+	<view v-if="userStore().loginStatus">
+		<view
+			:style="{height: `${getOs()=='ios'?'calc(100vh - env(safe-area-inset-bottom) - 106rpx)':'calc(100vh - 130rpx)'}`}">
 			<scroll-view v-show="tabbar===0" scroll-y="true" class="scroll">
 				<Home></Home>
 			</scroll-view>
@@ -11,7 +12,6 @@
 				<Self></Self>
 			</scroll-view>
 		</view>
-		
 		<view :class="`${getOs()=='ios'?'ios-bar':'and-bar'}`" class="tab-bar">
 			<view @click="tabbar=0" :class="{active:tabbar==0}" class="tab-item">
 				<text class="icon-home tab-icon fas fa-home"></text>
@@ -27,6 +27,9 @@
 			</view>
 		</view>
 	</view>
+	<view v-else>
+
+	</view>
 </template>
 
 <script setup>
@@ -40,25 +43,25 @@
 	import {
 		getOs
 	} from "@/utils/common.js"
-	import Home from '../home/home.vue';
-	import Word from '../word/word.vue';
-	import Self from '../self/self.vue';
+	import Home from '@/pages/index/home/home.vue';
+	import Word from '@/pages/index/word/word.vue';
+	import Self from '@/pages/index/self/self.vue';
 	const tabbar = ref(0)
-	onMounted(() => {
-		userStore().setUserInfo()
-	})
 </script>
 
 <style lang="scss" scoped>
-	.scroll{
+	.scroll {
 		height: 100%;
 	}
-	.and-bar{
+
+	.and-bar {
 		padding: 24rpx 0;
 	}
-	.ios-bar{
+
+	.ios-bar {
 		padding: 24rpx 0 env(safe-area-inset-bottom);
 	}
+
 	.tab-bar {
 		position: fixed;
 		bottom: 0;
@@ -69,6 +72,7 @@
 		justify-content: space-around;
 		background-color: #fff;
 		border-top: 2rpx solid #f0f0f0;
+
 		.tab-item {
 			flex: 1;
 			display: flex;
