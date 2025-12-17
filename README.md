@@ -122,6 +122,24 @@ npm run dev:mp-weixin
       * 项目使用了 `scss` 预处理。
       * 全局样式禁止了部分页面的滚动 (`disableScroll: true`)，内容滚动多通过 `<scroll-view>` 实现。
 
+
+## ⚠️ 提交规范
+```
+[
+  "build",
+  "chore",
+  "ci",
+  "docs",
+  "feat",
+  "fix",
+  "perf",
+  "refactor",
+  "revert",
+  "style",
+  "test",
+];
+```
+
 ## 📚 文档参考
 
   * [UniApp 官方文档](https://uniapp.dcloud.net.cn/)
