@@ -86,7 +86,6 @@
 </template>
 
 <script setup>
-	
 	import {
 		ref,
 	} from 'vue'
@@ -710,7 +709,7 @@
 			showDetail.value = true
 			setTimeout(() => {
 				boardShow.value = true
-			}, 500)
+			}, 100)
 		}
 	}
 	const get = (key) => {
@@ -745,7 +744,6 @@
 </script>
 
 <style lang="scss">
-	
 	._GCENTER {
 		display: flex;
 		align-items: center;
@@ -754,11 +752,11 @@
 
 	.header-section {
 		background: #fff;
-		
+
 		padding-bottom: 16rpx;
 	}
 
-	
+
 	.tab-container {
 		background-color: #f7f8fa;
 		border-radius: 200rpx;
@@ -781,12 +779,12 @@
 
 	.kana-tab.active {
 		background-color: #07C160;
-		
+
 		color: white;
 		font-weight: 600;
 	}
 
-	
+
 	.table {
 		margin: 0 40rpx;
 		padding-bottom: calc(env(safe-area-inset-bottom) + 64rpx);
@@ -800,7 +798,7 @@
 		font-size: 40rpx;
 		font-weight: 700;
 		color: #1a1a1a;
-		
+
 		background-color: transparent;
 		padding: 32rpx 8rpx 24rpx 8rpx;
 		margin: 0;
@@ -808,7 +806,7 @@
 		align-items: center;
 	}
 
-	
+
 	.kana-row-header::before {
 		content: '';
 		display: block;
@@ -823,29 +821,29 @@
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		gap: 24rpx;
-		
+
 	}
 
-	
+
 	.kana-card {
 		aspect-ratio: 1;
 		border-radius: 32rpx;
-		
+
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		background-color: #f7f8fa;
-		
+
 		transition: all 0.2s ease;
 		box-shadow: none;
-		
+
 	}
 
 	.kana-card:active {
 		transform: scale(0.96);
 		background-color: #ebedf0;
-		
+
 	}
 
 	.kana-character {
@@ -861,7 +859,7 @@
 		font-weight: 500;
 	}
 
-	
+
 	.minimal-popup {
 		border-radius: 48rpx 48rpx 0 0 !important;
 		background-color: #ffffff !important;
@@ -891,9 +889,9 @@
 		aspect-ratio: 880/739;
 		position: relative;
 		background-color: #f7f8fa;
-		
+
 		border: none;
-		
+
 		overflow: hidden;
 	}
 
@@ -904,7 +902,7 @@
 		top: 0;
 		left: 0;
 		opacity: 0.3;
-		
+
 	}
 
 	.drawingboard {
@@ -933,7 +931,7 @@
 		}
 	}
 
-	
+
 	.tools-btns {
 		margin-top: 48rpx;
 		width: 100%;
@@ -949,7 +947,7 @@
 		flex: 1;
 	}
 
-	
+
 	button::after {
 		border: none;
 	}
@@ -982,7 +980,7 @@
 		line-height: 96rpx;
 		margin: 0;
 		flex: 1.5;
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;

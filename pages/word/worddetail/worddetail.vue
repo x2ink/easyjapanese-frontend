@@ -311,21 +311,5 @@
 	}
 
 
-	.sheet-btn {
-		flex-direction: column;
-		font-size: 24rpx;
-		position: fixed;
-		bottom: 80rpx;
-		right: 40rpx;
-		background-color: white;
-		width: 120rpx;
-		height: 120rpx;
-		border-radius: 50%;
-		box-shadow: rgba(100, 100, 111, 0.2) 0rpx 14rpx 58rpx 0rpx;
-
-		text {
-			font-size: 36rpx;
-			margin-bottom: 8rpx;
-		}
-	}
+	
 </style>

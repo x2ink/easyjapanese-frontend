@@ -56,9 +56,8 @@
 					<wd-status-tip custom-style="margin-top: 80rpx;" :image-size="{ height: 128, width: 128 }"
 						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="没有找到相关结果" />
 
-					<view class="feedback-action">
-						<wd-button custom-style="width: 240rpx;background:#07C160" size="medium"
-							@click="onFeedback">提交反馈</wd-button>
+					<view class="search-action">
+						<button @click="onFeedback">提交反馈</button>
 					</view>
 				</view>
 
@@ -96,7 +95,7 @@
 	import {
 		onLoad,
 		onShow
-		
+
 	} from "@dcloudio/uni-app"
 	import {
 		goPage,
@@ -110,30 +109,30 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 
-	
+
 	const toast = useToast()
-	
+
 	const navBarHeight = ref('0rpx')
 	const current = ref('jc')
 	const value = ref('')
 
-	
+
 	const List = ref([])
 	const page = ref(1)
 	const size = ref(20)
 	const total = ref(0)
 
-	
-	const loadStatus = ref('more') 
-	const isSearching = ref(false) 
-	const loading = ref(false) 
 
-	
+	const loadStatus = ref('more')
+	const isSearching = ref(false)
+	const loading = ref(false)
+
+
 	const recommendWord = ref([])
 	const history = ref([])
 	const historyStore = historyrecordStore()
 
-	
+
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync();
 		navBarHeight.value = (systemInfo.statusBarHeight || 0) + 'px'
@@ -142,13 +141,13 @@
 		loadHistory()
 	})
 
-	
 
-	
 
-	
+
+
+
 	const loadMore = () => {
-		
+
 		if (!isSearching.value || loadStatus.value === 'noMore' || loadStatus.value === 'loading') return;
 
 		page.value++
@@ -163,7 +162,7 @@
 
 	const clearInput = () => {
 		value.value = ''
-		
+
 		isSearching.value = false
 		List.value = []
 	}
@@ -179,7 +178,7 @@
 		}
 	}
 
-	
+
 	const loadHistory = () => {
 		let record = historyStore.wordlist || []
 		history.value = record.slice(0, 10)
@@ -218,7 +217,7 @@
 			return
 		}
 
-		
+
 		if (!historyStore.wordlist.includes(val)) {
 			historyStore.push(val, 'word')
 			history.value.unshift(val)
@@ -228,8 +227,13 @@
 		value.value = val
 		search()
 	}
+	onLoad((e) => {
+		if (e.search) {
+			value.value = e.search
+			search()
+		}
+	})
 
-	
 	const search = () => {
 		isSearching.value = true
 		toast.loading('正在查询中...')
@@ -255,7 +259,7 @@
 					val: value.value
 				})
 			} else {
-				
+
 			}
 
 			toast.close()
@@ -263,12 +267,12 @@
 			const newData = res.data || []
 			total.value = res.total || 0
 
-			
+
 			if (newData.length > 0) {
 				List.value = List.value.concat(newData)
 			}
 
-			
+
 			if (List.value.length >= total.value) {
 				loadStatus.value = 'noMore'
 			} else {
@@ -294,7 +298,7 @@
 <style>
 	page {
 		background-color: white;
-		
+
 		height: 100%;
 		overflow: hidden;
 	}
@@ -305,29 +309,29 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		
+
 		overflow: hidden;
-		
+
 	}
 
-	
+
 	.search-header {
 		padding-left: 32rpx;
 		padding-right: 32rpx;
 		padding-bottom: 24rpx;
 		background-color: white;
 		border-bottom: 2rpx solid #f0f0f0;
-		
+
 		z-index: 99;
 		flex-shrink: 0;
-		
+
 	}
 
 	.scroll-content {
 		flex: 1;
-		
+
 		height: 0;
-		
+
 		background-color: white;
 	}
 
@@ -381,7 +385,7 @@
 		font-size: 32rpx;
 		z-index: 2;
 		padding: 8rpx;
-		
+
 	}
 
 	.language-tabs {
@@ -410,13 +414,13 @@
 		}
 	}
 
-	
+
 	.main-content {
-		
+
 		padding: 0 32rpx;
 	}
 
-	
+
 	.section-title {
 		display: flex;
 		justify-content: space-between;
@@ -456,7 +460,7 @@
 		}
 	}
 
-	
+
 	.hot-words {
 		margin-top: 16rpx;
 	}
@@ -477,7 +481,7 @@
 		line-height: 48rpx;
 	}
 
-	
+
 	.word-item {
 		padding: 32rpx 0;
 		border-bottom: 2rpx solid #f5f5f5;
@@ -508,19 +512,12 @@
 		overflow: hidden;
 	}
 
-	
+
 	.empty-state {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		padding-top: 40rpx;
-	}
-
-	.feedback-action {
-		margin-top: 48rpx;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
 	}
 </style>

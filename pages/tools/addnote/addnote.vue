@@ -2,7 +2,7 @@
 	<Loading v-if="!showEditor"></Loading>
 	<view v-show="showEditor" class="page-container">
 		<NavbarDefault border title="添加笔记"></NavbarDefault>
-		<view class="source-bar">
+		<view v-if="targetId" class="source-bar">
 			<view class="source-label">
 				<text>笔记来源</text>
 			</view>
@@ -69,7 +69,7 @@
 				content: '确定要清空编辑器内容吗？',
 				success: (res) => {
 					if (res.confirm) {
-						
+
 						editorCtx.value.clear()
 						toast.success('已清空')
 					}
@@ -79,7 +79,7 @@
 	}
 	const toolbarRef = ref(null)
 
-	
+
 	const editorCtx = ref(null)
 	const noteContent = ref(null)
 	const noteText = ref(null)
@@ -136,27 +136,27 @@
 					}
 					toast.loading('附件上传中...');
 					try {
-						
+
 						const filePath = fileData.path || fileData.tempFilePath;
 
 						const uploadRes = await uni.uploadFile({
-							url: `${http.baseUrl}upload`, 
+							url: `${http.baseUrl}upload`,
 							filePath: filePath,
 							name: 'file',
 							header: {
 								"Authorization": userStore().token
 							},
 							formData: {
-								
+
 								"file_name": `files/note/attachment/${Date.now()}_${userStore().userInfo.id}_${fileData.name}`
 							}
 						});
 
-						
+
 						const serverUrl = JSON.parse(uploadRes.data).url;
 
-						
-						
+
+
 						return {
 							path: serverUrl,
 							text: e.text || fileData.name
@@ -220,7 +220,7 @@
 			toast.warning("笔记不可为空")
 			return
 		}
-		if (targetId.value && targetType.value) {
+		if (targetType.value) {
 			try {
 				const res = await $http.common.submitNote({
 					target_id: Number(targetId.value),
@@ -257,10 +257,12 @@
 	const targetType = ref(null)
 	const noteId = ref(null)
 	onLoad((e) => {
-		if (e.type && e.id) {
+		if (e.id) {
 			targetId.value = e.id
 			targetType.value = e.type
 			queryOrigin(e.type, e.id)
+		} else {
+			targetType.value = "other"
 		}
 		if (e.noteId) {
 			noteId.value = e.noteId
@@ -294,27 +296,27 @@
 				display: block;
 				width: 6rpx;
 				height: 24rpx;
-				background-color: #07C160; 
+				background-color: #07C160;
 				border-radius: 4rpx;
 				margin-right: 12rpx;
 			}
 
 			text {
 				font-size: 28rpx;
-				color: #909399; 
+				color: #909399;
 			}
 		}
 
 		.source-content {
 			flex: 1;
-			overflow: hidden; 
+			overflow: hidden;
 
 			.source-title {
 				font-size: 30rpx;
 				color: #303133;
 				font-weight: 500;
 				display: block;
-				
+
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -346,7 +348,7 @@
 	.editor-wrapper {
 		flex: 1;
 		background-color: #fff;
-		padding: 32rpx; 
+		padding: 32rpx;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;

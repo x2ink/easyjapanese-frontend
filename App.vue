@@ -132,4 +132,38 @@
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 	}
+
+	// 
+	.search-action {
+		margin-top: 48rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		button {
+			width: 200rpx;
+			background: #07C160;
+			line-height: 60rpx;
+			font-size: 26rpx;
+			color: #fff;
+			border-radius: 200rpx;
+		}
+	}
+	.sheet-btn {
+		flex-direction: column;
+		font-size: 24rpx;
+		position: fixed;
+		bottom: 80rpx;
+		right: 40rpx;
+		background-color: white;
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 50%;
+		box-shadow: rgba(100, 100, 111, 0.2) 0rpx 14rpx 58rpx 0rpx;
+	
+		text {
+			font-size: 36rpx;
+			margin-bottom: 8rpx;
+		}
+	}
 </style>

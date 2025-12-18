@@ -5,7 +5,7 @@
 			<view class="search-bg">
 				<view class="search-bar">
 					<text class="fas fa-search"></text>
-					<input confirm-type="search" @confirm="confirm" type="text" placeholder="搜索单词">
+					<input v-model="searchVal" confirm-type="search" @confirm="confirm" type="text" placeholder="搜索单词">
 					<view @click="allSelect=!allSelect">
 						<text class="fas fa-sliders-h"></text>
 					</view>
@@ -61,6 +61,12 @@
 				<view v-if="total==0&&loading==false" style="margin-top: 80rpx;">
 					<wd-status-tip image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
 						tip="单词本还没有单词~" />
+					<view class="search-action">
+						<button @click="onSearch()">
+							<text class="fas fa-search search-icon"></text>
+							词典查询
+						</button>
+					</view>
 				</view>
 			</view>
 		</scroll-view>
@@ -138,6 +144,12 @@
 				}
 			});
 		}
+	}
+	const searchVal = ref("")
+	const onSearch = () => {
+		goPage("/pages/word/search/search", {
+			search: searchVal.value
+		})
 	}
 	const setDone = async (type) => {
 		try {
