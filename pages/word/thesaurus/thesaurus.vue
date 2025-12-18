@@ -13,7 +13,7 @@
 		<scroll-view class="scroll-content" scroll-y="true">
 			<view class="list">
 				<wd-swipe-action custom-class="book-swipe-action" :key="item.id"
-					v-for="item in bookList.get(tabList[current])">
+					v-for="(item,index) in bookList.get(tabList[current])">
 					<view class="item" @click="goDetail(item)">
 						<image class="book-cover" :src="item.icon"></image>
 						<view class="info">
@@ -33,9 +33,11 @@
 					</view>
 					<template #right>
 						<view class="actions">
-							<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">修改
+							<view class="_GCENTER" style="background: #FFB300;" @click="openPopup('update',item)">
+								修改
 							</view>
-							<view class="_GCENTER" style="background: #f5222d;" @click="delComfirm(item)">删除</view>
+							<view class="_GCENTER" style="background: #f5222d;" @click="delComfirm(item)">删除
+							</view>
 						</view>
 					</template>
 				</wd-swipe-action>
@@ -106,8 +108,26 @@
 	const changeTab = (e) => {
 		current.value = e
 	}
-	const delComfirm = (item) => {
+	const removeBookFromMap = (bookId) => {
+		const map = new Map(bookList.value)
 
+		map.forEach((list, key) => {
+			const newList = list.filter(book => book.id !== bookId)
+
+			if (newList.length > 0) {
+				map.set(key, newList)
+			} else {
+				map.delete(key)
+			}
+		})
+
+		bookList.value = map
+		if (current.value >= tabList.value.length) {
+			current.value = 0
+		}
+	}
+
+	const delComfirm = (item) => {
 		if (item.user_id != userStore().userInfo.id) {
 			toast.warning("您没有权限删除此单词本")
 			return
@@ -123,7 +143,7 @@
 							id: item.id
 						})
 						toast.success("删除成功")
-						getWordBook()
+						removeBookFromMap(item.id)
 					} catch (err) {
 						if (err.code == 4001) {
 							toast.warning("发布中的单词书禁止删除")
@@ -152,14 +172,12 @@
 		describe: ""
 	})
 	const openPopup = (type, data) => {
-
 		if (type == "update") {
 			if (data.user_id != userStore().userInfo.id) {
 				toast.warning("您没有权限修改此单词本")
 				return
 			}
 		}
-
 		createdShow.value = true
 		pattern.value = type
 		if (type == "update") {
@@ -168,6 +186,29 @@
 			formData.value.describe = data.describe
 		}
 	}
+	const updateBookNameDesc = () => {
+		const {
+			id,
+			name,
+			describe
+		} = formData.value
+		const map = new Map(bookList.value)
+
+		map.forEach((list, key) => {
+			const idx = list.findIndex(book => book.id === id)
+			if (idx !== -1) {
+				list[idx] = {
+					...list[idx],
+					name,
+					describe
+				}
+				map.set(key, [...list])
+			}
+		})
+
+		bookList.value = map
+	}
+
 	const submit = async () => {
 		if (formData.value.name.trim().length === 0) {
 			toast.warning("单词本名词为空")
@@ -190,10 +231,12 @@
 					return
 				}
 			}
+			getWordBook()
 		} else {
 			try {
 				const res = await $http.word.setBook(formData.value)
 				toast.success("更新成功")
+				updateBookNameDesc()
 			} catch (err) {
 				if (err.code == 4001) {
 					toast.warning("单词本名词重复")
@@ -208,7 +251,6 @@
 			name: "",
 			describe: ""
 		}
-		getWordBook()
 	}
 	const getConfig = async () => {
 		const res = await $http.user.getConfig()

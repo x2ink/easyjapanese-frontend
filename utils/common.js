@@ -33,8 +33,12 @@ export const formatWordName = (words, kana) => {
 	if (words.length == 0) {
 		return kana;
 	} else {
-		let word = words.map(item => `【${item}】`)
-		return `${kana}${word.join('')}`
+		if (words.length === 1 && words[0] == kana) {
+			return kana;
+		} else {
+			let word = words.map(item => `【${item}】`)
+			return `${kana}${word.join('')}`
+		}
 	}
 }
 export const getOs = () => {

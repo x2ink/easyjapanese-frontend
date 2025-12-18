@@ -48,13 +48,13 @@
 					<template #right>
 						<view class="actions">
 							<view v-if="currentTab==2||currentTab==3" class="_GCENTER" style="background: #FFB300;"
-								@click="actionClick('redo',item)">重学
+								@click="actionClick('redo',item,index)">重学
 							</view>
 							<view v-if="currentTab==1||currentTab==3" class="_GCENTER" style="background: #07C160;"
-								@click="actionClick('mark',item)">标熟
+								@click="actionClick('mark',item,index)">标熟
 							</view>
 							<view v-if="userId==userStore().userInfo.id" class="_GCENTER" style="background: #f5222d;"
-								@click="actionClick('del',item)">移除</view>
+								@click="actionClick('del',item,index)">移除</view>
 						</view>
 					</template>
 				</wd-swipe-action>
@@ -62,7 +62,7 @@
 					<wd-status-tip image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png"
 						tip="单词本还没有单词~" />
 					<view class="search-action">
-						<button @click="onSearch()">
+						<button @click="onSearch()" style="gap: 8rpx;">
 							<text class="fas fa-search search-icon"></text>
 							词典查询
 						</button>
@@ -110,9 +110,16 @@
 	} from "@/stores/index.js"
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-
 	const currentTab = ref(0)
-	const actionClick = async (type, item) => {
+	const removeItem = (index) => {
+		List.value.splice(index, 1)
+		loadMore()
+	}
+	const removeItems = (filter) => {
+		List.value = List.value.filter(item => !filter.includes(item.id))
+		loadMore()
+	}
+	const actionClick = async (type, item, index) => {
 		if (type == "redo" || type == "mark") {
 			try {
 				await $http.word.setDone({
@@ -120,9 +127,7 @@
 					type
 				})
 				toast.success("操作成功")
-				List.value = []
-				page.value = 1
-				getList()
+				removeItem(index)
 			} catch (err) {
 				toast.error("操作失败")
 			}
@@ -137,9 +142,7 @@
 							ids: [item.id]
 						})
 						toast.success('移除成功')
-						List.value = []
-						page.value = 1
-						getList()
+						removeItem(index)
 					}
 				}
 			});
@@ -152,16 +155,16 @@
 		})
 	}
 	const setDone = async (type) => {
+		const filter = List.value.filter(item => item.select).map(item => item.id)
 		try {
 			await $http.word.setDone({
-				word_ids: List.value.filter(item => item.select).map(item => item.id),
+				word_ids: filter,
 				type
 			})
 			toast.success("操作成功")
-			List.value = []
-			page.value = 1
-			getList()
+			removeItems(filter)
 		} catch (err) {
+			console.log(err);
 			toast.error("操作失败")
 		}
 	}
@@ -189,14 +192,13 @@
 			content: '确定要将所选单词移除单词本？',
 			success: async function(res) {
 				if (res.confirm) {
+					const filter = List.value.filter(item => item.select).map(item => item.id)
 					const res = await $http.word.removeBookWords({
 						book_id: Number(id.value),
-						ids: List.value.filter(item => item.select).map(item => item.id)
+						ids: filter
 					})
 					toast.success('移除成功')
-					List.value = []
-					page.value = 1
-					getList()
+					removeItems(filter)
 				}
 			}
 		});

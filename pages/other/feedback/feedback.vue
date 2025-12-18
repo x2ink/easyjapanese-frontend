@@ -57,6 +57,9 @@
 	import {
 		useToast
 	} from '@/uni_modules/wot-design-uni'
+	import {
+		context
+	} from '@/uni_modules/wot-design-uni/components/common/util'
 	const toast = useToast()
 	const current = ref("问题反馈")
 	const formData = ref({
@@ -79,10 +82,13 @@
 			return
 		}
 		formData.value.type = current.value
-		formData.value.content += formData.value.content + "\n" + source.value
-		const res = await $http.common.feedback(formData.value)
+		const res = await $http.common.feedback({
+			type: formData.value.type,
+			content: formData.value.content + "\n" + source.value
+		})
 		toast.success(`提交成功`)
 		history.value = formData.value.content
+		formData.value.content = ""
 	}
 	onLoad(e => {
 		if (e.type) {
@@ -91,6 +97,7 @@
 				source.value = `来自单词纠错 · ${e.wordType=='jc'?'日中':'中日'}单词ID：${e.wordId}`
 			} else if (e.type == "补充单词") {
 				source.value = `补充单词：${e.data}`
+				formData.value.content = "缺少单词"
 			} else if (e.type == "问题反馈") {
 				source.value = `反馈来源：${e.data}`
 			}
