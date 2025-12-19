@@ -236,13 +236,11 @@
 
 	const search = () => {
 		isSearching.value = true
-		toast.loading('正在查询中...')
-
+		// toast.loading('正在查询中...')
 		page.value = 1
 		List.value = []
 		total.value = 0
 		loadStatus.value = 'loading'
-
 		getList()
 	}
 
@@ -280,7 +278,7 @@
 			}
 
 		} catch (err) {
-			toast.close()
+			// toast.close()
 			loadStatus.value = 'more'
 			console.error("搜索失败", err)
 		} finally {

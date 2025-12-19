@@ -84,7 +84,7 @@
 			</view>
 
 			<view class="ranking-header">
-				<view class="ranking-title">单词达人榜</view>
+				<view class="ranking-title">学习达人榜</view>
 			</view>
 			<view class="ranking-list">
 				<view v-for="(item,index) in ranks" :key="item.user.id" class="ranking-item">
@@ -93,7 +93,7 @@
 					</view>
 					<view class="user-info">
 						<view class="username">{{item.user.nickname}}</view>
-						<view class="user-stats">已背 {{item.word_count}} 个单词</view>
+						<view class="user-stats">已学 {{item.sign_day}} 天</view>
 					</view>
 					<Avatar :size="70" :src="item.user.avatar"></Avatar>
 				</view>
