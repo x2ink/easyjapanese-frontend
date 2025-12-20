@@ -93,7 +93,7 @@
 
 			<view class="calendar-container">
 				<view class="section-header">
-					<text class="section-title">学习打卡</text>
+					<text class="section-title">学习日历</text>
 					<view class="section-more">
 						<text class="more-text">{{currentMonth}}月</text>
 					</view>
@@ -614,17 +614,12 @@
 					color: #ccc;
 				}
 
-				&.active {
-					background-color: #F0FDF4;
-					color: #16A34A;
-					border-radius: 8rpx;
-				}
+
 
 				&.highlight {
 					background-color: #DCFCE7;
 					color: #166534;
 					font-weight: 500;
-					border-radius: 8rpx;
 				}
 			}
 		}

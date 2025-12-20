@@ -120,7 +120,8 @@
 		ref
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onUnload
 	} from "@dcloudio/uni-app"
 	import {
 		useToast
@@ -133,7 +134,9 @@
 	const wordId = ref(null)
 	const submitted = ref(false)
 	const submitting = ref(false)
-
+	onUnload(() => {
+		clearTimeout(timeId)
+	})
 
 	const formData = ref({
 		words: "",
@@ -169,7 +172,7 @@
 			}
 		});
 	}
-
+	let timeId;
 	const doSubmit = async () => {
 		if (!formData.value.words.trim()) return toast.warning("请输入单词")
 
@@ -216,7 +219,7 @@
 			await $http.word.submitEditWord(payload)
 			toast.success("提交成功")
 			submitted.value = true
-			setTimeout(() => uni.navigateBack(), 1500)
+			timeId = setTimeout(() => uni.navigateBack(), 1500)
 		} catch (error) {
 			console.error(error)
 			toast.error("提交失败")
