@@ -29,6 +29,10 @@
 					<text class="source-text">{{source}}</text>
 				</view>
 
+				<wd-upload :action="http.baseUrl+'upload'" name="file" :header="{'Authorization': userStore().token}"
+					:limit="4" :file-list="fileList" image-mode="aspectFill" @change="handleChange"
+					:build-form-data="handleBuildFormData"></wd-upload>
+
 				<view class="action-area">
 					<button class="compact-btn" @click="submit()">提交反馈</button>
 				</view>
@@ -60,7 +64,51 @@
 	import {
 		context
 	} from '@/uni_modules/wot-design-uni/components/common/util'
+	import http from "@/utils/request.js"
+
 	const toast = useToast()
+
+	// 1. 文件列表
+	const fileList = ref([])
+
+	// 2. 监听文件改变
+	const handleChange = ({
+		fileList: files
+	}) => {
+		fileList.value = files
+		console.log('当前文件列表：', fileList.value);
+	}
+
+	// 3. 核心修复：构建上传参数的钩子
+	// 这个钩子会在点击上传、真正发起请求前执行
+	const handleBuildFormData = ({
+		file,
+		formData,
+		resolve
+	}) => {
+		// 获取文件名 (兼容 H5 和 小程序)
+		let fileName = file.name
+		if (!fileName && file.url) {
+			// 如果没有 name，尝试从路径中截取
+			fileName = file.url.substring(file.url.lastIndexOf('/') + 1)
+		}
+		// 兜底文件名，防止为空
+		if (!fileName) {
+			fileName = `file_${Date.now()}.jpg`
+		}
+
+		// 组装参数，注意 key 要和后端 PostForm("file_name") 一致
+		const newFormData = {
+			...formData,
+			"file_name": "files/feedback/" + fileName
+		}
+
+		console.log("准备上传参数:", newFormData)
+
+		// 必须调用 resolve 将组装好的参数返回去
+		resolve(newFormData)
+	}
+
 	const current = ref("问题反馈")
 	const formData = ref({
 		content: "",
@@ -68,7 +116,21 @@
 	})
 	const history = ref('')
 	const source = ref('')
+
 	const submit = async () => {
+		console.log(fileList.value);
+		const images = fileList.value.map(item => {
+			if (item.response) {
+				try {
+					const res = JSON.parse(item.response)
+					return res.url
+				} catch (e) {
+					console.error("解析上传响应失败", e)
+					return ""
+				}
+			}
+			return item.url
+		}).filter(url => url)
 		if (!userStore().loginStatus) {
 			goPage("/pages/login/login?toast=请登录之后使用")
 			return
@@ -84,12 +146,15 @@
 		formData.value.type = current.value
 		const res = await $http.common.feedback({
 			type: formData.value.type,
+			images,
 			content: formData.value.content + "\n" + source.value
 		})
 		toast.success(`提交成功`)
 		history.value = formData.value.content
 		formData.value.content = ""
+		fileList.value = []
 	}
+
 	onLoad(e => {
 		if (e.type) {
 			current.value = "问题反馈"
@@ -114,6 +179,33 @@
 </style>
 
 <style lang="scss" scoped>
+	:deep(.wd-upload__preview) {
+		margin: 0 !important;
+		width: inherit !important;
+		height: inherit !important;
+		aspect-ratio: 1 / 1;
+		border-radius: 16rpx !important;
+	}
+
+	:deep(.wd-upload__status-content) {
+		border-radius: 16rpx !important;
+		overflow: hidden;
+	}
+
+	:deep(.wd-upload__evoke) {
+		margin: 0 !important;
+		width: inherit !important;
+		height: inherit !important;
+		aspect-ratio: 1 / 1;
+		border-radius: 16rpx !important;
+	}
+
+	:deep(.wd-upload) {
+		gap: 32rpx;
+		display: grid !important;
+		grid-template-columns: repeat(4, 1fr);
+	}
+
 	.page-container {
 		min-height: 100vh;
 		display: flex;
@@ -210,7 +302,7 @@
 
 
 	.action-area {
-		margin-top: 16rpx;
+		margin-top: 32rpx;
 	}
 
 	.compact-btn {

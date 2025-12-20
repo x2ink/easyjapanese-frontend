@@ -28,12 +28,8 @@
 
 		<view class="main-content">
 			<view class="daily-card">
-				<image class="card-bg"
-					:src="sentence.picture || 'https://pic1.imgdb.cn/item/692be430291f309b79e90b56.png'"
-					mode="aspectFill"></image>
-
+				<image class="card-bg" :src="sentence.image" mode="aspectFill"></image>
 				<view class="card-mask"></view>
-
 				<view class="card-content">
 					<view class="card-header">
 						<view class="tag">每日一句</view>
@@ -71,9 +67,9 @@
 
 				<view class="feature-card word-card" @click="goPage('/pages/tools/commonwords/commonwords')">
 					<view class="feature-icon green">
-						<text class="fas fa-message"></text>
+						<text class="fas fa-layer-group"></text>
 					</view>
-					<view class="feature-name">常用词汇</view>
+					<view class="feature-name">专项练习</view>
 				</view>
 				<view class="feature-card word-card" @click="goPage('/pages/tools/grammar/grammar')">
 					<view class="feature-icon purple">

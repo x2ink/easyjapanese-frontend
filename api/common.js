@@ -1,7 +1,6 @@
 import http from '@/utils/request.js'
 
 export default {
-	
 	uploadbase64(data) {
 		return http.post(`base64`, data)
 	},
