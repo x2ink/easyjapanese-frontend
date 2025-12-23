@@ -46,16 +46,25 @@
 				</view>
 
 				<view class="content-block word-block">
-					<button v-if="wordinfo.step!=2" @click="playUserRecord(wordinfo.voice)" class="pronounce-btn"
-						title="发音">
+					<button v-if="(wordinfo.step < 2 || showAnswer) && !(wordinfo.step == 2 && !showAnswer)"
+						@click="playUserRecord(wordinfo.voice)" class="pronounce-btn" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
 
 					<view class="word-header-container">
-						<button @click="playUserRecord(wordinfo.voice)" v-if="wordinfo.step==2&&!showAnswer"
-							class="pronounce-btn pronounce-center" title="发音">
-							<i class="fas fa-volume-up"></i>
-						</button>
+						<view v-if="wordinfo.step == 2 && !showAnswer" class="definition-question">
+							<view class="question-label">请选择对应的假名</view>
+							<view class="question-content">{{wordinfo.description}}</view>
+						</view>
+
+						<view v-else-if="wordinfo.step == 3 && !showAnswer" class="audio-block"
+							@click="playUserRecord(wordinfo.voice)">
+							<view class="play-icon-wrapper">
+								<text class="fas fa-volume-up"></text>
+							</view>
+							<view class="audio-hint">点击播放发音</view>
+						</view>
+
 						<view v-else class="word-text-group">
 							<view class="word-kanji">{{wordinfo.words.join('·')}}</view>
 							<view class="word-furigana">{{wordinfo.kana}}</view>
@@ -76,12 +85,35 @@
 								</view>
 							</view>
 						</view>
-						<wd-skeleton v-else theme="paragraph"
+						<wd-skeleton v-else-if="wordinfo.step < 2" theme="paragraph"
 							:row-col="[[{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }], [{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }]]"></wd-skeleton>
 					</view>
 				</view>
 
-				<view class="content-block example-block" v-if="showAnswer||wordinfo.step==0">
+				<view v-if="wordinfo.step >= 2" class="options-container">
+					<view class="divider-wrap" v-if="!showAnswer">
+						<wd-divider>请选择正确答案</wd-divider>
+					</view>
+					<view class="options">
+						<view :class="['option-item', item.class]" @click="select(index,item)"
+							v-for="(item,index) in options" :key="index">
+							<view class="index-tag">
+								{{optionKey.get(index)}}
+							</view>
+							<view class="option-content">
+								{{item.word.kana}}
+							</view>
+							<view v-if="item.class=='fail'" class="status-icon fail">
+								<text class="fas fa-xmark"></text>
+							</view>
+							<view v-if="item.class=='success'" class="status-icon success">
+								<text class="fas fa-check"></text>
+							</view>
+						</view>
+					</view>
+				</view>
+
+				<view class="content-block example-block" v-if="(showAnswer||wordinfo.step==0) && wordinfo.step <= 2">
 					<view class="block-label">
 						<i class="fas fa-quote-left"></i> 例句
 					</view>
@@ -102,20 +134,23 @@
 				<view class="safe-area-spacer"></view>
 
 				<view v-if="showAnswer" class="action-bar">
-					<button v-if="know" @click="misremember()" class="action-btn btn-warning">
+					<button v-if="know && wordinfo.step < 2" @click="misremember()" class="action-btn btn-warning">
 						<text>记错了</text>
 					</button>
-					<button @click="getNext()" class="action-btn btn-primary">
+					<button @click="getNext()" class="action-btn btn-primary"
+						:style="{flex: wordinfo.step >= 2 ? 1 : ''}">
 						<text>下一个</text>
 					</button>
 				</view>
 				<view v-else class="action-bar">
-					<button @click="unknowBtn()" class="action-btn btn-danger">
-						<text>不认识</text>
-					</button>
-					<button @click="knowBtn()" class="action-btn btn-success">
-						<text>认识</text>
-					</button>
+					<template v-if="wordinfo.step < 2">
+						<button @click="unknowBtn()" class="action-btn btn-danger">
+							<text>不认识</text>
+						</button>
+						<button @click="knowBtn()" class="action-btn btn-success">
+							<text>认识</text>
+						</button>
+					</template>
 				</view>
 			</view>
 			<wd-toast />
@@ -152,13 +187,19 @@
 			innerAudioContext.destroy()
 		}
 	})
-	
+
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
 	const MAX_ERROR_TOLERANCE = 3
-	const MAX_SESSION_LEARN = 10 
+	const MAX_SESSION_LEARN = 10
 
-	
+	const optionKey = new Map([
+		[0, 'A'],
+		[1, 'B'],
+		[2, 'C'],
+		[3, 'D']
+	])
+
 	const renderRubyHTMLWeb = (rubyList) => {
 		return rubyList.map(item => `<ruby>${item.base}<rt>${item.ruby}</rt></ruby>`).join('');
 	}
@@ -180,7 +221,7 @@
 		})
 	}
 
-	
+
 	const loading = ref(true)
 	const doneTask = ref(false)
 	const showAnswer = ref(false)
@@ -190,7 +231,8 @@
 	const learnType = ref('learn')
 	const lastWordId = ref(null)
 
-	
+	const options = ref([]) // 选择题选项
+
 	const wordList = ref([])
 	const queuePending = ref([])
 	const queueActive = ref([])
@@ -222,8 +264,9 @@
 	})
 	const currentItem = ref(null)
 
+	// 修改 watch，Step 2（看义选假名）时不自动播放，防止泄题
 	watch(() => wordinfo.value.id, (newVal) => {
-		if (newVal) playUserRecord(wordinfo.value.voice)
+		if (newVal && wordinfo.value.step !== 2) playUserRecord(wordinfo.value.voice)
 	})
 
 	const typeTitle = computed(() => learnType.value == "learn" ? "学习" : "复习")
@@ -253,6 +296,7 @@
 		queueCompleted.value = []
 		showAnswer.value = false
 		doneTask.value = false
+		options.value = []
 	}
 
 	const init = async (type, forceRefresh = false) => {
@@ -301,8 +345,6 @@
 				}
 			})
 
-			
-			
 			total.value = Math.min(wordList.value.length, MAX_SESSION_LEARN)
 			queuePending.value = [...wordList.value]
 
@@ -336,12 +378,19 @@
 			if (target) {
 				currentItem.value = target
 				wordinfo.value = target.word
+				// 如果恢复时是选择题模式，重新获取选项
+				if (wordinfo.value.step >= 2) {
+					getOptions(wordinfo.value.id)
+				}
 			}
 		} else if (cache.wordinfo && cache.wordinfo.id) {
 			const target = wordList.value.find(i => i.word.id === cache.wordinfo.id)
 			if (target) {
 				currentItem.value = target
 				wordinfo.value = target.word
+				if (wordinfo.value.step >= 2) {
+					getOptions(wordinfo.value.id)
+				}
 			}
 		}
 	}
@@ -445,6 +494,12 @@
 
 		showAnswer.value = false
 		know.value = false
+		options.value = [] // 重置选项
+
+		// 如果是第三或第四阶段，获取选项
+		if (wordinfo.value.step >= 2) {
+			getOptions(wordinfo.value.id)
+		}
 
 		writeCache()
 	}
@@ -490,7 +545,8 @@
 		const item = currentItem.value
 		if (!item) return
 
-		if (item.word.step >= 3) {
+		// 完成条件修改为 >= 4 (Step 0, 1, 2, 3 都完成后)
+		if (item.word.step >= 4) {
 			if (!queueCompleted.value.find(i => i.word.id === item.word.id)) {
 				queueCompleted.value.push(item)
 			}
@@ -536,6 +592,34 @@
 			minIdx
 		queueActive.value.splice(insertIndex, 0, item)
 	}
+
+	// 获取选项
+	const getOptions = async (id) => {
+		try {
+			const res = await $http.word.getListenOptions({
+				wordId: id
+			})
+			options.value = res.data
+		} catch (e) {
+			console.error(e)
+			toast.error("选项加载失败")
+		}
+	}
+
+	// 选项选择逻辑
+	const select = (index, item) => {
+		if (showAnswer.value) return
+		playUserRecord(item.word.voice)
+		if (item.anwser) {
+			options.value[index].class = "success"
+			knowBtn()
+		} else {
+			options.value[index].class = "fail"
+			let correctIndex = options.value.findIndex(it => it.anwser)
+			if (correctIndex !== -1) options.value[correctIndex].class = "success"
+			unknowBtn()
+		}
+	}
 </script>
 
 <style>
@@ -547,7 +631,6 @@
 </style>
 
 <style scoped lang="scss">
-	
 	.page-scroll {
 		height: 100vh;
 		background-color: #ffffff;
@@ -578,12 +661,12 @@
 		padding-top: 80rpx;
 	}
 
-	
+
 	.content-block {
 		background-color: #f7f8fa;
 		border-radius: 32rpx;
 		padding: 40rpx;
-		
+
 		margin-bottom: 48rpx;
 		position: relative;
 	}
@@ -595,7 +678,7 @@
 		font-weight: 600;
 	}
 
-	
+
 	.completion-icon {
 		font-size: 160rpx;
 		color: #07C160;
@@ -617,7 +700,7 @@
 		line-height: 1.6;
 	}
 
-	
+
 	.stats-block {
 		display: flex;
 		align-items: center;
@@ -654,9 +737,9 @@
 		color: #999;
 	}
 
-	
 
-	
+
+
 	.progress-container {
 		margin-bottom: 40rpx;
 	}
@@ -683,9 +766,9 @@
 		transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	
+
 	.word-block {
-		
+
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -762,7 +845,7 @@
 		margin-top: 20rpx;
 	}
 
-	
+
 	.word-details {
 		padding-top: 40rpx;
 		border-top: 2rpx dashed #e0e0e0;
@@ -797,7 +880,7 @@
 		font-weight: 500;
 	}
 
-	
+
 	.example-item {
 		margin-bottom: 32rpx;
 		padding-bottom: 32rpx;
@@ -832,13 +915,13 @@
 		color: #07C160;
 	}
 
-	
+
 	.safe-area-spacer {
 		height: calc(env(safe-area-inset-bottom) + 180rpx);
 		width: 100%;
 	}
 
-	
+
 	.action-bar {
 		position: fixed;
 		left: 40rpx;
@@ -940,5 +1023,164 @@
 	:deep(rt) {
 		font-size: 60%;
 		color: #888;
+	}
+
+	/* 新增/适配 Dictation 样式 */
+	.definition-question {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: 160rpx;
+		width: 100%;
+	}
+
+	.question-label {
+		font-size: 24rpx;
+		color: #999;
+		margin-bottom: 24rpx;
+	}
+
+	.question-content {
+		font-size: 40rpx;
+		color: #333;
+		font-weight: 600;
+		text-align: center;
+		line-height: 1.4;
+	}
+
+	.audio-block {
+		background-color: #f0f2f5;
+		border-radius: 32rpx;
+		width: 100%;
+		padding: 40rpx 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transition: opacity 0.2s;
+		margin-bottom: 20rpx;
+
+		&:active {
+			opacity: 0.8;
+		}
+
+		.play-icon-wrapper {
+			width: 100rpx;
+			height: 100rpx;
+			background-color: #ffffff;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #07C160;
+			font-size: 40rpx;
+			margin-bottom: 20rpx;
+			box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+		}
+
+		.audio-hint {
+			font-size: 26rpx;
+			color: #999;
+		}
+	}
+
+	.options-container {
+		margin-bottom: 48rpx;
+	}
+
+	.divider-wrap {
+		margin: 0 0 32rpx;
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		gap: 24rpx;
+
+		.option-item {
+			background-color: #f7f8fa;
+			border-radius: 24rpx;
+			padding: 30rpx 32rpx;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			transition: background-color 0.2s;
+			border: none;
+			position: relative;
+
+			&:active {
+				background-color: #eceef1;
+			}
+
+			.index-tag {
+				width: 48rpx;
+				height: 48rpx;
+				background-color: #e5e7eb;
+				color: #6b7280;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 24rpx;
+				font-weight: 600;
+				margin-right: 24rpx;
+				flex-shrink: 0;
+			}
+
+			.option-content {
+				flex: 1;
+				font-size: 30rpx;
+				color: #333;
+				line-height: 1.5;
+			}
+
+			.status-icon {
+				margin-left: 20rpx;
+				width: 40rpx;
+				height: 40rpx;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				font-size: 20rpx;
+			}
+
+			&.success {
+				background-color: #e8fff3;
+
+				.index-tag {
+					background-color: #c6f6d5;
+					color: #065f46;
+				}
+
+				.option-content {
+					color: #047857;
+					font-weight: 500;
+				}
+
+				.status-icon.success {
+					background-color: #10B981;
+				}
+			}
+
+			&.fail {
+				background-color: #ffeef0;
+
+				.index-tag {
+					background-color: #fed7d7;
+					color: #9b2c2c;
+				}
+
+				.option-content {
+					color: #c53030;
+				}
+
+				.status-icon.fail {
+					background-color: #ef4444;
+				}
+			}
+		}
 	}
 </style>
