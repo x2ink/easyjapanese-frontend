@@ -716,7 +716,9 @@
 	const openDetail = (item) => {
 		if (item) {
 			boardShow.value = false
-			row.value = normalizeKey(item)
+			// 描红图用图片 key（di/du -> ji2/zu2；ji2/zu2 保持不变）
+			row.value = normalizeImageKey(item)
+			// 音频仍按 ji/zu 命名
 			playAudio(item)
 			showDetail.value = true
 			setTimeout(() => {
@@ -725,12 +727,28 @@
 		}
 	}
 
-	const romeAliasMap = {
+	// 兼容：
+	// 1) 页面内部需要区分 ji/zu 的第二组（ぢ/づ），所以用 ji2/zu2 作为唯一 key
+	// 2) 但你的音频资源仍然是 ji.mp3/zu.mp3，不改命名
+	// 3) 描红图资源希望用 ji2.png/zu2.png（并且支持 di/du 映射）
+	const audioAliasMap = {
+		ji2: 'ji',
+		zu2: 'zu',
+		di: 'ji',
+		du: 'zu'
+	}
+	const imageAliasMap = {
+		di: 'ji2',
+		du: 'zu2'
+	}
+	const normalizeAudioKey = (k) => audioAliasMap[k] || k
+	const normalizeImageKey = (k) => imageAliasMap[k] || k
+	// 列表展示仍显示 ji/zu（不显示 ji2/zu2）
+	const displayRomajiMap = {
 		ji2: 'ji',
 		zu2: 'zu'
 	}
-	const normalizeKey = (k) => romeAliasMap[k] || k
-	const displayRomaji = (k) => romeAliasMap[k] || k
+	const displayRomaji = (k) => displayRomajiMap[k] || k
 
 	const get = (key) => {
 		const res = kanaData.value.find(item => key === (item.key || item.rome))
@@ -758,7 +776,7 @@
 	]);
 	const innerAudioContext = uni.createInnerAudioContext();
 	const playAudio = (rome) => {
-		const key = normalizeKey(rome)
+		const key = normalizeAudioKey(rome)
 		innerAudioContext.src = `https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/${key}.mp3`;
 		innerAudioContext.play()
 	}
