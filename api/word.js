@@ -59,7 +59,7 @@ export default {
 		return http.post("learnt", data)
 	},
 	getListenOptions(data) {
-		return http.get("listen/options", data)
+		return http.get("learn/options", data)
 	},
 	submitEditWord(data) {
 		return http.post("edit/submit", data)

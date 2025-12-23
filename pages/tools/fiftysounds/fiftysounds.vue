@@ -61,7 +61,7 @@
 					:src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
 					mode="aspectFill"></image>
 				<view v-if="boardShow" class="drawingboard">
-					<l-signature disableScroll ref="signatureRef" penColor="black" :penSize="15"
+					<l-signature disableScroll :minLineWidth="8" ref="signatureRef" penColor="black" :penSize="15"
 						:openSmooth="true"></l-signature>
 				</view>
 				<view v-else class="loadingtext">
