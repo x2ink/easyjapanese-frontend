@@ -171,8 +171,21 @@
 	<wd-toast />
 	<!-- 手写板 -->
 	<view :style="{zIndex:boardShow?99:-1}" class="drawingboard">
-		<l-signature disableScroll :minLineWidth="8" ref="signatureRef" penColor="black" :penSize="15"
-			:openSmooth="true"></l-signature>
+		<l-signature disableScroll :minLineWidth="8" ref="signatureRef" penColor="black" :penSize="10"></l-signature>
+		<view class="bordertools">
+			<view @click="onClickBoard('undo')">
+				<text style="margin-right: 8rpx;" class="fas fa-reply"></text>
+				<text>撤销</text>
+			</view>
+			<view @click="onClickBoard('clear')">
+				<text style="margin-right: 8rpx;" class="fas fa-trash"></text>
+				<text>清空</text>
+			</view>
+			<view @click="onClickBoard('close')">
+				<text style="margin-right: 8rpx;" class="fas fa-xmark"></text>
+				<text>关闭</text>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -205,6 +218,13 @@
 			innerAudioContext.destroy()
 		}
 	})
+	const onClickBoard = (type) => {
+		if (type == "close") {
+			boardShow.value = false
+		} else {
+			signatureRef.value[type]();
+		}
+	};
 	// 手写板
 	const boardShow = ref(false)
 	const signatureRef = ref(null)
@@ -670,12 +690,36 @@
 
 <style scoped lang="scss">
 	.drawingboard {
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.5);
 		position: fixed;
 		top: 0;
 		right: 0;
 		left: 0;
 		bottom: 0;
+	}
+
+	.bordertools {
+		border-radius: 120rpx;
+		position: absolute;
+		height: 80rpx;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: white;
+		padding: 0 32rpx;
+		bottom: calc(env(safe-area-inset-bottom) + 180rpx);
+		flex-shrink: 0;
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32rpx;
+
+		.bordertools {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #555;
+		}
 	}
 
 	.page-scroll {
@@ -982,7 +1026,6 @@
 
 	.write-btn {
 		position: fixed;
-		bottom: 80rpx;
 		right: 40rpx;
 		background: rgba(7, 193, 96, 0.16);
 		width: 120rpx;

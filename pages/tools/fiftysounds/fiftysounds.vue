@@ -18,28 +18,28 @@
 					<div class="section-block">
 						<div class="kana-row-header">清音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="item in unvoicedsound" :key="item">
+							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in unvoicedsound" :key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
-								<div class="kana-romaji">{{item}}</div>
+								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="section-block">
 						<div class="kana-row-header">浊音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="item in dakutenHiragana"
-								:key="item">
+							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in dakutenHiragana"
+								:key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
-								<div class="kana-romaji">{{item}}</div>
+								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="section-block">
 						<div class="kana-row-header">拗音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="item in youonHiragana" :key="item">
+							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in youonHiragana" :key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
-								<div class="kana-romaji">{{item}}</div>
+								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
 						</div>
 					</div>
@@ -407,6 +407,18 @@
 			"hiragana": "だ",
 			"katakana": "ダ"
 		},
+
+		{
+			"rome": "ji",
+			"key": "ji2",
+			"hiragana": "ぢ",
+			"katakana": "ヂ"
+		}, {
+			"rome": "zu",
+			"key": "zu2",
+			"hiragana": "づ",
+			"katakana": "ヅ"
+		},
 		{
 			"rome": "de",
 			"hiragana": "で",
@@ -704,7 +716,7 @@
 	const openDetail = (item) => {
 		if (item) {
 			boardShow.value = false
-			row.value = item
+			row.value = normalizeKey(item)
 			playAudio(item)
 			showDetail.value = true
 			setTimeout(() => {
@@ -712,8 +724,16 @@
 			}, 100)
 		}
 	}
+
+	const romeAliasMap = {
+		ji2: 'ji',
+		zu2: 'zu'
+	}
+	const normalizeKey = (k) => romeAliasMap[k] || k
+	const displayRomaji = (k) => romeAliasMap[k] || k
+
 	const get = (key) => {
-		const res = kanaData.value.find(item => key == item.rome)
+		const res = kanaData.value.find(item => key === (item.key || item.rome))
 		if (res) {
 			if (current.value == "平假名") {
 				return res.hiragana
@@ -724,7 +744,7 @@
 			return ""
 		}
 	}
-	const dakutenHiragana = ref(['ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 'ji', 'zu', 'de', 'do',
+	const dakutenHiragana = ref(['ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 'ji2', 'zu2', 'de', 'do',
 		'ba', 'bi', 'bu', 'be', 'bo', 'pa', 'pi', 'pu', 'pe', 'po'
 	]);
 	const unvoicedsound = ref(['a', 'i', 'u', 'e', 'o', 'ka', 'ki', 'ku', 'ke', 'ko', 'sa', 'shi', 'su', 'se', 'so', 'ta',
@@ -738,7 +758,8 @@
 	]);
 	const innerAudioContext = uni.createInnerAudioContext();
 	const playAudio = (rome) => {
-		innerAudioContext.src = `https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/${rome}.mp3`;
+		const key = normalizeKey(rome)
+		innerAudioContext.src = `https://jpx2ink.oss-cn-shanghai.aliyuncs.com/audio/${key}.mp3`;
 		innerAudioContext.play()
 	}
 </script>
