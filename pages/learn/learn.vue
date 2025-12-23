@@ -46,18 +46,18 @@
 				</view>
 
 				<view class="content-block word-block">
-					<button v-if="(wordinfo.step < 2 || showAnswer) && !(wordinfo.step == 2 && !showAnswer)"
-						@click="playUserRecord(wordinfo.voice)" class="pronounce-btn" title="发音">
+					<button v-if="showAnswer || (wordinfo.step < 2)" @click="playUserRecord(wordinfo.voice)"
+						class="pronounce-btn" title="发音">
 						<i class="fas fa-volume-up"></i>
 					</button>
 
 					<view class="word-header-container">
-						<view v-if="wordinfo.step == 2 && !showAnswer" class="definition-question">
+						<view v-if="!showAnswer && quizType === 'kana'" class="definition-question">
 							<view class="question-label">请选择对应的假名</view>
 							<view class="question-content">{{wordinfo.description}}</view>
 						</view>
 
-						<view v-else-if="wordinfo.step == 3 && !showAnswer" class="audio-block"
+						<view v-else-if="!showAnswer && quizType === 'meaning'" class="audio-block"
 							@click="playUserRecord(wordinfo.voice)">
 							<view class="play-icon-wrapper">
 								<text class="fas fa-volume-up"></text>
@@ -85,12 +85,12 @@
 								</view>
 							</view>
 						</view>
-						<wd-skeleton v-else-if="wordinfo.step < 2" theme="paragraph"
+						<wd-skeleton v-else-if="options.length === 0" theme="paragraph"
 							:row-col="[[{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }], [{width: '80rpx'},{width: '100%', marginLeft: '20rpx' }]]"></wd-skeleton>
 					</view>
 				</view>
 
-				<view v-if="wordinfo.step >= 2" class="options-container">
+				<view v-if="options.length > 0" class="options-container">
 					<view class="divider-wrap" v-if="!showAnswer">
 						<wd-divider>请选择正确答案</wd-divider>
 					</view>
@@ -100,9 +100,16 @@
 							<view class="index-tag">
 								{{optionKey.get(index)}}
 							</view>
+
 							<view class="option-content">
-								{{item.word.kana}}
+								<template v-if="quizType === 'kana'">
+									{{item.word.kana}}
+								</template>
+								<template v-else-if="quizType === 'meaning'">
+									{{item.word.description}}
+								</template>
 							</view>
+
 							<view v-if="item.class=='fail'" class="status-icon fail">
 								<text class="fas fa-xmark"></text>
 							</view>
@@ -113,7 +120,7 @@
 					</view>
 				</view>
 
-				<view class="content-block example-block" v-if="(showAnswer||wordinfo.step==0) && wordinfo.step <= 2">
+				<view class="content-block example-block" v-if="showAnswer||wordinfo.step==0">
 					<view class="block-label">
 						<i class="fas fa-quote-left"></i> 例句
 					</view>
@@ -132,18 +139,17 @@
 				</view>
 
 				<view class="safe-area-spacer"></view>
-
 				<view v-if="showAnswer" class="action-bar">
-					<button v-if="know && wordinfo.step < 2" @click="misremember()" class="action-btn btn-warning">
+					<button v-if="know && options.length === 0" @click="misremember()" class="action-btn btn-warning">
 						<text>记错了</text>
 					</button>
 					<button @click="getNext()" class="action-btn btn-primary"
-						:style="{flex: wordinfo.step >= 2 ? 1 : ''}">
+						:style="{flex: options.length > 0 ? 1 : ''}">
 						<text>下一个</text>
 					</button>
 				</view>
 				<view v-else class="action-bar">
-					<template v-if="wordinfo.step < 2">
+					<template v-if="options.length === 0">
 						<button @click="unknowBtn()" class="action-btn btn-danger">
 							<text>不认识</text>
 						</button>
@@ -153,9 +159,21 @@
 					</template>
 				</view>
 			</view>
-			<wd-toast />
+			<!-- 手写板 -->
+			<view @click="openWriteBoard" class="write-btn _GCENTER">
+				<view>
+					<text class="fas fa-pen"></text>
+					<view>手写</view>
+				</view>
+			</view>
 		</view>
 	</scroll-view>
+	<wd-toast />
+	<!-- 手写板 -->
+	<view :style="{zIndex:boardShow?99:-1}" class="drawingboard">
+		<l-signature disableScroll :minLineWidth="8" ref="signatureRef" penColor="black" :penSize="15"
+			:openSmooth="true"></l-signature>
+	</view>
 </template>
 
 <script setup>
@@ -187,6 +205,13 @@
 			innerAudioContext.destroy()
 		}
 	})
+	// 手写板
+	const boardShow = ref(false)
+	const signatureRef = ref(null)
+	const openWriteBoard = () => {
+		signatureRef.value.clear()
+		boardShow.value = !boardShow.value
+	}
 
 	const WINDOW_SIZE = 6
 	const MIN_BUFFER = 4
@@ -232,6 +257,7 @@
 	const lastWordId = ref(null)
 
 	const options = ref([]) // 选择题选项
+	const quizType = ref('') // 'kana' | 'meaning'
 
 	const wordList = ref([])
 	const queuePending = ref([])
@@ -264,7 +290,7 @@
 	})
 	const currentItem = ref(null)
 
-	// 修改 watch，Step 2（看义选假名）时不自动播放，防止泄题
+	// Step 2 (看义选假名) 时不自动播放，防止泄题
 	watch(() => wordinfo.value.id, (newVal) => {
 		if (newVal && wordinfo.value.step !== 2) playUserRecord(wordinfo.value.voice)
 	})
@@ -297,6 +323,7 @@
 		showAnswer.value = false
 		doneTask.value = false
 		options.value = []
+		quizType.value = ''
 	}
 
 	const init = async (type, forceRefresh = false) => {
@@ -366,6 +393,7 @@
 		showAnswer.value = cache.showAnswer || false
 		know.value = cache.know || false
 		lastWordId.value = cache.lastWordId || null
+		quizType.value = cache.quizType || ''
 
 		const link = (list) => list.map(i => wordList.value.find(w => w.word.id === i.word.id)).filter(i => i)
 		queuePending.value = link(cache.queuePending || [])
@@ -378,7 +406,7 @@
 			if (target) {
 				currentItem.value = target
 				wordinfo.value = target.word
-				// 如果恢复时是选择题模式，重新获取选项
+				// 恢复时重新获取选项
 				if (wordinfo.value.step >= 2) {
 					getOptions(wordinfo.value.id)
 				}
@@ -409,7 +437,8 @@
 			queueCompleted: queueCompleted.value,
 			queueHard: queueHard.value,
 			wordList: wordList.value,
-			total: total.value
+			total: total.value,
+			quizType: quizType.value
 		}
 
 		if (learnType.value == "learn") {
@@ -495,9 +524,14 @@
 		showAnswer.value = false
 		know.value = false
 		options.value = [] // 重置选项
+		quizType.value = ''
 
-		// 如果是第三或第四阶段，获取选项
-		if (wordinfo.value.step >= 2) {
+		// 判断阶段，请求选项
+		if (wordinfo.value.step == 2) {
+			quizType.value = 'kana' // 选假名
+			getOptions(wordinfo.value.id)
+		} else if (wordinfo.value.step == 3) {
+			quizType.value = 'meaning' // 选释义
 			getOptions(wordinfo.value.id)
 		}
 
@@ -545,7 +579,7 @@
 		const item = currentItem.value
 		if (!item) return
 
-		// 完成条件修改为 >= 4 (Step 0, 1, 2, 3 都完成后)
+		// 完成判定：Step >= 4 (0, 1, 2, 3 都过)
 		if (item.word.step >= 4) {
 			if (!queueCompleted.value.find(i => i.word.id === item.word.id)) {
 				queueCompleted.value.push(item)
@@ -609,12 +643,16 @@
 	// 选项选择逻辑
 	const select = (index, item) => {
 		if (showAnswer.value) return
+
+		// 点击选项播放音频（假名发音或单词发音）
 		playUserRecord(item.word.voice)
+
 		if (item.anwser) {
 			options.value[index].class = "success"
 			knowBtn()
 		} else {
 			options.value[index].class = "fail"
+			// 标出正确答案
 			let correctIndex = options.value.findIndex(it => it.anwser)
 			if (correctIndex !== -1) options.value[correctIndex].class = "success"
 			unknowBtn()
@@ -631,6 +669,15 @@
 </style>
 
 <style scoped lang="scss">
+	.drawingboard {
+		background-color: rgba(0, 0, 0, 0.3);
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+
 	.page-scroll {
 		height: 100vh;
 		background-color: #ffffff;
@@ -929,8 +976,42 @@
 		bottom: calc(env(safe-area-inset-bottom) + 40rpx);
 		display: flex;
 		gap: 32rpx;
-		z-index: 99;
+		z-index: 9;
 		pointer-events: none;
+	}
+
+	.write-btn {
+		position: fixed;
+		bottom: 80rpx;
+		right: 40rpx;
+		background: rgba(7, 193, 96, 0.16);
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 50%;
+		bottom: calc(env(safe-area-inset-bottom) + 160rpx);
+		z-index: 100;
+		color: white;
+
+		>view {
+			flex-direction: column;
+			background: #07C160;
+			width: 100rpx;
+			height: 100rpx;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			text {
+				font-size: 36rpx;
+			}
+
+			>view {
+				font-size: 24rpx;
+			}
+		}
+
+
 	}
 
 	.button-container {
@@ -1025,7 +1106,7 @@
 		color: #888;
 	}
 
-	/* 新增/适配 Dictation 样式 */
+	/* 新增/适配样式 */
 	.definition-question {
 		display: flex;
 		flex-direction: column;
