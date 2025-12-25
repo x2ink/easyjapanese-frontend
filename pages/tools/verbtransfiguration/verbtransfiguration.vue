@@ -5,15 +5,8 @@
 			<view class="search-wrapper">
 				<view class="search-box">
 					<i class="fas fa-search search-icon"></i>
-					<input 
-						class="search-input" 
-						confirm-type="search" 
-						@confirm="confirm" 
-						v-model="value" 
-						type="text"
-						placeholder="请输入动词 (如：食べる)" 
-						placeholder-class="placeholder-style"
-					>
+					<input class="search-input" confirm-type="search" @confirm="confirm" v-model="value" type="text"
+						placeholder="请输入动词 (如：食べる)" placeholder-class="placeholder-style">
 					<view class="search-btn" @click="confirm">查询</view>
 				</view>
 			</view>
@@ -21,9 +14,9 @@
 
 		<scroll-view scroll-y class="content-scroll" :enable-back-to-top="true">
 			<view class="content-wrapper">
-				
+
 				<view v-if="data && data.length > 0" class="result-area">
-					
+
 					<view class="result-block main-block">
 						<text class="main-label">基本形</text>
 						<text class="main-word">{{ get('基本形') }}</text>
@@ -103,7 +96,8 @@
 				</view>
 
 				<view v-else class="empty-state">
-					<wd-status-tip image="search" tip="输入动词开始查询" />
+					<wd-status-tip :image-size="{ height: 128, width: 128 }"
+						image="https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/image/empty.png" tip="输入动词开始查询" />
 					<text class="empty-sub">支持输入：基本形、ます形等</text>
 				</view>
 			</view>
@@ -114,10 +108,14 @@
 </template>
 
 <script setup>
-	import { ref } from 'vue'
+	import {
+		ref
+	} from 'vue'
 	import NavbarDefault from "@/components/navbar/default"
 	import $http from "@/api/index.js"
-	import { useToast } from '@/uni_modules/wot-design-uni'
+	import {
+		useToast
+	} from '@/uni_modules/wot-design-uni'
 
 	const toast = useToast()
 	const data = ref([])
@@ -125,7 +123,9 @@
 
 	const get = (key) => {
 		if (!data.value) return '-'
-		const res = data.value.find(({ category }) => category == key)
+		const res = data.value.find(({
+			category
+		}) => category == key)
 		return res ? res.result : '-'
 	}
 
@@ -157,7 +157,6 @@
 </script>
 
 <style>
-	
 	page {
 		background-color: #ffffff;
 		height: 100%;
@@ -174,28 +173,28 @@
 	}
 
 	.head {
-		
+
 		background: #ffffff;
 		flex-shrink: 0;
 		z-index: 10;
 	}
 
 	.search-wrapper {
-		padding: 12rpx 40rpx 24rpx; 
+		padding: 12rpx 40rpx 24rpx;
 		background: #ffffff;
 	}
 
 	.search-box {
 		display: flex;
 		align-items: center;
-		background: #f7f8fa; 
+		background: #f7f8fa;
 		border-radius: 200rpx;
 		padding: 0 32rpx;
-		height: 88rpx; 
+		height: 88rpx;
 		transition: background-color 0.2s;
-		
+
 		&:focus-within {
-			background: #f0f2f5; 
+			background: #f0f2f5;
 		}
 	}
 
@@ -222,9 +221,9 @@
 		font-weight: 600;
 		padding-left: 24rpx;
 		margin-left: 16rpx;
-		
+
 		position: relative;
-		
+
 		&::before {
 			content: '';
 			position: absolute;
@@ -235,7 +234,7 @@
 			width: 2rpx;
 			background-color: #e0e0e0;
 		}
-		
+
 		&:active {
 			opacity: 0.7;
 		}
@@ -247,12 +246,12 @@
 	}
 
 	.content-wrapper {
-		padding: 24rpx 40rpx 80rpx; 
+		padding: 24rpx 40rpx 80rpx;
 	}
 
-	
+
 	.result-block {
-		background-color: #f7f8fa; 
+		background-color: #f7f8fa;
 		border-radius: 32rpx;
 		padding: 32rpx;
 		margin-bottom: 40rpx;
@@ -269,15 +268,15 @@
 		font-weight: 600;
 	}
 
-	
+
 	.main-block {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		padding: 48rpx 32rpx;
-		background-color: #f0fdf4; 
-		
+		background-color: #f0fdf4;
+
 	}
 
 	.main-label {
@@ -295,7 +294,7 @@
 		letter-spacing: 2rpx;
 	}
 
-	
+
 	.grid-container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -303,13 +302,13 @@
 	}
 
 	.grid-item {
-		background-color: #ffffff; 
+		background-color: #ffffff;
 		padding: 24rpx;
 		border-radius: 24rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		
+
 	}
 
 	.tag {
@@ -320,11 +319,26 @@
 		font-weight: 500;
 	}
 
-	
-	.tag-blue { background: #e6f7ff; color: #0099ff; }
-	.tag-red { background: #fff1f0; color: #ff4d4f; }
-	.tag-green { background: #f6ffed; color: #52c41a; }
-	.tag-orange { background: #fff7e6; color: #fa8c16; }
+
+	.tag-blue {
+		background: #e6f7ff;
+		color: #0099ff;
+	}
+
+	.tag-red {
+		background: #fff1f0;
+		color: #ff4d4f;
+	}
+
+	.tag-green {
+		background: #f6ffed;
+		color: #52c41a;
+	}
+
+	.tag-orange {
+		background: #fff7e6;
+		color: #fa8c16;
+	}
 
 	.grid-value {
 		font-size: 32rpx;
@@ -332,11 +346,11 @@
 		color: #333;
 	}
 
-	
+
 	.list-container {
 		display: flex;
 		flex-direction: column;
-		gap: 20rpx; 
+		gap: 20rpx;
 	}
 
 	.list-item {
@@ -344,7 +358,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 28rpx 32rpx;
-		background-color: #ffffff; 
+		background-color: #ffffff;
 		border-radius: 24rpx;
 	}
 
@@ -363,7 +377,7 @@
 		color: #ff4d4f;
 	}
 
-	
+
 	.empty-state {
 		display: flex;
 		flex-direction: column;

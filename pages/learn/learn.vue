@@ -30,7 +30,7 @@
 
 				<view class="button-container">
 					<button @click="writefrommemory()" class="primary-button">立即默写</button>
-					<button @click="init(learnType, true)" class="secondary-button">再来一组</button>
+					<button @click="init(learnType, true,false)" class="secondary-button">再来一组</button>
 				</view>
 			</view>
 
@@ -341,14 +341,14 @@
 		queueHard.value = []
 		queueCompleted.value = []
 		showAnswer.value = false
-		doneTask.value = false
 		options.value = []
+		doneTask.value = false
 		quizType.value = ''
 	}
 
-	const init = async (type, forceRefresh = false) => {
+	const init = async (type, forceRefresh = false, loadingView = true) => {
 		learnType.value = type
-		loading.value = true
+		loading.value = loadingView
 
 		const store = localwordsStore()
 		let cache = type == "learn" ? store.learnCache : store.reviewCache
@@ -363,9 +363,6 @@
 			const apiCall = type == "learn" ? $http.word.learnWord : $http.word.getReview;
 			const clearFunc = type == "learn" ? store.clearLearnCache : store.clearReviewCache;
 
-			resetAlgorithmState()
-			clearFunc()
-
 			const res = await apiCall()
 
 			let rawData = []
@@ -374,7 +371,15 @@
 			} else if (res.data && Array.isArray(res.data.data)) {
 				rawData = res.data.data
 			}
-
+			if (rawData.length == 0) {
+				toast.warning(`没有需要${type=='review'?'复习':'学习'}的单词了！`)
+				doneTask.value = true
+				loading.value = false
+				return
+			} else {
+				resetAlgorithmState()
+				clearFunc()
+			}
 			wordList.value = rawData.map(item => {
 				const examples = item.detail.flatMap(d => d.meanings).flatMap(m => m.examples)
 				const types = item.detail.flatMap(d => d.type).join(';')
