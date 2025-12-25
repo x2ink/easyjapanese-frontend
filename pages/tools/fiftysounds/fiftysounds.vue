@@ -54,10 +54,21 @@
 	<wd-popup lockScroll safe-area-inset-bottom v-model="showDetail" position="bottom" custom-class="minimal-popup">
 		<view class="_GCENTER" style="flex-direction: column;padding: 48rpx 40rpx;">
 			<view class="detail-header">
-				<view class="detail-title">假名手写板</view>
-				<view class="detail-subtitle">跟随描红练习书写</view>
+				<view class="header-left">
+					<view class="detail-title">假名手写板</view>
+					<view class="detail-subtitle">跟随描红练习书写</view>
+				</view>
+				<view class="header-right">
+					<view class="mini-tab-box">
+						<view @click="switchType('平假名')" :class="{active: current=='平假名'}" class="mini-tab-item">
+							平
+						</view>
+						<view @click="switchType('片假名')" :class="{active: current=='片假名'}" class="mini-tab-item">
+							片
+						</view>
+					</view>
+				</view>
 			</view>
-
 			<view class="detail-board-area">
 				<image v-if="boardShow" class="kana-write"
 					:src="`https://jpx2ink.oss-cn-shanghai.aliyuncs.com/images/${current=='平假名'?'hiragana':'katakana'}/detail/${row}.png`"
@@ -161,6 +172,16 @@
 			console.warn("No valid kana in array");
 		}
 	};
+
+	// 切换平/片假名的方法
+	const switchType = (type) => {
+		if (current.value === type) return;
+		current.value = type;
+		// 切换时清除画板
+		if (signatureRef.value) {
+			signatureRef.value.clear();
+		}
+	}
 
 	const kanaData = ref([{
 			"rome": "a",
@@ -963,8 +984,11 @@
 
 	.detail-header {
 		width: 100%;
-		text-align: left;
 		margin-bottom: 40rpx;
+		/* 修改为弹性布局 */
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	.detail-title {
@@ -978,6 +1002,37 @@
 		font-size: 28rpx;
 		color: #9aa0a6;
 	}
+
+	/* 新增切换按钮样式 */
+	.mini-tab-box {
+		background-color: #f7f8fa;
+		border-radius: 64rpx;
+		padding: 8rpx;
+		display: flex;
+		gap: 4rpx;
+		align-items: center;
+	}
+
+	.mini-tab-item {
+		padding: 0 24rpx;
+		height: 52rpx;
+		line-height: 52rpx;
+		border-radius: 64rpx;
+		font-size: 24rpx;
+		color: #8c9096;
+		font-weight: 500;
+		transition: all 0.3s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.mini-tab-item.active {
+		background-color: #07C160;
+		color: white;
+		font-weight: 600;
+	}
+
 
 	.detail-board-area {
 		border-radius: 40rpx;
