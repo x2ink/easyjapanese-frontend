@@ -18,7 +18,8 @@
 					<div class="section-block">
 						<div class="kana-row-header">清音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in unvoicedsound" :key="item + '_' + idx">
+							<div @click="openDetail(item,'unvoicedsound')" class="kana-card"
+								v-for="(item, idx) in unvoicedsound" :key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
 								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
@@ -27,8 +28,8 @@
 					<div class="section-block">
 						<div class="kana-row-header">浊音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in dakutenHiragana"
-								:key="item + '_' + idx">
+							<div @click="openDetail(item,'dakutenHiragana')" class="kana-card"
+								v-for="(item, idx) in dakutenHiragana" :key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
 								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
@@ -37,7 +38,8 @@
 					<div class="section-block">
 						<div class="kana-row-header">拗音</div>
 						<div class="grid">
-							<div @click="openDetail(item)" class="kana-card" v-for="(item, idx) in youonHiragana" :key="item + '_' + idx">
+							<div @click="openDetail(item,'youonHiragana')" class="kana-card"
+								v-for="(item, idx) in youonHiragana" :key="item + '_' + idx">
 								<div class="kana-character">{{get(item)}}</div>
 								<div class="kana-romaji">{{ displayRomaji(item) }}</div>
 							</div>
@@ -72,6 +74,12 @@
 
 			<view class="tools-btns">
 				<view class="left-actions">
+					<button @click="changeDetail('previous')" class="btn-flat-secondary">
+						<text class="fas fa-arrow-left"></text>
+					</button>
+					<button @click="changeDetail('next')" class="btn-flat-secondary">
+						<text class="fas fa-arrow-right"></text>
+					</button>
 					<button @click="onClick('undo')" class="btn-flat-secondary">
 						<text class="fas fa-reply"></text>
 					</button>
@@ -110,6 +118,50 @@
 	const toast = useToast()
 	const data = ref([])
 	const current = ref('平假名')
+	const isEmptyKana = (v) => v == null || String(v).trim() === "";
+
+	function pickPrevNext(arr, current, type) {
+		if (!Array.isArray(arr) || arr.length === 0) return null;
+
+		// 从当前值定位索引；找不到就从 0 开始（你也可以改成从 -1 开始）
+		let idx = arr.findIndex((x) => x === current);
+		if (idx === -1) idx = 0;
+
+		const step = type === "next" ? 1 : -1;
+		const n = arr.length;
+
+		// 最多走 n 次，避免死循环（比如数组全空）
+		for (let i = 0; i < n; i++) {
+			idx = (idx + step + n) % n; // 循环索引
+			const candidate = arr[idx];
+			if (!isEmptyKana(candidate)) return candidate;
+		}
+
+		return null; // 数组里没有任何有效值
+	}
+
+	const changeDetail = (type) => {
+		let arror;
+		if (currentOpenType.value === "unvoicedsound") {
+			arror = unvoicedsound.value;
+		} else if (currentOpenType.value === "dakutenHiragana") {
+			arror = dakutenHiragana.value;
+		} else {
+			arror = youonHiragana.value;
+		}
+
+		const nextVal = pickPrevNext(arror, rowItem.value, type); // type: "next" or "prev"
+
+		if (nextVal != null) {
+			signatureRef.value.clear()
+			rowItem.value = nextVal
+			row.value = normalizeImageKey(nextVal)
+			playAudio(nextVal)
+		} else {
+			console.warn("No valid kana in array");
+		}
+	};
+
 	const kanaData = ref([{
 			"rome": "a",
 			"hiragana": "あ",
@@ -713,8 +765,12 @@
 			}
 		});
 	}
-	const openDetail = (item) => {
+	const currentOpenType = ref('')
+	const rowItem = ref('')
+	const openDetail = (item, openType) => {
+		currentOpenType.value = openType
 		if (item) {
+			rowItem.value = item
 			boardShow.value = false
 			// 描红图用图片 key（di/du -> ji2/zu2；ji2/zu2 保持不变）
 			row.value = normalizeImageKey(item)
@@ -762,7 +818,8 @@
 			return ""
 		}
 	}
-	const dakutenHiragana = ref(['ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 'ji2', 'zu2', 'de', 'do',
+	const dakutenHiragana = ref(['ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 'ji2', 'zu2', 'de',
+		'do',
 		'ba', 'bi', 'bu', 'be', 'bo', 'pa', 'pi', 'pu', 'pe', 'po'
 	]);
 	const unvoicedsound = ref(['a', 'i', 'u', 'e', 'o', 'ka', 'ki', 'ku', 'ke', 'ko', 'sa', 'shi', 'su', 'se', 'so', 'ta',
