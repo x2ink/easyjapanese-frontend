@@ -6,8 +6,7 @@
 			"^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
 		}
 	},
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index/index",
 			"style": {
 				"disableScroll": true,
@@ -28,12 +27,10 @@
 			}
 		}
 	],
-	"subPackages": [
-		{
+	"subPackages": [{
 			"root": "pages/word",
 			"name": "word",
-			"pages": [
-				{
+			"pages": [{
 					"path": "thesaurus/thesaurus",
 					"style": {
 						"disableScroll": true,
@@ -108,8 +105,7 @@
 		{
 			"root": "pages/tools",
 			"name": "tools",
-			"pages": [
-				{
+			"pages": [{
 					"path": "verbtransfiguration/verbtransfiguration",
 					"style": {
 						"disableScroll": true,
@@ -178,14 +174,27 @@
 						"disableScroll": true,
 						"navigationStyle": "custom"
 					}
+				},
+				{
+					"path": "dailytalk/category",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "dailytalk/section",
+					"style": {
+						"disableScroll": true,
+						"navigationStyle": "custom"
+					}
 				}
 			]
 		},
 		{
 			"root": "pages/other",
 			"name": "other",
-			"pages": [
-				{
+			"pages": [{
 					"path": "feedback/feedback",
 					"style": {
 						"disableScroll": true,
@@ -224,15 +233,13 @@
 		{
 			"root": "pages/learn",
 			"name": "learn",
-			"pages": [
-				{
-					"path": "learn",
-					"style": {
-						"disableScroll": true,
-						"navigationStyle": "custom"
-					}
+			"pages": [{
+				"path": "learn",
+				"style": {
+					"disableScroll": true,
+					"navigationStyle": "custom"
 				}
-			]
+			}]
 		}
 	],
 	"preloadRule": {

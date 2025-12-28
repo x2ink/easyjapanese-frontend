@@ -3,7 +3,7 @@
 
 		<view class="fixed-header">
 			<view class="head">
-				<NavbarDefault border title="日常会话"></NavbarDefault>
+				<NavbarDefault border :title="pageTitle"></NavbarDefault>
 			</view>
 		</view>
 
@@ -39,6 +39,11 @@
 					</view>
 
 				</view>
+
+				<view v-if="List.length === 0 && !loading"
+					style="text-align: center; padding: 40rpx; color: #999; font-size: 24rpx;">
+					暂无内容
+				</view>
 			</view>
 
 			<view class="bottom-spacer"></view>
@@ -58,87 +63,125 @@
 		goPage
 	} from '@/utils/common'
 	import {
-		onUnload
+		onUnload,
+		onLoad
 	} from "@dcloudio/uni-app"
 	import {
-		useToast,
-		useMessage
+		useToast
 	} from '@/uni_modules/wot-design-uni'
+
 	const toast = useToast()
+
+	// 页面参数
+	const pageTitle = ref('日常会话')
+	const currentCid = ref(null)
+	const loading = ref(false)
+
 	onUnload(() => {
 		if (innerAudioContext) {
 			innerAudioContext.stop()
 			innerAudioContext.destroy()
 		}
 	})
+
+	// 接收上个页面传来的 cid 和 title
+	onLoad((options) => {
+		if (options.cid) {
+			currentCid.value = options.cid
+		}
+		if (options.title) {
+			pageTitle.value = options.title
+		}
+		getList()
+	})
+
 	const innerAudioContext = uni.createInnerAudioContext();
-	const total = ref(0)
-	const page = ref(1)
-	const size = ref(10)
 	const List = ref([])
 
-
+	// 获取列表逻辑更新为使用 getSpokenList
 	const getList = async () => {
-		if (List.value.length >= total.value && total.value !== 0) {
-			return
-		}
+		if (!currentCid.value) return
 
+		loading.value = true
 		try {
-			const res = await $http.common.getDailyTalk({
-				page: page.value,
-				page_size: size.value
+			// 使用新的 API 接口
+			const res = await $http.word.getSpokenList({
+				cid: currentCid.value
 			})
 
-			total.value = res.total
-			if (total.value === 0) {
-				return
-			}
-			List.value = List.value.concat(res.data)
+			if (res.data && Array.isArray(res.data)) {
+				// 数据处理：将 ruby JSON字符串转为对象数组，适配原有模板
+				List.value = res.data.map(item => {
+					let parsedRuby = []
+					if (typeof item.ruby === 'string') {
+						try {
+							parsedRuby = JSON.parse(item.ruby)
+						} catch (e) {
+							console.error('Ruby parse error', e)
+							// 容错：如果解析失败，构建一个默认结构
+							parsedRuby = [{
+								base: item.jp,
+								ruby: ''
+							}]
+						}
+					} else if (Array.isArray(item.ruby)) {
+						parsedRuby = item.ruby
+					}
 
+					return {
+						...item,
+						ruby: parsedRuby
+					}
+				})
+			}
 		} catch (error) {
 			console.error("获取每日会话失败:", error)
+			toast.error('加载失败')
+		} finally {
+			loading.value = false
 		}
 	}
 
-
+	// 新接口通常是一次性返回，此方法保留以兼容模板事件，但暂不执行分页逻辑
 	const reachBottom = () => {
-		if (total.value > List.value.length) {
-			++page.value
-			getList()
-		}
+		// 如果后续接口支持分页，可在此处恢复逻辑
 	}
-
 
 	const playAudio = (item) => {
+		if (!item.voice) return
 		innerAudioContext.src = item.voice;
 		innerAudioContext.play()
 	}
 
-
 	const handleCopy = (item) => {
 		if (!item.ruby || !Array.isArray(item.ruby)) {
-			toast.warning('暂无内容')
+			// 尝试直接复制 jp 字段作为兜底
+			if (item.jp) {
+				uni.setClipboardData({
+					data: item.jp
+				})
+			} else {
+				toast.warning('暂无内容')
+			}
 			return
 		}
-
 
 		const textToCopy = item.ruby.map(r => r.base).join('')
 		uni.setClipboardData({
 			data: textToCopy,
 			success: () => {
-
+				// uniapp 默认提示
 			}
 		})
 	}
+
 	const handleFavorite = (item) => {
 		goPage("/pages/tools/addnote/addnote", {
 			id: item.id,
-			type: 'talk'
+			type: 'talk',
+			content: item.zh // 顺便把中文传过去方便回显
 		})
 	}
-	onMounted(() => {
-		getList()
-	})
 </script>
 
 <style>

@@ -69,5 +69,14 @@ export default {
 	},
 	setDone(data) {
 		return http.post("word/done", data)
+	},
+	getSpokenSection() {
+		return http.get('spoken/section')
+	},
+	getSpokenCategory(data) {
+		return http.get('spoken/category', data)
+	},
+	getSpokenList(data) {
+		return http.get('spoken/list', data)
 	}
 }

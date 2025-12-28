@@ -128,12 +128,12 @@
 					</view>
 				</view>
 
-				<view class="func-card" @click="goPage('/pages/tools/dailytalk/dailytalk')">
+				<view class="func-card" @click="goPage('/pages/tools/dailytalk/section')">
 					<view class="func-icon-bg bg-purple">
 						<text class="fas fa-comments"></text>
 					</view>
 					<view class="func-info">
-						<text class="func-title">日常会话</text>
+						<text class="func-title">口语宝典</text>
 						<text class="func-desc">高频场景 地道表达</text>
 					</view>
 				</view>
