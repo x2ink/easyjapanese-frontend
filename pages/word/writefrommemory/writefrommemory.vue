@@ -7,7 +7,7 @@
 			</view>
 		</view>
 
-		<scroll-view scroll-y class="scroll-content">
+		<view class="content-body">
 			<div v-if="isBatchComplete" class="container">
 				<view class="result-icon-box">
 					<i class="fas fa-circle-check"></i>
@@ -38,9 +38,10 @@
 
 				<div class="input-section">
 					<div class="input-block" :class="{'is-error': isError}">
-						<input class="main-input" v-model="value" type="text" confirm-type="done" @confirm="submit()"
-							:disabled="showAnwser && !isError" placeholder="请输入日语单词、假名或罗马音"
-							placeholder-class="input-placeholder" />
+						<input :adjust-position="false" auto-blur always-embed class="main-input"
+							placeholder-class="input-placeholder-style" :focus="isFocus" v-model="value" type="text"
+							confirm-type="done" @confirm="submit()" :disabled="showAnwser && !isError"
+							placeholder="请输入日语单词、假名" />
 
 						<view class="input-actions">
 							<view class="action-icon" @click="value=''" v-if="value">
@@ -78,7 +79,7 @@
 
 				<view style="height: 120rpx;"></view>
 			</view>
-		</scroll-view>
+		</view>
 
 		<wd-popup v-model="showSoftKeyboard" position="bottom" safe-area-inset-bottom>
 			<view class="keyboard-container">
@@ -111,10 +112,12 @@
 <script setup>
 	import {
 		ref,
-		computed
+		computed,
+		nextTick
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onReady
 	} from "@dcloudio/uni-app"
 	import $http from "@/api/index.js"
 	import NavbarDefault from "@/components/navbar/default"
@@ -129,6 +132,10 @@
 		useToast
 	} from '@/uni_modules/wot-design-uni'
 
+	onReady(() => {
+		isFocus.value = true
+	})
+
 	const toast = useToast()
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = false;
@@ -138,60 +145,40 @@
 	const doneList = ref([])
 	const value = ref('')
 
-
 	const isBatchComplete = ref(false)
 	const showAnwser = ref(false)
 	const isError = ref(false)
 
-
 	const showSoftKeyboard = ref(false)
 	const kbTab = ref('hira')
 
-
-	// 平假名：包含清音、浊音、半浊音、拗音/小假名
+	// ... [假名数组数据保持不变，此处省略以节省空间] ...
+	// 平假名
 	const hiragana = [
-		'あ', 'い', 'う', 'え', 'お',
-		'か', 'き', 'く', 'け', 'こ',
-		'さ', 'し', 'す', 'せ', 'そ',
-		'た', 'ち', 'つ', 'て', 'と',
-		'な', 'に', 'ぬ', 'ね', 'の',
-		'は', 'ひ', 'ふ', 'へ', 'ほ',
-		'ま', 'み', 'む', 'め', 'も',
-		'や', '', 'ゆ', '', 'よ',
-		'ら', 'り', 'る', 'れ', 'ろ',
-		'わ', '', 'を', '', 'ん',
-		'が', 'ぎ', 'ぐ', 'げ', 'ご',
-		'ざ', 'じ', 'ず', 'ぜ', 'ぞ',
-		'だ', 'ぢ', 'づ', 'で', 'ど',
-		'ば', 'び', 'ぶ', 'べ', 'ぼ',
-		'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ',
-		'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ',
+		'あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ',
+		'さ', 'し', 'す', 'せ', 'そ', 'た', 'ち', 'つ', 'て', 'と',
+		'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ',
+		'ま', 'み', 'む', 'め', 'も', 'や', '', 'ゆ', '', 'よ',
+		'ら', 'り', 'る', 'れ', 'ろ', 'わ', '', 'を', '', 'ん',
+		'が', 'ぎ', 'ぐ', 'げ', 'ご', 'ざ', 'じ', 'ず', 'ぜ', 'ぞ',
+		'だ', 'ぢ', 'づ', 'で', 'ど', 'ば', 'び', 'ぶ', 'べ', 'ぼ',
+		'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ', 'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ',
 		'っ', 'ゃ', 'ゅ', 'ょ'
 	]
-
-	// 片假名：包含清音、浊音、半浊音、拗音/小假名
+	// 片假名
 	const katakana = [
-		'ア', 'イ', 'ウ', 'エ', 'オ',
-		'カ', 'キ', 'ク', 'ケ', 'コ',
-		'サ', 'シ', 'ス', 'セ', 'ソ',
-		'タ', 'チ', 'ツ', 'テ', 'ト',
-		'ナ', 'ニ', 'ヌ', 'ネ', 'ノ',
-		'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
-		'マ', 'ミ', 'ム', 'メ', 'モ',
-		'ヤ', '', 'ユ', '', 'ヨ',
-		'ラ', 'リ', 'ル', 'レ', 'ロ',
-		'ワ', '', 'ヲ', '', 'ン',
-		'ガ', 'ギ', 'グ', 'ゲ', 'ゴ',
-		'ザ', 'ジ', 'ズ', 'ゼ', 'ゾ',
-		'ダ', 'ヂ', 'ヅ', 'デ', 'ド',
-		'バ', 'ビ', 'ブ', 'ベ', 'ボ',
-		'パ', 'ピ', 'プ', 'ペ', 'ポ',
-		'ァ', 'ィ', 'ゥ', 'ェ', 'ォ',
+		'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
+		'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',
+		'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
+		'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', '', 'ユ', '', 'ヨ',
+		'ラ', 'リ', 'ル', 'レ', 'ロ', 'ワ', '', 'ヲ', '', 'ン',
+		'ガ', 'ギ', 'グ', 'ゲ', 'ゴ', 'ザ', 'ジ', 'ズ', 'ゼ', 'ゾ',
+		'ダ', 'ヂ', 'ヅ', 'デ', 'ド', 'バ', 'ビ', 'ブ', 'ベ', 'ボ',
+		'パ', 'ピ', 'プ', 'ペ', 'ポ', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ',
 		'ッ', 'ャ', 'ュ', 'ョ', 'ヴ'
 	]
 
 	const currentKeys = computed(() => kbTab.value === 'hira' ? hiragana : katakana)
-
 
 	const batchTotal = ref(0)
 	const serverTotal = ref(0)
@@ -253,30 +240,36 @@
 		}
 	}
 
-	const getNext = () => {
+	const isFocus = ref(false)
+
+	const getNext = async () => {
 		if (wordList.value.length === 0) {
 			isBatchComplete.value = true
 			return
 		}
-
+		isError.value = false
 		value.value = ""
 		showAnwser.value = false
-		isError.value = false
-
 		showSoftKeyboard.value = false
 		wordinfo.value = wordList.value[0]
+
+		await nextTick()
+		isFocus.value = true
 	}
 
 	const submit = async () => {
 		if (value.value.trim().length == 0) {
-			toast.warning(`请输入答案`)
+			uni.hideKeyboard()
+			isFocus.value = false
+			setTimeout(() => {
+				toast.warning(`请输入答案`)
+			}, 100)
 			return
 		}
 
+		isFocus.value = false
 		const inputVal = value.value.trim()
 		const targetWord = wordinfo.value
-
-
 		const isKanji = targetWord.words.includes(inputVal)
 		const isKana = inputVal == targetWord.kana
 		const isRome = targetWord.rome && (inputVal.toLowerCase() == targetWord.rome.toLowerCase())
@@ -284,7 +277,6 @@
 		const isCorrect = isKanji || isKana || isRome
 
 		if (isCorrect) {
-
 			$http.word.setLearnt({
 				type: "write",
 				word_id: targetWord.id
@@ -293,20 +285,22 @@
 			doneList.value.push(targetWord)
 			wordList.value.shift()
 
-			toast.success("正确")
+			toast.success("回答正确")
 			value.value = ""
 			showSoftKeyboard.value = false
 
 			setTimeout(() => {
 				getNext()
 			}, 500)
-
 		} else {
-
 			isError.value = true
 			showAnwser.value = true
 			playUserRecord(targetWord.voice)
 			showSoftKeyboard.value = false
+
+			// 错误时也收起键盘，方便看答案
+			uni.hideKeyboard()
+			toast.error(`答案错误`)
 
 			const current = wordList.value.shift()
 			wordList.value.push(current)
@@ -318,6 +312,7 @@
 		showAnwser.value = true
 		playUserRecord(wordinfo.value.voice)
 		showSoftKeyboard.value = false
+		uni.hideKeyboard() // 放弃时收起键盘
 
 		const current = wordList.value.shift()
 		wordList.value.push(current)
@@ -329,11 +324,6 @@
 	}
 
 	const onKeyClick = (char) => {
-
-		if (char === '゛' || char === '゜') {
-
-
-		}
 		value.value += char
 	}
 
@@ -371,10 +361,12 @@
 
 	page {
 		background-color: $bg-color;
+		// 确保页面最小高度，防止回弹
+		min-height: 100vh;
 	}
 
 	.page-container {
-		height: 100vh;
+		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
 		background-color: $bg-color;
@@ -384,13 +376,19 @@
 		background: $bg-color;
 		z-index: 10;
 		flex-shrink: 0;
+		// 粘性定位 (可选，如果希望吸顶)
+		position: sticky;
+		top: 0;
 	}
 
-	.scroll-content {
+	// 替代原有的 scroll-content
+	.content-body {
 		flex: 1;
-		height: 0;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
 	}
-
 
 	.progress-bar {
 		height: 8rpx;
@@ -433,7 +431,6 @@
 			gap: 12rpx;
 			padding: 16rpx 32rpx;
 			background-color: #ffffff;
-
 			border-radius: 1998rpx;
 			transition: opacity 0.2s;
 
@@ -468,11 +465,10 @@
 		display: flex;
 		align-items: center;
 		height: 110rpx;
-		transition: background-color 0.2s;
+		box-sizing: border-box;
 
 		&.is-error {
 			background-color: $error-bg;
-
 
 			.main-input {
 				color: #e53e3e;
@@ -481,14 +477,15 @@
 
 		.main-input {
 			flex: 1;
-			height: 100%;
-			font-size: 32rpx;
 			color: $text-main;
 			background: transparent;
-		}
-
-		.input-placeholder {
-			color: #c0c4cc;
+			border: none;
+			outline: none;
+			box-shadow: none;
+			height: 90rpx !important;
+			min-height: 90rpx;
+			line-height: 90rpx !important;
+			vertical-align: middle;
 		}
 
 		.input-actions {
@@ -523,6 +520,13 @@
 		}
 	}
 
+	.input-placeholder-style {
+		color: #c0c4cc;
+		line-height: 90rpx !important;
+		height: 90rpx !important;
+		vertical-align: middle;
+	}
+
 
 	.action-btn {
 		width: 100%;
@@ -534,7 +538,6 @@
 		text-align: center;
 		border: none;
 		box-shadow: none;
-
 
 		&::after {
 			border: none;
@@ -582,7 +585,6 @@
 		margin-top: 40rpx;
 		padding: 30rpx 40rpx;
 		background-color: $block-bg;
-
 		border-radius: 24rpx;
 		transition: opacity 0.2s;
 
@@ -668,7 +670,6 @@
 		padding: 20rpx 30rpx;
 		background: #ffffff;
 
-
 		.keyboard-tabs {
 			display: flex;
 			gap: 40rpx;
@@ -703,7 +704,6 @@
 
 	.keyboard-body {
 		height: 540rpx;
-
 		padding: 20rpx 10rpx;
 	}
 
@@ -716,7 +716,6 @@
 
 	.key-btn {
 		width: calc(20% - 12rpx);
-
 		height: 90rpx;
 		background: #ffffff;
 		border-radius: 12rpx;
@@ -725,7 +724,6 @@
 		justify-content: center;
 		font-size: 36rpx;
 		color: $text-main;
-
 		box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.05);
 
 		&:active {
@@ -734,7 +732,6 @@
 
 		&.action-key {
 			background-color: #e1e4e9;
-
 			color: #555;
 			font-size: 32rpx;
 			box-shadow: none;
